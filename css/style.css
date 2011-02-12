@@ -40,7 +40,7 @@ font-family: Arial, Helvetica, sans-serif;
 		width: 500px;
 		color: #fff;
 		font-size: 13px;
-		background: #F5992A url(/static/channelng/img/e.gif) top left no-repeat;
+		background: #F5992A url(/img/e.gif) top left no-repeat;
 		padding: 10px 20px 0 87px;
 		-moz-border-radius: 0 0 5px 5px;
 		-webkit-border-radius: 0 0 5px 5px;
@@ -70,7 +70,7 @@ font-family: Arial, Helvetica, sans-serif;
 			right: 6px;
 			height: 20px;
 			width: 20px;
-			background: url(/static/channelng/img/x.gif) top left no-repeat;
+			background: url(/img/x.gif) top left no-repeat;
 		}
 	
 	
@@ -125,7 +125,7 @@ font-family: Arial, Helvetica, sans-serif;
 	#splash{
 		position: relative;
 		height: 212px;
-		background: #eee url(/static/channelng/img/personal-channel-with-next.png) 260px bottom no-repeat;
+		background: #eee url(/img/personal-channel-with-next.png) 260px bottom no-repeat;
 		-moz-border-radius: 18px 18px 0 0;
 		-webkit-border-radius: 18px 18px 0 0;
 		border-radius: 18px 18px 0 0;
@@ -238,7 +238,7 @@ font-family: Arial, Helvetica, sans-serif;
 		padding: 0 0 12px 0;
 		text-align: left;
 		border-top: 27px solid #fff;
-		background: url(/static/channelng/img/pbg.gif) top right repeat-y;
+		background: url(/img/pbg.gif) top right repeat-y;
 	}
 	
 		#shim{
@@ -247,7 +247,7 @@ font-family: Arial, Helvetica, sans-serif;
 			left: 240px;
 			height: 27px;
 			width: 53px;
-			background: url(/static/channelng/img/shim.gif) top left no-repeat;
+			background: url(/img/shim.gif) top left no-repeat;
 		}
 		
 		#shim2{
@@ -257,7 +257,7 @@ font-family: Arial, Helvetica, sans-serif;
 			
 			height: 513px;
 			width: 839px;
-			background: url(/static/channelng/img/art.png) bottom right no-repeat;
+			background: url(/img/art.png) bottom right no-repeat;
 		}
 	
 		h2.col-title{
@@ -325,16 +325,16 @@ font-family: Arial, Helvetica, sans-serif;
 				}
 				
 				li.ci1{
-					background: url(/static/channelng/img/mb1.gif) left center no-repeat;
+					background: url(/img/mb1.gif) left center no-repeat;
 				}
 				li.ci2{
-					background: url(/static/channelng/img/mb2.gif) left center no-repeat;
+					background: url(/img/mb2.gif) left center no-repeat;
 				}
 				li.ci3{
-					background: url(/static/channelng/img/mb3.gif) left center no-repeat;
+					background: url(/img/mb3.gif) left center no-repeat;
 				}
 				li.ci4{
-					background: url(/static/channelng/img/mb4.gif) left center no-repeat;
+					background: url(/img/mb4.gif) left center no-repeat;
 				}
 				
 				.channel li span{
@@ -429,7 +429,7 @@ font-family: Arial, Helvetica, sans-serif;
 						height: 20px;
 						width: 20px;
 						margin: 4px 4px 0 0;
-						background: url(/static/channelng/img/plus.gif) center no-repeat;
+						background: url(/img/plus.gif) center no-repeat;
 					}
 					
 					a.flag{
@@ -437,11 +437,11 @@ font-family: Arial, Helvetica, sans-serif;
 						height: 33px;
 						width: 33px;
 						margin: 3px 3px 0 0;
-						background: url(/static/channelng/img/flag.gif) top left no-repeat;
+						background: url(/img/flag.gif) top left no-repeat;
 					}
 					
 					.entry.location.mod a.flag{
-						background: url(/static/channelng/img/flag2.gif) top left no-repeat;
+						background: url(/img/flag2.gif) top left no-repeat;
 					}
 					
 					span.here{
@@ -725,28 +725,28 @@ font-family: Arial, Helvetica, sans-serif;
 							}
 							
 							.social1{
-								background: url(/static/channelng/img/1.gif) top left no-repeat;
+								background: url(/img/1.gif) top left no-repeat;
 							}
 							.social2{
-								background: url(/static/channelng/img/s2.gif) top left no-repeat;
+								background: url(/img/s2.gif) top left no-repeat;
 							}
 							.social3{
-								background: url(/static/channelng/img/s3.gif) top left no-repeat;
+								background: url(/img/s3.gif) top left no-repeat;
 							}
 							.social4{
-								background: url(/static/channelng/img/s4.gif) top left no-repeat;
+								background: url(/img/s4.gif) top left no-repeat;
 							}
 							.social5{
-								background: url(/static/channelng/img/s5.gif) top left no-repeat;
+								background: url(/img/s5.gif) top left no-repeat;
 							}
 							.social6{
-								background: url(/static/channelng/img/s6.gif) top left no-repeat;
+								background: url(/img/s6.gif) top left no-repeat;
 							}
 							.social7{
-								background: url(/static/channelng/img/s7.gif) top left no-repeat;
+								background: url(/img/s7.gif) top left no-repeat;
 							}
 							.social8{
-								background: url(/static/channelng/img/s8.gif) top left no-repeat;
+								background: url(/img/s8.gif) top left no-repeat;
 							}
 						
 						
@@ -843,16 +843,16 @@ font-family: Arial, Helvetica, sans-serif;
 						}
 						
 						.g1{
-							background: url(/static/channelng/img/g1.gif) center no-repeat;
+							background: url(/img/g1.gif) center no-repeat;
 						}						
 						.g2{
-							background: url(/static/channelng/img/g2.gif) center no-repeat;
+							background: url(/img/g2.gif) center no-repeat;
 						}						
 						.g3{
-							background: url(/static/channelng/img/g3.gif) center no-repeat;
+							background: url(/img/g3.gif) center no-repeat;
 						}						
 						.g4{
-							background: url(/static/channelng/img/g4.gif) center no-repeat;
+							background: url(/img/g4.gif) center no-repeat;
 						}
 			
 			.share{
@@ -952,7 +952,7 @@ font-family: Arial, Helvetica, sans-serif;
 				.my-places li{
 					padding: 1px 0 2px 30px;
 					margin-bottom: 3px;
-					background: url(/static/channelng/img/small-flag.gif) top left no-repeat;	
+					background: url(/img/small-flag.gif) top left no-repeat;	
 				}
 				
 				.my-places li strong{
@@ -982,7 +982,7 @@ font-family: Arial, Helvetica, sans-serif;
 				.the-place{
 					position: relative;
 					padding: 5px 10px 0 80px;
-					background: url(/static/channelng/img/flag3.gif) 15px 10px no-repeat;	
+					background: url(/img/flag3.gif) 15px 10px no-repeat;	
 				}
 				
 				.this-place h5{
