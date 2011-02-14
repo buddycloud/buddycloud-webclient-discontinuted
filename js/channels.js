@@ -1,3 +1,5 @@
+var IQ_TIMEOUT = 10000;
+
 var stub = function() {};
 if (!window.console)
     window.console = { log: stub, info: stub, warn: stub, error: stub };
@@ -20,7 +22,7 @@ window.Channels.Client = function(jid, password) {
     this.requests = {};
     this.conn.addHandler(function(stanza) {
 	/*console.log('<<< ' + Strophe.serialize(stanza));*/
-	that.receive(stanza);
+	/*that.receive(stanza);*/
 	return true;
     });
 
@@ -48,42 +50,20 @@ window.Channels.Client.prototype = {
     onDisconnect: stub,
     onUpdate: stub,
 
-    receive: function(stanza) {
-	var id = stanza.getAttribute('id');
-	if (stanza.nodeName === 'iq' &&
-	    this.requests.hasOwnProperty(id)) {
-
-	    if (stanza.getAttribute('type') === 'result') {
-		this.requests[id](null, stanza);
-		delete this.requests[id];
-	    } else if (stanza.getAttribute('type') === 'error') {
-		this.requests[id](stanza);
-		delete this.requests[id];
-	    }
-	}
-    },
-
-    request: function(stanza, cb) {
-	var that = this;
-
-	stanza = stanza.tree();
-	var id = this.lastId.toString();
-	this.lastId++;
-	stanza.setAttribute('id', id);
-	this.conn.send(stanza);
-	this.requests[id] = cb;
-	window.setTimeout(function() {
-	    if (that.requests[id]) {
-		delete that.requests[id];
-		cb(new Error('timeout'));
-	    }
-	}, 10000);
+    request: function(stanza, callback, errback) {
+	this.conn.sendIQ(stanza, function(reply) {
+	    if (callback)
+		callback(reply);
+	}, function(error) {
+	    if (errback)
+		errback(error);
+	}, IQ_TIMEOUT);
     },
 
     getRoster: function(cb) {
 	var that = this;
 	this.request($iq({ type: 'get' }).c('query', { xmlns: Strophe.NS.ROSTER }),
-	    function(err, reply) {
+	    function(reply) {
 		var queryEl = reply && reply.getElementsByTagName('query')[0];
 		if (queryEl) {
 		    that.roster = {};
@@ -124,7 +104,7 @@ window.Channels.Discovery.prototype = {
 	    this.client.request($iq({ to: jid,
 				      type: 'get' }).
 				c('query', { xmlns: NS_DISCO_ITEMS }),
-				function(err, reply) {
+				function(reply) {
 	        var queryEl = reply && reply.getElementsByTagName('query')[0];
 		if (queryEl) {
 		    var itemEls = queryEl.getElementsByTagName('item');
@@ -146,7 +126,7 @@ window.Channels.Discovery.prototype = {
 	    this.client.request($iq({ to: jid,
 				      type: 'get' }).
 				c('query', { xmlns: NS_DISCO_INFO }),
-				function(err, reply) {
+				function(reply) {
 	        var queryEl = reply && reply.getElementsByTagName('query')[0];
 		if (queryEl) {
 		    var identityEls = queryEl.getElementsByTagName('identity');
