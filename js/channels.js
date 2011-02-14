@@ -8,14 +8,14 @@ if (!window.console)
     console.log('Strophe ' + level + ': ' + msg);
 };*/
 
-window.Channels = {};
+var Channels = {};
 
-window.Channels.Client = function(jid, password) {
+Channels.Client = function(jid, password) {
     var that = this;
 
     this.lastId = Math.ceil(Math.random() * 999999);
     this.roster = {};
-    this.discovery = new window.Channels.Discovery(this);
+    this.discovery = new Channels.Discovery(this);
 
     this.conn = new Strophe.Connection('/http-bind/');
 
@@ -43,8 +43,8 @@ window.Channels.Client = function(jid, password) {
 	}
     });
 };
-window.Channels.Client.prototype = {
-    constructor: window.Channels.Client,
+Channels.Client.prototype = {
+    constructor: Channels.Client,
 
     onConnect: stub,
     onDisconnect: stub,
@@ -82,13 +82,13 @@ window.Channels.Client.prototype = {
 var NS_DISCO_ITEMS = 'http://jabber.org/protocol/disco#items',
     NS_DISCO_INFO = 'http://jabber.org/protocol/disco#info';
 
-window.Channels.Discovery = function(client) {
+Channels.Discovery = function(client) {
     this.domainsBrowsed = {};
     this.domainsDiscovered = {};
     this.domainServices = {};
     this.client = client;
 };
-window.Channels.Discovery.prototype = {
+Channels.Discovery.prototype = {
     start: function() {
 	for(var jid in this.client.roster) {
 	    var domain = Strophe.getDomainFromJid(jid);
