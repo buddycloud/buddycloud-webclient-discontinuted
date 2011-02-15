@@ -1,4 +1,4 @@
-var cl = new Channels.Client('astro@hq.c3d2.de', '***');
+var cl = new Channels.ChannelsClient('astro@hq.c3d2.de', '***');
 
 $(document).load(function() {
     $('#wrap').hide();
