@@ -126,11 +126,65 @@ Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
 };
 
 /**
+ * PubSub queries
+ */
+
+Channels.XmppClient.prototype.getSubscriptions = function(jid, cb) {
+    this.request($iq({ to: jid,
+		       type: 'get' }).
+		 c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+		 c('subscriptions'),
+    function(reply) {
+	var subscriptions = [];
+	var pubsubEl = reply && reply.getElementsByTagName('pubsub')[0];
+	var subscriptionsEl = pubsubEl && pubsubEl.getElementsByTagName('subscriptions')[0];
+	if (subscriptionsEl) {
+	    var subscriptionEls = subscriptionsEl.getElementsByTagName('subscription');
+	    for(var i = 0; i < subscriptionEls; i++) {
+		var subscriptionEl = subscriptionEls[i];
+		subscriptions.push({ node: subscriptionEl.getAttribute('node'),
+				     subscription: subscriptionEl.getAttribute('subscription')
+				   });
+	    }
+	}
+	cb(null, subscriptions);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
+
+Channels.XmppClient.prototype.getAffiliations = function(jid, cb) {
+    this.request($iq({ to: jid,
+		       type: 'get' }).
+		 c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+		 c('affiliations'),
+    function(reply) {
+	var affiliations = [];
+	var pubsubEl = reply && reply.getElementsByTagName('pubsub')[0];
+	var affiliationsEl = pubsubEl && pubsubEl.getElementsByTagName('affiliations')[0];
+	if (affiliationsEl) {
+	    var affiliationEls = affiliationsEl.getElementsByTagName('affiliation');
+	    for(var i = 0; i < affiliationEls; i++) {
+		var affiliationEl = affiliationEls[i];
+		affiliations.push({ node: affiliationEl.getAttribute('node'),
+				    affiliation: affiliationEl.getAttribute('affiliation')
+				   });
+	    }
+	}
+	cb(null, affiliations);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
+
+/**
  * High-level channels logic
  */
 Channels.ChannelsClient = function(jid, password) {
     Channels.XmppClient.apply(this, arguments);
     var that = this;
+
+    this.services = {};
 
     this.on('online', function() {
 	that.conn.send($pres().c('status').t('buddycloud channels'));
@@ -139,6 +193,14 @@ Channels.ChannelsClient = function(jid, password) {
 };
 Channels.ChannelsClient.prototype = Object.create(Channels.XmppClient.prototype);
 Channels.ChannelsClient.prototype.constructor = Channels.ChannelsClient;
+
+Channels.ChannelsClient.prototype.getService = function(jid) {
+    if (!this.services.hasOwnProperty(jid)) {
+	this.services[jid] = new Channels.Service(this, jid);
+	this.emit('newService', this.services[jid]);
+    }
+    return this.services[jid];
+};
 
 /** cb([String]) */
 Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
@@ -194,18 +256,55 @@ Channels.ChannelsClient.prototype.findHomeServices = function() {
 
 Channels.ChannelsClient.prototype.initHomeServices = function(jids) {
     this.homeServices = jids;
+    for(var i = 0; i < jids.length; i++)
+	this.getService(jids[i]);
 };
 
 /**
  * Represents a channel-server instance
  */
 Channels.Service = function(client, jid) {
+    Channels.Service.call(this);
     this.client = client;
     this.jid = jid;
     this.nodes = {};
+
+    this.updateSubscriptions();
+    this.updateAffiliations();
 };
-Channels.Service.prototype = {
-    
+Channels.Service.prototype = Object.create(EventEmitter.prototype);
+Channels.Service.prototype.constructor = Channels.Service;
+
+Channels.Service.prototype.getNode = function(name) {
+    if (!this.nodes.hasOwnProperty(name)) {
+	this.nodes[name] = new Channels.Node(this, name);
+	this.emit('newNode', this.nodes[name]);
+    }
+    return this.nodes[name];
+};
+
+Channels.Service.prototype.updateSubscriptions = function() {
+    var that = this;
+    this.client.getSubscriptions(this.jid, function(err, subscriptions) {
+	/* TODO: handle err, mark unseen as none */
+	for(var i = 0; i < subscriptions.length; i++) {
+	    var node = that.getNode(subscriptions[i].node);
+	    node.subscription = subscriptions[i].subscription;
+	    node.emit('update');
+	}
+    });
+};
+
+Channels.Service.prototype.updateAffiliations = function() {
+    var that = this;
+    this.client.getAffiliations(this.jid, function(err, affiliations) {
+	/* TODO: handle err, mark unseen as none */
+	for(var i = 0; i < affiliations.length; i++) {
+	    var node = that.getNode(affiliations[i].node);
+	    node.affiliation = affiliations[i].affiliation;
+	    node.emit('update');
+	}
+    });
 };
 
 Channels.Node = function(service, name) {
@@ -213,6 +312,6 @@ Channels.Node = function(service, name) {
     this.affiliation = 'none';
     this.subscription = 'none';
 };
-Channels.Node.prototype = {
-    
-};
+Channels.Node.prototype = Object.create(EventEmitter.prototype);
+Channels.Node.prototype.constructor = Channels.Node;
+
