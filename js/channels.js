@@ -1,6 +1,5 @@
 var IQ_TIMEOUT = 10000;
-var NS_DISCO_ITEMS = 'http://jabber.org/protocol/disco#items',
-    NS_DISCO_INFO = 'http://jabber.org/protocol/disco#info';
+Strophe.addNamespace('PUBSUB', "http://jabber.org/protocol/pubsub");
 
 var stub = function() {};
 if (!window.console)
@@ -84,7 +83,7 @@ Channels.XmppClient.prototype.getRoster = function(cb) {
 Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
     this.request($iq({ to: jid,
 		       type: 'get' }).
-		 c('query', { xmlns: NS_DISCO_ITEMS,
+		 c('query', { xmlns: Strophe.NS.DISCO_ITEMS,
 			      node: node }),
     function(reply) {
 	var results = [];
@@ -109,7 +108,7 @@ Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
 Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
     this.request($iq({ to: jid,
 		       type: 'get' }).
-		 c('query', { xmlns: NS_DISCO_INFO,
+		 c('query', { xmlns: Strophe.NS.DISCO_INFO,
 			      node: node }),
     function(reply) {
 	var result = { identities: [], features: [] };
