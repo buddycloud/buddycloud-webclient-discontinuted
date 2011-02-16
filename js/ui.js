@@ -6,3 +6,12 @@ $(document).load(function() {
 	$('#wrap').show();
     };
 });
+
+cl.on('newService', function(service) {
+    service.on('newNode', function(node) {
+	var m;
+	if ((m = node.name.match(/^\/user\/([^\/]+)/))) {
+	}
+    });
+});
+
