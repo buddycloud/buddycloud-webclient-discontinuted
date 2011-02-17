@@ -22,7 +22,6 @@ Channels.XmppClient = function(jid, password) {
 
     this.conn.addHandler(function(stanza) {
 	/*console.log('<<< ' + Strophe.serialize(stanza));*/
-	/*that.receive(stanza);*/
 	return true;
     });
 
@@ -32,7 +31,6 @@ Channels.XmppClient = function(jid, password) {
 	switch(status) {
 	    case Strophe.Status.CONNECTED:
 		that.emit('online');
-		that.onConnect();
 		break;
 	    case Strophe.Status.DISCONNECTED:
 		that.onDisconnect();
@@ -80,11 +78,13 @@ Channels.XmppClient.prototype.getRoster = function(cb) {
  * 
  * cb(error, [{ jid: String, node: String }])
  */
-Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
+Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
+    var queryAttrs = { xmlns: Strophe.NS.DISCO_ITEMS };
+    if (node)
+	queryAttrs.node = node;
     this.request($iq({ to: jid,
 		       type: 'get' }).
-		 c('query', { xmlns: Strophe.NS.DISCO_ITEMS,
-			      node: node }),
+		 c('query', queryAttrs),
     function(reply) {
 	var results = [];
 	var queryEl = reply && reply.getElementsByTagName('query')[0];
@@ -97,6 +97,9 @@ Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
 		});
 	    }
 	}
+	cb(null, results);
+    }, function(reply) {
+	cb(new Error());
     });
 };
 
@@ -105,23 +108,31 @@ Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
  * cb(error, { identities: [{ category: String, type: String }], 
  *             features: [String] })
  */
-Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
+Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
+    var queryAttrs = { xmlns: Strophe.NS.DISCO_INFO };
+    if (node)
+	queryAttrs.node = node;
     this.request($iq({ to: jid,
 		       type: 'get' }).
-		 c('query', { xmlns: Strophe.NS.DISCO_INFO,
-			      node: node }),
+		 c('query', queryAttrs),
     function(reply) {
-	var result = { identities: [], features: [] };
+	var i, result = { identities: [], features: [] };
 	var queryEl = reply && reply.getElementsByTagName('query')[0];
 	if (queryEl) {
 	    var identityEls = queryEl.getElementsByTagName('identity');
-	    for(var i = 0; i < identityEls.length; i++) {
+	    for(i = 0; i < identityEls.length; i++) {
 		var identityEl = identityEls[i];
 		result.identities.push({ category: identityEl.getAttribute('category'),
 					 type: identityEl.getAttribute('type')
 				       });
 	    }
+	    var featureEls = queryEl.getElementsByTagName('feature');
+	    for(i = 0; i < featureEls.length; i++)
+		result.features.push(featureEls[i].getAttribute('var'));
 	}
+	cb(null, result);
+    }, function(reply) {
+	cb(new Error());
     });
 };
 
@@ -140,7 +151,7 @@ Channels.XmppClient.prototype.getSubscriptions = function(jid, cb) {
 	var subscriptionsEl = pubsubEl && pubsubEl.getElementsByTagName('subscriptions')[0];
 	if (subscriptionsEl) {
 	    var subscriptionEls = subscriptionsEl.getElementsByTagName('subscription');
-	    for(var i = 0; i < subscriptionEls; i++) {
+	    for(var i = 0; i < subscriptionEls.length; i++) {
 		var subscriptionEl = subscriptionEls[i];
 		subscriptions.push({ node: subscriptionEl.getAttribute('node'),
 				     subscription: subscriptionEl.getAttribute('subscription')
@@ -164,7 +175,7 @@ Channels.XmppClient.prototype.getAffiliations = function(jid, cb) {
 	var affiliationsEl = pubsubEl && pubsubEl.getElementsByTagName('affiliations')[0];
 	if (affiliationsEl) {
 	    var affiliationEls = affiliationsEl.getElementsByTagName('affiliation');
-	    for(var i = 0; i < affiliationEls; i++) {
+	    for(var i = 0; i < affiliationEls.length; i++) {
 		var affiliationEl = affiliationEls[i];
 		affiliations.push({ node: affiliationEl.getAttribute('node'),
 				    affiliation: affiliationEl.getAttribute('affiliation')
@@ -196,6 +207,7 @@ Channels.ChannelsClient.prototype.constructor = Channels.ChannelsClient;
 
 Channels.ChannelsClient.prototype.getService = function(jid) {
     if (!this.services.hasOwnProperty(jid)) {
+	console.log('newService ' + jid);
 	this.services[jid] = new Channels.Service(this, jid);
 	this.emit('newService', this.services[jid]);
     }
@@ -204,9 +216,10 @@ Channels.ChannelsClient.prototype.getService = function(jid) {
 
 /** cb([String]) */
 Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
+    console.log('findChannelServices '+domain);
     var that = this;
     this.discoItems(domain, null, function(err, items) {
-	if (err) {
+	if (err || !items) {
 	    cb([]);
 	    return;
 	}
@@ -221,20 +234,22 @@ Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
 	    if (!item.node) {
 		that.discoInfo(item.jid, item.node, (function(jid) {
 		    return function(err, result) {
-			if (result && result.identities)
+			if (result && result.identities) {
 			    for(var j = 0; j < result.identities.length; j++) {
 				var identity = result.identities[j];
 				if (identity.category === 'pubsub' &&
 				    identity.type === 'channels')
 				    results.push(jid);
 			    }
+			}
 			done();
 		    };
 		})(item.jid));
 		pending++;
 	    }
 	}
-	next();
+	/* pending was initialized with 1 to catch empty results */
+	done();
     });
 };
 
@@ -255,6 +270,7 @@ Channels.ChannelsClient.prototype.findHomeServices = function() {
 };
 
 Channels.ChannelsClient.prototype.initHomeServices = function(jids) {
+    console.log('Home Services: ' + jids.join(', '));
     this.homeServices = jids;
     for(var i = 0; i < jids.length; i++)
 	this.getService(jids[i]);
@@ -264,19 +280,24 @@ Channels.ChannelsClient.prototype.initHomeServices = function(jids) {
  * Represents a channel-server instance
  */
 Channels.Service = function(client, jid) {
-    Channels.Service.call(this);
+    var that = this;
+    EventEmitter.call(this);
+
     this.client = client;
     this.jid = jid;
     this.nodes = {};
 
-    this.updateSubscriptions();
-    this.updateAffiliations();
+    setTimeout(function() {
+	that.updateSubscriptions();
+	that.updateAffiliations();
+    }, 10);
 };
 Channels.Service.prototype = Object.create(EventEmitter.prototype);
 Channels.Service.prototype.constructor = Channels.Service;
 
 Channels.Service.prototype.getNode = function(name) {
     if (!this.nodes.hasOwnProperty(name)) {
+	console.log('newNode ' + this.jid + ' ' + name);
 	this.nodes[name] = new Channels.Node(this, name);
 	this.emit('newNode', this.nodes[name]);
     }
@@ -286,6 +307,8 @@ Channels.Service.prototype.getNode = function(name) {
 Channels.Service.prototype.updateSubscriptions = function() {
     var that = this;
     this.client.getSubscriptions(this.jid, function(err, subscriptions) {
+	if (!subscriptions)
+	    return;
 	/* TODO: handle err, mark unseen as none */
 	for(var i = 0; i < subscriptions.length; i++) {
 	    var node = that.getNode(subscriptions[i].node);
@@ -298,6 +321,8 @@ Channels.Service.prototype.updateSubscriptions = function() {
 Channels.Service.prototype.updateAffiliations = function() {
     var that = this;
     this.client.getAffiliations(this.jid, function(err, affiliations) {
+	if (!affiliations)
+	    return;
 	/* TODO: handle err, mark unseen as none */
 	for(var i = 0; i < affiliations.length; i++) {
 	    var node = that.getNode(affiliations[i].node);
@@ -308,6 +333,8 @@ Channels.Service.prototype.updateAffiliations = function() {
 };
 
 Channels.Node = function(service, name) {
+    EventEmitter.call(this);
+
     this.name = name;
     this.affiliation = 'none';
     this.subscription = 'none';
