@@ -188,6 +188,31 @@ Channels.XmppClient.prototype.getAffiliations = function(jid, cb) {
     });
 };
 
+/** cb(error, [{ id: String, elements: [...] }]) */
+Channels.XmppClient.prototype.getItems = function(jid, node, cb) {
+    this.request($iq({ to: jid,
+		       type: 'get' }).
+		 c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+		 c('items', { node: node }),
+    function(reply) {
+	var items = [];
+	var pubsubEl = reply && reply.getElementsByTagName('pubsub')[0];
+	var itemsEl = pubsubEl && pubsubEl.getElementsByTagName('items')[0];
+	var itemEls = itemsEl && itemsEl.getElementsByTagName('item');
+	if (itemEls) {
+	    for(var i = 0; i < itemEls.length; i++) {
+		var itemEl = itemEls[i];
+		items.push({ id: itemEl.getAttribute('id'),
+			     elements: itemEl.childNodes
+			   });
+	    }
+	}
+	cb(null, items);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
+
 /**
  * High-level channels logic
  */
@@ -333,12 +358,34 @@ Channels.Service.prototype.updateAffiliations = function() {
 };
 
 Channels.Node = function(service, name) {
+    var that = this;
     EventEmitter.call(this);
 
+    this.service = service;
     this.name = name;
     this.affiliation = 'none';
     this.subscription = 'none';
+    this.items = {};  /* { id: node } */
+
+    setTimeout(function() {
+	that.updateItems();
+    }, 10);
 };
 Channels.Node.prototype = Object.create(EventEmitter.prototype);
 Channels.Node.prototype.constructor = Channels.Node;
 
+Channels.Node.prototype.updateItems = function() {
+    var that = this;
+    this.service.client.getItems(this.service.jid, this.name, function(error, items) {
+	if (error || !items)
+	    return;
+
+	for(var i = 0; i < items.length; i++) {
+	    var id = items[i].id;
+	    var elements = items[i].elements;
+	    if (id && elements && elements[0])
+		that.items[id] = elements[0];
+	}
+	that.emit('update');
+    });
+};
