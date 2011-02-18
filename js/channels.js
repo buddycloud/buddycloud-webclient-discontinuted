@@ -262,6 +262,7 @@ Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
 			if (result && result.identities) {
 			    for(var j = 0; j < result.identities.length; j++) {
 				var identity = result.identities[j];
+				console.log(jid + ': ' + identity.category + '/' + identity.type);
 				if (identity.category === 'pubsub' &&
 				    identity.type === 'channels')
 				    results.push(jid);
@@ -313,6 +314,7 @@ Channels.Service = function(client, jid) {
     this.nodes = {};
 
     setTimeout(function() {
+	console.log('service ' + that.jid + ' update');
 	that.updateSubscriptions();
 	that.updateAffiliations();
     }, 10);
@@ -365,7 +367,7 @@ Channels.Node = function(service, name) {
     this.name = name;
     this.affiliation = 'none';
     this.subscription = 'none';
-    this.items = {};  /* { id: node } */
+    this.items = []; /* [{ id: String, elements: [...] }] */
 
     setTimeout(function() {
 	that.updateItems();
@@ -374,6 +376,10 @@ Channels.Node = function(service, name) {
 Channels.Node.prototype = Object.create(EventEmitter.prototype);
 Channels.Node.prototype.constructor = Channels.Node;
 
+Channels.Node.prototype.sortItems = function() {
+    /* TODO */
+};
+
 Channels.Node.prototype.updateItems = function() {
     var that = this;
     this.service.client.getItems(this.service.jid, this.name, function(error, items) {
@@ -381,11 +387,16 @@ Channels.Node.prototype.updateItems = function() {
 	    return;
 
 	for(var i = 0; i < items.length; i++) {
-	    var id = items[i].id;
-	    var elements = items[i].elements;
-	    if (id && elements && elements[0])
-		that.items[id] = elements[0];
+	    var item = items[i];
+	    if (item.id && item.elements)
+		that.items.push(item);
 	}
+	that.sortItems();
 	that.emit('update');
     });
+};
+
+Channels.Node.prototype.getLastItem = function() {
+    var item = this.items[0];
+    return item && item.children && item.children[0];
 };
