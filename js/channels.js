@@ -398,5 +398,5 @@ Channels.Node.prototype.updateItems = function() {
 
 Channels.Node.prototype.getLastItem = function() {
     var item = this.items[0];
-    return item && item.children && item.children[0];
+    return item && item.elements && item.elements[0];
 };
