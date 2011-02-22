@@ -72,7 +72,9 @@ function MyChannelView(user) {
 		  subview('.ci3', '<span class="cict4"></span>', function() {
 			      var channelNode = that.nodes['/user/' + that.user + '/channel'];
 			      var lastItem = channelNode && channelNode.getLastItem();
-			      return lastItem && $(lastItem).find('title')[0].text();
+			      if (lastItem)
+				  console.log({lastItem:lastItem,user:that.user,channelNode:channelNode});
+			      return lastItem && $($(lastItem).find('title')[0] || $(lastItem).find('content')[0]).text();
 			  })];
 
     this.update();
