@@ -104,8 +104,8 @@ Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
 };
 
 /** disco with #info for <identity/>
- * 
- * cb(error, { identities: [{ category: String, type: String }], 
+ *
+ * cb(error, { identities: [{ category: String, type: String }],
  *             features: [String] })
  */
 Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
@@ -214,189 +214,115 @@ Channels.XmppClient.prototype.getItems = function(jid, node, cb) {
 };
 
 /**
- * High-level channels logic
+ * !!!
  */
-Channels.ChannelsClient = function(jid, password) {
-    Channels.XmppClient.apply(this, arguments);
-    var that = this;
+var cl = new Channels.XmppClient('astro@hq.c3d2.de', '***');
 
-    this.services = {};
 
-    this.on('online', function() {
-	that.conn.send($pres().c('status').t('buddycloud channels'));
-	that.findHomeServices();
-    });
+Channels.Store = function() {
 };
-Channels.ChannelsClient.prototype = Object.create(Channels.XmppClient.prototype);
-Channels.ChannelsClient.prototype.constructor = Channels.ChannelsClient;
+_.extend(Channels.Store, {
+    save: function() {
+	throw 'Not implemented';
+    },
 
-Channels.ChannelsClient.prototype.getService = function(jid) {
-    if (!this.services.hasOwnProperty(jid)) {
-	console.log('newService ' + jid);
-	this.services[jid] = new Channels.Service(this, jid);
-	this.emit('newService', this.services[jid]);
+    create: function(model) {
+	throw 'Not implemented';
+	return model;
+    },
+
+    update: function(model) {
+	throw 'Not implemented';
+    },
+
+    find: function(model) {
+	throw 'Not implemented';
+    },
+
+    findAll: function() {
+	throw 'Not implemented';
+    },
+
+    destroy: function(model) {
+	throw 'Not implemented';
     }
-    return this.services[jid];
+
+});
+
+Backbone.sync = function() {
 };
 
-/** cb([String]) */
-Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
-    console.log('findChannelServices '+domain);
-    var that = this;
-    this.discoItems(domain, null, function(err, items) {
-	if (err || !items) {
-	    cb([]);
-	    return;
-	}
+window.channelEvents = new EventEmitter();
 
-	var pending = 1, results = [], done = function() {
-	    pending--;
-	    if (pending < 1)
-		cb(results);
-	};
-	for(var i = 0; i < items.length; i++) {
-	    var item = items[i];
-	    if (!item.node) {
-		that.discoInfo(item.jid, item.node, (function(jid) {
-		    return function(err, result) {
-			if (result && result.identities) {
-			    for(var j = 0; j < result.identities.length; j++) {
-				var identity = result.identities[j];
-				console.log(jid + ': ' + identity.category + '/' + identity.type);
-				if (identity.category === 'pubsub' &&
-				    identity.type === 'channels')
-				    results.push(jid);
-			    }
-			}
-			done();
-		    };
-		})(item.jid));
-		pending++;
-	    }
-	}
-	/* pending was initialized with 1 to catch empty results */
-	done();
-    });
-};
+window.Item = Backbone.Model.extend({
+});
+window.Items = Backbone.Collection.extend({
+    model: window.Item,
+    localStorage: new Channels.Store()
+});
 
-Channels.ChannelsClient.prototype.findHomeServices = function() {
-    var that = this;
-    var myServer = Strophe.getDomainFromJid(this.conn.jid);
-    this.findChannelServices(myServer, function(jids) {
-	if (jids.length > 0) {
-	    that.initHomeServices(jids);
-	} else
-	    that.findChannelServices('buddycloud.com', function(jids) {
-		if (jids.length > 0) {
-		    that.initHomeServices(jids);
-		} else
-		    that.emit('error', 'Cannot find channel services on the network');
+window.Node = Backbone.Model.extend({
+    localStorage: new Channels.Store(),
+
+    initialize: function() {
+	var that = this;
+	this.set({ items: new window.Items() });
+	cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
+	    _.forEach(items, function(item) {
+		that.get('items').create({ id: item.id, elements: item.elements });
 	    });
-    });
-};
+	});
 
-Channels.ChannelsClient.prototype.initHomeServices = function(jids) {
-    console.log('Home Services: ' + jids.join(', '));
-    this.homeServices = jids;
-    for(var i = 0; i < jids.length; i++)
-	this.getService(jids[i]);
-};
-
-/**
- * Represents a channel-server instance
- */
-Channels.Service = function(client, jid) {
-    var that = this;
-    EventEmitter.call(this);
-
-    this.client = client;
-    this.jid = jid;
-    this.nodes = {};
-
-    setTimeout(function() {
-	console.log('service ' + that.jid + ' update');
-	that.updateSubscriptions();
-	that.updateAffiliations();
-    }, 10);
-};
-Channels.Service.prototype = Object.create(EventEmitter.prototype);
-Channels.Service.prototype.constructor = Channels.Service;
-
-Channels.Service.prototype.getNode = function(name) {
-    if (!this.nodes.hasOwnProperty(name)) {
-	console.log('newNode ' + this.jid + ' ' + name);
-	this.nodes[name] = new Channels.Node(this, name);
-	this.emit('newNode', this.nodes[name]);
+	window.channelEvents.emit('newNode', this);
     }
-    return this.nodes[name];
-};
+});
 
-Channels.Service.prototype.updateSubscriptions = function() {
-    var that = this;
-    this.client.getSubscriptions(this.jid, function(err, subscriptions) {
-	if (!subscriptions)
-	    return;
-	/* TODO: handle err, mark unseen as none */
-	for(var i = 0; i < subscriptions.length; i++) {
-	    var node = that.getNode(subscriptions[i].node);
-	    node.subscription = subscriptions[i].subscription;
-	    node.emit('update');
-	}
-    });
-};
+window.Service = Backbone.Model.extend({
+    initialize: function() {
+	var jid = this.get('id');
+	this.nodes = {};
 
-Channels.Service.prototype.updateAffiliations = function() {
-    var that = this;
-    this.client.getAffiliations(this.jid, function(err, affiliations) {
-	if (!affiliations)
-	    return;
-	/* TODO: handle err, mark unseen as none */
-	for(var i = 0; i < affiliations.length; i++) {
-	    var node = that.getNode(affiliations[i].node);
-	    node.affiliation = affiliations[i].affiliation;
-	    node.emit('update');
-	}
-    });
-};
+	var that = this;
+	cl.getSubscriptions(jid, function(err, subscriptions) {
+	    _.forEach(subscriptions, function(subscription) {
+		that.getNode(subscription.node).set({ subscription: subscription.subscription });
+	    });
+	});
+	cl.getAffiliations(jid, function(err, affiliations) {
+	    _.forEach(affiliations, function(affiliation) {
+		that.getNode(affiliation.node).set({ affiliation: affiliation.affiliation });
+	    });
+	});
+    },
 
-Channels.Node = function(service, name) {
-    var that = this;
-    EventEmitter.call(this);
+    getNode: function(node) {
+	if (this.nodes.hasOwnProperty(node))
+	    return this.nodes[node];
+	else
+	    return (this.nodes[node] = new window.Node({ id: node, service: this }));
+    }
+});
+cl.on('online', function() {
+    new window.Service({ id: 'sandbox.buddycloud.com' });
+});
 
-    this.service = service;
-    this.name = name;
-    this.affiliation = 'none';
-    this.subscription = 'none';
-    this.items = []; /* [{ id: String, elements: [...] }] */
+window.Channel = Backbone.Collection.extend({
+    initialize: function() {
+	window.channelEvents.emit('newChannel', this);
+    }
+});
 
-    setTimeout(function() {
-	that.updateItems();
-    }, 10);
-};
-Channels.Node.prototype = Object.create(EventEmitter.prototype);
-Channels.Node.prototype.constructor = Channels.Node;
+window.channels = new (Backbone.Collection.extend({
+    model: window.Channel,
 
-Channels.Node.prototype.sortItems = function() {
-    /* TODO */
-};
+    initialize: function() {
+	var that = this;
+	window.channelEvents.on('newNode', function(node) {
+	    var id = node.get('id'), m;
+	    if ((m = id.match(/^\/user\/([^\/]+)/))) {
+		that.create({ id: m[1] });
+	    }
+	});
+    }
+}))();
 
-Channels.Node.prototype.updateItems = function() {
-    var that = this;
-    this.service.client.getItems(this.service.jid, this.name, function(error, items) {
-	if (error || !items)
-	    return;
-
-	for(var i = 0; i < items.length; i++) {
-	    var item = items[i];
-	    if (item.id && item.elements)
-		that.items.push(item);
-	}
-	that.sortItems();
-	that.emit('update');
-    });
-};
-
-Channels.Node.prototype.getLastItem = function() {
-    var item = this.items[0];
-    return item && item.elements && item.elements[0];
-};
