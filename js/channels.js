@@ -13,6 +13,8 @@ var Channels = {};
 
 /**
  * XmppClient implements the basic protocols.
+ * 
+ * TODO: extend Backbone.Events
  */
 Channels.XmppClient = function(jid, password) {
     EventEmitter.call(this);
@@ -214,12 +216,122 @@ Channels.XmppClient.prototype.getItems = function(jid, node, cb) {
 };
 
 /**
+ * High-level channels logic
+ */
+Channels.ChannelsClient = function(jid, password) {
+    Channels.XmppClient.apply(this, arguments);
+    var that = this;
+
+    /* { domain: { jids: [String], waiting: [Function] } } */
+    this.domainServices = {};
+
+    this.on('online', function() {
+	console.log('ChannelsClient online');
+	that.conn.send($pres().c('status').t('buddycloud channels'));
+    });
+};
+Channels.ChannelsClient.prototype = Object.create(Channels.XmppClient.prototype);
+Channels.ChannelsClient.prototype.constructor = Channels.ChannelsClient;
+
+/** 
+ * Discover items of a domain and callback with the ones that have a
+ * pubsub/channels identity.
+ * 
+ * cb([String])
+ */
+Channels.ChannelsClient.prototype.findChannelServices1 = function(domain, cb) {
+    console.log('findChannelServices '+domain);
+    var that = this;
+    this.discoItems(domain, null, function(err, items) {
+	if (err || !items) {
+	    cb([]);
+	    return;
+	}
+
+	var pending = 1, results = [], done = function() {
+	    pending--;
+	    if (pending < 1)
+		cb(results);
+	};
+	for(var i = 0; i < items.length; i++) {
+	    var item = items[i];
+	    if (!item.node) {
+		that.discoInfo(item.jid, item.node, (function(jid) {
+		    return function(err, result) {
+			if (result && result.identities) {
+			    for(var j = 0; j < result.identities.length; j++) {
+				var identity = result.identities[j];
+				console.log(jid + ': ' + identity.category + '/' + identity.type);
+				if (identity.category === 'pubsub' &&
+				    identity.type === 'channels')
+				    results.push(jid);
+			    }
+			}
+			done();
+		    };
+		})(item.jid));
+		pending++;
+	    }
+	}
+	/* pending was initialized with 1 to catch empty results */
+	done();
+    });
+};
+
+/**
+ * Cached interface to avoid duplicate queries
+ */
+Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
+    var domainService;
+    if (this.domainServices.hasOwnProperty(domain)) {
+	domainService = this.domainServices[domain];
+	if (domainService.hasOwnProperty('jids')) {
+	    /* discovered before */
+	    cb(domainService.jids);
+	} else {
+	    /* enqueue callback */
+	    domainService.waiting.push(cb);
+	}
+    } else {
+	this.domainServices[domain] = domainService =
+	    { waiting: [cb] };
+	this.findChannelServices1(domain, function(jids) {
+	    /* cache it */
+	    domainService.jids = jids;
+	    /* trigger all waiting callbacks */
+	    var cbs = domainService.waiting;
+	    delete domainService.waiting;
+	    _.forEach(cbs, function(cb) {
+		cb(jids);
+	    });
+	});
+    }
+};
+
+Channels.ChannelsClient.prototype.findUserService = function(jid) {
+    var that = this;
+    var myServer = Strophe.getDomainFromJid(jid);
+    this.findChannelServices(myServer, function(jids) {
+	if (jids.length > 0) {
+	    that.initHomeServices(jids);
+	} else
+	    that.findChannelServices('buddycloud.com', function(jids) {
+		if (jids.length > 0) {
+		    that.initHomeServices(jids);
+		} else
+		    that.emit('error', 'Cannot find channel services on the network');
+	    });
+    });
+};
+
+
+/**
  * !!!
  */
-var cl = new Channels.XmppClient('astro@hq.c3d2.de', '***');
+var cl = new Channels.ChannelsClient('astro@hq.c3d2.de', '***');
 
 
-Channels.Store = function() {
+/*Channels.Store = function() {
 };
 _.extend(Channels.Store, {
     save: function() {
@@ -247,33 +359,28 @@ _.extend(Channels.Store, {
 	throw 'Not implemented';
     }
 
-});
+});*/
 
 Backbone.sync = function() {
+    console.log('Backbone.sync ' + _.toArray(arguments).join(', '));
 };
-
-window.channelEvents = new EventEmitter();
 
 window.Item = Backbone.Model.extend({
 });
 window.Items = Backbone.Collection.extend({
-    model: window.Item,
-    localStorage: new Channels.Store()
+    model: window.Item
 });
 
 window.Node = Backbone.Model.extend({
-    localStorage: new Channels.Store(),
-
     initialize: function() {
 	var that = this;
 	this.set({ items: new window.Items() });
 	cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
-		that.get('items').create({ id: item.id, elements: item.elements });
+		that.get('items').
+		    create({ id: item.id, elements: item.elements });
 	    });
 	});
-
-	window.channelEvents.emit('newNode', this);
     }
 });
 
@@ -285,44 +392,99 @@ window.Service = Backbone.Model.extend({
 	var that = this;
 	cl.getSubscriptions(jid, function(err, subscriptions) {
 	    _.forEach(subscriptions, function(subscription) {
-		that.getNode(subscription.node).set({ subscription: subscription.subscription });
+		that.getNode(subscription.node).
+		    set({ subscription: subscription.subscription });
 	    });
 	});
 	cl.getAffiliations(jid, function(err, affiliations) {
 	    _.forEach(affiliations, function(affiliation) {
-		that.getNode(affiliation.node).set({ affiliation: affiliation.affiliation });
+		that.getNode(affiliation.node).
+		    set({ affiliation: affiliation.affiliation });
 	    });
 	});
     },
 
-    getNode: function(node) {
-	if (this.nodes.hasOwnProperty(node))
+    getNode: function(name) {
+	if (!this.nodes.hasOwnProperty(name)) {
+	    var node = new window.Node({ id: node, service: this });
+	    this.nodes[name] = node;
+	    this.trigger('newNode', node);
+	    return node;
+	} else
 	    return this.nodes[node];
-	else
-	    return (this.nodes[node] = new window.Node({ id: node, service: this }));
     }
 });
-cl.on('online', function() {
-    new window.Service({ id: 'sandbox.buddycloud.com' });
-});
 
-window.Channel = Backbone.Collection.extend({
+window.Channel = Backbone.Model.extend({
     initialize: function() {
-	window.channelEvents.emit('newChannel', this);
+	console.log({newChannel:this.attributes})
+    },
+
+    addNode: function(nodeTail, node) {
+	var attrs = {};
+	attrs['node:' + nodeTail] = node;
+	this.set(attrs);
     }
 });
 
-window.channels = new (Backbone.Collection.extend({
+/**
+ * Contains all the channels and performs discovery on a per-user
+ * base. This forward approach ensures we always seek the responsible
+ * server first before adding nodes to a channel. See hookUser().
+ */
+window.Channels = Backbone.Collection.extend({
     model: window.Channel,
 
     initialize: function() {
+	this.services = {};
+
 	var that = this;
-	window.channelEvents.on('newNode', function(node) {
-	    var id = node.get('id'), m;
-	    if ((m = id.match(/^\/user\/([^\/]+)/))) {
-		that.create({ id: m[1] });
-	    }
+	cl.on('online', function() {
+	    console.log('online');
+	    that.hookUser(cl.jid);
+	});
+	/* TODO: hook roster */
+    },
+
+    /**
+     * @param jid (Domain of) the service
+     */
+    getService: function(jid) {
+	if (!this.services.hasOwnProperty(jid))
+	    this.services[jid] = new window.Service({ id: jid });
+	return this.services[jid];
+    },
+
+    /**
+     * @param jid User
+     */
+    getChannel: function(jid) {
+	var channel = this.detect(function(channel) {
+	    return channel.get('id') === jid;
+	});
+	if (!channel) {
+	    channel = new window.Channel({ id: jid });
+	    this.add(channel);
+	}
+	return channel;
+    },
+
+    hookUser: function(user) {
+	var that = this;
+	var nodeHead = '/user/' + user + '/';
+	cl.findUserService(user, function(serviceJids) {
+	    _.forEach(serviceJids, function(serviceJid) {
+		var service = that.getService(serviceJid);
+		service.bind('newNode', function(node) {
+		    var name = node.get('id');
+		    if (name.indexOf(nodeHead) === 0) {
+			var channel = that.getChannel(user);
+			var nodeTail = name.substr(nodeHead.length);
+			channel.addNode(nodeTail, node);
+		    }
+		});
+	    });
 	});
     }
-}))();
+});
 

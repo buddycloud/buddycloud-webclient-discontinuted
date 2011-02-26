@@ -20,14 +20,27 @@ $(function() {
     var MyChannelView = Backbone.View.extend({
 	template: _.template($('#my_channel_template').html()),
 
-	initialize: function(channel) {
-	    this.channel = channel;
+	initialize: function(model) {
+	    this.model = model;
 	    this.el = $('<div></div>');
 	},
 
 	render: function() {
-	    this.el.html(this.template({ user: this.channel.get('id') }));
+	    var vars = { user: this.model.get('id'),
+			 channel: this.peek('channel'),
+			 geoPrevious: this.peek('geo/previous'),
+			 geoCurrent: this.peek('geo/current'),
+			 geoFuture: this.peek('geo/future')
+		       };
+	    this.el.html(this.template(vars));
 	    return this;
+	},
+
+	/**
+	 * Get content of the last entry of a node.
+	 */
+	peek: function(nodeTail) {
+	    return "foo in " + nodeTail;
 	}
     });
 
@@ -35,10 +48,12 @@ $(function() {
 	el: '#wrap',
 
 	initialize: function() {
+	    this.channels = new window.Channels();
 	    (new MyMessageView()).render();
 
-	    window.channelEvents.on('newChannel', function(channel) {
-		$('#col1').append(new MyChannelView(channel).render().el);
+	    this.channels.bind('all', function() {
+		console.log('channels ' + _.toArray(arguments).join(', '));
+		//$('#col1').append(new MyChannelView(channel).render().el);
 	    });
 	}
     });
