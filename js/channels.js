@@ -17,6 +17,7 @@ var Channels = {};
 Channels.XmppClient = function(jid, password) {
     var that = this;
 
+    this.jid = Strophe.getBareJidFromJid(jid);
     this.conn = new Strophe.Connection('/http-bind/');
 
     this.conn.addHandler(function(stanza) {
@@ -304,19 +305,15 @@ Channels.ChannelsClient.prototype.findChannelServices = function(domain, cb) {
     }
 };
 
-Channels.ChannelsClient.prototype.findUserService = function(jid) {
+Channels.ChannelsClient.prototype.findUserService = function(jid, cb) {
     var that = this;
     var myServer = Strophe.getDomainFromJid(jid);
     this.findChannelServices(myServer, function(jids) {
 	if (jids.length > 0) {
-	    that.initHomeServices(jids);
-	} else
-	    that.findChannelServices('buddycloud.com', function(jids) {
-		if (jids.length > 0) {
-		    that.initHomeServices(jids);
-		} else
-		    that.trigger('error', new Error('Cannot find channel services on the network'));
-	    });
+	    cb(jids);
+	} else {
+	    that.findChannelServices('buddycloud.com', cb);
+	}
     });
 };
 
@@ -400,14 +397,16 @@ window.Service = Backbone.Model.extend({
 	});
     },
 
+    /** Adds on demand */
     getNode: function(name) {
 	if (!this.nodes.hasOwnProperty(name)) {
-	    var node = new window.Node({ id: node, service: this });
+	    var node = new window.Node({ id: name, service: this });
 	    this.nodes[name] = node;
+	    /* Notify potential channels */
 	    this.trigger('newNode', node);
 	    return node;
 	} else
-	    return this.nodes[node];
+	    return this.nodes[name];
     }
 });
 
@@ -455,9 +454,7 @@ window.Channels = Backbone.Collection.extend({
      * @param jid User
      */
     getChannel: function(jid) {
-	var channel = this.detect(function(channel) {
-	    return channel.get('id') === jid;
-	});
+	var channel = this.get(jid);
 	if (!channel) {
 	    channel = new window.Channel({ id: jid });
 	    this.add(channel);

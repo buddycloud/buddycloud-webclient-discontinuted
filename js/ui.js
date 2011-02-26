@@ -9,7 +9,7 @@ $(function() {
 
 	initialize: function() {
 	    _.bindAll(this, 'render');
-	    cl.on('online', this.render);
+	    cl.bind('online', this.render);
 	},
 
 	render: function() {
