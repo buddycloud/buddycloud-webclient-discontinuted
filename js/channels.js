@@ -13,11 +13,8 @@ var Channels = {};
 
 /**
  * XmppClient implements the basic protocols.
- * 
- * TODO: extend Backbone.Events
  */
 Channels.XmppClient = function(jid, password) {
-    EventEmitter.call(this);
     var that = this;
 
     this.conn = new Strophe.Connection('/http-bind/');
@@ -32,7 +29,7 @@ Channels.XmppClient = function(jid, password) {
 	console.log({connStatus:status});
 	switch(status) {
 	    case Strophe.Status.CONNECTED:
-		that.emit('online');
+		that.trigger('online');
 		break;
 	    case Strophe.Status.DISCONNECTED:
 		that.onDisconnect();
@@ -40,8 +37,7 @@ Channels.XmppClient = function(jid, password) {
 	}
     });
 };
-Channels.XmppClient.prototype = Object.create(EventEmitter.prototype);
-Channels.XmppClient.prototype.constructor = Channels.Client;
+_.extend(Channels.XmppClient.prototype, Backbone.Events);
 
 Channels.XmppClient.prototype.request = function(stanza, callback, errback) {
     this.conn.sendIQ(stanza, function(reply) {
@@ -225,7 +221,7 @@ Channels.ChannelsClient = function(jid, password) {
     /* { domain: { jids: [String], waiting: [Function] } } */
     this.domainServices = {};
 
-    this.on('online', function() {
+    this.bind('online', function() {
 	console.log('ChannelsClient online');
 	that.conn.send($pres().c('status').t('buddycloud channels'));
     });
@@ -319,7 +315,7 @@ Channels.ChannelsClient.prototype.findUserService = function(jid) {
 		if (jids.length > 0) {
 		    that.initHomeServices(jids);
 		} else
-		    that.emit('error', 'Cannot find channel services on the network');
+		    that.trigger('error', new Error('Cannot find channel services on the network'));
 	    });
     });
 };
@@ -439,7 +435,7 @@ window.Channels = Backbone.Collection.extend({
 	this.services = {};
 
 	var that = this;
-	cl.on('online', function() {
+	cl.bind('online', function() {
 	    console.log('online');
 	    that.hookUser(cl.jid);
 	});
