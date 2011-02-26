@@ -51,9 +51,9 @@ $(function() {
 	    this.channels = new window.Channels();
 	    (new MyMessageView()).render();
 
-	    this.channels.bind('all', function() {
-		console.log('channels ' + _.toArray(arguments).join(', '));
-		//$('#col1').append(new MyChannelView(channel).render().el);
+	    this.channels.bind('add', function(channel) {
+		console.log({channels: arguments});
+		$('#col1').append(new MyChannelView(channel).render().el);
 	    });
 	}
     });
