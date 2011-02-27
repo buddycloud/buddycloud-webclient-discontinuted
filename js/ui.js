@@ -59,7 +59,7 @@ $(function() {
 	el: '#wrap',
 
 	initialize: function() {
-	    this.channels = new window.Channels();
+	    this.channels = new Channels.Channels();
 	    (new MyMessageView()).render();
 
 	    this.channels.bind('add', function(channel) {

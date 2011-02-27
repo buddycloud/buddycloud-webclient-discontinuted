@@ -358,16 +358,16 @@ Backbone.sync = function() {
     console.log('Backbone.sync ' + _.toArray(arguments).join(', '));
 };
 
-window.Item = Backbone.Model.extend({
+Channels.Item = Backbone.Model.extend({
 });
-window.Items = Backbone.Collection.extend({
-    model: window.Item
+Channels.Items = Backbone.Collection.extend({
+    model: Channels.Item
 });
 
-window.Node = Backbone.Model.extend({
+Channels.Node = Backbone.Model.extend({
     initialize: function() {
 	var that = this;
-	var items = new window.Items();
+	var items = new Channels.Items();
 	items.bind('all', function() {
 	    /* Propagate any change to the node */
 	    that.trigger('change:items', that);
@@ -378,7 +378,7 @@ window.Node = Backbone.Model.extend({
 	cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
 		that.get('items').
-		    add(new window.Item({ id: item.id, elements: item.elements }));
+		    add(new Channels.Item({ id: item.id, elements: item.elements }));
 	    });
 	});
     },
@@ -389,7 +389,7 @@ window.Node = Backbone.Model.extend({
     }
 });
 
-window.Service = Backbone.Model.extend({
+Channels.Service = Backbone.Model.extend({
     initialize: function() {
 	var jid = this.get('id');
 
@@ -412,7 +412,7 @@ window.Service = Backbone.Model.extend({
     getNode: function(name) {
 	var node = this.get('node:' + name);
 	if (!node) {
-	    node = new window.Node({ id: name, service: this });
+	    node = new Channels.Node({ id: name, service: this });
 	    var attrs = {};
 	    attrs['node:' + name] = node;
 	    this.set(attrs);
@@ -421,7 +421,7 @@ window.Service = Backbone.Model.extend({
     },
 
     /**
-     * @return [{ nodeTail: String, node: window.Node }]
+     * @return [{ nodeTail: String, node: Channels.Node }]
      */
     getUserNodes: function(user) {
 	var nameHead = 'node:/user/' + user + '/';
@@ -437,7 +437,7 @@ window.Service = Backbone.Model.extend({
     }
 });
 
-window.Channel = Backbone.Model.extend({
+Channels.Channel = Backbone.Model.extend({
     initialize: function() {
 	console.log({newChannel:this.attributes})
     },
@@ -477,8 +477,8 @@ window.Channel = Backbone.Model.extend({
  * base. This forward approach ensures we always seek the responsible
  * server first before adding nodes to a channel. See hookUser().
  */
-window.Channels = Backbone.Collection.extend({
-    model: window.Channel,
+Channels.Channels = Backbone.Collection.extend({
+    model: Channels.Channel,
 
     initialize: function() {
 	this.services = {};
@@ -505,7 +505,7 @@ window.Channels = Backbone.Collection.extend({
      */
     getService: function(jid) {
 	if (!this.services.hasOwnProperty(jid))
-	    this.services[jid] = new window.Service({ id: jid });
+	    this.services[jid] = new Channels.Service({ id: jid });
 	return this.services[jid];
     },
 
@@ -517,7 +517,7 @@ window.Channels = Backbone.Collection.extend({
     getChannel: function(jid) {
 	var channel = this.get(jid);
 	if (!channel) {
-	    channel = new window.Channel({ id: jid });
+	    channel = new Channels.Channel({ id: jid });
 	    this.add(channel);
 	}
 	return channel;
