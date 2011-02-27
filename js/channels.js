@@ -416,9 +416,24 @@ window.Service = Backbone.Model.extend({
 	    var attrs = {};
 	    attrs['node:' + name] = node;
 	    this.set(attrs);
-	    this.trigger('newNode', node);
 	}
 	return node;
+    },
+
+    /**
+     * @return [{ nodeTail: String, node: window.Node }]
+     */
+    getUserNodes: function(user) {
+	var nameHead = 'node:/user/' + user + '/';
+	var results = [];
+	_.each(this.toJSON(), function(node, name) {
+	    if (name.indexOf(nameHead) === 0) {
+		var nodeTail = name.substr(nameHead.length);
+		results.push({ nodeTail: nodeTail,
+			       node: node });
+	    }
+	});
+	return results;
     }
 });
 
@@ -433,9 +448,6 @@ window.Channel = Backbone.Model.extend({
 	this.set(attrs);
 
 	var that = this;
-	node.bind('all', function(ev) {
-	    console.log('node triggered ' + ev);
-	});
 	node.bind('change:items', function() {
 	    /* Propagate */
 	    console.log('Propagate change:items from node to channel');
@@ -446,6 +458,17 @@ window.Channel = Backbone.Model.extend({
     /* Simple getter */
     getNode: function(nodeTail) {
 	return this.get('node:' + nodeTail);
+    },
+
+    /**
+     * Grab user's channels from service
+     */
+    syncNodes: function(service) {
+	var that = this;
+	_.forEach(service.getUserNodes(this.get('id')), function(userNode) {
+	    if (!that.getNode(userNode.nodeTail))
+		that.addNode(userNode.nodeTail, userNode.node);
+	});
     }
 });
 
@@ -464,8 +487,17 @@ window.Channels = Backbone.Collection.extend({
 	cl.bind('online', function() {
 	    console.log('online');
 	    that.hookUser(cl.jid);
+
+	    cl.getRoster(function(error, roster) {
+		if (!roster)
+		    return;
+		_.forEach(roster, function(item) {
+		    that.hookUser(item.jid);
+		});
+	    });
 	});
-	/* TODO: hook roster */
+
+	/* TODO: hook roster updates */
     },
 
     /**
@@ -492,18 +524,18 @@ window.Channels = Backbone.Collection.extend({
     },
 
     hookUser: function(user) {
+	console.log('hookUser ' + user);
 	var that = this;
-	var nodeHead = '/user/' + user + '/';
 	cl.findUserService(user, function(serviceJids) {
 	    _.forEach(serviceJids, function(serviceJid) {
 		var service = that.getService(serviceJid);
-		service.bind('newNode', function(node) {
-		    var name = node.get('id');
-		    if (name.indexOf(nodeHead) === 0) {
-			var channel = that.getChannel(user);
-			var nodeTail = name.substr(nodeHead.length);
-			channel.addNode(nodeTail, node);
-		    }
+		var channel = that.getChannel(user);
+		/* nodes known already? populate channel! */
+		channel.syncNodes(service);
+
+		service.bind('change', function() {
+		    /* new nodes: populate channel */
+		    channel.syncNodes(service);
 		});
 	    });
 	});
