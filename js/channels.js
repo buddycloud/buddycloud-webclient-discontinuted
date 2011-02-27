@@ -15,16 +15,19 @@ var Channels = {};
  * XmppClient implements the basic protocols.
  */
 Channels.XmppClient = function(jid, password) {
-    var that = this;
-
-    this.jid = Strophe.getBareJidFromJid(jid);
     this.conn = new Strophe.Connection('/http-bind/');
 
     this.conn.addHandler(function(stanza) {
 	/*console.log('<<< ' + Strophe.serialize(stanza));*/
 	return true;
     });
+};
+_.extend(Channels.XmppClient.prototype, Backbone.Events);
 
+Channels.XmppClient.prototype.connect = function(jid, password) {
+    var that = this;
+
+    this.jid = Strophe.getBareJidFromJid(jid);
     /* TODO: memorize for later reconnect */
     this.conn.connect(jid, password, function(status) {
 	console.log({connStatus:status});
@@ -38,7 +41,6 @@ Channels.XmppClient = function(jid, password) {
 	}
     });
 };
-_.extend(Channels.XmppClient.prototype, Backbone.Events);
 
 Channels.XmppClient.prototype.request = function(stanza, callback, errback) {
     this.conn.sendIQ(stanza, function(reply) {
@@ -321,7 +323,7 @@ Channels.ChannelsClient.prototype.findUserService = function(jid, cb) {
 /**
  * !!!
  */
-var cl = new Channels.ChannelsClient('astro@hq.c3d2.de', '***');
+Channels.cl = new Channels.ChannelsClient();
 
 
 /*Channels.Store = function() {
@@ -375,7 +377,7 @@ Channels.Node = Backbone.Model.extend({
 	this.set({ items: items });
 
 	/* Fetch items */
-	cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
+	Channels.cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
 		that.get('items').
 		    add(new Channels.Item({ id: item.id, elements: item.elements }));
@@ -394,13 +396,13 @@ Channels.Service = Backbone.Model.extend({
 	var jid = this.get('id');
 
 	var that = this;
-	cl.getSubscriptions(jid, function(err, subscriptions) {
+	Channels.cl.getSubscriptions(jid, function(err, subscriptions) {
 	    _.forEach(subscriptions, function(subscription) {
 		that.getNode(subscription.node).
 		    set({ subscription: subscription.subscription });
 	    });
 	});
-	cl.getAffiliations(jid, function(err, affiliations) {
+	Channels.cl.getAffiliations(jid, function(err, affiliations) {
 	    _.forEach(affiliations, function(affiliation) {
 		that.getNode(affiliation.node).
 		    set({ affiliation: affiliation.affiliation });
@@ -484,11 +486,11 @@ Channels.Channels = Backbone.Collection.extend({
 	this.services = {};
 
 	var that = this;
-	cl.bind('online', function() {
+	Channels.cl.bind('online', function() {
 	    console.log('online');
-	    that.hookUser(cl.jid);
+	    that.hookUser(Channels.cl.jid);
 
-	    cl.getRoster(function(error, roster) {
+	    Channels.cl.getRoster(function(error, roster) {
 		if (!roster)
 		    return;
 		_.forEach(roster, function(item) {
@@ -526,7 +528,7 @@ Channels.Channels = Backbone.Collection.extend({
     hookUser: function(user) {
 	console.log('hookUser ' + user);
 	var that = this;
-	cl.findUserService(user, function(serviceJids) {
+	Channels.cl.findUserService(user, function(serviceJids) {
 	    _.forEach(serviceJids, function(serviceJid) {
 		var service = that.getService(serviceJid);
 		var channel = that.getChannel(user);

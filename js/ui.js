@@ -3,17 +3,50 @@ function xmlEscape(s) {
 }
 
 $(function() {
+    var LoginView = Backbone.View.extend({
+	el: '#login',
+
+	initialize: function() {
+	},
+
+	show: function() {
+	    $(this.el).show();
+	    this.enableAll();
+	},
+	hide: function() {
+	    $(this.el).hide();
+	},
+
+	events: {
+	    'submit form': 'login'
+	},
+
+	login: function() {
+	    this.disableAll();
+	    Channels.cl.connect(this.$('#login_jid').val(), this.$('#login_password').val());
+
+	    return false;
+	},
+
+	disableAll: function() {
+	    this.$('input').attr('disabled', 'disabled');
+	},
+	enableAll: function() {
+	    this.$('input').removeAttr('disabled');
+	}
+    });
+
     var MyMessageView = Backbone.View.extend({
 	el: '.my_message',
 	template: _.template($('#my_message_template').html()),
 
 	initialize: function() {
 	    _.bindAll(this, 'render');
-	    cl.bind('online', this.render);
+	    Channels.cl.bind('online', this.render);
 	},
 
 	render: function() {
-	    $(this.el).html(this.template({ user: cl.jid, desc1: 'foo', desc2: 'bar' }));
+	    $(this.el).html(this.template({ user: Channels.cl.jid, desc1: 'foo', desc2: 'bar' }));
 	}
     });
 
@@ -55,7 +88,7 @@ $(function() {
 	}
     });
 
-    var appView = Backbone.View.extend({
+    var AppView = Backbone.View.extend({
 	el: '#wrap',
 
 	initialize: function() {
@@ -66,8 +99,70 @@ $(function() {
 		console.log({channels: arguments});
 		$('#col1').append(new MyChannelView(channel).render().el);
 	    });
+	},
+
+	show: function() {
+	    $(this.el).show();
+	},
+	hide: function() {
+	    $(this.el).hide();
 	}
     });
 
-    new appView();
+    var AppController = Backbone.Controller.extend({
+	initialize: function() {
+	    this.login = new LoginView();
+	    this.view = new AppView();
+	},
+
+	routes: {
+	    'login': 'login',
+	    '': 'index',
+	    'browse/:user': 'browseUser'
+	},
+
+	login: function() {
+	    if (this.mustLogin()) {
+		this.view.hide();
+		this.login.show();
+
+		var that = this;
+		var success = function() {
+		    Channels.cl.unbind('online', success);
+		    console.log({'login success':Channels.cl});
+		    window.location = '#';
+		};
+		Channels.cl.bind('online', success);
+	    } else {
+		window.location = '#';
+	    }
+	},
+
+	index: function() {
+	    if (this.mustLogin()) return;
+
+	    this.login.hide();
+	    this.view.show();
+	},
+
+	browseUser: function(user) {
+	    if (this.mustLogin()) return;
+
+	    console.log('browse ' + user);
+	},
+
+	/**
+	 * Helper
+	 */
+	mustLogin: function() {
+	    if (!Channels.cl.conn.authenticated) {
+		window.location = '#login';
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+    });
+    new AppController();
+    Backbone.history.start();
 });
