@@ -80,12 +80,16 @@
 	      </div>
 	      <ul>
 		<li class="ci1"><%= xmlEscape(user) %></li>
+		<% if (geoFuture || geoCurrent || geoPrevious) { %>
 		<li class="ci2">
 		  <span class="cict1"><%= xmlEscape(geoFuture) %></span>
 		  <span class="cict2"><%= xmlEscape(geoCurrent) %></span>
 		  <span class="cict3 strike"><%= xmlEscape(geoPrevious) %></span>
 		</li>
+		<% } %>
+		<% if (channel) { %>
 		<li class="ci3"><%= xmlEscape(channel) %></li>
+		<% } %>
 	      </ul>
 	    </div>
 	  </script>

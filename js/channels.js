@@ -367,20 +367,31 @@ window.Items = Backbone.Collection.extend({
 window.Node = Backbone.Model.extend({
     initialize: function() {
 	var that = this;
-	this.set({ items: new window.Items() });
+	var items = new window.Items();
+	items.bind('all', function() {
+	    /* Propagate any change to the node */
+	    that.trigger('change:items', that);
+	});
+	this.set({ items: items });
+
+	/* Fetch items */
 	cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
 		that.get('items').
-		    create({ id: item.id, elements: item.elements });
+		    add(new window.Item({ id: item.id, elements: item.elements }));
 	    });
 	});
+    },
+
+    getLastItem: function() {
+	var items = this.get('items');
+	return items.at(0);
     }
 });
 
 window.Service = Backbone.Model.extend({
     initialize: function() {
 	var jid = this.get('id');
-	this.nodes = {};
 
 	var that = this;
 	cl.getSubscriptions(jid, function(err, subscriptions) {
@@ -399,14 +410,15 @@ window.Service = Backbone.Model.extend({
 
     /** Adds on demand */
     getNode: function(name) {
-	if (!this.nodes.hasOwnProperty(name)) {
-	    var node = new window.Node({ id: name, service: this });
-	    this.nodes[name] = node;
-	    /* Notify potential channels */
+	var node = this.get('node:' + name);
+	if (!node) {
+	    node = new window.Node({ id: name, service: this });
+	    var attrs = {};
+	    attrs['node:' + name] = node;
+	    this.set(attrs);
 	    this.trigger('newNode', node);
-	    return node;
-	} else
-	    return this.nodes[name];
+	}
+	return node;
     }
 });
 
@@ -419,6 +431,21 @@ window.Channel = Backbone.Model.extend({
 	var attrs = {};
 	attrs['node:' + nodeTail] = node;
 	this.set(attrs);
+
+	var that = this;
+	node.bind('all', function(ev) {
+	    console.log('node triggered ' + ev);
+	});
+	node.bind('change:items', function() {
+	    /* Propagate */
+	    console.log('Propagate change:items from node to channel');
+	    that.trigger('change:items', that);
+	});
+    },
+
+    /* Simple getter */
+    getNode: function(nodeTail) {
+	return this.get('node:' + nodeTail);
     }
 });
 
@@ -451,6 +478,8 @@ window.Channels = Backbone.Collection.extend({
     },
 
     /**
+     * Adds on demand
+     * 
      * @param jid User
      */
     getChannel: function(jid) {

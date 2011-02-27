@@ -20,13 +20,20 @@ $(function() {
     var MyChannelView = Backbone.View.extend({
 	template: _.template($('#my_channel_template').html()),
 
-	initialize: function(model) {
-	    this.model = model;
+	initialize: function(channel) {
+	    this.channel = channel;
 	    this.el = $('<div></div>');
+
+	    _.bindAll(this, 'render');
+	    channel.bind('change', this.render);
+	    channel.bind('change:items', this.render);
+	    channel.bind('all', function(ev) {
+		console.log('channel ' + channel.get('id') + ' - ' + ev);
+	    });
 	},
 
 	render: function() {
-	    var vars = { user: this.model.get('id'),
+	    var vars = { user: this.channel.get('id'),
 			 channel: this.peek('channel'),
 			 geoPrevious: this.peek('geo/previous'),
 			 geoCurrent: this.peek('geo/current'),
@@ -40,7 +47,11 @@ $(function() {
 	 * Get content of the last entry of a node.
 	 */
 	peek: function(nodeTail) {
-	    return "foo in " + nodeTail;
+	    var node = this.channel.getNode(nodeTail);
+	    var item = node && node.getLastItem();
+	    var contentEls = item && $(item.get('elements')).find('content');
+	    console.log({node:node,item:item,contentEls:contentEls})
+	    return contentEls && $(contentEls[0]).text();
 	}
     });
 
