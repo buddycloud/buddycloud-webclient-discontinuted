@@ -3,6 +3,9 @@ function xmlEscape(s) {
 }
 
 $(function() {
+    /**
+     * LoginView
+     */
     var LoginView = Backbone.View.extend({
 	el: '#login',
 
@@ -36,6 +39,15 @@ $(function() {
 	}
     });
 
+    /**
+     * Get text content of the last entry of a node.
+     */
+    function peek(channel, nodeTail) {
+	var node = channel.getNode(nodeTail);
+	var item = node && node.getLastItem();
+	return item && item.getTextContent();
+    }
+
     var MyMessageView = Backbone.View.extend({
 	el: '.my_message',
 	template: _.template($('#my_message_template').html()),
@@ -49,6 +61,14 @@ $(function() {
 	    $(this.el).html(this.template({ user: Channels.cl.jid, desc1: 'foo', desc2: 'bar' }));
 	}
     });
+
+    /**
+     * col1 MyChannelView
+     * 
+     * TODO:
+     * * indicate loading state
+     * * filter by actual subscribed channels
+     */
 
     var MyChannelView = Backbone.View.extend({
 	template: _.template($('#my_channel_template').html()),
@@ -67,26 +87,86 @@ $(function() {
 
 	render: function() {
 	    var vars = { user: this.channel.get('id'),
-			 channel: this.peek('channel'),
-			 geoPrevious: this.peek('geo/previous'),
-			 geoCurrent: this.peek('geo/current'),
-			 geoFuture: this.peek('geo/future')
+			 channel: peek(this.channel, 'channel'),
+			 geoPrevious: peek(this.channel, 'geo/previous'),
+			 geoCurrent: peek(this.channel, 'geo/current'),
+			 geoFuture: peek(this.channel, 'geo/future')
 		       };
 	    this.el.html(this.template(vars));
 	    return this;
+	}
+    });
+
+    /**
+     * col2 BrowseView
+     */
+
+    var BrowseView = Backbone.View.extend({
+	el: '#col2',
+
+	initialize: function(channel) {
+	    var that = this;
+	    this.channel = channel;
+	    this.render();
+
+	    _.bindAll(this, 'render');
+	    channel.bind('change', this.render);
+	    channel.bind('change:items', this.render);
+
+	    this.itemViews = [];
+	    var channelNode = channel.getNode('channel');
+	    if (channelNode) {
+		var items = channelNode.get('items');
+		/* Populate with existing items */
+		items.forEach(function(item) {
+		    that.itemViews.push(new BrowseItemView(item));
+		});
+		/* Hook future updates */
+		items.bind('add', function(item) {
+		    that.itemViews.push(new BrowseItemView(item));
+		});
+	    }
+	},
+
+	render: function() {
+	    this.$('.col-title').text('> ' + this.channel.get('id'));
+	    $('#c1').text(peek(this.channel, 'geo/future') || '');
+	    $('#c2').text(peek(this.channel, 'geo/current') || '');
+	    $('#c3').text(peek(this.channel, 'geo/previous') || '');
 	},
 
 	/**
-	 * Get content of the last entry of a node.
+	 * Backbone's remove() just removes this.el, which we don't
+	 * want. Therefore we don't call the superclass.
 	 */
-	peek: function(nodeTail) {
-	    var node = this.channel.getNode(nodeTail);
-	    var item = node && node.getLastItem();
-	    var contentEls = item && $(item.get('elements')).find('content');
-	    console.log({node:node,item:item,contentEls:contentEls})
-	    return contentEls && $(contentEls[0]).text();
+	remove: function() {
+	    this.channel.unbind('change', this.render);
+	    this.channel.unbind('change:items', this.render);
+	    this.itemViews.forEach(function(itemView) {
+		itemView.remove();
+	    });
 	}
     });
+
+    var BrowseItemView = Backbone.View.extend({
+	template: _.template($('#browse_entry_template').html()),
+
+	initialize: function(item) {
+	    this.item = item;
+
+	    this.el = $(this.template());
+	    $('#col2 h2').after(this.el);
+	    this.render();
+	},
+
+	render: function() {
+	    this.$('.entry-content p').text(this.item.getTextContent());
+	}
+    });
+
+    /**
+     * Main AppView
+     */
 
     var AppView = Backbone.View.extend({
 	el: '#wrap',
@@ -106,6 +186,17 @@ $(function() {
 	},
 	hide: function() {
 	    $(this.el).hide();
+	},
+
+	browse: function(user) {
+	    if (this.browseView) {
+		this.browseView.remove();
+		delete this.browseView;
+	    }
+
+	    var channel = this.channels.getChannel(user);
+	    if (channel)
+		this.browseView = new BrowseView(channel);
 	}
     });
 
@@ -143,12 +234,15 @@ $(function() {
 
 	    this.login.hide();
 	    this.view.show();
+
+	    /* Forward to own channel */
+	    this.location = '#browse/' + Channels.cl.jid;
 	},
 
 	browseUser: function(user) {
 	    if (this.mustLogin()) return;
 
-	    console.log('browse ' + user);
+	    this.view.browse(user);
 	},
 
 	/**
