@@ -119,13 +119,25 @@ $(function() {
 		var items = channelNode.get('items');
 		/* Populate with existing items */
 		items.forEach(function(item) {
-		    that.itemViews.push(new BrowseItemView(item));
+		    that.addView(new BrowseItemView(item));
 		});
 		/* Hook future updates */
 		items.bind('add', function(item) {
-		    that.itemViews.push(new BrowseItemView(item));
+		    that.addView(new BrowseItemView(item));
 		});
+
+		/* TODO: when posted, add a new one */
+		this.addView(new BrowsePostView(channelNode));
 	    }
+	},
+
+	addView: function(view) {
+	    this.itemViews.push(view);
+	    $('#col2 h2').after(view.el);
+	    /* Views may not have an `el' field before their
+	     * `initialize()' member is called. We need to trigger
+	     * binding events again: */
+	    view.delegateEvents();
 	},
 
 	render: function() {
@@ -155,12 +167,40 @@ $(function() {
 	    this.item = item;
 
 	    this.el = $(this.template());
-	    $('#col2 h2').after(this.el);
 	    this.render();
 	},
 
 	render: function() {
 	    this.$('.entry-content p').text(this.item.getTextContent());
+	}
+    });
+
+    var BrowsePostView = Backbone.View.extend({
+	template: _.template($('#browse_post_template').html()),
+
+	events: {
+	    'click a.btn2': 'post'
+	},
+
+	initialize: function(node) {
+	    this.node = node;
+	    this.el = $(this.template());
+	    this.$('textarea')[0].focus();
+	},
+
+	post: function() {
+	    console.log('BrowsePostView post()');
+
+	    var textarea = this.$('textarea');
+	    textarea.attr('disabled', 'disabled');
+	    this.node.post(textarea.val(), function(err) {
+		if (err) {
+		} else {
+		    /* TODO: not subscribed? manual refresh */
+		}
+	    });
+
+	    return false;
 	}
     });
 
@@ -188,7 +228,7 @@ $(function() {
 	    $(this.el).hide();
 	},
 
-	browse: function(user) {
+	browseUser: function(user) {
 	    if (this.browseView) {
 		this.browseView.remove();
 		delete this.browseView;
@@ -242,7 +282,7 @@ $(function() {
 	browseUser: function(user) {
 	    if (this.mustLogin()) return;
 
-	    this.view.browse(user);
+	    this.view.browseUser(user);
 	},
 
 	/**

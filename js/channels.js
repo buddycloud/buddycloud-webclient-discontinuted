@@ -214,6 +214,26 @@ Channels.XmppClient.prototype.getItems = function(jid, node, cb) {
     });
 };
 
+Channels.XmppClient.prototype.publishItem = function(jid, node, itemId, elements, cb) {
+    var iq = $iq({ to: jid,
+		   type: 'set' }).
+	c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+	c('publish', { node: node }).
+	c('item').tree();
+
+    /* itemId is optional */
+    if (itemId)
+	$(iq).find('item').attr('id', itemId);
+
+    $(iq).find('item').append(elements);
+
+    this.request(iq, function(reply) {
+	cb();
+    }, function(reply) {
+	cb(new Error('Publishing failed'));
+    });
+};
+
 /**
  * High-level channels logic
  */
@@ -361,9 +381,47 @@ Backbone.sync = function() {
 };
 
 Channels.Item = Backbone.Model.extend({
+    getTextContent: function() {
+	var typeTexts = {};
+	_.forEach(this.get('elements'), function(entryEl) {
+	    _.forEach(entryEl.getElementsByTagName('content'), function(contentEl) {
+		var type = contentEl.getAttribute('type') || "text";
+		typeTexts[type] = $(contentEl).text();
+	    });
+	});
+	return typeTexts.text || typeTexts.xhtml;
+    },
+
+    /**
+     * @return {Date}
+     */
+    getPublished: function() {
+	var result = undefined;
+	var elements = this.get('elements');
+	if (elements)
+	    _.forEach(elements, function(entryEl) {
+		if (!result)
+		    _.forEach(entryEl.getElementsByTagName('published'),
+			      function(publishedEl) {
+		        var d = new Date(publishedEl.textContent);
+			if (!isNaN(d))
+			    result = d;
+		    });
+	    });
+	return result;
+    }
 });
+
 Channels.Items = Backbone.Collection.extend({
-    model: Channels.Item
+    model: Channels.Item,
+
+    /**
+     * Order by published time, ascending
+     */
+    comparator: function(item) {
+	var published = item.getPublished();
+	return published ? published.getTime() : 0;
+    }
 });
 
 Channels.Node = Backbone.Model.extend({
@@ -387,7 +445,17 @@ Channels.Node = Backbone.Model.extend({
 
     getLastItem: function() {
 	var items = this.get('items');
-	return items.at(0);
+	return items.at(items.size() - 1);
+    },
+
+    post: function(text, cb) {
+	var entry = $("<entry xmlns='http://www.w3.org/2005/Atom'><content type='text'></content><published></published></entry>");
+	entry.find('content').text(text);
+	entry.find('published').text(isoDateString(new Date()));
+
+	var jid = this.get('service').get('id');
+	var nodeName = this.get('id');
+	Channels.cl.publishItem(jid, nodeName, null, [entry[0]], cb);
     }
 });
 
@@ -544,3 +612,19 @@ Channels.Channels = Backbone.Collection.extend({
     }
 });
 
+/**
+ * Format Date as ISO8601
+ * 
+ * https://developer.mozilla.org/en/JavaScript/Reference/global_objects/date#Example.3a_ISO_8601_formatted_dates
+ */
+function isoDateString(d) {
+    function pad(n) {
+	return n<10 ? '0'+n : n;
+    }
+    return d.getUTCFullYear()+'-'
+	+ pad(d.getUTCMonth()+1)+'-'
+	+ pad(d.getUTCDate())+'T'
+	+ pad(d.getUTCHours())+':'
+	+ pad(d.getUTCMinutes())+':'
+	+ pad(d.getUTCSeconds())+'Z';
+ }
