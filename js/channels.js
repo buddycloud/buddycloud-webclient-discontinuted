@@ -1,5 +1,6 @@
 var IQ_TIMEOUT = 10000;
 Strophe.addNamespace('PUBSUB', "http://jabber.org/protocol/pubsub");
+Strophe.addNamespace('PUBSUB_EVENT', "http://jabber.org/protocol/pubsub#event");
 
 var stub = function() {};
 if (!window.console)
@@ -17,12 +18,44 @@ var Channels = {};
 Channels.XmppClient = function(jid, password) {
     this.conn = new Strophe.Connection('/http-bind/');
 
+    var that = this;
     this.conn.addHandler(function(stanza) {
 	/*console.log('<<< ' + Strophe.serialize(stanza));*/
+
+	if (stanza.tagName === 'message')
+	    that.handleMessage(stanza);
+
 	return true;
     });
 };
 _.extend(Channels.XmppClient.prototype, Backbone.Events);
+
+/**
+ * triggers:
+ * * 'item', jid, node, id, elements
+ */
+Channels.XmppClient.prototype.handleMessage = function(stanza) {
+    var that = this;
+    var jid = stanza.getAttribute('from');
+    _.forEach(stanza.getElementsByTagNameNS(Strophe.NS.PUBSUB_EVENT, 'event'),
+	      function(eventEl) {
+        _.forEach(eventEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_EVENT, 'items'),
+		  function(itemsEl) {
+	    var node = itemsEl.getAttribute('node');
+	    _.forEach(itemsEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_EVENT, 'item'),
+		      function(itemEl) {
+	        var id = itemEl.getAttribute('id');
+		var elements = itemEl.childNodes;
+		try {
+		    that.trigger('item', jid, node, id, elements);
+		} catch (x) {
+		    console.log(x);
+		    console.error(x);
+		}
+	    });
+	});
+    });
+};
 
 Channels.XmppClient.prototype.connect = function(jid, password) {
     var that = this;
@@ -435,10 +468,9 @@ Channels.Node = Backbone.Model.extend({
 	this.set({ items: items });
 
 	/* Fetch items */
-	Channels.cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
+	Channels.cl.getItems(this.get('serviceJid'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
-		that.get('items').
-		    add(new Channels.Item({ id: item.id, elements: item.elements }));
+		that.setItem(item.id, item.elements);
 	    });
 	});
     },
@@ -448,12 +480,27 @@ Channels.Node = Backbone.Model.extend({
 	return items.at(items.size() - 1);
     },
 
+    setItem: function(id, elements) {
+	var items = this.get('items');
+	var item;
+	if ((item = items.get(id))) {
+	    /* Avoid backbone views comparing DOM elements as this may
+	     * be expensive and exhausts max stack level.
+	     */
+	    item.unset('elements');
+	    item.set({ elements: elements });
+	} else {
+	    items.add(new Channels.Item({ id: id,
+					  elements: elements }));
+	}
+    },
+
     post: function(text, cb) {
 	var entry = $("<entry xmlns='http://www.w3.org/2005/Atom'><content type='text'></content><published></published></entry>");
 	entry.find('content').text(text);
 	entry.find('published').text(isoDateString(new Date()));
 
-	var jid = this.get('service').get('id');
+	var jid = this.get('serviceJid');
 	var nodeName = this.get('id');
 	Channels.cl.publishItem(jid, nodeName, null, [entry[0]], cb);
     }
@@ -482,7 +529,7 @@ Channels.Service = Backbone.Model.extend({
     getNode: function(name) {
 	var node = this.get('node:' + name);
 	if (!node) {
-	    node = new Channels.Node({ id: name, service: this });
+	    node = new Channels.Node({ id: name, serviceJid: this.get('id') });
 	    var attrs = {};
 	    attrs['node:' + name] = node;
 	    this.set(attrs);
@@ -551,9 +598,9 @@ Channels.Channels = Backbone.Collection.extend({
     model: Channels.Channel,
 
     initialize: function() {
+	var that = this;
 	this.services = {};
 
-	var that = this;
 	Channels.cl.bind('online', function() {
 	    console.log('online');
 	    that.hookUser(Channels.cl.jid);
@@ -568,9 +615,24 @@ Channels.Channels = Backbone.Collection.extend({
 	});
 
 	/* TODO: hook roster updates */
+
+	Channels.cl.bind('item', function(jid, nodeName, id, elements) {
+	    var service = that.getService(jid);
+	    var node = service.getNode(nodeName);
+	    if (!node) {
+		/* We only care about nodes we subscribed to.  If
+		 * subscriptions haven't been synced, we'll get items
+		 * later anyway.
+		 */
+		return;
+	    }
+	    node.setItem(id, elements);
+	});
     },
 
     /**
+     * Adds on demand
+     * 
      * @param jid (Domain of) the service
      */
     getService: function(jid) {
