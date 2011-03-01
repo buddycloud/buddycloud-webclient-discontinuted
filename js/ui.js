@@ -109,7 +109,7 @@ $(function() {
 	    this.channel = channel;
 	    this.render();
 
-	    _.bindAll(this, 'render');
+	    _.bindAll(this, 'render', 'insertPostView');
 	    channel.bind('change', this.render);
 	    channel.bind('change:items', this.render);
 
@@ -119,19 +119,27 @@ $(function() {
 		var items = channelNode.get('items');
 		/* Populate with existing items */
 		items.forEach(function(item) {
-		    that.addView(new BrowseItemView(item));
+		    that.insertView(new BrowseItemView(item));
 		});
 		/* Hook future updates */
 		items.bind('add', function(item) {
-		    that.addView(new BrowseItemView(item));
+		    that.insertView(new BrowseItemView(item));
 		});
 
-		/* TODO: when posted, add a new one */
-		this.addView(new BrowsePostView(channelNode));
+		this.insertPostView();
 	    }
 	},
 
-	addView: function(view) {
+	insertPostView: function() {
+	    var channelNode = this.channel.getNode('channel');
+	    if (channelNode) {
+		this.postView = new BrowsePostView(channelNode);
+		this.postView.bind('remove', this.insertPostView);
+		this.insertView(this.postView);
+	    }
+	},
+
+	insertView: function(view) {
 	    this.itemViews.push(view);
 	    $('#col2 h2').after(view.el);
 	    /* Views may not have an `el' field before their
@@ -154,6 +162,8 @@ $(function() {
 	remove: function() {
 	    this.channel.unbind('change', this.render);
 	    this.channel.unbind('change:items', this.render);
+	    if (this.postView)
+		this.postView.unbind('remove', this.insertPostView);
 	    this.itemViews.forEach(function(itemView) {
 		itemView.remove();
 	    });
@@ -189,18 +199,26 @@ $(function() {
 	},
 
 	post: function() {
-	    console.log('BrowsePostView post()');
-
+	    var that = this;
 	    var textarea = this.$('textarea');
 	    textarea.attr('disabled', 'disabled');
+	    this.$('a.btn2').hide();
 	    this.node.post(textarea.val(), function(err) {
 		if (err) {
+		    textarea.removeAttr('disabled');
+		    this.$('a.btn2').show();
 		} else {
+		    that.remove();
 		    /* TODO: not subscribed? manual refresh */
 		}
 	    });
 
 	    return false;
+	},
+
+	remove: function() {
+	    this.trigger('remove');
+	    Backbone.View.prototype.remove.apply(this, arguments);
 	}
     });
 
