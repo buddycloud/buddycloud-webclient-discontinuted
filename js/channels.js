@@ -1,6 +1,8 @@
 var IQ_TIMEOUT = 10000;
 Strophe.addNamespace('PUBSUB', "http://jabber.org/protocol/pubsub");
 Strophe.addNamespace('PUBSUB_EVENT', "http://jabber.org/protocol/pubsub#event");
+Strophe.addNamespace('DATA', "jabber:x:data");
+var PUBSUB_META_DATA = "http://jabber.org/protocol/pubsub#meta-data";
 
 var stub = function() {};
 if (!window.console)
@@ -140,7 +142,9 @@ Channels.XmppClient.prototype.discoItems = function(jid, node, cb) {
 /** disco with #info for <identity/>
  *
  * cb(error, { identities: [{ category: String, type: String }],
- *             features: [String] })
+ *             features: [String],
+ *             forms: [ { type: 'result', fields: { ... } } ]
+ *           })
  */
 Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
     var queryAttrs = { xmlns: Strophe.NS.DISCO_INFO };
@@ -150,19 +154,42 @@ Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
 		       type: 'get' }).
 		 c('query', queryAttrs),
     function(reply) {
-	var i, result = { identities: [], features: [] };
+	var i, result = { identities: [], features: [], forms: [] };
 	var queryEl = reply && reply.getElementsByTagName('query')[0];
 	if (queryEl) {
-	    var identityEls = queryEl.getElementsByTagName('identity');
-	    for(i = 0; i < identityEls.length; i++) {
-		var identityEl = identityEls[i];
+	    /* Extract identities */
+	    _.forEach(queryEl.getElementsByTagName('identity'),
+		      function(identityEl) {
 		result.identities.push({ category: identityEl.getAttribute('category'),
 					 type: identityEl.getAttribute('type')
 				       });
-	    }
-	    var featureEls = queryEl.getElementsByTagName('feature');
-	    for(i = 0; i < featureEls.length; i++)
-		result.features.push(featureEls[i].getAttribute('var'));
+	    });
+	    /* Extract features */
+	    _.forEach(queryEl.getElementsByTagName('feature'),
+		      function(featureEl) {
+		result.features.push(featureEl.getAttribute('var'));
+	    });
+	    /* Extract forms */
+	    _.forEach(queryEl.getElementsByTagNameNS(Strophe.NS.DATA, 'x'),
+		      function(xEl) {
+		var form = { type: xEl.getAttribute('type'),
+			     fields: {} };
+		_.forEach(xEl.getElementsByTagName('field'),
+			  function(fieldEl) {
+		    var key = fieldEl.getAttribute('var');
+		    var values = [];
+		    var type = fieldEl.getAttribute('type') || 'text-single';
+		    _.forEach(fieldEl.getElementsByTagName('value'),
+			      function(valueEl) {
+		        values.push(valueEl.textContent);
+		    });
+		    if (/-multi$/.test(type))
+			form.fields[key] = values;
+		    else
+			form.fields[key] = values[0];
+		});
+		result.forms.push(form);
+	    });
 	}
 	cb(null, result);
     }, function(reply) {
@@ -372,9 +399,30 @@ Channels.ChannelsClient.prototype.findUserService = function(jid, cb) {
     });
 };
 
+/**
+ * cb(error, formFields)
+ */
+Channels.ChannelsClient.prototype.getNodeMeta = function(jid, node, cb) {
+    this.discoInfo(jid, node, function(err, result) {
+	if (!result) {
+	    return cb(err);
+	}
+
+	var fields = {};
+	_.forEach(result.forms, function(form) {
+	    if (form.type === 'result' &&
+		form.fields.FORM_TYPE === PUBSUB_META_DATA) {
+
+		fields = form.fields;
+	    }
+	});
+	cb(err, fields);
+    });
+};
+
 
 /**
- * !!!
+ * !!! TODO: rename to client
  */
 Channels.cl = new Channels.ChannelsClient();
 
@@ -472,6 +520,10 @@ Channels.Node = Backbone.Model.extend({
 	    _.forEach(items, function(item) {
 		that.setItem(item.id, item.elements);
 	    });
+	});
+	/* Fetch meta data */
+	Channels.cl.getNodeMeta(this.get('serviceJid'), this.get('id'), function(err, fields) {
+	    that.set({ meta: fields });
 	});
     },
 

@@ -57,14 +57,31 @@ $(function() {
 	    Channels.cl.bind('online', this.render);
 	},
 
+	setChannel: function(channel) {
+	    if (this.channel) {
+		this.channel.unbind('change', this.render);
+		this.channel.unbind('change:items', this.render);
+	    }
+
+	    this.channel = channel;
+	    channel.bind('change', this.render);
+	    channel.bind('change:items', this.render);
+	    this.render();
+	},
+
 	render: function() {
-	    $(this.el).html(this.template({ user: Channels.cl.jid, desc1: 'foo', desc2: 'bar' }));
+	    var channelNode = this.channel && this.channel.getNode('channel');
+	    var meta = channelNode && channelNode.get('meta');
+	    $(this.el).html(this.template({ user: Channels.cl.jid,
+					    desc1: meta && meta['pubsub#title'],
+					    desc2: meta && meta['pubsub#description']
+					  }));
 	}
     });
 
     /**
      * col1 MyChannelView
-     * 
+     *
      * TODO:
      * * indicate loading state
      * * filter by actual subscribed channels
@@ -231,10 +248,18 @@ $(function() {
 
 	initialize: function() {
 	    this.channels = new Channels.Channels();
-	    (new MyMessageView()).render();
+	    this.myMessage = new MyMessageView();
+	    this.myMessage.render();
 
+	    var that = this;
 	    this.channels.bind('add', function(channel) {
 		console.log({channels: arguments});
+
+		/* update header if own channel */
+		if (channel.get('id') === Channels.cl.jid)
+		    that.myMessage.setChannel(channel);
+
+		/* add to .col1 */
 		$('#col1').append(new MyChannelView(channel).render().el);
 	    });
 	},
