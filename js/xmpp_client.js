@@ -70,8 +70,15 @@ Channels.XmppClient.prototype.connect = function(jid, password) {
 	    case Strophe.Status.CONNECTED:
 		that.trigger('online');
 		break;
+	    case Strophe.Status.AUTHFAIL:
+		that.trigger('error', new Error('Authentication failure'));
+		that.conn.disconnect();
+		break;
+	    case Strophe.Status.CONNFAIL:
+		that.trigger('error', new Error('Connection failure'));
+		break;
 	    case Strophe.Status.DISCONNECTED:
-		that.onDisconnect();
+		/* TODO: reconnect */
 		break;
 	}
     });

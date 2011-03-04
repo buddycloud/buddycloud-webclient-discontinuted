@@ -13,25 +13,33 @@ var LoginView = Backbone.View.extend({
 	this.el = $(this.template);
 	this.message = new StatusMessageView({ content: this.el,
 					       title: 'Login' });
+
 	this.delegateEvents();
+
+	_.bindAll(this, 'loginFailed');
+	Channels.cl.bind('error', this.loginFailed);
     },
     events: {
         'click input[type=submit]': 'login'
     },
     login: function() {
-        this.disableAll();
+        this.$('input').attr('disabled', 'disabled');
+	this.$('.progress').html('<img src="/img/throbber.gif">');
+
         Channels.cl.connect(this.$('#login_jid').val(), this.$('#login_password').val());
         return false;
     },
 
-    disableAll: function() {
-        this.$('input').attr('disabled', 'disabled');
-    },
-    enableAll: function() {
+    loginFailed: function(err) {
+	this.$('.progress').html('');
+	this.$('.progress').text(err && err.message);
         this.$('input').removeAttr('disabled');
+
+	this.$('#login_password')[0].focus();
     },
 
     remove: function() {
+	Channels.cl.unbind('error', this.loginFailed);
 	Backbone.View.prototype.remove.apply(this, arguments);
 	this.message.remove();
     }
