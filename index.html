@@ -21,6 +21,7 @@
     <script type="text/javascript" src="/js/xmpp_client.js"></script>
     <script type="text/javascript" src="/js/channels_client.js"></script>
     <script type="text/javascript" src="/js/models.js"></script>
+    <script type="text/javascript" src="/js/views/status_message.js"></script>
     <script type="text/javascript" src="/js/views/login.js"></script>
     <script type="text/javascript" src="/js/views/my_message.js"></script>
     <script type="text/javascript" src="/js/views/my_channel.js"></script>
@@ -29,22 +30,6 @@
 
   </head>
   <body>
-    <div id="login">
-      <form>
-	<div>
-	  <label for="login_jid">Jabber-Id:</label>
-	  <input id="login_jid" value="astro@hq.c3d2.de"/>
-	</div>
-	<div>
-	  <label for="login_password">Password:</label>
-	  <input type="password" value="" id="login_password"/>
-	</div>
-	<div>
-	  <input type="submit" value="Login"/>
-	</div>
-      </form>
-    </div>
-
     <div id="wrap">
       
       <div id="head">
@@ -908,11 +893,29 @@
 	
       </div><!-- e: page -->
       
-      <!--div id="alert">
+      <script type="text/template" id="status_message_template">
+	<div class="alert">
 	  <h1>Status Message Title</h1>
-	  <p>content <br />content <br />content here <br />content </p>
+	  <div class="content"></div>
 	  <a href="#" class="close"></a>
-	  </div-->
+	</div>
+      </script>
+
+      <script type="text/template" id="login_template">
+	<form>
+	  <div>
+	    <label>Jabber-Id:
+	      <input id="login_jid" value="astro@hq.c3d2.de"/>
+	    </label>
+	  </div>
+	  <div>
+	    <label>Password:
+	      <input type="password" value="assi" id="login_password"/>
+	    </label>
+	    <input type="submit" value="Login"/>
+	  </div>
+	</form>
+      </script>
       
     </div><!-- e: wrap -->
 

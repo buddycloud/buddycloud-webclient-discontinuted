@@ -33,7 +33,7 @@ font-family: Arial, Helvetica, sans-serif;
 	width: 960px;
 }
 
-	#alert{
+	.alert{
 		position: absolute;
 		top:0;
 		right: 100px;
@@ -48,23 +48,23 @@ font-family: Arial, Helvetica, sans-serif;
 		text-align: left;	
 	}
 	
-		#alert h1{
+		.alert h1{
 			position: relative;
 			font-size: 24px;
 			font-weight: bold;
 		}
 		
-		#alert p{
+		.alert p{
 			line-height: 1.5em;
 			padding-bottom: 1em;
 		}
 		
-		#alert a{
+		.alert a{
 			color: #fff;
 			text-decoration: underline;	
 		}
 		
-		#alert a.close{
+		.alert a.close{
 			position: absolute;
 			top: 6px;
 			right: 6px;

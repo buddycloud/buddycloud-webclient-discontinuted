@@ -23,13 +23,6 @@ var AppView = Backbone.View.extend({
         });
     },
 
-    show: function() {
-        $(this.el).show();
-    },
-    hide: function() {
-        $(this.el).hide();
-    },
-
     browseUser: function(user) {
         if (this.browseView) {
             this.browseView.remove();
@@ -44,7 +37,6 @@ var AppView = Backbone.View.extend({
 
 var AppController = Backbone.Controller.extend({
     initialize: function() {
-        this.login = new LoginView();
         this.view = new AppView();
     },
 
@@ -55,33 +47,34 @@ var AppController = Backbone.Controller.extend({
     },
 
     login: function() {
-        if (this.mustLogin()) {
-            this.view.hide();
-            this.login.show();
+	console.log('login');
+        if (this.mustLogin() && !this.loginView) {
+	    this.loginView = new LoginView();
 
             var that = this;
             var success = function() {
+		that.loginView.remove();
+		delete that.loginView;
+
                 Channels.cl.unbind('online', success);
-                console.log({'login success':Channels.cl});
                 window.location = '#';
             };
             Channels.cl.bind('online', success);
-        } else {
+        } else if (!this.loginView) {
             window.location = '#';
         }
     },
 
     index: function() {
+	console.log('index');
         if (this.mustLogin()) return;
-
-        this.login.hide();
-        this.view.show();
 
         /* Forward to own channel */
         this.location = '#browse/' + Channels.cl.jid;
     },
 
     browseUser: function(user) {
+	console.log('browseUser ' + user);
         if (this.mustLogin()) return;
 
         this.view.browseUser(user);
@@ -92,9 +85,11 @@ var AppController = Backbone.Controller.extend({
      */
     mustLogin: function() {
         if (!Channels.cl.conn.authenticated) {
+	    console.log('not authenticated, must login');
             window.location = '#login';
             return true;
         } else {
+	    console.log('authenticated, alright');
             return false;
         }
     }
