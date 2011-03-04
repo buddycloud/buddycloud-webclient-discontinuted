@@ -21,6 +21,27 @@ var AppView = Backbone.View.extend({
             /* add to .col1 */
             $('#col1').append(new MyChannelView(channel).render().el);
         });
+
+	this.channels.bind('hookUser', function(user, serviceJids) {
+	    if (user === Channels.cl.jid) {
+		_.forEach(serviceJids, function(serviceJid) {
+		    that.channels.getService(serviceJid).
+				  bind('sync', function() {
+		        /* Service has synced subscriptions & affiliations */
+		        var userChannel = that.channels.getChannel(Channels.cl.jid);
+			var hasNodes = userChannel.hasNodes();
+			if (!hasNodes && !that.register) {
+			    /* Show if there are no nodes */
+			    that.register = new RegisterView(); // TODO
+			} else if (hasNodes && that.register) {
+			    /* Hide if we found nodes */
+			    that.register.remove();
+			    delete that.register;
+			}
+		    });
+		});
+	    }
+	});
     },
 
     browseUser: function(user) {

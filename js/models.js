@@ -140,17 +140,26 @@ Channels.Service = Backbone.Model.extend({
 	var jid = this.get('id');
 
 	var that = this;
+	var pending = 2;
+	var done = function() {
+	    pending--;
+	    if (pending < 1) {
+		that.trigger('sync');
+	    }
+	};
 	Channels.cl.getSubscriptions(jid, function(err, subscriptions) {
 	    _.forEach(subscriptions, function(subscription) {
 		that.getNode(subscription.node).
 		    set({ subscription: subscription.subscription });
 	    });
+	    done();
 	});
 	Channels.cl.getAffiliations(jid, function(err, affiliations) {
 	    _.forEach(affiliations, function(affiliation) {
 		that.getNode(affiliation.node).
 		    set({ affiliation: affiliation.affiliation });
 	    });
+	    done();
 	});
     },
 
@@ -199,6 +208,10 @@ Channels.Channel = Backbone.Model.extend({
 	    console.log('Propagate change:items from node to channel');
 	    that.trigger('change:items', that);
 	});
+    },
+
+    hasNodes: function() {
+	return (service.getUserNodes(this.get('id')).length > 0);
     },
 
     /* Simple getter */
@@ -288,6 +301,8 @@ Channels.Channels = Backbone.Collection.extend({
 	console.log('hookUser ' + user);
 	var that = this;
 	Channels.cl.findUserService(user, function(serviceJids) {
+	    that.trigger('userService', user, serviceJids);
+
 	    _.forEach(serviceJids, function(serviceJid) {
 		var service = that.getService(serviceJid);
 		var channel = that.getChannel(user);
