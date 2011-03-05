@@ -211,7 +211,11 @@ Channels.Channel = Backbone.Model.extend({
     },
 
     hasNodes: function() {
-	return (service.getUserNodes(this.get('id')).length > 0);
+	for(var k in this.attributes) {
+	    if (this.attributes.hasOwnProperty(k) && /^node:/.test(k))
+		return true;
+	}
+	return false;
     },
 
     /* Simple getter */

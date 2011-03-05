@@ -22,11 +22,12 @@ var AppView = Backbone.View.extend({
             $('#col1').append(new MyChannelView(channel).render().el);
         });
 
-	this.channels.bind('hookUser', function(user, serviceJids) {
+	this.channels.bind('userService', function(user, serviceJids) {
 	    if (user === Channels.cl.jid) {
 		_.forEach(serviceJids, function(serviceJid) {
 		    that.channels.getService(serviceJid).
 				  bind('sync', function() {
+console.log(user + ' sync ' + serviceJid);
 		        /* Service has synced subscriptions & affiliations */
 		        var userChannel = that.channels.getChannel(Channels.cl.jid);
 			var hasNodes = userChannel.hasNodes();
