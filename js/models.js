@@ -85,6 +85,8 @@ Channels.Items = Backbone.Collection.extend({
 Channels.Node = Backbone.Model.extend({
     initialize: function() {
 	var that = this;
+	this.refcnt = 0;
+
 	var items = new Channels.Items();
 	items.bind('all', function() {
 	    /* Propagate any change to the node */
@@ -93,13 +95,13 @@ Channels.Node = Backbone.Model.extend({
 	this.set({ items: items });
 
 	/* Fetch items */
-	Channels.cl.getItems(this.get('serviceJid'), this.get('id'), function(err, items) {
+	Channels.cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
 		that.setItem(item.id, item.elements);
 	    });
 	});
 	/* Fetch meta data */
-	Channels.cl.getNodeMeta(this.get('serviceJid'), this.get('id'), function(err, fields) {
+	Channels.cl.getNodeMeta(this.get('service').get('id'), this.get('id'), function(err, fields) {
 	    that.set({ meta: fields });
 	});
     },
@@ -129,9 +131,31 @@ Channels.Node = Backbone.Model.extend({
 	entry.find('content').text(text);
 	entry.find('published').text(isoDateString(new Date()));
 
-	var jid = this.get('serviceJid');
+	var jid = this.get('service').get('id');
 	var nodeName = this.get('id');
 	Channels.cl.publishItem(jid, nodeName, null, [entry[0]], cb);
+    },
+
+    /**
+     * Reference counting
+     */
+    bind: function() {
+	this.refcnt++;
+	Backbone.Model.prototype.bind.apply(this, arguments);
+    },
+
+    /**
+     * Remove from service if not viewing anymore, for channels we
+     * have no affiliation with.
+     */
+    unbind: function() {
+	this.refcnt--;
+	Backbone.Model.prototype.unbind.apply(this, arguments);
+
+	if (this.refcnt < 1) {
+	    /* TODO: only on no affiliation */
+	    this.get('service').dropNode(this.get('id'));
+	}
     }
 });
 
@@ -173,12 +197,19 @@ Channels.Service = Backbone.Model.extend({
     getNode: function(name) {
 	var node = this.get('node:' + name);
 	if (!node) {
-	    node = new Channels.Node({ id: name, serviceJid: this.get('id') });
+	    node = new Channels.Node({ id: name, service: this });
 	    var attrs = {};
 	    attrs['node:' + name] = node;
 	    this.set(attrs);
 	}
 	return node;
+    },
+
+    /**
+     * When a browsed node is not needed anymore, dispose of it
+     */
+    dropNode: function(name) {
+	this.unset('node:' + name);
     },
 
     /**
