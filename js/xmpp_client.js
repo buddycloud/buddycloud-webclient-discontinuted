@@ -1,7 +1,9 @@
+/* TODO: error messages everywhere */
 var IQ_TIMEOUT = 10000;
 Strophe.addNamespace('PUBSUB', "http://jabber.org/protocol/pubsub");
 Strophe.addNamespace('PUBSUB_EVENT', "http://jabber.org/protocol/pubsub#event");
 Strophe.addNamespace('DATA', "jabber:x:data");
+Strophe.addNamespace('REGISTER', "jabber:iq:register");
 var PUBSUB_META_DATA = "http://jabber.org/protocol/pubsub#meta-data";
 
 var stub = function() {};
@@ -199,6 +201,20 @@ Channels.XmppClient.prototype.discoInfo = function(jid, node, cb) {
 	    });
 	}
 	cb(null, result);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
+
+/**
+ * XEP-0077 in-band registration
+ */
+Channels.XmppClient.prototype.register = function(jid, cb) {
+    this.request($iq({ to: jid,
+		       type: 'set' }).
+		 c('query', { xmlns: Strophe.NS.REGISTER }),
+    function(reply) {
+	cb();
     }, function(reply) {
 	cb(new Error());
     });

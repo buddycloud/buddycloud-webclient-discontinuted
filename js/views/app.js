@@ -27,13 +27,17 @@ var AppView = Backbone.View.extend({
 		_.forEach(serviceJids, function(serviceJid) {
 		    that.channels.getService(serviceJid).
 				  bind('sync', function() {
-console.log(user + ' sync ' + serviceJid);
 		        /* Service has synced subscriptions & affiliations */
 		        var userChannel = that.channels.getChannel(Channels.cl.jid);
 			var hasNodes = userChannel.hasNodes();
 			if (!hasNodes && !that.register) {
 			    /* Show if there are no nodes */
-			    that.register = new RegisterView(); // TODO
+			    that.register = new RegisterView({ serviceJid: serviceJid,
+							       cb: function() {
+				/* Resynchronize affiliations after successful registration: */
+				that.channels.getService(serviceJid).sync();
+				delete that.register;
+			    } });
 			} else if (hasNodes && that.register) {
 			    /* Hide if we found nodes */
 			    that.register.remove();

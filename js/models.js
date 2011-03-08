@@ -137,9 +137,13 @@ Channels.Node = Backbone.Model.extend({
 
 Channels.Service = Backbone.Model.extend({
     initialize: function() {
+	this.sync();
+    },
+
+    sync: function() {
+	var that = this;
 	var jid = this.get('id');
 
-	var that = this;
 	var pending = 2;
 	var done = function() {
 	    pending--;
@@ -148,6 +152,7 @@ Channels.Service = Backbone.Model.extend({
 	    }
 	};
 	Channels.cl.getSubscriptions(jid, function(err, subscriptions) {
+	    /* TODO: clear old subscriptions */
 	    _.forEach(subscriptions, function(subscription) {
 		that.getNode(subscription.node).
 		    set({ subscription: subscription.subscription });
@@ -155,6 +160,7 @@ Channels.Service = Backbone.Model.extend({
 	    done();
 	});
 	Channels.cl.getAffiliations(jid, function(err, affiliations) {
+	    /* TODO: clear old affiliations */
 	    _.forEach(affiliations, function(affiliation) {
 		that.getNode(affiliation.node).
 		    set({ affiliation: affiliation.affiliation });
