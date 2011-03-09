@@ -80,7 +80,17 @@ var BrowseItemView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$('.entry-content p').text(this.item.getTextContent());
+        this.$('.entry-content p:nth-child(1)').text(this.item.getTextContent());
+
+	var published = this.item.getPublished();
+	if (published) {
+	    var ago = $('<span></span>');
+	    ago.attr('title', published);
+	    this.$('.entry-content .meta').append(ago);
+	    /* Activate plugin: */
+	    ago.timeago();
+	}
+	/* TODO: add geoloc info */
     }
 });
 
