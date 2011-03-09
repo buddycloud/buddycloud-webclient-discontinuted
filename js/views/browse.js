@@ -27,16 +27,31 @@ var BrowseView = Backbone.View.extend({
                 that.insertView(new BrowseItemView(item));
             });
 
-            this.insertPostView();
+	    /*TODO: if (channelNode.canPublish())*/
+		this.insertPostView();
         }
     },
 
+    posted: function() {
+	this.postView.remove();
+	delete this.postView;
+
+	this.insertPostView();
+    },
+
     insertPostView: function() {
+	if (this.postView) {
+	    /* Already there */
+	    return;
+	}
+
         var channelNode = this.channel.getNode('channel');
         if (channelNode) {
-            this.postView = new BrowsePostView(channelNode);
-            this.postView.bind('remove', this.insertPostView);
-            this.insertView(this.postView);
+	    var that = this;
+            var postView = new BrowsePostView(channelNode);
+            postView.bind('done', this.posted);
+            this.insertView(postView);
+	    this.postView = postView;
         }
     },
 
