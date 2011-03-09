@@ -56,8 +56,24 @@ var BrowseView = Backbone.View.extend({
     },
 
     insertView: function(view) {
+	var before = this.postView &&
+	    this.postView.el ||
+	    $('#col2 h2');
+	var published = view.getDate &&
+	    view.getDate() ||
+	    new Date();
+	_.forEach(this.itemViews, function(itemView) {
+	    var published1 = itemView &&
+			  itemView.getDate &&
+			  itemView.getDate();
+	    if (published1 && published1 > published) {
+		before = itemView.el;
+	    }
+	});
+
+	/* add to view model & DOM */
         this.itemViews.push(view);
-        $('#col2 h2').after(view.el);
+        before.after(view.el);
         /* Views may not have an `el' field before their
          * `initialize()' member is called. We need to trigger
          * binding events again: */
