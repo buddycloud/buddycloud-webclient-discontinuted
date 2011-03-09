@@ -78,7 +78,7 @@ var BrowseItemView = Backbone.View.extend({
     initialize: function(item) {
         this.item = item;
 
-        this.el = $(this.template());
+        this.el = $(this.template);
         this.render();
     },
 
@@ -88,17 +88,22 @@ var BrowseItemView = Backbone.View.extend({
 	var published = this.item.getPublished();
 	if (published) {
 	    var ago = $('<span></span>');
-	    ago.attr('title', published);
+	    ago.attr('title', isoDateString(published));
 	    this.$('.entry-content .meta').append(ago);
 	    /* Activate plugin: */
 	    ago.timeago();
 	}
 	/* TODO: add geoloc info */
+    },
+
+    /* for view ordering */
+    getDate: function() {
+	return this.item.getPublished();
     }
 });
 
 $(function() {
-      BrowseItemView.prototype.template = _.template($('#browse_entry_template').html());
+      BrowseItemView.prototype.template = $('#browse_entry_template').html();
 });
 
 /**
@@ -111,7 +116,7 @@ var BrowsePostView = Backbone.View.extend({
 
     initialize: function(node) {
         this.node = node;
-        this.el = $(this.template());
+        this.el = $(this.template);
         this.$('textarea')[0].focus();
     },
 
@@ -139,5 +144,5 @@ var BrowsePostView = Backbone.View.extend({
     }
 });
 $(function() {
-      BrowsePostView.prototype.template = _.template($('#browse_post_template').html());
+      BrowsePostView.prototype.template = $('#browse_post_template').html();
 });
