@@ -111,6 +111,9 @@ Channels.Node = Backbone.Model.extend({
 	return items.at(items.size() - 1);
     },
 
+    /**
+     * Used by fetch & updates
+     */
     setItem: function(id, elements) {
 	var items = this.get('items');
 	var item;
