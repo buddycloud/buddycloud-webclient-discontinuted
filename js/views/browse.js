@@ -159,7 +159,7 @@ var BrowsePostView = Backbone.View.extend({
         this.node.post(textarea.val(), function(err) {
             if (err) {
                 textarea.removeAttr('disabled');
-                this.$('a.btn2').show();
+                that.$('a.btn2').show();
             } else {
                 that.trigger('done');
                 /* TODO: not subscribed? manual refresh */
