@@ -164,18 +164,21 @@ Channels.Node = Backbone.Model.extend({
 
 Channels.Service = Backbone.Model.extend({
     initialize: function() {
+	this.isSyncing = false;
 	this.sync();
     },
 
     sync: function() {
 	var that = this;
 	var jid = this.get('id');
+	this.isSyncing = true;
 
 	var pending = 2;
 	var done = function() {
 	    pending--;
 	    if (pending < 1) {
 		that.trigger('sync');
+		this.isSyncing = false;
 	    }
 	};
 	Channels.cl.getSubscriptions(jid, function(err, subscriptions) {
@@ -229,12 +232,51 @@ Channels.Service = Backbone.Model.extend({
 	    }
 	});
 	return results;
+    },
+
+    discoverUserNodes: function(user) {
+	var that = this;
+	_.forEach(['channel', 'geo/previous', 'geo/current', 'geo/future'],
+		  function(nodeTail) {
+	    var nodeName = '/user/' + user + '/' + nodeTail;
+	    Channels.cl.discoInfo(that.get('id'), nodeName, function(err, info) {
+		if (err) {
+		    return;
+		}
+		/* TODO: keep info */
+		that.getNode(nodeName);
+	    });
+        });
     }
 });
 
 Channels.Channel = Backbone.Model.extend({
     initialize: function() {
-	console.log({newChannel:this.attributes})
+	_.bindAll(this, 'hook');
+	setTimeout(this.hook, 1);
+    },
+
+    hook: function() {
+	var that = this;
+	var user = this.get('id');
+	var channels = that.collection;
+
+	console.log('hook channel ' + user);
+	Channels.cl.findUserService(user, function(serviceJids) {
+	    that.trigger('userService', user, serviceJids);
+
+	    _.forEach(serviceJids, function(serviceJid) {
+		var service = channels.getService(serviceJid);
+		/* nodes known already? populate channel! */
+		that.syncNodes(service);
+
+		service.bind('change', function() {
+		    /* new nodes: populate channel */
+		    that.syncNodes(service);
+		});
+		service.discoverUserNodes(user);
+	    });
+	});
     },
 
     addNode: function(nodeTail, node) {
@@ -289,13 +331,13 @@ Channels.Channels = Backbone.Collection.extend({
 
 	Channels.cl.bind('online', function() {
 	    console.log('online');
-	    that.hookUser(Channels.cl.jid);
+	    that.getChannel(Channels.cl.jid);
 
 	    Channels.cl.getRoster(function(error, roster) {
 		if (!roster)
 		    return;
 		_.forEach(roster, function(item) {
-		    that.hookUser(item.jid);
+		    that.getChannel(item.jid);
 		});
 	    });
 	});
@@ -339,26 +381,6 @@ Channels.Channels = Backbone.Collection.extend({
 	    this.add(channel);
 	}
 	return channel;
-    },
-
-    hookUser: function(user) {
-	console.log('hookUser ' + user);
-	var that = this;
-	Channels.cl.findUserService(user, function(serviceJids) {
-	    that.trigger('userService', user, serviceJids);
-
-	    _.forEach(serviceJids, function(serviceJid) {
-		var service = that.getService(serviceJid);
-		var channel = that.getChannel(user);
-		/* nodes known already? populate channel! */
-		channel.syncNodes(service);
-
-		service.bind('change', function() {
-		    /* new nodes: populate channel */
-		    channel.syncNodes(service);
-		});
-	    });
-	});
     }
 });
 
