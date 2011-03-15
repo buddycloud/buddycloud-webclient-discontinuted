@@ -6,30 +6,56 @@ var BrowseView = Backbone.View.extend({
     el: '#col2',
 
     initialize: function(channel) {
-        var that = this;
         this.channel = channel;
+        this.itemViews = [];
+
         this.render();
 
         _.bindAll(this, 'render', 'posted');
         channel.bind('change', this.render);
         channel.bind('change:items', this.render);
+    },
 
-        this.itemViews = [];
-        var channelNode = channel.getNode('channel');
-        if (channelNode) {
-            var items = channelNode.get('items');
-            /* Populate with existing items */
-            items.forEach(function(item) {
-                that.insertView(new BrowseItemView(item));
-            });
-            /* Hook future updates */
-            items.bind('add', function(item) {
-                that.insertView(new BrowseItemView(item));
-            });
+    render: function() {
+	this.hookChannelNode();
 
-	    /*TODO: if (channelNode.canPublish())*/
-		this.insertPostView();
-        }
+        this.$('.col-title').text('> ' + this.channel.get('id'));
+        $('#c1').text(peek(this.channel, 'geo/future') || '');
+        $('#c2').text(peek(this.channel, 'geo/current') || '');
+        $('#c3').text(peek(this.channel, 'geo/previous') || '');
+    },
+
+    /**
+     * why call this from render?
+     * * the node could be there already
+     * * the node could still sync from the server
+     */
+    hookChannelNode: function() {
+        var that = this;
+
+	/* Got it already? */
+	if (this.channelNode)
+	    return;
+
+        this.channelNode = this.channel.getNode('channel');
+	/* Is there one already? */
+	if (!this.channelNode)
+	    return;
+
+	/* Attach: */
+        var items = this.channelNode.get('items');
+	/* Populate with existing items */
+	items.forEach(function(item) {
+            that.insertView(new BrowseItemView(item));
+        });
+	/* Hook future updates */
+	items.bind('add', function(item) {
+	    console.log('addItem to browseview');
+            that.insertView(new BrowseItemView(item));
+        });
+
+	/*TODO: if (this.channelNode.canPublish())*/
+	this.insertPostView();
     },
 
     posted: function() {
@@ -39,23 +65,31 @@ var BrowseView = Backbone.View.extend({
 	this.insertPostView();
     },
 
+    /* requires this.channelNode to be set by hookChannelNode() */
     insertPostView: function() {
 	if (this.postView) {
 	    /* Already there */
 	    return;
 	}
 
-        var channelNode = this.channel.getNode('channel');
-        if (channelNode) {
-	    var that = this;
-            var postView = new BrowsePostView(channelNode);
-            postView.bind('done', this.posted);
-            this.insertView(postView);
-	    this.postView = postView;
-        }
+	var that = this;
+	var postView = new BrowsePostView(this.channelNode);
+	postView.bind('done', this.posted);
+	this.insertView(postView);
+	this.postView = postView;
     },
 
     insertView: function(view) {
+	/* There's no view for this item, right? FIXME. */
+	if (_.any(this.itemViews, function(view1) {
+		return view.item === view1.item;
+	})) {
+	    /* Should not happen */
+	    console.warn('Not inserting duplicate view for ' + view.item);
+	    return;
+	}
+
+	/* Look for the least but still more recent item below which to insert */
 	var before = this.postView &&
 	    this.postView.el ||
 	    $('#col2 h2');
@@ -80,13 +114,6 @@ var BrowseView = Backbone.View.extend({
         view.delegateEvents();
     },
 
-    render: function() {
-        this.$('.col-title').text('> ' + this.channel.get('id'));
-        $('#c1').text(peek(this.channel, 'geo/future') || '');
-        $('#c2').text(peek(this.channel, 'geo/current') || '');
-        $('#c3').text(peek(this.channel, 'geo/previous') || '');
-    },
-
     /**
      * Backbone's remove() just removes this.el, which we don't
      * want. Therefore we don't call the superclass.
@@ -99,9 +126,13 @@ console.log('BrowseView remove')
             this.postView.unbind('done', this.posted);
 	    this.postView.remove();
 	}
-        this.itemViews.forEach(function(itemView) {
+        _.forEach(this.itemViews, function(itemView) {
             itemView.remove();
         });
+
+
+	/* Remove any remains. FIXME */
+	$('#col2 div').remove();
     }
 });
 
