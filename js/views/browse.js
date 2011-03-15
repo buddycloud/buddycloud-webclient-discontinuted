@@ -72,11 +72,9 @@ var BrowseView = Backbone.View.extend({
 	    return;
 	}
 
-	var that = this;
-	var postView = new BrowsePostView(this.channelNode);
-	postView.bind('done', this.posted);
-	this.insertView(postView);
-	this.postView = postView;
+	this.postView = new BrowsePostView(this.channelNode);
+	this.postView.bind('done', this.posted);
+	this.insertView(this.postView);
     },
 
     insertView: function(view) {
