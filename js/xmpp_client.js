@@ -28,6 +28,8 @@ Channels.XmppClient = function(jid, password) {
 
 	if (stanza.tagName === 'message')
 	    that.handleMessage(stanza);
+	else if (stanza.tagName === 'presence')
+	    that.handlePresence(stanza);
 
 	return true;
     });
@@ -59,6 +61,17 @@ Channels.XmppClient.prototype.handleMessage = function(stanza) {
 	    });
 	});
     });
+};
+
+Channels.XmppClient.prototype.handlePresence = function(stanza) {
+    var jid = stanza.getAttribute('from');
+    var type = stanza.getAttribute('type');
+
+    /* Subscription request from service? */
+    if (jid.indexOf('@') < 0 && type === 'subscribe') {
+	/* Always allow: */
+	this.send($pres({ type: 'subscribed', to: jid }));
+    }
 };
 
 Channels.XmppClient.prototype.connect = function(jid, password) {
