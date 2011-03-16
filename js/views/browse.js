@@ -115,7 +115,6 @@ var BrowseView = Backbone.View.extend({
      * want. Therefore we don't call the superclass.
      */
     remove: function() {
-console.log('BrowseView remove')
         this.channel.unbind('change', this.render);
         this.channel.unbind('change:items', this.render);
         if (this.postView) {
@@ -161,7 +160,7 @@ $(function() {
 });
 
 /**
- * Triggers 'posted' so BrowseView can remove it on success.
+ * Triggers 'done' so BrowseView can remove it on success.
  */
 var BrowsePostView = Backbone.View.extend({
     events: {
