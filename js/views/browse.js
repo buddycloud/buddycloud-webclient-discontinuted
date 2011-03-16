@@ -59,8 +59,10 @@ var BrowseView = Backbone.View.extend({
     },
 
     posted: function() {
-	this.postView.remove();
-	delete this.postView;
+	if (this.postView) {
+	    this.postView.remove();
+	    delete this.postView;
+	}
 
 	this.insertPostView();
     },
