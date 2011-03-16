@@ -332,14 +332,6 @@ Channels.Channels = Backbone.Collection.extend({
 	Channels.cl.bind('online', function() {
 	    console.log('online');
 	    that.getChannel(Channels.cl.jid);
-
-	    Channels.cl.getRoster(function(error, roster) {
-		if (!roster)
-		    return;
-		_.forEach(roster, function(item) {
-		    that.getChannel(item.jid);
-		});
-	    });
 	});
 
 	/* TODO: hook roster updates */
