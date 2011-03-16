@@ -80,7 +80,7 @@ var BrowseView = Backbone.View.extend({
     insertView: function(view) {
 	/* There's no view for this item, right? FIXME. */
 	if (_.any(this.itemViews, function(view1) {
-		return view.item === view1.item;
+		return view1.item && view.item === view1.item;
 	})) {
 	    /* Should not happen */
 	    console.warn('Not inserting duplicate view for ' + view.item);
@@ -88,9 +88,7 @@ var BrowseView = Backbone.View.extend({
 	}
 
 	/* Look for the least but still more recent item below which to insert */
-	var before = this.postView &&
-	    this.postView.el ||
-	    $('#col2 h2');
+	var before = $('#col2 h2');
 	var published = view.getDate &&
 	    view.getDate() ||
 	    new Date();
@@ -178,6 +176,13 @@ var BrowsePostView = Backbone.View.extend({
         this.node = node;
         this.el = $(this.template);
         this.$('textarea')[0].focus();
+    },
+
+    /**
+     * The item to be posted should always be on top.
+     */
+    getDate: function() {
+	return new Date();
     },
 
     post: function() {
