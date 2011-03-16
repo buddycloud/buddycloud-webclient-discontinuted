@@ -125,10 +125,6 @@ console.log('BrowseView remove')
         _.forEach(this.itemViews, function(itemView) {
             itemView.remove();
         });
-
-
-	/* Remove any remains. FIXME */
-	$('#col2 div').remove();
     }
 });
 
