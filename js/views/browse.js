@@ -8,10 +8,9 @@ var BrowseView = Backbone.View.extend({
     initialize: function(channel) {
         this.channel = channel;
         this.itemViews = [];
-
+        _.bindAll(this, 'render', 'posted');
         this.render();
 
-        _.bindAll(this, 'render', 'posted');
         channel.bind('change', this.render);
         channel.bind('change:items', this.render);
     },
