@@ -129,6 +129,11 @@ Channels.Node = Backbone.Model.extend({
 	}
     },
 
+    canPost: function() {
+	var affiliation = this.get('affiliation');
+	return affiliation === 'owner' || affiliation === 'publisher';
+    },
+
     post: function(text, cb) {
 	var entry = $("<entry xmlns='http://www.w3.org/2005/Atom'><content type='text'></content><published></published></entry>");
 	entry.find('content').text(text);

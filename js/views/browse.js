@@ -8,7 +8,7 @@ var BrowseView = Backbone.View.extend({
     initialize: function(channel) {
         this.channel = channel;
         this.itemViews = [];
-        _.bindAll(this, 'render', 'posted');
+        _.bindAll(this, 'render', 'posted', 'updatePostView');
         this.render();
 
         channel.bind('change', this.render);
@@ -53,8 +53,8 @@ var BrowseView = Backbone.View.extend({
             that.insertView(new BrowseItemView(item));
         });
 
-	/*TODO: if (this.channelNode.canPublish())*/
-	this.insertPostView();
+	this.channelNode.bind('change', this.updatePostView);
+	this.updatePostView();
     },
 
     posted: function() {
@@ -63,19 +63,28 @@ var BrowseView = Backbone.View.extend({
 	    delete this.postView;
 	}
 
-	this.insertPostView();
+	this.updatePostView();
     },
 
     /* requires this.channelNode to be set by hookChannelNode() */
-    insertPostView: function() {
-	if (this.postView) {
-	    /* Already there */
-	    return;
-	}
+    updatePostView: function() {
+	if (!this.channelNode.canPost()) {
+	    /* Cannot post; remove: */
+	    if (this.postView) {
+		this.postView.remove();
+		delete this.postView;
+	    }
+	} else {
+	    /* Can post: */
+	    if (this.postView) {
+		/* Already there */
+		return;
+	    }
 
-	this.postView = new BrowsePostView(this.channelNode);
-	this.postView.bind('done', this.posted);
-	this.insertView(this.postView);
+	    this.postView = new BrowsePostView(this.channelNode);
+	    this.postView.bind('done', this.posted);
+	    this.insertView(this.postView);
+	}
     },
 
     insertView: function(view) {
@@ -120,7 +129,6 @@ var BrowseView = Backbone.View.extend({
         this.channel.unbind('change:items', this.render);
         if (this.postView) {
             this.postView.unbind('done', this.posted);
-	    this.postView.remove();
 	}
         _.forEach(this.itemViews, function(itemView) {
             itemView.remove();
