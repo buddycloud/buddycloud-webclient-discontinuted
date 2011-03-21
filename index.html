@@ -28,6 +28,7 @@
     <script type="text/javascript" src="/js/views/my_message.js"></script>
     <script type="text/javascript" src="/js/views/my_channel.js"></script>
     <script type="text/javascript" src="/js/views/browse.js"></script>
+    <script type="text/javascript" src="/js/views/explore.js"></script>
     <script type="text/javascript" src="/js/views/app.js"></script>
 
   </head>
@@ -121,6 +122,19 @@
 	    </div>
 	  </script>
 	  
+	  <script type="text/template" id="browse_subscribe_template">
+	    <div class="entry alt">				
+	      <div class="entry-left">
+		<img src="/img/min-av.gif" alt="" />
+	      </div>
+	      <div class="entry-content">
+		You are not subscribed to this channel, real-time
+		updates won't be delivered to you.
+		<a href="#" class="btn2">subscribe</a>
+	      </div>
+	    </div>
+	  </script>
+
 	  <script type="text/template" id="browse_post_template">
 	    <div class="entry alt">				
 	      <div class="entry-left">
@@ -431,6 +445,53 @@
 	  <h2 class="col-title">&gt; explore</h2>
 	  
 	  <ul id="explore">
+	    <script type="text/template" id="explore_details_template">
+	      <li class="explore">
+		<h3>&gt;  details</h3>
+		<div class="explore-this">
+		  <div class="who">
+		    <img src="/img/avatar.gif" alt="" />
+		    <ul>
+		      <li><a href="#">filmgirl@buddycloud.com</a></li>
+		      <li>channel name</li>
+		      <li>channel description</li>
+		    </ul>
+		  </div>
+		  
+		  <ul>
+		    <li>days on air: 22</li>
+		    <li>broadcasting from: Munich, Germany</li>
+		    <li>rank: 45</li>
+		    <li><a href="#">followers: 35</a></li>
+		  </ul>
+		  
+		  <ul>
+		    <li>produces <a href="#">14 channels</a></li>
+		    <li>moderates <a href="#">4 channels</a></li>							
+		    <li>follows <a href="#">32 channels</a></li>
+		  </ul>
+		  
+		  <ul>
+		    <li>media posted to this channel <a href="#">22 items</a></li>
+		    <li>+1's: 2333</li>
+		    <li>shared to the following: <a href="#">twitter</a>, <a href="#">blog</a>, <a href="#">facebook</a></li>
+		  </ul>
+		  
+		  <ul>
+		    <li>direct link <a href="#">thisismylink.com/thisisme</a></li>
+		  </ul>
+		  
+		  <div class="trends">
+		    <a href="#" class="g1">trending</a>
+		    <a href="#" class="g2">following</a>
+		    <a href="#" class="g3">activity</a>
+		    <a href="#" class="g4">rank</a>
+		  </div>
+		</div>
+	      </li>
+	    </script>
+
+	    <!--
 	    <li class="explore">
 	      <h3>&gt; followers of filmgirl@buddycloud.com</h3>
 	      <div class="explore-this">
@@ -472,8 +533,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore">
 	      <h3>&gt; koski@buddycloud.com details</h3>
@@ -516,8 +577,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore">
 	      <h3>&gt; koski@buddycloud.com following</h3>
@@ -560,8 +621,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore">
 	      <h3>#parischannel details</h3>
@@ -604,8 +665,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore active">
 	      <h3>&gt; filgirl@buddycloud.com details</h3>
@@ -648,8 +709,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore">
 	      <h3>&gt; filmgirl@buddycloud.com's media</h3>
@@ -692,8 +753,8 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->
+	      </div>
+	    </li>
 	    
 	    <li class="explore">
 	      <h3>#beer</h3>
@@ -736,158 +797,10 @@
 		  <a href="#" class="g3">activity</a>
 		  <a href="#" class="g4">rank</a>
 		</div>
-	      </div><!-- e: extra explore info -->
-	    </li><!-- e: explorer -->				
-	    
+	      </div>
+	    </li>
+	    -->
 	  </ul><!-- e: EXPLORE -->
-	  
-	  <div class="share">
-	    <h4>Share this channel	</h4>
-	    <ul>
-	      <li><a href="#">email this</a></li>
-	      <li><a href="#">embed this channel in your website</a></li>
-	      <li><a href="#">rss feed</a></li>
-	      <li><a href="#">ical stream</a></li>
-	      <li><a href="#"> - of places</a></li>
-	      <li><a href="#"> - of channel posts</a></li>
-	    </ul>
-	  </div>
-	  
-	  <div class="followers">
-	    <h4>&gt; followers of channel name</h4>
-	    <ul class="the-followers">
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	      <li>
-		<a href="#" class="follower-avatar"><img src="/img/avatar-green.gif" alt="" /></a>
-		<span><a href="#">#namehereyouknow</a></span><!-- span for overflow -->
-	      </li>
-	    </ul>
-	    
-	    <p class="boxinate"><a href="#" class="b-prev">&lt; prev</a>page 1 of 20<a href="#" class="b-next">next &gt;</a></p>
-	  </div><!-- e: followers -->
-	  
-	  
-	  <div class="my-places">
-	    <h4>&gt; filmgirl@buddycloud.com places</h4>
-	    <ul>
-	      <li><strong>Home</strong><span>(private)</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	      <li><a href="#">Place Name</a><span>356 km from you</span></li>
-	    </ul>
-	    <p class="boxinate"><a href="#" class="b-prev">&lt; prev</a>page 1 of 20<a href="#" class="b-next">next &gt;</a></p>
-	  </div>
-	  
-	  
-	  <div class="this-place">
-	    <h4>&gt; places details: new cafe</h4>
-	    <div class="the-place">
-	      <h5>News cafe</h5>
-	      <p><a href="#" class="btn2">add to my places</a></p>
-	      
-	      <ul>
-		<li>leopoldstr 95</li>
-		<li>80802, Munich</li>
-		<li>Germany</li>
-		<li>(384km from you)</li>
-		<li><a href="#">see nearby places</a></li>
-		<li><a href="#">see nearby users</a></li>
-	      </ul>
-	    </div>
-	    <div class="this-place-map">
-	      <img src="/img/antmap3.gif" alt="" />
-	    </div>
-	  </div>
-	  
-	  
-	  <div class="nearby">
-	    <h4>nearby places to News Cafe</h4>
-	    <div class="nearby-map">
-	      <img src="/img/antmap3.gif" alt="" />
-	    </div>
-	    <p>showing the 10 most nearby $object types</p>
-	  </div>
 	  
 	  
 	</div><!-- e: col 3 -->

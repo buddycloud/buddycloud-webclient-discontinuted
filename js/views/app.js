@@ -9,6 +9,7 @@ var AppView = Backbone.View.extend({
         this.channels = new Channels.Channels();
         this.myMessage = new MyMessageView();
         this.myMessage.render();
+	this.explore = new ExploreView();
 
         var that = this;
         this.channels.bind('add', function(channel) {
@@ -57,6 +58,8 @@ var AppView = Backbone.View.extend({
 
         var channel = this.channels.getChannel(user);
 	this.browseView = new BrowseView({ channel: channel });
+
+	this.explore.add(new ExploreViewDetails({ channel: channel }));
     }
 });
 
