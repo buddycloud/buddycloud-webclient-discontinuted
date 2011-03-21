@@ -56,7 +56,7 @@ var AppView = Backbone.View.extend({
         }
 
         var channel = this.channels.getChannel(user);
-	this.browseView = new BrowseView(channel);
+	this.browseView = new BrowseView({ channel: channel });
     }
 });
 

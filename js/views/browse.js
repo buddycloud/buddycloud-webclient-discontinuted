@@ -5,14 +5,14 @@
 var BrowseView = Backbone.View.extend({
     el: '#col2',
 
-    initialize: function(channel) {
-        this.channel = channel;
+    initialize: function(options) {
+        this.channel = options.channel;
         this.itemViews = [];
         _.bindAll(this, 'render', 'posted', 'updatePostView');
         this.render();
 
-        channel.bind('change', this.render);
-        channel.bind('change:items', this.render);
+        this.channel.bind('change', this.render);
+        this.channel.bind('change:items', this.render);
     },
 
     render: function() {
@@ -45,12 +45,12 @@ var BrowseView = Backbone.View.extend({
         var items = this.channelNode.get('items');
 	/* Populate with existing items */
 	items.forEach(function(item) {
-            that.insertView(new BrowseItemView(item));
+            that.insertView(new BrowseItemView({ item: item }));
         });
 	/* Hook future updates */
 	items.bind('add', function(item) {
 	    console.log('addItem to browseview');
-            that.insertView(new BrowseItemView(item));
+            that.insertView(new BrowseItemView({ item: item }));
         });
 
 	this.channelNode.bind('change', this.updatePostView);
@@ -81,7 +81,7 @@ var BrowseView = Backbone.View.extend({
 		return;
 	    }
 
-	    this.postView = new BrowsePostView(this.channelNode);
+	    this.postView = new BrowsePostView({ node: this.channelNode });
 	    this.postView.bind('done', this.posted);
 	    this.insertView(this.postView);
 	}
@@ -137,8 +137,8 @@ var BrowseView = Backbone.View.extend({
 });
 
 var BrowseItemView = Backbone.View.extend({
-    initialize: function(item) {
-        this.item = item;
+    initialize: function(options) {
+        this.item = options.item;
 
         this.el = $(this.template);
         this.render();
@@ -176,8 +176,8 @@ var BrowsePostView = Backbone.View.extend({
         'click a.btn2': 'post'
     },
 
-    initialize: function(node) {
-        this.node = node;
+    initialize: function(options) {
+        this.node = options.node;
         this.el = $(this.template);
         this.$('textarea')[0].focus();
     },
