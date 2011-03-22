@@ -67,6 +67,13 @@ var ExploreViewDetails = ExploreViewItem.extend({
 	    this.$('.desc2').text(meta && meta['pubsub#description']);
 
 	    this.$('.followers').text(this.channelNode.get('subscribers').length);
+	    var creationDate = meta && meta['pubsub#creation_date'] && new Date(meta['pubsub#creation_date']);
+	    this.$('.created').attr('title', isoDateString(creationDate));
+	    if (!this.createdTimeagoSet) {
+		this.$('.created').timeago();
+		/* Don't activate twice: */
+		this.createdTimeagoSet = true;
+	    }
 	}
     },
 
