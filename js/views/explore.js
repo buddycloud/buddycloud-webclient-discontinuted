@@ -54,19 +54,43 @@ var ExploreViewDetails = ExploreViewItem.extend({
     },
 
     render: function() {
+	this.hookChannelNode();
+
 	var user = this.channel.get('id');
 	this.$('h3').text('> ' + user + ' details');
 	this.$('.user a').text(user);
 	this.$('.user a').attr('href', '#browse/' + user);
 
-	var channelNode = this.channel.getNode('channel');
-	var meta = channelNode && channelNode.get('meta');
-	this.$('.desc1').text(meta && meta['pubsub#title']);
-	this.$('.desc2').text(meta && meta['pubsub#description']);
+	if (this.channelNode) {
+	    var meta = this.channelNode.get('meta');
+	    this.$('.desc1').text(meta && meta['pubsub#title']);
+	    this.$('.desc2').text(meta && meta['pubsub#description']);
+
+	    this.$('.followers').text(this.channelNode.get('subscribers').length);
+	}
+    },
+
+    hookChannelNode: function() {
+	/* Got it already? */
+	if (this.channelNode)
+	    return;
+
+	this.channelNode = this.channel.getNode('channel');
+	/* Not available yet? */
+	if (!this.channelNode)
+	    return;
+
+	this.channelNode.bind('change', this.render);
+	this.channelNode.get('subscribers').bind('change', this.render);
     },
 
     remove: function() {
 	this.channel.unbind('change', this.render);
+
+	if (this.channelNode) {
+	    this.channelNode.unbind('change', this.render);
+	    this.channelNode.get('subscribers').unbind('change', this.render);
+	}
     }
 });
 

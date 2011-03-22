@@ -82,6 +82,13 @@ Channels.Items = Backbone.Collection.extend({
     }
 });
 
+Channels.Subscriber = Backbone.Model.extend({
+});
+
+Channels.Subscribers = Backbone.Collection.extend({
+    model: Channels.Subscriber
+});
+
 Channels.Node = Backbone.Model.extend({
     initialize: function() {
 	var that = this;
@@ -92,12 +99,20 @@ Channels.Node = Backbone.Model.extend({
 	    /* Propagate any change to the node */
 	    that.trigger('change:items', that);
 	});
-	this.set({ items: items });
+	var subscribers = new Channels.Subscribers();
+	this.set({ items: items, subscribers: subscribers });
 
 	/* Fetch items */
 	Channels.cl.getItems(this.get('service').get('id'), this.get('id'), function(err, items) {
 	    _.forEach(items, function(item) {
 		that.setItem(item.id, item.elements);
+	    });
+	});
+	/* Fetch subscribers */
+	Channels.cl.getSubscribers(this.get('service').get('id'), this.get('id'), function(err, jids) {
+	    _.forEach(jids, function(jid) {
+		if (!subscribers.get(jid))
+		    subscribers.add(new Channels.Subscriber({ id: jid }));
 	    });
 	});
 	/* Fetch meta data */

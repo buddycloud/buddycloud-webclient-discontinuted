@@ -1,6 +1,7 @@
 /* TODO: error messages everywhere */
 var IQ_TIMEOUT = 10000;
 Strophe.addNamespace('PUBSUB', "http://jabber.org/protocol/pubsub");
+Strophe.addNamespace('PUBSUB_OWNER', "http://jabber.org/protocol/pubsub#owner");
 Strophe.addNamespace('PUBSUB_EVENT', "http://jabber.org/protocol/pubsub#event");
 Strophe.addNamespace('DATA', "jabber:x:data");
 Strophe.addNamespace('REGISTER', "jabber:iq:register");
@@ -329,3 +330,29 @@ Channels.XmppClient.prototype.publishItem = function(jid, node, itemId, elements
 	cb(new Error('Publishing failed'));
     });
 };
+
+/* cb(err, [jid]) */
+Channels.XmppClient.prototype.getSubscribers = function(jid, node, cb) {
+    this.request($iq({ to: jid,
+		       type: 'get' }).
+		 c('pubsub', { xmlns: Strophe.NS.PUBSUB_OWNER }).
+		 c('subscriptions', { node: node }),
+    function(reply) {
+	var subscriptions = [];
+	var pubsubEl = reply && reply.getElementsByTagName('pubsub')[0];
+	var subscriptionsEl = pubsubEl && pubsubEl.getElementsByTagName('subscriptions')[0];
+	if (subscriptionsEl) {
+	    var subscriptionEls = subscriptionsEl.getElementsByTagName('subscription');
+	    for(var i = 0; i < subscriptionEls.length; i++) {
+		var subscriptionEl = subscriptionEls[i];
+		var subscription = subscriptionEl.getAttribute('subscription');
+		if (subscription === 'subscribed' || !subscription)
+		    subscriptions.push(subscriptionEl.getAttribute('jid'));
+	    }
+	}
+	cb(null, subscriptions);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
+

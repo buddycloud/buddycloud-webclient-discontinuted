@@ -12,7 +12,6 @@ var BrowseView = Backbone.View.extend({
         this.render();
 
         this.channel.bind('change', this.render);
-        this.channel.bind('change:items', this.render);
     },
 
     render: function() {
@@ -126,7 +125,6 @@ var BrowseView = Backbone.View.extend({
      */
     remove: function() {
         this.channel.unbind('change', this.render);
-        this.channel.unbind('change:items', this.render);
         if (this.postView) {
             this.postView.unbind('done', this.posted);
 	}
