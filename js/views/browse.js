@@ -139,6 +139,8 @@ var BrowseView = Backbone.View.extend({
 var BrowseItemView = Backbone.View.extend({
     initialize: function(options) {
         this.item = options.item;
+	_.bindAll(this, 'render');
+	this.item.bind('change', this.render);
 
         this.el = $(this.template);
         this.render();
@@ -161,6 +163,11 @@ var BrowseItemView = Backbone.View.extend({
     /* for view ordering */
     getDate: function() {
 	return this.item.getPublished();
+    },
+
+    remove: function() {
+	Backbone.View.prototype.remove.apply(this, arguments);
+	this.item.unbind('change', this.render);
     }
 });
 
