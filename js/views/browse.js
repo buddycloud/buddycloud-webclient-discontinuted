@@ -8,7 +8,7 @@ var BrowseView = Backbone.View.extend({
     initialize: function(options) {
         this.channel = options.channel;
         this.itemViews = [];
-        _.bindAll(this, 'render', 'posted', 'updatePostView');
+        _.bindAll(this, 'render', 'posted', 'updatePostView', 'updateSubscribeView');
         this.render();
 
         this.channel.bind('change', this.render);
@@ -54,23 +54,28 @@ var BrowseView = Backbone.View.extend({
 
 	this.channelNode.bind('change', this.updatePostView);
 	this.updatePostView();
+
+	this.channelNode.bind('change', this.updateSubscribeView);
+	this.updateSubscribeView();
     },
 
     posted: function() {
 	if (this.postView) {
-	    this.postView.remove();
+	    this.removeView(this.postView);
 	    delete this.postView;
 	}
 
 	this.updatePostView();
     },
 
-    /* requires this.channelNode to be set by hookChannelNode() */
     updatePostView: function() {
+	if (!this.channelNode)
+	    return;
+
 	if (!this.channelNode.canPost()) {
 	    /* Cannot post; remove: */
 	    if (this.postView) {
-		this.postView.remove();
+		this.removeView(this.postView);
 		delete this.postView;
 	    }
 	} else {
@@ -83,6 +88,24 @@ var BrowseView = Backbone.View.extend({
 	    this.postView = new BrowsePostView({ node: this.channelNode });
 	    this.postView.bind('done', this.posted);
 	    this.insertView(this.postView);
+	}
+    },
+
+    updateSubscribeView: function() {
+	if (!this.channelNode)
+	    return;
+
+	var subscription = this.channelNode.get('subscription');
+console.log('subscription: ' + subscription);
+	/* Insertion, because not yet subscribed */
+	if (!this.subscribeView && subscription === 'none') {
+	    this.subscribeView = new BrowseSubscribeView({ channel: this.channel });
+	    this.insertView(this.subscribeView);
+	}
+	/* Removal, because subscribed */
+	if (this.subscribeView && subscription !== 'none') {
+	    this.removeView(this.subscribeView);
+	    delete this.subscribeView;
 	}
     },
 
@@ -117,6 +140,11 @@ var BrowseView = Backbone.View.extend({
          * `initialize()' member is called. We need to trigger
          * binding events again: */
         view.delegateEvents();
+    },
+
+    removeView: function(view) {
+	this.itemViews = _.without(this.itemViews, view);
+	view.remove();
     },
 
     /**
@@ -191,7 +219,7 @@ var BrowsePostView = Backbone.View.extend({
      * The item to be posted should always be on top.
      */
     getDate: function() {
-	return new Date();
+	return (new Date()).getTime() + 1E6;
     },
 
     post: function() {
@@ -219,4 +247,45 @@ var BrowsePostView = Backbone.View.extend({
 });
 $(function() {
       BrowsePostView.prototype.template = $('#browse_post_template').html();
+});
+
+/**
+ * Triggers 'done' so BrowseView can remove it on success.
+ */
+var BrowseSubscribeView = Backbone.View.extend({
+    events: {
+        'click a.btn2': 'subscribe'
+    },
+
+    initialize: function(options) {
+        this.channel = options.channel;
+        this.el = $(this.template);
+    },
+
+    /**
+     * The item to be posted should always be on top.
+     */
+    getDate: function() {
+	return (new Date()).getTime() + 2E6;
+    },
+
+    subscribe: function() {
+        var that = this;
+        this.$('a.btn2').hide();
+	this.$('p').text('Subscribing to this channel...');
+
+	this.channel.subscribe(function(err) {
+	    if (!err) {
+		that.trigger('done');
+	    } else {
+		that.$('a.btn2').show();
+		that.$('p').text('Error');
+	    }
+	});
+
+        return false;
+    }
+});
+$(function() {
+      BrowseSubscribeView.prototype.template = $('#browse_subscribe_template').html();
 });

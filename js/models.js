@@ -159,6 +159,19 @@ Channels.Node = Backbone.Model.extend({
 	Channels.cl.publishItem(jid, nodeName, null, [entry[0]], cb);
     },
 
+    subscribe: function(cb) {
+	var that = this;
+	var jid = this.get('service').get('id');
+	var nodeName = this.get('id');
+	Channels.cl.subscribe(jid, nodeName, function(err) {
+	    if (!err) {
+		/* TODO: pending? affiliations sync? */
+		that.set({ subscription: 'subscribed' });
+	    }
+	    cb(err);
+	});
+    },
+
     /**
      * Reference counting
      */
@@ -175,7 +188,9 @@ Channels.Node = Backbone.Model.extend({
 	this.refcnt--;
 	Backbone.Model.prototype.unbind.apply(this, arguments);
 
-	if (this.refcnt < 1) {
+	if (this.refcnt < 1 &&
+	    this.get('subscription') === 'none' &&
+	    this.get('affiliation') === 'none') {
 	    /* TODO: only on no affiliation */
 	    this.get('service').dropNode(this.get('id'));
 	}
@@ -202,7 +217,12 @@ Channels.Service = Backbone.Model.extend({
 	    }
 	};
 	Channels.cl.getSubscriptions(jid, function(err, subscriptions) {
-	    /* TODO: clear old subscriptions */
+	    /* clear old subscriptions first */
+	    _.forEach(that.getAllNodes(), function(node) {
+		node.set({ subscription: 'none' });
+	    });
+
+	    /* set new subscriptions */
 	    _.forEach(subscriptions, function(subscription) {
 		that.getNode(subscription.node).
 		    set({ subscription: subscription.subscription });
@@ -210,7 +230,12 @@ Channels.Service = Backbone.Model.extend({
 	    done();
 	});
 	Channels.cl.getAffiliations(jid, function(err, affiliations) {
-	    /* TODO: clear old affiliations */
+	    /* clear old affiliations first */
+	    _.forEach(that.getAllNodes(), function(node) {
+		node.set({ affiliation: 'none' });
+	    });
+
+	    /* set new affiliations */
 	    _.forEach(affiliations, function(affiliation) {
 		that.getNode(affiliation.node).
 		    set({ affiliation: affiliation.affiliation });
@@ -223,7 +248,10 @@ Channels.Service = Backbone.Model.extend({
     getNode: function(name) {
 	var node = this.get('node:' + name);
 	if (!node) {
-	    node = new Channels.Node({ id: name, service: this });
+	    node = new Channels.Node({ id: name,
+				       service: this,
+				       subscription: 'none',
+				       affiliation: 'none' });
 	    var attrs = {};
 	    attrs['node:' + name] = node;
 	    this.set(attrs);
@@ -236,6 +264,16 @@ Channels.Service = Backbone.Model.extend({
      */
     dropNode: function(name) {
 	this.unset('node:' + name);
+    },
+
+    getAllNodes: function() {
+	var results = [];
+	_.each(this.toJSON(), function(node, name) {
+	    if (name.indexOf('node:') === 0) {
+		results.push(node);
+	    }
+	});
+	return results;
     },
 
     /**
@@ -323,6 +361,31 @@ Channels.Channel = Backbone.Model.extend({
     /* Simple getter */
     getNode: function(nodeTail) {
 	return this.get('node:' + nodeTail);
+    },
+
+    getAllNodes: function() {
+	var results = [];
+	_.each(this.toJSON(), function(node, name) {
+	    if (name.indexOf('node:') === 0) {
+		results.push(node);
+	    }
+	});
+	return results;
+    },
+
+    subscribe: function(cb) {
+	var pending = 0, error, done = function(err) {
+	    if (err)
+		error = err;
+
+	    pending--;
+	    if (pending < 1)
+		cb(error);
+	};
+	_.forEach(this.getAllNodes(), function(node) {
+	    node.subscribe(done);
+	});
+	done();
     },
 
     /**

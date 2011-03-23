@@ -71,7 +71,7 @@ Channels.XmppClient.prototype.handlePresence = function(stanza) {
     /* Subscription request from service? */
     if (jid.indexOf('@') < 0 && type === 'subscribe') {
 	/* Always allow: */
-	this.send($pres({ type: 'subscribed', to: jid }));
+	this.conn.send($pres({ type: 'subscribed', to: jid }));
     }
 };
 
@@ -356,3 +356,14 @@ Channels.XmppClient.prototype.getSubscribers = function(jid, node, cb) {
     });
 };
 
+Channels.XmppClient.prototype.subscribe = function(jid, node, cb) {
+    this.request($iq({ to: jid,
+		       type: 'set' }).
+		 c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+		 c('subscribe', { node: node }),
+    function(reply) {
+	cb(null);
+    }, function(reply) {
+	cb(new Error());
+    });
+};
