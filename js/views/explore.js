@@ -151,6 +151,7 @@ var ExploreViewSubscribers = ExploreViewItem.extend({
 	var user = subscriber.get('id');
 	var li = $($('#explore_subscriber_template').html());
 	li.find('.user').text(user);
+	li.find('a').attr('href', '#browse/' + user);
 	this.$('ul.the-followers').append(li);
     }
 });
