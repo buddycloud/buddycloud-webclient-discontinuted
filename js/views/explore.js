@@ -14,8 +14,7 @@ var ExploreView = Backbone.View.extend({
 
 	this.views.unshift(view);
 	this.$('#explore').prepend(view.el);
-	if (active)
-	    view.el.addClass('active');
+	view.el.addClass('active');
 
 	view.render();
 	view.delegateEvents();
@@ -44,12 +43,17 @@ var ExploreViewItem = Backbone.View.extend({
 });
 
 var ExploreViewDetails = ExploreViewItem.extend({
+    events: _.extend({
+	'click .followers': 'showFollowers'
+    }, ExploreViewItem.prototype.events),
+
     initialize: function(options) {
 	ExploreViewItem.prototype.initialize.call(this);
 
 	this.channel = options.channel;
+	this.parent = options.parent;
 
-	_.bindAll(this, 'render');
+	_.bindAll(this, 'render', 'showFollowers');
 	this.channel.bind('change', this.render);
     },
 
@@ -94,6 +98,10 @@ var ExploreViewDetails = ExploreViewItem.extend({
 	this.channelNode.get('subscribers').bind('change', this.render);
     },
 
+    showFollowers: function() {
+	this.parent.add(new ExploreViewSubscribers({ channel: this.channel }));
+    },
+
     remove: function() {
 	this.channel.unbind('change', this.render);
 
@@ -106,4 +114,47 @@ var ExploreViewDetails = ExploreViewItem.extend({
 
 $(function() {
       ExploreViewDetails.prototype.template = $('#explore_details_template').html();
+});
+
+var ExploreViewSubscribers = ExploreViewItem.extend({
+    initialize: function(options) {
+	ExploreViewItem.prototype.initialize.call(this);
+
+	_.bindAll(this, 'addSubscriber');
+	this.channel = options.channel;
+	this.channel.bind('change', this.render);
+    },
+
+    render: function() {
+	this.hookChannelNode();
+
+	this.$('h3').text('> ' + this.channel.get('id') + ' followers');
+    },
+
+    hookChannelNode: function() {
+	/* Got it already? */
+	if (this.channelNode)
+	    return;
+
+	this.channelNode = this.channel.getNode('channel');
+	/* Not available yet? */
+	if (!this.channelNode)
+	    return;
+
+	this.channelNode.bind('change', this.render);
+	var subscribers = this.channelNode.get('subscribers');
+	subscribers.forEach(this.addSubscriber);
+	subscribers.bind('add', this.addSubscriber);
+    },
+
+    addSubscriber: function(subscriber) {
+	var user = subscriber.get('id');
+	var li = $($('#explore_subscriber_template').html());
+	li.find('.user').text(user);
+	this.$('ul.the-followers').append(li);
+    }
+});
+
+$(function() {
+      ExploreViewSubscribers.prototype.template = $('#explore_subscribers_template').html();
 });
