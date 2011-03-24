@@ -427,7 +427,7 @@ Channels.Channels = Backbone.Collection.extend({
 	this.services = {};
 
 	Channels.cl.bind('online', function() {
-	    console.log('online');
+	    console.log('channels model online');
 	    that.getChannel(Channels.cl.jid);
 	});
 

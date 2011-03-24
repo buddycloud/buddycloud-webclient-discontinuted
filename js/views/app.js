@@ -20,7 +20,7 @@ var AppView = Backbone.View.extend({
                 that.myMessage.setChannel(channel);
 
             /* add to .col1 */
-            $('#col1').append(new MyChannelView(channel).render().el);
+            $('#col1').append(new MyChannelView(channel).el);
         });
 
 	this.channels.bind('userService', function(user, serviceJids) {

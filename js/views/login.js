@@ -1,11 +1,4 @@
 /**
- * TODO: This may go in favour of weld-style
- */
-function xmlEscape(s) {
-    return Strophe.xmlescape(s || '');
-}
-
-/**
  * LoginView
  */
 var LoginView = Backbone.View.extend({
