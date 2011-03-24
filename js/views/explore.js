@@ -100,6 +100,8 @@ var ExploreViewDetails = ExploreViewItem.extend({
 
     showFollowers: function() {
 	this.parent.add(new ExploreViewSubscribers({ channel: this.channel }));
+
+	return false;
     },
 
     remove: function() {
@@ -123,6 +125,7 @@ var ExploreViewSubscribers = ExploreViewItem.extend({
 	_.bindAll(this, 'addSubscriber');
 	this.channel = options.channel;
 	this.channel.bind('change', this.render);
+	this.subscriberItems = [];
     },
 
     render: function() {
@@ -148,14 +151,48 @@ var ExploreViewSubscribers = ExploreViewItem.extend({
     },
 
     addSubscriber: function(subscriber) {
-	var user = subscriber.get('id');
-	var li = $($('#explore_subscriber_template').html());
-	li.find('.user').text(user);
-	li.find('a').attr('href', '#browse/' + user);
-	this.$('ul.the-followers').append(li);
+	var jid = subscriber.get('id');
+	var channel = this.channel.get('channels').getChannel(jid);
+
+	var item = new ExploreViewSubscribersItem({ channel: channel });
+	this.subscriberItems.push(item);
+	this.$('ul.the-followers').append(item.el);
+    },
+
+    remove: function() {
+	Backbone.View.prototype.remove.apply(this, arguments);
+	_.forEach(this.subscriberItems, function(item) {
+	    item.remove();
+	});
     }
 });
 
 $(function() {
       ExploreViewSubscribers.prototype.template = $('#explore_subscribers_template').html();
+});
+
+var ExploreViewSubscribersItem = ExploreViewItem.extend({
+    initialize: function(options) {
+	_.bindAll(this, 'render');
+	this.el = $(this.template);
+
+	this.channel = options.channel;
+	this.channel.bind('change', this.render);
+	this.render();
+    },
+
+    render: function() {
+	var jid = this.channel.get('id');
+	this.$('.user').text(jid);
+	this.$('a').attr('href', '#browse/' + jid);
+	this.$('img').attr('src', this.channel.getAvatarURL());
+    },
+
+    remove: function() {
+	this.channel.unbind('change', this.render);
+    }
+});
+
+$(function() {
+      ExploreViewSubscribersItem.prototype.template = $('#explore_subscriber_template').html();
 });

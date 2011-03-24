@@ -373,6 +373,20 @@ Channels.Channel = Backbone.Model.extend({
 	return results;
     },
 
+    /**
+     * TODO: this needs to come from meta-data some day
+     * meta-data updates need to trigger channel 'update'
+     */
+    getAvatarURL: function(size) {
+	var jid = this.get('id');
+	var parts = jid.split('@');
+	if (parts.length === 2) {
+	    return 'http://media.buddycloud.com/channel/' + (size || '54x54') + '/' + parts[1] +
+		'/' + parts[0] + '.png';
+	} else
+	    return '';
+    },
+
     subscribe: function(cb) {
 	var pending = 0, error, done = function(err) {
 	    if (err)
@@ -452,7 +466,7 @@ Channels.Channels = Backbone.Collection.extend({
     getChannel: function(jid) {
 	var channel = this.get(jid);
 	if (!channel) {
-	    channel = new Channels.Channel({ id: jid });
+	    channel = new Channels.Channel({ id: jid, channels: this });
 	    this.add(channel);
 	}
 	return channel;
