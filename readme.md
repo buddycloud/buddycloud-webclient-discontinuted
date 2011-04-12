@@ -1,23 +1,43 @@
+This is the Buddycloud web client. See my [introduction](http://bennolan.com/2011/04/12/distributed-social-networking.html) at [bennolan.com](http://bennolan.com/). It is a Javascript + PHP implementation of a social network powered by XMPP.
+
+# Funding
+
+The original Diaspora-x codebase that this project is an extension of was created by Ben Nolan as a part-time project. Further development has been kindly funded by Imaginator Ltd, operators of buddycloud.com.
+
+# Buddycloud protocol
+
+The buddycloud protocol is being submitted as a XEP. The [current draft](http://buddycloud.org/wiki/XMPP_XEP) should be submitted in mid-2011.
+
+# Buddycloud server implementations
+
+The XMPP extensions that Buddycloud describes have been implemented in three projects:
+
+* [Node.js server](https://github.com/buddycloud/channel-server)
+* [Prosody implementation](http://buddycloud.com/cms/content/buddycloud-channels-built-prosody)
+* The original ejabberd implementation of Buddycloud channels (obsolete)
 
 # Installation
 
-Diaspora-x^2 doesn't require any 
+Requires [capt](http://github.com/bnolan/capt) and php5. (todo - this section needs expansion)
 
-# References
+# API
 
-* http://onesocialweb.org/spec/1.0/osw-activities.html
-* http://xmpp.org/extensions/xep-0277.html#reply
+The php aspects of the client provide an API for services that cannot be easily done on the client, eg - automated sending of email and uploading of images.
 
-# Investigate..
+## Authentication
 
-Add [qunit-mock](https://github.com/bitzesty/qunit-mock) to the test suite - or switch to jasmine?
+All requests to the API must be authenticated using http-auth with the the users jid and password. Requests should obviously be over https. The api will connect to the users jabber server to ensure the password is correct. This authentication check against the jabber server will only happen once per session.
 
-Support standard pubsub seems to do most of what we want with [persistence](http://stackoverflow.com/questions/3831408/how-to-store-pubsub-payloads-in-db).
+## /api/email
 
-# Content licence
+    { data : [ {
+        recipient : "friend@gmail.com",
+        subject : "Visit me on Diaspora-x",
+        message : "Hey Friend, come join me at..."
+      }, { ... }, { ...} ]
+    }
 
-Users should be able to select their own licence. By default the licence should be creative commons. The licence should be attached to content using [RFC 4946](http://tools.ietf.org/html/rfc4946).
-
+Used to send invitation emails to friends. Returns `{ success : true }` on success.
 
 # Licenced under the BSD
 
@@ -46,3 +66,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ben Nolan.
+
+# Assorted notes follow - 
+
+## References
+
+* http://onesocialweb.org/spec/1.0/osw-activities.html
+* http://xmpp.org/extensions/xep-0277.html#reply
+
+## Content licence
+
+Users should be able to select their own licence. By default the licence should be creative commons. The licence should be attached to content using [RFC 4946](http://tools.ietf.org/html/rfc4946).
+
