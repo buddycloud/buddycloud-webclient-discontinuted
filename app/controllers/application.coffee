@@ -13,7 +13,7 @@ class Connection
     @c.connect jid, password, @onConnect
 
     @c.rawInput = (message) ->
-      c = if message.match(/error/)
+      c = if message.match(/<error/)
         'error'
       else
         'input'
@@ -32,8 +32,8 @@ class Connection
       # console.log('Strophe failed to authenticate.')
       app.signout()
     else if (status == Strophe.Status.CONNFAIL)
-      # console.log('Strophe failed to connect.')
-      app.signout()
+      console.log('Strophe failed to connect.')
+      # app.signout()
     else if (status == Strophe.Status.DISCONNECTING)
       # console.log('Strophe is disconnecting.')
     else if (status == Strophe.Status.DISCONNECTED)
@@ -296,9 +296,6 @@ app.connect = ->
 
   window.location.hash = "connecting"
 
-  # Establish xmpp connection
-  window.$c = new Connection(localStorage['jid'], localStorage['password'])
-
 app.currentUser = null
 
 app.spinner = ->
@@ -351,7 +348,17 @@ app.start = ->
     
     # The login / connection process isn't robust enough to jump
     # to a random page in the app yet..
-    window.location.hash = ""
+    # window.location.hash = ""
+
+
+    if jid = localStorage['jid']
+      # Set the currentUser
+      app.currentUser = Users.findOrCreateByJid(jid)
+
+      # Establish xmpp connection
+      window.$c = new Connection(localStorage['jid'], localStorage['password'])
+    else
+      window.location.hash = ""
   
     # Start the url router
     Backbone.history.start();  

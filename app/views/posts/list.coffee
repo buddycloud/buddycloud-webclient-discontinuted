@@ -58,6 +58,11 @@ class PostsListView extends Backbone.View
       <% }); %>
     ''')
 
+    @collection.bind 'add', @render
+    @collection.bind 'change', @render
+    @collection.bind 'remove', @render
+    @collection.bind 'refresh', @render
+
     @render()
   
   events: {

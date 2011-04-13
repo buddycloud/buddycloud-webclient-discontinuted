@@ -26,7 +26,7 @@ The php aspects of the client provide an API for services that cannot be easily 
 
 ## Authentication
 
-All requests to the API must be authenticated using http-auth with the the users jid and password. Requests should obviously be over https. The api will connect to the users jabber server to ensure the password is correct. This authentication check against the jabber server will only happen once per session.
+All requests to the API must be authenticated using http-auth with the the users jid and password. Requests should be over https. The api will connect to the users jabber server to ensure the password is correct. This authentication check against the jabber server will only happen once per session.
 
 ## /api/email
 
@@ -37,7 +37,7 @@ All requests to the API must be authenticated using http-auth with the the users
       }, { ... }, { ...} ]
     }
 
-Used to send invitation emails to friends. Returns `{ success : true }` on success.
+Used to send invitation or notification emails. Returns `{ success : true }` on success. Does no validation on the subject, recipient or message. Does not support html messages. The reply-to is set as "no-reply@DOMAIN". The from is the jid of the authenticated user.
 
 # Licence
 

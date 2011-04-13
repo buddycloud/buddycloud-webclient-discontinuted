@@ -2,6 +2,8 @@ class User extends Backbone.Model
   initializer: ->
     # ...
 
+  localStorage: new Store("UserCollection")
+
   fetchPosts: ->
     $c.getChannel @getNode()
     
@@ -66,9 +68,11 @@ class UserCollection extends Backbone.Collection
         jid : jid
       }
       @add user
+      user.save()
 
     user
   # comparator: (post) ->
   #   post.get('published')
   
 this.Users = new UserCollection
+this.Users.refresh()

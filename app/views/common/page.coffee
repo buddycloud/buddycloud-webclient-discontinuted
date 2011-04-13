@@ -78,6 +78,5 @@ class CommonPageView extends Backbone.View
     $('ul.tabs li').show()
     @el.html(@template())
     @delegateEvents()
-    
 
 @CommonPageView = CommonPageView

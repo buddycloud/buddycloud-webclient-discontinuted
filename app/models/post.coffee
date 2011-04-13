@@ -44,7 +44,35 @@ class Post extends Backbone.Model
       $c.sendPost(this)
     else
       # console.log "not sending.. seems invalid."
+
+  validate: (attr) ->
+    attr ||= @attributes
     
+    if !attr.content
+      'Post must have content'
+    else
+      true
+    
+Post.parseFromItem = (item) ->
+  post = new Post { 
+    id : parseInt(item.find('id').text().replace(/.+:/,''))
+    content : item.find('content').text() 
+    author : Users.findOrCreateByJid(item.find('author jid').text())
+    published : item.find('published').text()
+  }
+
+  if item.find 'in-reply-to'
+    post.set { 'in_reply_to' : parseInt(item.find('in-reply-to').attr('ref')) }
+
+  if item.find 'geoloc'
+    post.set { 
+      geoloc_country : item.find('geoloc country').text()
+      geoloc_locality : item.find('geoloc locality').text()
+      geoloc_text : item.find('geoloc text').text()
+    }
+
+  post
+  
 this.Post = Post
 
 class PostCollection extends Backbone.Collection
@@ -53,4 +81,5 @@ class PostCollection extends Backbone.Collection
   comparator: (post) ->
     post.get('published')
   
+this.PostCollection = PostCollection
 this.Posts = new PostCollection

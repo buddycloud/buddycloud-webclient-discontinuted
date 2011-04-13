@@ -4,15 +4,29 @@ class ChannelsShowView extends Backbone.View
 
     @el = $("#main")
 
-    @collection = Posts
+    # Get some meta data (subscribers / etc...)
+    @model.fetchMetadata()
+    
+    # Get the posts (collection may be empty initially)
+    @collection = new PostCollection # @model.getPosts()
     
     @template = _.template('''
 
-      <h1>
+      <h1 class="channel-name">
         <%= channel.getName().capitalize() %>
       </h1>
       <p class="usermeta">
-        <img src="public/icons/folder.png" /> <%= channel.getName().capitalize() %> Channel
+        <% if(channel.hasMetaData()){ %>
+          <img src="public/icons/user.png" /> Owned by <%= channel.escapeOwnerNode() %>
+          <img src="public/icons/clock.png" /> Created <%= channel.escapeCreationDate() %>
+          <img src="public/icons/chart_bar.png" /> <%= channel.escape('num_subscribers') %> subscribers 
+          <!--img src="public/icons/cert.png" /> Ranked #<%= channel.escape('popularity') %> in popularity -->
+        <% } else { %>
+          <img src="public/icons/sand.png" />Loading...
+        <% } %>
+      </p>
+      <p class="description">
+        <%= channel.escape('description') %>
       </p>
     
       <form action="#" class="new_activity status">
@@ -24,11 +38,8 @@ class ChannelsShowView extends Backbone.View
       <div class="posts"></div>
     ''')
 
-    @collection.bind 'add', @render
-    @collection.bind 'change', @render
-    @collection.bind 'remove', @render
-    @collection.bind 'refresh', @render
-
+    @model.bind 'change', @render
+    
     @render()
   
   events: {
@@ -53,20 +64,15 @@ class ChannelsShowView extends Backbone.View
     
     post.send()
   
-  getPosts: ->
-    _ @collection.select((post) =>
-      (!post.isReply()) && (post.get('channel') == @model.getNode())
-    ).reverse()
-    
   render: =>
     if @renderTimeout
       clearTimeout @renderTimeout
       
     @renderTimeout = setTimeout( =>
-      @el.html(@template( { channel : @model, posts : @getPosts() })).find('.timeago').timeago()
+      @el.html(@template( { channel : @model }))
       @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), collection : @getPosts() }
+      new PostsListView { el : @el.find('.posts'), collection : @collection }
       
       @renderTimeout = null
     , 50)
