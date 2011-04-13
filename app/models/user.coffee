@@ -67,6 +67,10 @@ class UserCollection extends Backbone.Collection
   findOrCreateByJid : (jid) ->
     user  = null
     
+    unless typeof jid == "string"
+      console.log jid
+      throw "JID is not a string"
+    
     if @findByJid(jid)
       user = @findByJid(jid)
     else

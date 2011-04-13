@@ -331,8 +331,10 @@ app.signout = ->
   Posts.refresh []
   Users.refresh []
   
-  localStorage.removeItem('jid')
-
+  localStorage.clear()
+  
+  window.location.reload()
+  
   try
     window.$c.c.disconnect()
   catch e

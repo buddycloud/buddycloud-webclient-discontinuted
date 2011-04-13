@@ -43,11 +43,8 @@ class Channel extends Backbone.Model
           if (@posts.get(post.id)) || (true != post.validate())
             continue
 
-          console.log post.get('content')
           @posts.add post
           post.save()
-          
-        console.log @posts.length
 
         # ...
       (err) =>

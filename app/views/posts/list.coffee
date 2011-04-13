@@ -1,7 +1,6 @@
 class PostsListView extends Backbone.View
   initialize: ->
     @template = _.template('''
-      <% posts.each(function(post){ %>
         <div class="activity">
           <div class="grid_1">
             <img class="thumb avatar" src="<%= post.getAuthorAvatar() %>" />
@@ -11,7 +10,7 @@ class PostsListView extends Backbone.View
               <a href="#users/<%= post.getAuthor().get('jid') %>"><%= post.getAuthorName() %> </a>
             </h4>
             <p class="content">
-              <%= post.get('content') %>
+              <%= view.formatContent(post) %>
             </p>
             <p class="meta">
               <span class='timeago' title='<%= post.get('published') %>'><%= post.get('published') %></span> |
@@ -31,7 +30,8 @@ class PostsListView extends Backbone.View
                   <div class="comment">
                     <img class="micro avatar" src="<%= reply.getAuthorAvatar() %>" />
                     <p class="content">
-                      <a href="#users/<%= reply.getAuthor().get('jid') %>"><%= reply.getAuthorName() %></a> <%= reply.get('content') %>
+                      <a href="#users/<%= reply.getAuthor().get('jid') %>"><%= reply.getAuthorName() %></a> 
+                      <%= view.formatContent(reply) %>
                     </p>
                     <span class="meta">
                       <span class='timeago' title='<%= reply.get('published') %>'><%= post.get('published') %></span>
@@ -55,7 +55,6 @@ class PostsListView extends Backbone.View
           </div>
           <div class="clear"></div>
         </div>
-      <% }); %>
     ''')
 
     @collection.bind 'add', @render
@@ -70,6 +69,11 @@ class PostsListView extends Backbone.View
     'keydown textarea' : 'keydown'
   }
   
+  formatContent: (post) ->
+    post.escape('content').replace /\b\S+?@\S+\.\S+?\b/, (jid) ->
+      node = jid.replace(/@.+/,'')
+      "<a href='#users/#{jid}'>#{node}</a>"
+      
   keydown: (e) ->
     if ((e.metaKey || e.shiftKey) && e.keyCode == 13)
       $(e.currentTarget).parents("form").submit();
@@ -88,9 +92,13 @@ class PostsListView extends Backbone.View
     post.send()
 
   render: =>
-    console.log @collection.length
+    @el.html("<div />")
     
-    @el.html(@template( { posts : @collection })).find('.timeago').timeago()
+    for post in @collection.models
+      div = $(@template( { view : this, post : post }))
+      div.find('.timeago').timeago()
+      div.insertBefore @el.find("div:first")
+      
     @delegateEvents()
 
 @PostsListView = PostsListView

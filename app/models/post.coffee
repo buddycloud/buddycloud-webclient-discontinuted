@@ -29,10 +29,10 @@ class Post extends Backbone.Model
       true
       
   getAuthor: ->
-    if @get('author') instanceof User
-      @get('author')
-    else
-      Users.findOrCreateByJid @get('author')
+    # if @get('author') instanceof User
+    #   @get('author')
+    # else
+    Users.findOrCreateByJid @get('author')
     
   getAuthorName: ->
     @getAuthor().getName()
@@ -58,7 +58,7 @@ Post.parseFromItem = (item) ->
   post = new Post { 
     id : parseInt(item.find('id').text().replace(/.+:/,''))
     content : item.find('content').text() 
-    author : Users.findOrCreateByJid(item.find('author jid').text())
+    author : item.find('author jid').text()
     published : item.find('published').text()
   }
 
