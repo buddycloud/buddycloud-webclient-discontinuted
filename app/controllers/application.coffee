@@ -9,6 +9,8 @@ CHANNEL = "/user/simon@buddycloud.com/channel"
 
 class Connection
   constructor: (jid, password) ->
+    @connected = false
+    
     @c = new Strophe.Connection(BOSH_SERVICE)
     @c.connect jid, password, @onConnect
 
@@ -27,19 +29,21 @@ class Connection
   
   onConnect: (status) =>
     if (status == Strophe.Status.CONNECTING)
-      # console.log('Strophe is connecting.')
+      console.log('Strophe is connecting.')
     else if (status == Strophe.Status.AUTHFAIL)
-      # console.log('Strophe failed to authenticate.')
+      console.log('Strophe failed to authenticate.')
       app.signout()
     else if (status == Strophe.Status.CONNFAIL)
       console.log('Strophe failed to connect.')
+      @connected = false
       # app.signout()
     else if (status == Strophe.Status.DISCONNECTING)
-      # console.log('Strophe is disconnecting.')
+      console.log('Strophe is disconnecting.')
     else if (status == Strophe.Status.DISCONNECTED)
-      # console.log('Strophe is disconnected.')
+      console.log('Strophe is disconnected.')
+      @connected = false
     else if (status == Strophe.Status.CONNECTED)
-      # console.log('Strophe is connected.')
+      console.log('Strophe is connected.')
       @afterConnected()
 
       # @c.disconnect()
@@ -244,6 +248,8 @@ class Connection
   #   @grantChannelPermissions app.currentUser.get('jid'), app.currentUser.channelId()
     
   afterConnected: ->
+    @connected = true
+    
     app.signedIn(@c.jid.replace(/\/.+/,''))
 
     # Send a presence stanza
@@ -259,9 +265,9 @@ class Connection
     # @createMyChannel()
 
     # Add handlers for messages and iq stanzas
-    @c.addHandler(@onMessage, null, 'message', null, null,  null); 
-    @c.addHandler(@onIq, null, 'iq', null, null,  null); 
-    @c.addHandler(@onPresence, null, 'presence', null, null,  null); 
+    # @c.addHandler(@onMessage, null, 'message', null, null,  null); 
+    # @c.addHandler(@onIq, null, 'iq', null, null,  null); 
+    # @c.addHandler(@onPresence, null, 'presence', null, null,  null); 
 
     @getAllChannels()
     
@@ -336,32 +342,38 @@ app.signout = ->
   
 
 app.start = ->
-  if window.location.pathname == "/test/"
-    # ...
-  else
-    app.afterConnect = "home"
-    
-    if window.location.hash.match 'channels/'
-      app.afterConnect = window.location.hash
-    else if window.location.hash.match 'users/'
-      app.afterConnect = window.location.hash
-    
-    # The login / connection process isn't robust enough to jump
-    # to a random page in the app yet..
-    # window.location.hash = ""
 
+  # Investigate - localStorage doesn't seem to be available until the dom is ready?  
+  window.Channels = new ChannelCollection
+  window.Channels.fetch()
+  # # $ ->
+  # models = Channels.localStorage.findAll()
+  # # console.log models.length
+  # Channels.refresh(models)
 
-    if jid = localStorage['jid']
-      # Set the currentUser
-      app.currentUser = Users.findOrCreateByJid(jid)
-
-      # Establish xmpp connection
-      window.$c = new Connection(localStorage['jid'], localStorage['password'])
-    else
-      window.location.hash = ""
+  app.afterConnect = "home"
   
-    # Start the url router
-    Backbone.history.start();  
+  if window.location.hash.match 'channels/'
+    app.afterConnect = window.location.hash
+  else if window.location.hash.match 'users/'
+    app.afterConnect = window.location.hash
+  
+  # The login / connection process isn't robust enough to jump
+  # to a random page in the app yet..
+  # window.location.hash = ""
+
+
+  if jid = localStorage['jid']
+    # Set the currentUser
+    app.currentUser = Users.findOrCreateByJid(jid)
+
+    # Establish xmpp connection
+    window.$c = new Connection(localStorage['jid'], localStorage['password'])
+  else
+    window.location.hash = ""
+
+  # Start the url router
+  Backbone.history.start();  
 
 
 @app = app

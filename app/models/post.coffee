@@ -77,6 +77,8 @@ this.Post = Post
 
 class PostCollection extends Backbone.Collection
   model: Post
+
+  # localStorage: new Store("UserCollection")
   
   comparator: (post) ->
     post.get('published')

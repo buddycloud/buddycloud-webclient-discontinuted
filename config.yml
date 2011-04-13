@@ -12,6 +12,7 @@ javascripts:
   - 'lib/md5.js'
   - 'app/controllers/*.coffee'
   - 'app/views/**/*.coffee'
+  - 'app/models/post.coffee'
   - 'app/models/*.coffee'
 
 stylesheets:

@@ -1,7 +1,6 @@
 class Channel extends Backbone.Model
   initialize: ->
     # ...
-    @conn = $c.c
     @posts = new PostCollection
     
   # The node id of this chanel
@@ -21,13 +20,21 @@ class Channel extends Backbone.Model
     @escape('owner').replace(/@.+/,'')
     
   fetchPosts: ->
-    request = $iq({ "to" : @serviceProvider(), "type" : "get"})
-      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-      .c("items", {"node":@getNode()})
-      # .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-      # .c("after").t("100")
+    if !$c.connected
+      return
+      
+    request = $iq({ to : @serviceProvider(), type : 'get' })
+      .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
+      .c('items', { node : @getNode() })
+      
+    # 
+    # request = $iq({ "to" : @serviceProvider(), "type" : "get"})
+    #   .c("pubsub", {"xmlns":Strophe.NS.PUBSUB})
+    #   .c("items", {"node":@getNode()})
+    # .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
+    # .c("after").t("100")
     
-    @conn.sendIQ(
+    $c.c.sendIQ(
       request,
       (response) =>
         for item in $(response).find('item')
@@ -36,8 +43,11 @@ class Channel extends Backbone.Model
           if (@posts.get(post.id)) || (true != post.validate())
             continue
 
+          console.log post.get('content')
           @posts.add post
-          post.save()
+          # post.save()
+          
+        console.log @posts.length
 
         # ...
       (err) =>
@@ -47,10 +57,13 @@ class Channel extends Backbone.Model
     )
     
   fetchMetadata: ->
+    if !$c.connected
+      return
+
     request = $iq( { "to" : @serviceProvider(), "type" : "get" })
       .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : @getNode() })
 
-    @conn.sendIQ(
+    $c.c.sendIQ(
       request,
       (response) =>
         # Iterate over the fields and set on this object
@@ -88,7 +101,8 @@ this.Channel = Channel
 class ChannelCollection extends Backbone.Collection
   model: Channel
   
-  localStorage: new Store("ChannelCollection")
+  initialize: ->
+    @localStorage = new Store("ChannelCollection")
   
   findByNode : (node) ->
     @find (channel) ->
@@ -110,6 +124,5 @@ class ChannelCollection extends Backbone.Collection
 
   # comparator: (post) ->
   #   post.get('published')
-  
-this.Channels = new ChannelCollection
-this.Channels.refresh()
+
+this.ChannelCollection = ChannelCollection

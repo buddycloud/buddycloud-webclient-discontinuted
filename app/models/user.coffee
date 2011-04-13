@@ -2,10 +2,11 @@ class User extends Backbone.Model
   initializer: ->
     # ...
 
-  localStorage: new Store("UserCollection")
-
   fetchPosts: ->
-    $c.getChannel @getNode()
+    if $c.connected
+      $c.getChannel @getNode()
+    else
+      # queue..?
     
   getName: ->
     @get('jid').replace /@.+/, ''
@@ -17,13 +18,16 @@ class User extends Backbone.Model
     "/user/#{@get('jid')}/channel"
     
   subscribe: ->
-    $c.subscribeToUser @get('jid')
+    if $c.connected
+      $c.subscribeToUser @get('jid')
 
   unsubscribe: ->
-    $c.unsubscribeFromUser @get('jid')
+    if $c.connected
+      $c.unsubscribeFromUser @get('jid')
   
   grantChannelPermissions: ->
-    $c.grantChannelPermissions @get('jid'), @getNode()
+    if $c.connected
+      $c.grantChannelPermissions @get('jid'), @getNode()
 
   addFriend: (jid) ->
     if ! @get('friends')
@@ -54,6 +58,8 @@ this.User = User
 class UserCollection extends Backbone.Collection
   model: User
   
+  localStorage: new Store("UserCollection")
+
   findByJid : (jid) ->
     @find (user) ->
       user.get('jid') == jid
@@ -68,11 +74,11 @@ class UserCollection extends Backbone.Collection
         jid : jid
       }
       @add user
-      user.save()
+      # user.save()
 
     user
   # comparator: (post) ->
   #   post.get('published')
   
 this.Users = new UserCollection
-this.Users.refresh()
+# this.Users.fetch()
