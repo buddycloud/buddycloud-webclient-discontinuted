@@ -10,6 +10,7 @@ class Post extends Backbone.Model
 
   isUserChannel: ->
     @get('channel').match /^.user/
+    
   hasReplies: ->
     @getReplies().any()
     
@@ -82,6 +83,12 @@ class PostCollection extends Backbone.Collection
   
   comparator: (post) ->
     post.get('published')
+  
+PostCollection.forChannel = (channel) ->
+  collection = new PostCollection
+  collection.localStorage = new Store("PostCollection-#{channel.id}")
+  collection.fetch()
+  collection
   
 this.PostCollection = PostCollection
 this.Posts = new PostCollection

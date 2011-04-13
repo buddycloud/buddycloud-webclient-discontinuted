@@ -88,6 +88,8 @@ class PostsListView extends Backbone.View
     post.send()
 
   render: =>
+    console.log @collection.length
+    
     @el.html(@template( { posts : @collection })).find('.timeago').timeago()
     @delegateEvents()
 

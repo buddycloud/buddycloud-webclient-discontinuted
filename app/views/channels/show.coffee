@@ -8,7 +8,7 @@ class ChannelsShowView extends Backbone.View
     @model.fetchMetadata()
     
     # Get the posts (collection may be empty initially)
-    @collection = new PostCollection # @model.getPosts()
+    @collection = @model.getPosts()
     
     @template = _.template('''
 

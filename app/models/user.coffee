@@ -9,7 +9,7 @@ class User extends Backbone.Model
       # queue..?
     
   getName: ->
-    @get('jid').replace /@.+/, ''
+    @get('jid').toString().replace /@.+/, ''
 
   getStatus: ->
     (@get('status') + "").replace(/<.+?>/g,'')
@@ -48,7 +48,7 @@ class User extends Backbone.Model
       Users.findOrCreateByJid jid
     
   getAvatar: ->
-    if @get('jid').match /@buddycloud/
+    if @get('jid').toString().match /@buddycloud/
       "http://media.buddycloud.com/channel/54x54/buddycloud.com/#{@getName()}.png"
     else
       "http://www.gravatar.com/avatar/#{hex_md5(@get('jid'))}?d=http://media.buddycloud.com/channel/54x54/buddycloud.com/welcome.bot.png"

@@ -1,7 +1,7 @@
 class Channel extends Backbone.Model
   initialize: ->
     # ...
-    @posts = new PostCollection
+    @posts = PostCollection.forChannel(this)
     
   # The node id of this chanel
   getNode: ->
@@ -45,7 +45,7 @@ class Channel extends Backbone.Model
 
           console.log post.get('content')
           @posts.add post
-          # post.save()
+          post.save()
           
         console.log @posts.length
 

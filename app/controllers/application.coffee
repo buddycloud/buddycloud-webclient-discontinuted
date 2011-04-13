@@ -320,7 +320,7 @@ app.signedIn = (jid) ->
     
   app.currentUser = Users.findByJid(jid)
   
-  window.location.hash = app.afterConnect
+  # window.location.hash = app.afterConnect
   
   new CommonAuthView
   
@@ -351,17 +351,16 @@ app.start = ->
   # # console.log models.length
   # Channels.refresh(models)
 
-  app.afterConnect = "home"
+  # app.afterConnect = "home"
   
-  if window.location.hash.match 'channels/'
-    app.afterConnect = window.location.hash
-  else if window.location.hash.match 'users/'
-    app.afterConnect = window.location.hash
+  # if window.location.hash.match 'channels/'
+  #   app.afterConnect = window.location.hash
+  # else if window.location.hash.match 'users/'
+  #   app.afterConnect = window.location.hash
   
   # The login / connection process isn't robust enough to jump
   # to a random page in the app yet..
   # window.location.hash = ""
-
 
   if jid = localStorage['jid']
     # Set the currentUser
