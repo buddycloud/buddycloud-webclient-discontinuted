@@ -72,7 +72,7 @@ class PostsListView extends Backbone.View
   formatContent: (post) ->
     post.escape('content').replace /\b\S+?@\S+\.\S+?\b/, (jid) ->
       node = jid.replace(/@.+/,'')
-      "<a href='#users/#{jid}'>#{node}</a>"
+      "<a class='inline-jid' href='#users/#{jid}'>#{node}</a>"
       
   keydown: (e) ->
     if ((e.metaKey || e.shiftKey) && e.keyCode == 13)

@@ -525,16 +525,17 @@ input[type='text'], input[type='password'], textarea{
 }
 
 .description{
-  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-family: arial, sans-serif;
   font-size: 11px;
   line-height: 18px;
+  padding-top: 4px;
 }
 
 .usermeta{
-  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+  font-family: arial, sans-serif;
   font-size: 11px;
   line-height: 18px;
-  color: #555;
+  color: #777;
   margin: 0;
 	
 	b{
@@ -550,4 +551,38 @@ input[type='text'], input[type='password'], textarea{
 		top: 2px;
 		padding-right: 1px;
 	}
+}
+
+.inline-jid{
+  background-image: url(../images/inline-jid.png);
+  background-repeat: no-repeat;
+  background-position: top left;
+  padding-left: 14px;
+}
+
+li .inline-action{
+  display: none;
+}
+
+li:hover .inline-action{
+  display: inline;
+}
+
+.inline-action{
+  float: right;
+  margin-right: 10px;
+  border-radius: 8px;
+  background: #eee;
+  min-width: 16px;
+  height: 16px;
+  text-align: center;
+  display: inline-block;
+
+  img{
+    width: 12px;
+    opacity: 0.5;
+  }
+  img:hover{
+    opacity: 1.0;
+  }
 }
