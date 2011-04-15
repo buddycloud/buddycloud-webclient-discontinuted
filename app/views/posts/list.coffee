@@ -70,10 +70,30 @@ class PostsListView extends Backbone.View
   }
   
   formatContent: (post) ->
-    post.escape('content').replace /\b\S+?@\S+\.\S+?\b/, (jid) ->
-      node = jid.replace(/@.+/,'')
-      "<a class='inline-jid' href='#users/#{jid}'>#{node}</a>"
+    content = post.escape('content')
+    
+    # Format email addresses
+    content = content.replace /\b\S+?@\S+\.\S+?\b/, (match) ->
+      jid = new Jid(match)
+
+      console.log match
       
+      # If it's a known buddycloud provider - then change it to a user link
+      if jid.buddycloudDomain()
+        "<a class='inline-jid' href='#users/#{jid}'>#{jid.getNode()}</a>"
+      else
+        # Otherwise just link the email address
+        "<a class='inline-email' href='mailto:#{match}'>#{match}</a>"
+          
+    # Format external links
+    content = content.replace /\bhttp:\/\/\S+\b/, (match) ->
+      truncated = if match.length < 35
+        match
+      else
+        match.slice(7,27) + "..." + match.slice(-10, match.length)
+        
+      "<a class='inline-link' href='#{match}'>#{truncated}</a>"
+
   keydown: (e) ->
     if ((e.metaKey || e.shiftKey) && e.keyCode == 13)
       $(e.currentTarget).parents("form").submit();
@@ -81,10 +101,11 @@ class PostsListView extends Backbone.View
     
   submit: (e) ->
     e.preventDefault()
+    form = $(e.currentTarget)
 
     post = new Post {
-      content : @el.find('textarea:first').val()
-      in_reply_to : @el.find("input[name='in_reply_to']").val()
+      content : form.find('textarea:first').val()
+      in_reply_to : form.find("input[name='in_reply_to']").val()
       channel : app.currentUser.getNode()
       author : app.currentUser.get('jid')
     }
@@ -94,10 +115,11 @@ class PostsListView extends Backbone.View
   render: =>
     @el.html("<div />")
     
-    for post in @collection.models
+    for post in @collection.notReplies()
       div = $(@template( { view : this, post : post }))
       div.find('.timeago').timeago()
       div.insertBefore @el.find("div:first")
+      div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
       
     @delegateEvents()
 
