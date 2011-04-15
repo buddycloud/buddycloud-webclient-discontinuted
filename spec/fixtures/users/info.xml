@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<iq from="sandbox.buddycloud.com" to="simon@buddycloud.com/7501983241302742582196268" id="8492:sendIQ" type="result">
+  <query xmlns="http://jabber.org/protocol/disco#info" node="/user/bnolan@buddycloud.com/geo/future">
+    <feature var="http://jabber.org/protocol/pubsub#create-nodes"/>
+    <feature var="http://jabber.org/protocol/pubsub#subscribe"/>
+    <feature var="http://jabber.org/protocol/pubsub#publish"/>
+    <feature var="http://jabber.org/protocol/pubsub#retract-items"/>
+    <feature var="http://jabber.org/protocol/pubsub#retrieve-items"/>
+    <feature var="http://jabber.org/protocol/pubsub#retrieve-subscriptions"/>
+    <feature var="http://jabber.org/protocol/pubsub#retrieve-affiliations"/>
+    <feature var="http://jabber.org/protocol/pubsub#manage-subscriptions"/>
+    <feature var="http://jabber.org/protocol/pubsub#modify-affiliations"/>
+    <feature var="http://jabber.org/protocol/pubsub#config-node"/>
+    <feature var="http://jabber.org/protocol/pubsub#get-pending"/>
+    <feature var="http://jabber.org/protocol/pubsub#register"/>
+    <feature var="http://jabber.org/protocol/pubsub#browse-nodes"/>
+    <feature var="http://jabber.org/protocol/disco#info"/>
+    <identity category="pubsub" type="leaf" name="bnolan's node"/>
+    <x xmlns="jabber:x:data" type="result">
+      <field var="FORM_TYPE" type="hidden">
+        <value>http://jabber.org/protocol/pubsub#meta-data</value>
+      </field>
+      <field var="pubsub#title" type="text-single" label="A friendly name for the node">
+        <value>bnolan's node</value>
+      </field>
+      <field var="pubsub#description" type="text-single" label="A description text for the node">
+        <value>Where bnolan publishes things</value>
+      </field>
+      <field var="pubsub#type" type="text-single" label="Payload type">
+        <value>http://www.w3.org/2005/Atom</value>
+      </field>
+      <field var="pubsub#access_model" type="list-single" label="Who can subscribe and browse your channel?">
+        <value>open</value>
+      </field>
+      <field var="pubsub#publish_model" type="list-single" label="May new subscribers post on your channel?">
+        <value>subscribers</value>
+        <field var="pubsub#creation_date" type="text-single" label="Creation date">
+          <value>2011-04-06T06:25:20.258Z</value>
+        </field>
+      </field>
+    </x>
+  </query>
+</iq>
