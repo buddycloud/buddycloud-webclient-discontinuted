@@ -2,6 +2,7 @@
 javascripts:
   - 'lib/jquery.js'
   - 'lib/jquery-ui.js'
+  - 'lib/jquery-embedly.js'
   - 'lib/underscore.js'
   - 'lib/backbone.js'
   - 'lib/backbone-localstorage.js'
@@ -10,6 +11,7 @@ javascripts:
   - 'lib/strophe.js'
   - 'lib/timeago.js'
   - 'lib/md5.js'
+  - 'lib/*.coffee'
   - 'app/controllers/*.coffee'
   - 'app/views/**/*.coffee'
   - 'app/models/post.coffee'
