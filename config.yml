@@ -20,3 +20,7 @@ javascripts:
 stylesheets:
   - 'public/stylesheets/*.css'
   - 'public/stylesheets/*.less'
+  
+specs:
+  - 'lib/coffeescript.js'
+  - 'spec/*.coffee'

@@ -2416,6 +2416,6 @@ jasmine.getGlobal().clearInterval = function(timeoutKey) {
 jasmine.version_= {
   "major": 1,
   "minor": 0,
-  "build": 2,
-  "revision": 1298837858
+  "build": 0,
+  "revision": 1284494074
 };

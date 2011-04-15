@@ -64,8 +64,13 @@ app.start = ->
     # Establish xmpp connection
     window.$c = new Connection(localStorage['jid'], localStorage['password'])
     
-    $c.bind 'connecting', app.afterConnect
-    $c.bind 'connect', app.afterConnect
+    $c.bind 'connecting', ->
+      new CommonConnectingView
+      
+    $c.bind 'connected', ->
+      app.signedIn($c.jid)
+      
+    # $c.bind 'disconnect', app.afterConnect
     
     $c.connect()
   else
@@ -76,7 +81,3 @@ app.start = ->
 
 
 @app = app
-
-setTimeout( ->
-  app.start()
-, 1000)

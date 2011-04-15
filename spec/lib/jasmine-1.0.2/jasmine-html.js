@@ -70,16 +70,16 @@ jasmine.TrivialReporter.prototype.reportRunnerStarting = function(runner) {
   this.startedAt = new Date();
 
   var self = this;
-  showPassed.onclick = function(evt) {
-    if (showPassed.checked) {
+  showPassed.onchange = function(evt) {
+    if (evt.target.checked) {
       self.outerDiv.className += ' show-passed';
     } else {
       self.outerDiv.className = self.outerDiv.className.replace(/ show-passed/, '');
     }
   };
 
-  showSkipped.onclick = function(evt) {
-    if (showSkipped.checked) {
+  showSkipped.onchange = function(evt) {
+    if (evt.target.checked) {
       self.outerDiv.className += ' show-skipped';
     } else {
       self.outerDiv.className = self.outerDiv.className.replace(/ show-skipped/, '');
@@ -162,13 +162,7 @@ jasmine.TrivialReporter.prototype.reportSpecResults = function(spec) {
 
 jasmine.TrivialReporter.prototype.log = function() {
   var console = jasmine.getGlobal().console;
-  if (console && console.log) {
-    if (console.log.apply) {
-      console.log.apply(console, arguments);
-    } else {
-      console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
-    }
-  }
+  if (console && console.log) console.log.apply(console, arguments);
 };
 
 jasmine.TrivialReporter.prototype.getLocation = function() {

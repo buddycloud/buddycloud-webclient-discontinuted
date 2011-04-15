@@ -5,11 +5,12 @@ BOSH_SERVICE = 'http://bosh.metajack.im:5280/xmpp-httpbind'
 class Connection
   constructor: (jid, password) ->
     @connected = false
+    @jid = jid
+    @password = password
     
     _.extend(@, Backbone.Events)
     
     @c = new Strophe.Connection(BOSH_SERVICE)
-    @c.connect jid, password, @onConnect
 
     @c.rawInput = (message) ->
       c = if message.match(/<error/)
@@ -25,8 +26,13 @@ class Connection
     @maxMessageId = 1292405757510
   
     @bind 'connected', @afterConnected
+    
+  connect: ->
+    @c.connect @jid, @password, @onConnect
+    
   onConnect: (status) =>
     if (status == Strophe.Status.CONNECTING)
+      @trigger('connecting')
       console.log('Strophe is connecting.')
     else if (status == Strophe.Status.AUTHFAIL)
       console.log('Strophe failed to authenticate.')

@@ -57,9 +57,9 @@ class PostsListView extends Backbone.View
         </div>
     ''')
 
-    @collection.bind 'add', @render
-    @collection.bind 'change', @render
-    @collection.bind 'remove', @render
+    @collection.bind 'add', @addPost
+    @collection.bind 'change', @updatePost
+    @collection.bind 'remove', @removePost
     @collection.bind 'refresh', @render
 
     @render()
@@ -110,14 +110,23 @@ class PostsListView extends Backbone.View
 
     post.send()
 
+  addPost: (post) =>
+    div = $(@template( { view : this, post : post }))
+    div.find('.timeago').timeago()
+    div.insertBefore @el.find("div:first")
+    div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
+
+  removePost: (post) =>
+    console.log "posts#list#removePost not implemented!"
+    
+  updatePost: (post) =>
+    console.log "posts#list#removePost not implemented!"
+
   render: =>
     @el.html("<div />")
     
     for post in @collection.notReplies()
-      div = $(@template( { view : this, post : post }))
-      div.find('.timeago').timeago()
-      div.insertBefore @el.find("div:first")
-      div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
+      @addPost post
       
     @delegateEvents()
 
