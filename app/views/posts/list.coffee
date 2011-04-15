@@ -76,8 +76,6 @@ class PostsListView extends Backbone.View
     content = content.replace /\b\S+?@\S+\.\S+?\b/, (match) ->
       jid = new Jid(match)
 
-      console.log match
-      
       # If it's a known buddycloud provider - then change it to a user link
       if jid.buddycloudDomain()
         "<a class='inline-jid' href='#users/#{jid}'>#{jid.getNode()}</a>"

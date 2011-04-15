@@ -10,7 +10,8 @@ class UsersController extends Backbone.Controller
     
   show: (jid) ->
     user = Users.findOrCreateByJid(jid)
-    user.fetchPosts()
+    # user.subscribe()
+    # user.fetchPosts()
     new UsersShowView { model : user }
     
 new UsersController

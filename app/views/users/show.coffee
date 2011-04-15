@@ -4,10 +4,9 @@ class UsersShowView extends Backbone.View
 
     @el = $("#main") # app.activePage()
 
-    @collection = Posts
+    @collection = @model.getChannel().getPosts()
     
     @template = _.template('''
-
       <h1>
         <%= user.getName() %>
       </h1>
@@ -26,10 +25,7 @@ class UsersShowView extends Backbone.View
       <div class="posts"></div>
     ''')
 
-    Users.bind 'add', @render
-    Users.bind 'change', @render
-    Users.bind 'remove', @render
-    Users.bind 'refresh', @render
+    @model.bind 'change', @render
 
     @render()
   
@@ -55,20 +51,20 @@ class UsersShowView extends Backbone.View
     
     post.send()
   
-  getPosts: ->
-    _ @collection.select((post) =>
-      (!post.isReply()) && (post.get('channel') == @model.getNode())
-    ).reverse()
-    
+  # getPosts: ->
+  #   _ @collection.select((post) =>
+  #     (!post.isReply()) && (post.get('channel') == @model.getNode())
+  #   ).reverse()
+  #   
   render: =>
     if @renderTimeout
       clearTimeout @renderTimeout
       
     @renderTimeout = setTimeout( =>
-      @el.html(@template( { user : @model, posts : @getPosts() })).find('.timeago').timeago()
+      @el.html(@template( { view : this, user : @model })).find('.timeago').timeago()
       @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), collection : @getPosts() }
+      new PostsListView { el : @el.find('.posts'), collection : @collection }
       
       @renderTimeout = null
     , 50)

@@ -1,6 +1,5 @@
 class Channel extends Backbone.Model
   initialize: ->
-    # ...
     @posts = PostCollection.forChannel(this)
     
   # The node id of this chanel
@@ -27,30 +26,13 @@ class Channel extends Backbone.Model
       .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
       .c('items', { node : @getNode() })
       
-    # 
-    # request = $iq({ "to" : @serviceProvider(), "type" : "get"})
-    #   .c("pubsub", {"xmlns":Strophe.NS.PUBSUB})
-    #   .c("items", {"node":@getNode()})
-    # .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-    # .c("after").t("100")
-    
     $c.c.sendIQ(
       request,
       (response) =>
-        for item in $(response).find('item')
-          post = Post.parseFromItem($(item))
-          
-          if (@posts.get(post.id)) || (true != post.validate())
-            continue
-
-          @posts.add post
-          post.save()
-
-        # ...
+        @posts.parseResponse(response)
       (err) =>
         console.log 'err'
         console.log err
-        # ...
     )
     
   fetchMetadata: ->
@@ -84,11 +66,6 @@ class Channel extends Backbone.Model
   getPosts: ->
     @fetchPosts()
     @posts
-    
-    # 
-    # @posts = Posts.select((post) =>
-    #   (!post.isReply()) && (post.get('channel') == @model.getNode())
-    # ).reverse()
 
   getName: ->
     @get('node').replace(/.+\//,'')

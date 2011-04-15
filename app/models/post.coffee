@@ -2,6 +2,9 @@ class Post extends Backbone.Model
   initializer: ->
     # ...
 
+  serviceProvider: ->
+    "pubsub-bridge@broadcaster.buddycloud.com"
+
   isReply: ->
     (@get('in_reply_to') != undefined) and (!isNaN(@get('in_reply_to')))
     
@@ -15,7 +18,7 @@ class Post extends Backbone.Model
     @getReplies().any()
     
   getReplies: ->
-    _ Posts.filter( (post) =>
+    _ @collection.filter( (post) =>
       post.get('in_reply_to') == @id
     )
     
@@ -27,7 +30,7 @@ class Post extends Backbone.Model
       "Can't have empty content"
     else
       true
-      
+
   getAuthor: ->
     # if @get('author') instanceof User
     #   @get('author')
@@ -42,17 +45,46 @@ class Post extends Backbone.Model
     
   send: ->
     if @valid()
-      $c.sendPost(this)
+      @_send()
     else
-      # console.log "not sending.. seems invalid."
+      console.log "not sending.. seems invalid."
+      
+  _send: ->
+    request = $iq({ "to" : @serviceProvider(), "type" : "set" })
+      .c("pubsub", { "xmlns" : "http://jabber.org/protocol/pubsub" })
+      .c("publish", {"node" : @get('channel')})
+      .c("item")
+      .c("entry", {"xmlns":"http://www.w3.org/2005/Atom"})
+      .c("content", {"type" : "text"}).t(@get("content")).up()
+      .c("author")
+      .c("jid", {"xmlns":"http://buddycloud.com/atom-elements-0"}).t(@get("author")).up().up()
 
-  validate: (attr) ->
-    attr ||= @attributes
+    if @isReply()
+      request.c("in-reply-to", { "xmlns" : "http://purl.org/syndication/thread/1.0", "ref" : @get('in_reply_to') }).up()
+      # ... geoloc ..
+
+      # <link rel="license" type="text/html"
+      #   href="http://creativecommons.org/licenses/by/2.5/" />      
+
+    # Request..
+    $c.c.sendIQ(request)
+    #   (response) =>
+    #     console.log 'response'
+    #     console.log response
+    #   (err) ->
+    #     console.log 'error!'
+    #     console.log err
+    # )
+    # 
     
-    if !attr.content
-      'Post must have content'
-    else
-      true
+  # 
+  # validate: (attr) ->
+  #   attr = _.extend(attr || {}, @attributes)
+  #   
+  #   if !attr.content
+  #     'Post must have content'
+  #   else
+  #     true
     
 Post.parseFromItem = (item) ->
   post = new Post { 
@@ -64,7 +96,7 @@ Post.parseFromItem = (item) ->
 
   if item.find 'in-reply-to'
     post.set { 'in_reply_to' : parseInt(item.find('in-reply-to').attr('ref')) }
-
+    
   if item.find 'geoloc'
     post.set { 
       geoloc_country : item.find('geoloc country').text()
@@ -79,14 +111,38 @@ this.Post = Post
 class PostCollection extends Backbone.Collection
   model: Post
 
-  # localStorage: new Store("UserCollection")
-  
   comparator: (post) ->
     post.get('published')
+    
+  notReplies: ->
+    @filter( (post) =>
+      !post.get('in_reply_to')
+    )
+
+  parseResponse: (response) ->
+    for item in $(response).find('item')
+      post = Post.parseFromItem($(item))
+      
+      if (@get(post.id)) || (!post.valid())
+        continue
+
+      @add post
+      post.save()
   
-PostCollection.forChannel = (channel) ->
+# Todo - refactor me - this should be a hasMany or something....
+PostCollection.forChannel = (model) ->
+  unique = "channel-#{model.getNode()}"
+
   collection = new PostCollection
-  collection.localStorage = new Store("PostCollection-#{channel.id}")
+  collection.localStorage = new Store("PostCollection-#{unique}")
+  collection.fetch()
+  collection
+
+PostCollection.forUser = (model) ->
+  unique = "user-#{model.getNode()}"
+
+  collection = new PostCollection
+  collection.localStorage = new Store("PostCollection-#{unique}")
   collection.fetch()
   collection
   

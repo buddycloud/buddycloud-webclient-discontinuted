@@ -1,12 +1,46 @@
 class User extends Backbone.Model
-  initializer: ->
-    # ...
+  initialize: ->
+    @posts = PostCollection.forUser(this)
 
-  fetchPosts: ->
-    if $c.connected
-      $c.getChannel @getNode()
-    else
-      # queue..?
+  getPosts: ->
+    @fetchPosts()
+    @posts
+
+  serviceProvider: ->
+    "pubsub-bridge@broadcaster.buddycloud.com"
+
+  getChannel: ->
+    Channels.findOrCreateByNode @getNode()
+
+  getNode: ->
+    "/user/#{@get('jid')}/channel"
+    
+  # fetchPosts: ->
+  #   if !$c.connected
+  #     return
+  # 
+  #   # Discover...
+  #   request = $iq({ to: @serviceProvider(), type: 'get' })
+  #     .c('query', { xmlns: Strophe.NS.DISCO_ITEMS, node : @getNode() })
+  #     
+  #   $c.c.sendIQ(request)
+  #   
+  #   # Get....
+  #   request = $iq({ to : @serviceProvider(), type : 'get' })
+  #     .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
+  #     .c('items', { node : @getNode() })
+  #     
+  #   $c.c.sendIQ(
+  #     request,
+  #     (response) =>
+  #       @posts.parseResponse(response)
+  #     (err) =>
+  #       console.log 'err'
+  #       console.log err
+  #   )
+  #   
+  getJid: ->
+    @get('jid')
     
   getName: ->
     @get('jid').toString().replace /@.+/, ''
@@ -14,20 +48,38 @@ class User extends Backbone.Model
   getStatus: ->
     (@get('status') + "").replace(/<.+?>/g,'')
     
-  getNode: ->
-    "/user/#{@get('jid')}/channel"
-    
-  subscribe: ->
-    if $c.connected
-      $c.subscribeToUser @get('jid')
-
-  unsubscribe: ->
-    if $c.connected
-      $c.unsubscribeFromUser @get('jid')
+  # subscribe: ->
+  #    #     this.request($iq({ to: jid,
+  #    #       type: 'set' }).
+  #    # c('pubsub', { xmlns: Strophe.NS.PUBSUB }).
+  #    # c('subscribe', { node: node }),
+  #    # 
+  #    # 
+  #   if $c.connected
+  #     request = $iq( { to : @serviceProvider(), type : 'set' })
+  #       .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
+  #       .c('subscribe', { node: @getNode() })
+  #       
+  #     console.log Strophe.serialize(request)
+  #     $c.c.sendIQ(
+  #       request
+  #       (response) =>
+  #         @posts.parseResponse(response)
+  #       (err) =>
+  #         console.log 'err'
+  #         console.log err
+  #     )
+  # 
+  #     # $c.c.send($pres( { "type" : "subscribe", "to" : @getJid() } ).tree())
+  #     # $c.subscribeToUser @get('jid')
+  # 
+  # unsubscribe: ->
+  #   if $c.connected
+  #     $c.c.send($pres( { "type" : "unsubscribe", "to" : @get('jid') } ).tree())
   
-  grantChannelPermissions: ->
-    if $c.connected
-      $c.grantChannelPermissions @get('jid'), @getNode()
+  # grantChannelPermissions: ->
+  #   if $c.connected
+  #     $c.grantChannelPermissions @get('jid'), @getNode()
 
   addFriend: (jid) ->
     if ! @get('friends')
@@ -65,12 +117,8 @@ class UserCollection extends Backbone.Collection
       user.get('jid') == jid
       
   findOrCreateByJid : (jid) ->
-    user  = null
-    
-    unless typeof jid == "string"
-      console.log jid
-      throw "JID is not a string"
-    
+    user = null
+
     if @findByJid(jid)
       user = @findByJid(jid)
     else

@@ -11,6 +11,10 @@ class WelcomeController extends Backbone.Controller
     
   home: ->
     $("#spinner").remove()
-    new WelcomeIndexView
+
+    user = app.currentUser
+    # user.subscribe()
+    # user.fetchPosts()
+    new UsersShowView { model : user }
     
 new WelcomeController

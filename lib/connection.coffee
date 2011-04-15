@@ -142,7 +142,6 @@ class Connection
     
   onSubscriptionIq: (iq) =>
     # console.log iq
-
     true
     
     
@@ -202,22 +201,9 @@ class Connection
     @c.send(stanza.tree())
 
   onIq: (iq) =>
-    console.log 'iq'
-    console.log iq
-    console.log Strophe.serialize(iq)
-
-    return
-    
     for items in $(iq).find('items')
-      channel = $(items).attr('node')
+      channel = Channels.findOrCreateByNode($(items).attr('node'))
 
-      return
-      # if !channel.match(/.user/)
-      #   Channels.findOrCreateByNode channel
-      # 
-      # if !channel.match(/.user/)
-      #   Channels.findOrCreateByNode channel
-        
       for item in $(items).find('item')
         item = $(item)
       
@@ -227,9 +213,8 @@ class Connection
           post = new Post { 
             id : id
             content : item.find('content').text() 
-            author : Users.findOrCreateByJid(item.find('author jid').text())
+            author : item.find('author jid').text()
             published : item.find('published').text()
-            channel : channel
           }
       
           if item.find 'in-reply-to'
@@ -243,7 +228,8 @@ class Connection
             }
         
           if post.valid()
-            Posts.add(post)
+            channel.posts.add(post)
+            post.save()
           else
             # we dont display posts that have no content (looks ugly)...
     
@@ -261,8 +247,6 @@ class Connection
   #   @grantChannelPermissions app.currentUser.get('jid'), app.currentUser.channelId()
     
   afterConnected: ->
-    app.signedIn(@c.jid.replace(/\/.+/,''))
-
     # @c.pubsub.setService(PUBSUB_BRIDGE)
 
     # Tell the pubsub service i'm here
@@ -277,16 +261,16 @@ class Connection
 
     # Add handlers for messages and iq stanzas
 
-    @c.addHandler (stanza) ->
-      console.log 'recieved...'
-      console.log Strophe.serialize(stanza)
-      true
+    # @c.addHandler (stanza) ->
+    #   console.log 'recieved...'
+    #   console.log Strophe.serialize(stanza)
+    #   true
 
     console.log "After connection done..."
     
     # @c.addHandler(@onMessage, null, 'message', null, null,  null); 
-    # @c.addHandler(@onIq, null, 'iq', null, null,  null); 
-    @c.addHandler(@onPresence, null, 'presence', null, null,  null); 
+    @c.addHandler @onIq, null, 'iq' # , null, null,  null); 
+    # @c.addHandler(@onPresence, null, 'presence', null, null,  null); 
 
     @getAllChannels()
 
