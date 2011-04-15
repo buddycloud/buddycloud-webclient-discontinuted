@@ -3,15 +3,12 @@ class Jid
     @jid = jid
     
   getDomain: ->
-    @jid.replace(/.+@/,'').replace(/\/.+/,'')
+    @jid.replace(/.+?@/,'').replace(/\/.+/,'')
     
   getNode: ->
-    jid.replace(/@.+/,'')
+    @jid.replace(/@.+/,'')
   
   buddycloudDomain: ->
     (@getDomain() == "buddycloud.com")  || (@getDomain() == "diaspora-x.com")
-  
-
-
 
 @Jid = Jid

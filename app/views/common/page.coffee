@@ -60,7 +60,7 @@ class CommonPageView extends Backbone.View
     @render()
 
     new UsersListView { collection : app.currentUser.getFriends() }
-    new ChannelsListView { collection : Channels }
+    new ChannelsListView { collection : Channels.getStandalone() }
     
   events: {
     'submit .friend_new' : 'friendSearch'

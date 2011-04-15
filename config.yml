@@ -23,4 +23,4 @@ stylesheets:
   
 specs:
   - 'lib/coffeescript.js'
-  - 'spec/*.coffee'
+  - 'spec/*/*.coffee'

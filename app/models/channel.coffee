@@ -9,6 +9,10 @@ class Channel extends Backbone.Model
   serviceProvider: ->
     "pubsub-bridge@broadcaster.buddycloud.com"
 
+  # Isn't a user node
+  isStandalone: ->
+    !@getNode().match(/^\/user/)
+    
   escapeCreationDate: ->
     @escape('creation_date').replace(/T.+/,'')
     
@@ -82,6 +86,17 @@ class ChannelCollection extends Backbone.Collection
     @find (channel) ->
       channel.get('node') == node
       
+  getStandalone: ->
+    channels = new Backbone.Collection
+    channels.model = Channel
+
+    channels.refresh(@detect (channel) ->
+      channel.isStandalone()
+    )
+
+    channels
+    
+    
   findOrCreateByNode : (node) ->
     channel = null
     
