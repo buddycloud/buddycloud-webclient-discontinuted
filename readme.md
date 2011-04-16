@@ -66,3 +66,10 @@ Copyright 2010-2011 Ben Nolan
 
 Users should be able to select their own licence. By default the licence should be creative commons. The licence should be attached to content using [RFC 4946](http://tools.ietf.org/html/rfc4946).
 
+# Enabling ejabberdctl
+
+To allow register / delete / reset password on users - you need to enable ejabberdctl for the web user. The easiest way to do this is:
+
+    cp /var/lib/ejabberd/.erlang.cookie ~ben
+    
+    

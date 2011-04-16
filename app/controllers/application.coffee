@@ -6,9 +6,9 @@ app = {}
 
 app.connect = ->
   # Spinner!
-  app.spinner()
+  # app.spinner()
 
-  window.location.hash = "connecting"
+  window.location.hash = "#home"
 
 app.currentUser = null
 

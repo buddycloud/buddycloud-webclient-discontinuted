@@ -51,11 +51,7 @@ class AuthLoginView extends Backbone.View
         
         <h2><span>Create an account</span></h2>
 
-        <p>
-          <small>Account creation is temporarily disabled. Please try again later.</small>
-        </p>
-        
-        <!--div style="display: none">
+        <div style="display: none">
           <p>
             <small>
               If you don't want to use an existing login, you can sign up for one
@@ -87,7 +83,7 @@ class AuthLoginView extends Backbone.View
 
             <div class="f"><input id="user_submit" name="commit" type="submit" value="Sign up" /></div>
           </form>
-        </div-->
+        </div>
         
         
       </div>
