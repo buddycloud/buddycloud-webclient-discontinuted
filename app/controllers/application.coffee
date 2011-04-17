@@ -4,51 +4,39 @@
 
 app = {}
 
-app.connect = ->
-  # Spinner!
-  # app.spinner()
-
+app.connect = (jid, password, autologin)->
   window.location.hash = "#home"
+  
+  if autologin
+    localStorage['jid'] = jid
+    localStorage['password'] = password
 
+  $c.connect jid, password
+  
 app.currentUser = null
 
-app.spinner = ->
-  $("#content").empty()
-  $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
+# app.spinner = ->
+#   $("#content").empty()
+#   $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
+# 
 
-app.showLog = ->
-  $("#log").show()
-  
-app.signedIn = (jid) ->
-  $("#spinner").remove()
-  
-  if not Users.findByJid(jid)
-    user = new User { jid : jid }
-    Users.add user
-    
-  app.currentUser = Users.findByJid(jid)
-  
-  # window.location.hash = app.afterConnect
-  
-  new CommonAuthView
+# app.showLog = ->
+#   $("#log").show()
+#   
   
 app.signout = ->
+  delete app.currentUser
   window.location.hash = ""
-  $("#spinner").remove()
   
-  Posts.refresh []
+  Channels.refresh []
   Users.refresh []
   
   localStorage.clear()
-  
-  window.location.reload()
   
   try
     window.$c.c.disconnect()
   catch e
     # ...
-    
-  window.$c = null
   
 
 app.start = ->
@@ -57,27 +45,41 @@ app.start = ->
   window.Channels = new ChannelCollection
   window.Channels.fetch()
 
-  if jid = localStorage['jid']
-    # Set the currentUser
-    app.currentUser = Users.findOrCreateByJid(jid)
+  # Establish xmpp connection
+  window.$c = new Connection
+  
+  $c.bind 'connecting', ->
+    new CommonConnectingView
+    
+  $c.bind 'connected', ->
+    jid = $c.jid
+    
+    alert "?"
 
-    # Establish xmpp connection
-    window.$c = new Connection(localStorage['jid'], localStorage['password'])
+    # if not Users.findByJid(jid)
+    #   user = new User { jid : jid }
+    #   Users.add user
+    # 
+    app.currentUser = Users.findOrCreateByJid(jid)
+  
+    window.location.hash = "#home"
+
+    alert app.currentUser
     
-    $c.bind 'connecting', ->
-      new CommonConnectingView
-      
-    $c.bind 'connected', ->
-      app.signedIn($c.jid)
-      
-    # $c.bind 'disconnect', app.afterConnect
+    new CommonAuthView
+
+  # $c.bind 'disconnect', ->
+  #   ....
     
-    $c.connect()
+  # Previously logged in and wants autologin
+  if jid = localStorage['jid']
+    app.connect localStorage['jid'], localStorage['password']
+    app.currentUser = Users.findOrCreateByJid(jid)
+    $c.connect(localStorage['jid'], localStorage['password'])
   else
     window.location.hash = ""
 
   # Start the url router
   Backbone.history.start();  
-
 
 @app = app

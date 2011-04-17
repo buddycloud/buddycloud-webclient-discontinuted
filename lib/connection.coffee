@@ -3,31 +3,31 @@ BOSH_SERVICE = 'http://buddycloud.com/http-bind/'
 BOSH_SERVICE = 'http://bosh.metajack.im:5280/xmpp-httpbind'
 
 class Connection
-  constructor: (jid, password) ->
+  constructor: ->
     @connected = false
-    @jid = jid
-    @password = password
     
     _.extend(@, Backbone.Events)
     
     @c = new Strophe.Connection(BOSH_SERVICE)
 
-    @c.rawInput = (message) ->
-      c = if message.match(/<error/)
-        'error'
-      else
-        'input'
-      
-      $("<div />").text(message).addClass(c).appendTo '#log'
-    
-    @c.rawOutput = (message) ->
-      $("<div />").text(message).addClass('output').appendTo '#log'
+    # @c.rawInput = (message) ->
+    #   c = if message.match(/<error/)
+    #     'error'
+    #   else
+    #     'input'
+    #   $("<div />").text(message).addClass(c).appendTo '#log'
+    # 
+    # @c.rawOutput = (message) ->
+    #   $("<div />").text(message).addClass('output').appendTo '#log'
 
     @maxMessageId = 1292405757510
   
     @bind 'connected', @afterConnected
     
-  connect: ->
+  connect: (jid, password)->
+    @jid = jid
+    @password = password
+    
     @c.connect @jid, @password, @onConnect
     
   onConnect: (status) =>

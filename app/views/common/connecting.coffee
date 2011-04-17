@@ -13,7 +13,7 @@ class CommonConnectingView extends Backbone.View
     @render()
     
   render: =>
-    @el.html(@template( { user : app.currentUser } ))
+    @el.html(@template())
     @delegateEvents()
 
 @CommonConnectingView = CommonConnectingView

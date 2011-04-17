@@ -30,23 +30,21 @@ class CommonLoginView extends Backbone.View
     
   events: {
     'submit form.signin' : 'signin'
-    'click .signin-button' : 'signin'
+    'click button' : 'signin'
   }
   
   signin: (e) =>
-    jid = @el.find(".signin input[name='jid']").val()
-    password = @el.find(".signin input[name='password']").val()
+    e.preventDefault()
+
+    jid = @el.find("input[name='jid']").val()
+    password = @el.find("input[name='password']").val()
 
     console.log [jid, password]
     
     if jid.match(/@/) && password.length > 0
-      localStorage['jid'] = jid
-      localStorage['password'] = password
-      app.connect()
+      app.connect(jid, password, true)
     else
       alert "Invalid login / password..."
-    
-    e.preventDefault()
     
   render: =>
     @el.html(@template( { users : @collection })).hide().fadeIn()

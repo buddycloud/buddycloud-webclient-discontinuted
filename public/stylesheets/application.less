@@ -1,3 +1,44 @@
+/*
+ * Diaspora-x colors
+ */
+
+@header-color: #333333;
+@body-color: white;
+@button-color: #333333;
+@link-color: #107fc9;
+@hover-color: @link-color;
+@active-color: #005d9c;
+@header-font: BrandonGrotesqueLightRegular, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@header-transform: uppercase;
+@header-size: 20px;
+
+/*
+ * Buddycloud colors
+ */
+ 
+/*
+  @header-color: #132B36;
+  @body-color: #C4CED1 ;
+  @button-color: #3093D3;
+  @link-color: #132B36;
+  @hover-color: #CD3C40;
+  @active-color: #AC1D21;
+  @header-font: corbel, sans-serif;
+  @header-transform: lowercase;
+  @header-size: 35px;
+  */
+  
+button, input[type='submit']{
+  background: @button-color;
+  -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.5);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.5);
+  border-right: 1px solid rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
 
 @font-face {
   src: url("Brandon_light-webfont.eot");
@@ -10,7 +51,7 @@
 html,body {
   padding: 0;
   margin: 0;
-  background-color: #fcfcfc;
+  background-color: @body-color;
   font-family: Arial, sans-serif; 
 }
 
@@ -19,15 +60,15 @@ html,body {
 }
 
 a {
-  color: #107fc9;
+  color: @link-color;
   text-decoration: none; 
 }
 a:hover {
-  color: #22aae0; 
+  color: @hover-color; 
 	text-decoration: underline;
 }
 a:active {
-  color: #005d9c; 
+  color: @active-color;
 }
 
 p {
@@ -59,8 +100,10 @@ input[type='text'], input[type='password'], textarea{
  */
  
 .header {
-  background-color: #333333;
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#080808), to(#191919), color-stop(0.9, #262626), color-stop(0.1, #333333), color-stop(0.75, #343434));
+  background-color: @header-color;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, 
+    from(@header-color * 0.8), to(@header-color * 0.6), color-stop(0.9, @header-color * 0.6), color-stop(0.1, @header-color * 0.7), color-stop(0.75, @header-color * 0.8)
+  );
   background: -moz-linear-gradient(center bottom, #151515 1%, #333333 12%);
   padding: 80px 0 0 0;
   margin-bottom: 40px;
@@ -68,10 +111,10 @@ input[type='text'], input[type='password'], textarea{
 
 .header h1{
   color: #ccc;
-  font-family: BrandonGrotesqueLightRegular, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: @header-font;
   font-weight: normal;
-  font-size: 20px;
-  text-transform: uppercase;
+  font-size: @header-size;
+  text-transform: @header-transform;
 }
 
 .header h1 b{
@@ -122,8 +165,6 @@ input[type='text'], input[type='password'], textarea{
 	color: #aaa;
 	padding: 5px;
 	line-height: 20px;
-	position: relative;
-	left: -10px;
 }
 .header .auth .avatar{
 	float: left;
@@ -427,6 +468,11 @@ input[type='text'], input[type='password'], textarea{
 .signin{
   color: white;
   width: 500px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -20px;
+  left: 180px;
   
   div.f{
     float: left;
