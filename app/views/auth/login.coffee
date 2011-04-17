@@ -18,48 +18,16 @@ class AuthLoginView extends Backbone.View
           This is the primary diaspora*x server for public use, or you can <a href="http://github.com/bnolan/diaspora-x2">run your own</a>.
         </p>
 
-        <h2>
-          <span>Sign in</span>
-        </h2>
-
-        <p>
-          <small>
-            You can sign in using your diasapora-x.com, gmail.com, buddycloud.com or me.com login. Your password is 
-            stored in your browser and never shared with the diaspora-x server.
-          </small>
-        </p>
-
-        <form action="/signin" class="signin">
-          <div class="f">
-            <label for="jid">Login</label>
-            <input name="jid" size="30" style="width: 180px" type="text" />
-          </div>
-
-          <div class="f">
-            <label for="password">Password</label>
-            <input name="password" size="30" style="width: 120px" type="password" />
-          </div>
-
-          <!--div class="f cb">
-            <input name="user[remember_me]" type="hidden" value="0" /><input checked="checked" id="user_remember_me" name="user[remember_me]" type="checkbox" value="1" /> <label for="user_remember_me">Remember me</label>
-          </div-->
-          
-          <div class="f">
-            <input class="signin-button" type="submit" value="Sign in" />
-          </div>
-        </form>
-        
-        <h2><span>Create an account</span></h2>
+        <h2><span>Sign Up</span></h2>
 
         <div>
           <p>
             <small>
-              If you don't want to use an existing login, you can sign up for one
-              from Diaspora*x.com.
+              Its free, forever.
             </small>
           </p>
 
-          <form action="/signup" class="signup">
+          <form action="#signup" class="signup">
 
             <div class="f">
               <label for="jid">Login</label>
@@ -92,11 +60,10 @@ class AuthLoginView extends Backbone.View
     @render()
     
   events: {
-    'submit form.signin' : 'signin'
-    'click .signin-button' : 'signin'
+    'submit form.signup' : 'signup'
   }
   
-  signin: (e) =>
+  signup: (e) =>
     jid = @el.find(".signin input[name='jid']").val()
     password = @el.find(".signin input[name='password']").val()
 
@@ -112,12 +79,11 @@ class AuthLoginView extends Backbone.View
     e.preventDefault()
     
   render: =>
-    $('.auth').hide()
     $('ul.tabs li').hide()
-    
-    console.log(@template( { users : @collection }));
     
     @el.html(@template( { users : @collection })).hide().fadeIn()
     @delegateEvents()
+    
+    new CommonLoginView()
 
 @AuthLoginView = AuthLoginView

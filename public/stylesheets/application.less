@@ -67,10 +67,16 @@ input[type='text'], input[type='password'], textarea{
 }
 
 .header h1{
-  color: white;
+  color: #ccc;
   font-family: BrandonGrotesqueLightRegular, 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.header h1 b{
+  font-weight: normal;
+  color: white;
 }
 
 .header a{
@@ -418,24 +424,45 @@ input[type='text'], input[type='password'], textarea{
  * Sign in
  */
 
-.sign_in h1{
-	text-shadow: 1px 1px 1px white;
-}
+.signin{
+  color: white;
+  width: 500px;
+  
+  div.f{
+    float: left;
+    width: 150px;
+    margin: 0;
+    padding: 0;
+    
+    button{
+      margin-top: 25px;
+    }
+    
+    label{
+      color: #eee;
+      text-shadow: 0 -1px 1px black;
+    }
 
-.sign_in .screenshot{
-	-webkit-box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
-	-moz-box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
-	background: white;
-	width: 320px;
-	position: absolute;
-	right: 10px;
-	top: -99px;
-}
-
-.sign_in .icon{
-	margin-right: 5px;
-	position: relative;
-	top: 3px;
+    small{
+      a{
+        color: #aaa;
+      }
+    }
+    
+    small,label{
+      display: block;
+      position: relative;
+      left: 0;
+      top: 0;
+      font-size: 0.9em;
+      line-height: 1em;
+      padding: 5px 0;
+    }
+    
+    input{
+      width: 130px !important;
+    }
+  }
 }
 
 /*
