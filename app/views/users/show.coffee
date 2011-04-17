@@ -64,7 +64,7 @@ class UsersShowView extends Backbone.View
       @el.html(@template( { view : this, user : @model })).find('.timeago').timeago()
       @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), collection : @collection }
+      new PostsListView { el : @el.find('.posts'), model : @model.getChannel() }
       
       @renderTimeout = null
     , 50)

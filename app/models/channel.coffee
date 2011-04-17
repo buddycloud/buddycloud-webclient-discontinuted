@@ -7,14 +7,9 @@ class Channel extends Backbone.Model
     @get('node')
     
   subscribe: ->
-    # request = $iq( { to : @serviceProvider(), type : 'set' })
-    #   .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
-    #   .c('subscribe', { node: @getNode() })
-
-    request = $iq( { to : @serviceProvider(), type : 'set' })
+    request = $iq( { to : @pubsubService(), type : 'set' })
       .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
-      .c('subscriptions', { node: @getNode() })
-      .c('subscription', { jid : $c.jid, subscription : 'subscribed' })
+      .c('subscribe', { node: @getNode(), jid : app.currentUser.getJid() })
 
     console.log Strophe.serialize(request)
     
@@ -28,8 +23,28 @@ class Channel extends Backbone.Model
         console.log err
     )
     
+  unsubscribe: ->
+    request = $iq( { to : @pubsubService(), type : 'set' })
+      .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
+      .c('unsubscribe', { node: @getNode(), jid : app.currentUser.getJid() })
+
+    console.log Strophe.serialize(request)
+
+    $c.c.sendIQ(
+      request
+      (response) =>
+        console.log 'response'
+        console.log response
+      (err) =>
+        console.log 'err'
+        console.log err
+    )
+
+  pubsubService: ->
+    "broadcaster.buddycloud.com"
+    
   serviceProvider: ->
-    "pubsub-bridge@broadcaster.buddycloud.com"
+    "pubsub-bridge@#{@pubsubService()}"
 
   # Isn't a user node
   isStandalone: ->

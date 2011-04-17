@@ -72,7 +72,7 @@ class ChannelsShowView extends Backbone.View
       @el.html(@template( { channel : @model }))
       @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), collection : @collection }
+      new PostsListView { el : @el.find('.posts'), model : @model }
       
       @renderTimeout = null
     , 50)

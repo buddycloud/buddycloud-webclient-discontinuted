@@ -34,6 +34,8 @@ class PostsListView extends Backbone.View
           <div class="clear"></div>
         </div>
     ''')
+    
+    @collection = @model.getPosts()
 
     @collection.bind 'add', @addPost
     @collection.bind 'change', @updatePost
@@ -85,7 +87,7 @@ class PostsListView extends Backbone.View
     post = new Post {
       content : form.find('textarea:first').val()
       in_reply_to : form.find("input[name='in_reply_to']").val()
-      channel : app.currentUser.getNode()
+      channel : @model.getNode()
       author : app.currentUser.get('jid')
     }
 
