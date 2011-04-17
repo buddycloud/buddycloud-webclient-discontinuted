@@ -35,12 +35,11 @@ app.signout = ->
   Users.refresh []
   
   localStorage.clear()
-  
-  try
-    window.$c.c.disconnect()
-  catch e
-    # ...
-  
+
+  # Force disconnect...
+  $c.unbind()
+  if $c.c
+    $c.c.disconnect()
 
 app.start = ->
 
@@ -75,7 +74,6 @@ app.start = ->
     
   # Previously logged in and wants autologin
   if jid = localStorage['jid']
-    app.connect localStorage['jid'], localStorage['password']
     app.currentUser = Users.findOrCreateByJid(jid)
     $c.connect(localStorage['jid'], localStorage['password'])
   else
