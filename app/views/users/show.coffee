@@ -13,7 +13,11 @@ class UsersShowView extends Backbone.View
       <p class="usermeta">
         <img src="public/icons/globe_2.png" /> <%= user.get('jid') %>
         |
-        <a href="#users/<%= user.get('jid') %>/subscribe">Subscribe</a>
+        <% if(user.getChannel().isSubscribed()){ %>
+          <a href="#users/<%= user.get('jid') %>/unsubscribe">Unsubscribe</a>
+        <% }else{ %>
+          <a href="#users/<%= user.get('jid') %>/subscribe">Subscribe</a>
+        <% } %>
       </p>
     
       <form action="#" class="new_activity status">
@@ -26,6 +30,7 @@ class UsersShowView extends Backbone.View
     ''')
 
     @model.bind 'change', @render
+    @model.getChannel().bind 'change', @render
 
     @render()
   
@@ -34,13 +39,17 @@ class UsersShowView extends Backbone.View
     'keydown textarea' : 'keydown'
   }
   
-  keydown: (e) ->
-    if ((e.metaKey || e.shiftKey) && e.keyCode == 13)
-      $(e.currentTarget).parents("form").submit();
-      e.preventDefault();
+  keydown: (e) =>
+    if e.keyCode == 13
+      if (e.metaKey || e.shiftKey)
+        # ...
+      else
+        $(e.currentTarget).parents("form").submit();
+        e.preventDefault();
     
   submit: (e) ->
     e.preventDefault()
+    form = $(e.currentTarget)
 
     post = new Post {
       content : @el.find('textarea:first').val()
@@ -50,6 +59,9 @@ class UsersShowView extends Backbone.View
     }
     
     post.send()
+
+    # Reset the form
+    form.find('textarea:first').val('').blur()
   
   # getPosts: ->
   #   _ @collection.select((post) =>
@@ -57,16 +69,9 @@ class UsersShowView extends Backbone.View
   #   ).reverse()
   #   
   render: =>
-    if @renderTimeout
-      clearTimeout @renderTimeout
-      
-    @renderTimeout = setTimeout( =>
-      @el.html(@template( { view : this, user : @model })).find('.timeago').timeago()
-      @delegateEvents()
+    @el.html(@template( { view : this, user : @model })).find('.timeago').timeago()
+    @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), model : @model.getChannel() }
-      
-      @renderTimeout = null
-    , 50)
+    new PostsListView { el : @el.find('.posts'), model : @model.getChannel() }
 
 @UsersShowView = UsersShowView

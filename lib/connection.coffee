@@ -59,27 +59,22 @@ class Connection
 
       # @c.disconnect()
 
-  # getSubscriptions: (node) ->
-  #   id = @c.getUniqueId("LM")
-  # 
-  #   stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"get"})
-  #     .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-  #     .c("subscriptions")
-  # 
-  #   # Request..
-  #   @c.send(stanza.tree());
-  # 
-  #   id = @c.getUniqueId("LM")
-  # 
-  #   stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"get"})
-  #     .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-  #     .c("items")
-  #     .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-  #     .c("after").t(@maxMessageId)
-  # 
-  #   # Request..
-  #   @c.send(stanza.tree());
-  #   
+  getSubscriptions: (node) ->
+    request = $iq({"to" : PUBSUB_BRIDGE, "type":"get"})
+      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
+      .c("subscriptions")
+  
+    # Request..
+    @c.sendIQ(
+      request
+      (response) ->
+        console.log 'response'
+        for subscription in $(response).find('subscription')
+          Channels.findOrCreateByNode($(subscription).attr('node')).parseSubscription($(subscription)).save()
+      (err) ->
+        console.log 'getSubscriptions#err'
+        console.log err
+    )
   
   # sendPost: (post) ->
   #   id = @c.getUniqueId("LM")
@@ -139,6 +134,18 @@ class Connection
       # .c("max").t("100")
       # .up()
       # .c("before")
+
+    # 
+    # id = @c.getUniqueId("LM")
+    # 
+    # stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"get"})
+    #   .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
+    #   .c("items")
+    #   .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
+    #   .c("after").t(@maxMessageId)
+    # 
+    # # Request..
+    # @c.send(stanza.tree());
 
     @c.send stanza.tree()
     
@@ -266,7 +273,7 @@ class Connection
 
     @getAllChannels()
 
-    # @getSubscriptions()
+    @getSubscriptions()
     # @getChannel(CHANNEL)
 
     # connection.pubsub.subscribe(CHANNEL_NODE, null, null, Rcf.onSubscriptionIq, true);

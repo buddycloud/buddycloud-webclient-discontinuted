@@ -13,8 +13,10 @@ class PostsListView extends Backbone.View
               <%= view.formatContent(post) %>
             </p>
             <p class="meta">
-              <span class='timeago' title='<%= post.get('published') %>'><%= post.get('published') %></span> |
-              <a href="#" onclick="$(this).parents('.activity').find('form').show().find('textarea').focus(); return false">Comment</a>
+              <span class='timeago' title='<%= post.get('published') %>'><%= post.get('published') %></span>
+              <% if (model.canPost()){ %>
+                | <a href="#" onclick="$(this).parents('.activity').find('form').show().find('textarea').focus(); return false">Comment</a>
+              <% } %>
               <% if(post.hasGeoloc()){ %>
                 | <%= post.get('geoloc_text') %>
               <% } %>
@@ -52,13 +54,18 @@ class PostsListView extends Backbone.View
   formatContent: (post) ->
     content = post.escape('content')
     
+    # Format hash channels
+    content = content.replace /\#\S+?\b/, (match) ->
+      channel = match.slice(1,100)
+      "<a class='inline-channel' href='#channels/#{channel}'>##{channel}</a>"
+
     # Format email addresses
     content = content.replace /\b\S+?@\S+\.\S+?\b/, (match) ->
       jid = new Jid(match)
 
       # If it's a known buddycloud provider - then change it to a user link
       if jid.buddycloudDomain()
-        "<a class='inline-jid' href='#users/#{jid}'>#{jid.getNode()}</a>"
+        "<a class='inline-jid' href='#users/#{jid.getNode()}'>#{jid.getNode()}</a>"
       else
         # Otherwise just link the email address
         "<a class='inline-email' href='mailto:#{match}'>#{match}</a>"
@@ -94,14 +101,15 @@ class PostsListView extends Backbone.View
     # Hide the form
     form.find('textarea:first').val('')
     form.hide()
-      
     post.send()
 
   addPost: (post) =>
     if post.isReply()
-      @addReply(@el.find("div[data-id='#{post.get('in_reply_to')}']"), post)
+      div = @el.find("div[data-id='#{post.get('in_reply_to')}']")
+      @addReply(div, post)
+      div.find('.comments').show()
     else
-      div = $(@template( { view : this, post : post }))
+      div = $(@template( { model : @model, view : this, post : post }))
       div.find('.timeago').timeago()
       div.insertBefore @el.find("div:first")
       div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }

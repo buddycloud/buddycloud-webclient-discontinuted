@@ -1,0 +1,17 @@
+<iq from=​"pubsub-bridge@broadcaster.buddycloud.com" to=​"ben@diaspora-x.com/​952571357130339071937755" type=​"result" id=​"5502:​sendIQ">​
+<pubsub xmlns=​"http:​/​/​jabber.org/​protocol/​pubsub">​
+<subscriptions>​
+<subscription node=​"/​user/​ben@diaspora-x.com/​channel" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"owner">​</subscription>​
+<subscription node=​"/​user/​ben@diaspora-x.com/​geo/​current" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"owner">​</subscription>​
+<subscription node=​"/​user/​simon@buddycloud.com/​channel" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"publisher">​</subscription>​
+<subscription node=​"/​user/​ben@diaspora-x.com/​geo/​previous" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"owner">​</subscription>​
+<subscription node=​"/​user/​ben@diaspora-x.com/​geo/​future" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"owner">​</subscription>​
+<subscription node=​"/​user/​ben@diaspora-x.com/​mood" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"owner">​</subscription>​
+<subscription node=​"/​channel/​welcome" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"publisher">​</subscription>​
+<subscription node=​"/​channel/​channel-promotion" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"member">​</subscription>​
+<subscription node=​"/​channel/​help" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"publisher">​</subscription>​
+<subscription node=​"/​channel/​ministryofcurrentaffairs" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"member">​</subscription>​
+<subscription node=​"/​channel/​faq" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"member">​</subscription>​
+<subscription node=​"/​user/​fahrertuer@buddycloud.com/​channel" jid=​"ben@diaspora-x.com" subscription=​"subscribed" affiliation=​"publisher">​</subscription>​
+</subscriptions>​
+</pub
