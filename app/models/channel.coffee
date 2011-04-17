@@ -2,6 +2,10 @@ class Channel extends Backbone.Model
   initialize: ->
     @posts = PostCollection.forChannel(this)
     
+  updateUsers: ->
+    if @isUserChannel()
+      Users.findOrCreateByJid @getUserJid()
+    
   # The node id of this chanel
   getNode: ->
     @get('node')
@@ -58,6 +62,12 @@ class Channel extends Backbone.Model
   # Isn't a user node
   isStandalone: ->
     @getNode().match(/^.channel/)
+
+  isUserChannel: ->
+    @getNode().match(/^.user/)
+    
+  getUserJid: ->
+    @getNode().match(/user.(.+?)\//)[1]
     
   escapeCreationDate: ->
     @escape('creation_date').replace(/T.+/,'')
