@@ -76,29 +76,29 @@ class User extends Backbone.Model
   #   if $c.connected
   #     $c.grantChannelPermissions @get('jid'), @getNode()
 
-  addFriend: (jid) ->
-    if ! @get('friends')
-      @set { friends : [] }
-
-    for j in @get('friends') when jid == j
-      # already exists...
-      return
-      
-    @attributes.friends.push jid
-    
-  # more like the roster...
-  getFriends: ->
-    if ! @get('friends')
-      @set { friends : [] }
-
-    for jid in @get('friends')
-      Users.findOrCreateByJid jid
+  # addFriend: (jid) ->
+  #   if ! @get('friends')
+  #     @set { friends : [] }
+  # 
+  #   for j in @get('friends') when jid == j
+  #     # already exists...
+  #     return
+  #     
+  #   @attributes.friends.push jid
+  #   
+  # # more like the roster...
+  # getFriends: ->
+  #   if ! @get('friends')
+  #     @set { friends : [] }
+  # 
+  #   for jid in @get('friends')
+  #     Users.findOrCreateByJid jid
     
   getAvatar: ->
     if @get('jid').toString().match /@buddycloud/
       "http://media.buddycloud.com/channel/54x54/buddycloud.com/#{@getName()}.png"
     else
-      "http://www.gravatar.com/avatar/#{hex_md5(@get('jid'))}?d=http://media.buddycloud.com/channel/54x54/buddycloud.com/welcome.bot.png"
+      "http://www.gravatar.com/avatar/#{hex_md5(@get('jid'))}?d=http://diaspora-x.com/public/icons/user.png"
     
 this.User = User
 
@@ -107,6 +107,19 @@ class UserCollection extends Backbone.Collection
   
   localStorage: new Store("UserCollection")
 
+  smartFilter : (func) ->
+    collection = new Backbone.Collection
+    collection.model = @model
+    collection.refresh(@select(func))
+    @bind 'all', =>
+      collection.refresh(@select(func))
+    collection
+    
+  # Returns a list of users that I am subscribed to
+  findFriends : ->
+    @smartFilter (user) ->
+      user.getChannel().isSubscribed()
+    
   findByJid : (jid) ->
     @find (user) ->
       user.get('jid') == jid

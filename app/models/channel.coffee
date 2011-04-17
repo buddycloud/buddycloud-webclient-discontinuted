@@ -154,7 +154,6 @@ class ChannelCollection extends Backbone.Collection
 
     channels
     
-    
   findOrCreateByNode : (node) ->
     channel = null
     
