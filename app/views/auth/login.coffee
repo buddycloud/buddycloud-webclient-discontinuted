@@ -27,9 +27,9 @@ class AuthLoginView extends Backbone.View
             You can sign in using your diasapora-x.com, gmail.com, buddycloud.com or me.com login. Your password is 
             stored in your browser and never shared with the diaspora-x server.
           </small>
-        </p
+        </p>
 
-        <form action="#signin" class="signin">
+        <form action="/signin" class="signin">
           <div class="f">
             <label for="jid">Login</label>
             <input name="jid" size="30" style="width: 180px" type="text" />
@@ -51,15 +51,15 @@ class AuthLoginView extends Backbone.View
         
         <h2><span>Create an account</span></h2>
 
-        <div style="display: none">
+        <div>
           <p>
             <small>
               If you don't want to use an existing login, you can sign up for one
               from Diaspora*x.com.
             </small>
-          </p
+          </p>
 
-          <form method="get" action="#signup" class="signup">
+          <form action="/signup" class="signup">
 
             <div class="f">
               <label for="jid">Login</label>
@@ -96,10 +96,12 @@ class AuthLoginView extends Backbone.View
     'click .signin-button' : 'signin'
   }
   
-  signin: (e) ->
-    jid = $("input[name='jid']").val()
-    password = $("input[name='password']").val()
+  signin: (e) =>
+    jid = @el.find(".signin input[name='jid']").val()
+    password = @el.find(".signin input[name='password']").val()
 
+    console.log [jid, password]
+    
     if jid.match(/@/) && password.length > 0
       localStorage['jid'] = jid
       localStorage['password'] = password
@@ -112,6 +114,8 @@ class AuthLoginView extends Backbone.View
   render: =>
     $('.auth').hide()
     $('ul.tabs li').hide()
+    
+    console.log(@template( { users : @collection }));
     
     @el.html(@template( { users : @collection })).hide().fadeIn()
     @delegateEvents()

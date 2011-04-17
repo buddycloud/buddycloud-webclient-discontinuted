@@ -17,7 +17,6 @@ describe 'jid', ->
     j = new Jid('bnolan@gmail.com/x/y/z@blah')
     expect(j.getNode()).toEqual('bnolan')
 
-
   it 'should be a bc domain', ->
     j = new Jid('bnolan@gmail.com')
     expect(j.buddycloudDomain()).toBeFalsy()
