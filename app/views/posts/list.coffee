@@ -1,7 +1,7 @@
 class PostsListView extends Backbone.View
   initialize: ->
     @template = _.template('''
-        <div class="activity">
+        <div class="activity" data-id="<%= post.id %>">
           <div class="grid_1">
             <img class="thumb avatar" src="<%= post.getAuthorAvatar() %>" />
           </div>
@@ -18,33 +18,11 @@ class PostsListView extends Backbone.View
               <% if(post.hasGeoloc()){ %>
                 | <%= post.get('geoloc_text') %>
               <% } %>
-              | <%= post.id %>
             </p>
           
-            <% if(post.hasReplies()){ %>
-            
-              <div class="comments">
-                <div class="chevron">&diams;</div>
-
-                <% post.getReplies().each(function(reply){ %>
-                  <div class="comment">
-                    <img class="micro avatar" src="<%= reply.getAuthorAvatar() %>" />
-                    <p class="content">
-                      <a href="#users/<%= reply.getAuthor().get('jid') %>"><%= reply.getAuthorName() %></a> 
-                      <%= view.formatContent(reply) %>
-                    </p>
-                    <span class="meta">
-                      <span class='timeago' title='<%= reply.get('published') %>'><%= post.get('published') %></span>
-                      <% if(reply.hasGeoloc()){ %>
-                        | <%= reply.get('geoloc_text') %>
-                      <% } %>
-                      | <%= reply.id %>
-                    </span>
-                  </div>
-                <% }); %>
-              
-              </div>
-            <% }; %>
+            <div class="comments">
+              <div class="chevron">&diams;</div>
+            </div>
 
             <form class="new_activity reply" action="#">
               <input type="hidden" name="in_reply_to" value="<%= post.id %>" />
@@ -92,10 +70,13 @@ class PostsListView extends Backbone.View
         
       "<a class='inline-link' href='#{match}'>#{truncated}</a>"
 
-  keydown: (e) ->
-    if ((e.metaKey || e.shiftKey) && e.keyCode == 13)
-      $(e.currentTarget).parents("form").submit();
-      e.preventDefault();
+  keydown: (e) =>
+    if e.keyCode == 13
+      if (e.metaKey || e.shiftKey)
+        # ...
+      else
+        $(e.currentTarget).parents("form").submit();
+        e.preventDefault();
     
   submit: (e) ->
     e.preventDefault()
@@ -108,13 +89,33 @@ class PostsListView extends Backbone.View
       author : app.currentUser.get('jid')
     }
 
+    # Hide the form
+    form.find('textarea:first').val('')
+    form.hide()
+      
     post.send()
 
   addPost: (post) =>
-    div = $(@template( { view : this, post : post }))
-    div.find('.timeago').timeago()
-    div.insertBefore @el.find("div:first")
-    div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
+    if post.isReply()
+      @addReply(@el.find("div[data-id='#{post.get('in_reply_to')}']"), post)
+    else
+      div = $(@template( { view : this, post : post }))
+      div.find('.timeago').timeago()
+      div.insertBefore @el.find("div:first")
+      div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
+    
+      if post.hasReplies()
+        div.find('.comments').show()
+      else
+        div.find('.comments').hide()
+        
+      for reply in post.getReplies().value()
+        @addReply(div, reply)
+        
+  addReply: (div, reply) ->
+    el = $("<div />")
+    el.appendTo(div.find('.comments'))
+    new PostsCommentsView { model : reply, el : el }
 
   removePost: (post) =>
     console.log "posts#list#removePost not implemented!"

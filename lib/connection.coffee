@@ -29,6 +29,9 @@ class Connection
     @password = password
     
     @c.connect @jid, @password, @onConnect
+  
+  reconnect: ->
+    @c.connect @jid, @password, @onConnect
     
   onConnect: (status) =>
     if (status == Strophe.Status.CONNECTING)
@@ -117,6 +120,15 @@ class Connection
 
     @c.send(request.tree())
     
+    # <iq to="broadcaster.buddycloud.com" type="get" id="13:01">
+    #    <pubsub xmlns="http://jabber.org/protocol/pubsub">
+    #      <subscriptions/>
+    #      <set xmlns="http://jabber.org/protocol/rsm">
+    #        <max>50</max>
+    #      </set>
+    #    </pubsub>
+    #  </iq>    
+
   getAllChannels: ->
     stanza = $pres( { "to" : PUBSUB_BRIDGE } )
     

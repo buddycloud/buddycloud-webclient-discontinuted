@@ -6,6 +6,28 @@ class Channel extends Backbone.Model
   getNode: ->
     @get('node')
     
+  subscribe: ->
+    # request = $iq( { to : @serviceProvider(), type : 'set' })
+    #   .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
+    #   .c('subscribe', { node: @getNode() })
+
+    request = $iq( { to : @serviceProvider(), type : 'set' })
+      .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
+      .c('subscriptions', { node: @getNode() })
+      .c('subscription', { jid : $c.jid, subscription : 'subscribed' })
+
+    console.log Strophe.serialize(request)
+    
+    $c.c.sendIQ(
+      request
+      (response) =>
+        console.log 'response'
+        console.log response
+      (err) =>
+        console.log 'err'
+        console.log err
+    )
+    
   serviceProvider: ->
     "pubsub-bridge@broadcaster.buddycloud.com"
 

@@ -6,7 +6,7 @@ class Post extends Backbone.Model
     "pubsub-bridge@broadcaster.buddycloud.com"
 
   isReply: ->
-    (@get('in_reply_to') != undefined) and (!isNaN(@get('in_reply_to')))
+    (@get('in_reply_to') != null) and (!isNaN(@get('in_reply_to')))
     
   hasGeoloc: ->
     (typeof @get('geoloc_text') == 'string') and (@get('geoloc_text') != "")
@@ -44,10 +44,10 @@ class Post extends Backbone.Model
     @getAuthor().getAvatar()
     
   send: ->
-    if @valid()
+    if errors = @valid()
       @_send()
     else
-      console.log "not sending.. seems invalid."
+      alert "not sending.. seems invalid."
       
   _send: ->
     request = $iq({ "to" : @serviceProvider(), "type" : "set" })
@@ -67,15 +67,16 @@ class Post extends Backbone.Model
       #   href="http://creativecommons.org/licenses/by/2.5/" />      
 
     # Request..
-    $c.c.sendIQ(request)
-    #   (response) =>
-    #     console.log 'response'
-    #     console.log response
-    #   (err) ->
-    #     console.log 'error!'
-    #     console.log err
-    # )
-    # 
+    $c.c.sendIQ(
+      request,
+      (response) =>
+        console.log 'response'
+        console.log response
+      (err) ->
+        console.log 'error!'
+        console.log err
+    )
+    
     
   # 
   # validate: (attr) ->

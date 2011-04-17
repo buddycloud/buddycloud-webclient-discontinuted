@@ -5,7 +5,7 @@ class UsersController extends Backbone.Controller
     
   subscribe: (jid) ->
     user = Users.findOrCreateByJid(jid)
-    user.subscribe()
+    user.getChannel().subscribe()
     window.location.hash = "#users/#{user.get('jid')}"
     
   show: (jid) ->

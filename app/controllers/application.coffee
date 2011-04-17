@@ -67,7 +67,9 @@ app.start = ->
     app.removeSpinner()
     app.currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
-    window.location.hash = "#home"
+    
+    if window.location.hash == "#login"
+      window.location.hash = "#home"
 
   # $c.bind 'disconnect', ->
   #   ....
