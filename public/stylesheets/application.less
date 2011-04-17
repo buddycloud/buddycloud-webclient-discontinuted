@@ -165,8 +165,10 @@ input[type='text'], input[type='password'], textarea{
 	color: #aaa;
 	padding: 5px;
 	line-height: 20px;
+	width: 225px;
+	margin-left: 225px;
 }
-.header .auth .avatar{
+.header .auth .spinner, .header .auth .avatar{
 	float: left;
 	margin-right: 5px;
 	width: 16px;
@@ -473,6 +475,22 @@ input[type='text'], input[type='password'], textarea{
   position: relative;
   top: -20px;
   left: 180px;
+
+  .form-flash{
+    background: #333;
+    color: white;
+    text-shadow: 0 1px 1px black;
+    position: absolute;
+    top: 50px;
+    padding: 5px 10px 5px 30px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    width: 250px;
+    background-image: url(/public/images/fire.png);
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    background-size: 16px 16px;
+  }  
   
   div.f{
     float: left;

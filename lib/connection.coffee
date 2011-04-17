@@ -7,7 +7,8 @@ class Connection
     @connected = false
     
     _.extend(@, Backbone.Events)
-    
+
+  connect: (jid, password)->
     @c = new Strophe.Connection(BOSH_SERVICE)
 
     # @c.rawInput = (message) ->
@@ -23,8 +24,7 @@ class Connection
     @maxMessageId = 1292405757510
   
     @bind 'connected', @afterConnected
-    
-  connect: (jid, password)->
+
     @jid = jid
     @password = password
     
@@ -36,12 +36,14 @@ class Connection
       console.log('Strophe is connecting.')
     else if (status == Strophe.Status.AUTHFAIL)
       console.log('Strophe failed to authenticate.')
-      app.signout()
+      @trigger('authfail')
     else if (status == Strophe.Status.CONNFAIL)
+      @trigger('connfail')
       console.log('Strophe failed to connect.')
       @connected = false
       # app.signout()
     else if (status == Strophe.Status.DISCONNECTING)
+      @trigger('disconnecting')
       console.log('Strophe is disconnecting.')
     else if (status == Strophe.Status.DISCONNECTED)
       console.log('Strophe is disconnected.')

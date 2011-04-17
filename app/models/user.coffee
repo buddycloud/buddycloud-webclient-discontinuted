@@ -1,10 +1,5 @@
 class User extends Backbone.Model
   initialize: ->
-    @posts = PostCollection.forUser(this)
-
-  getPosts: ->
-    @fetchPosts()
-    @posts
 
   serviceProvider: ->
     "pubsub-bridge@broadcaster.buddycloud.com"

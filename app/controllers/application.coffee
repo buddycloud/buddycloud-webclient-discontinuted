@@ -5,20 +5,23 @@
 app = {}
 
 app.connect = (jid, password, autologin)->
-  window.location.hash = "#home"
-  
   if autologin
-    localStorage['jid'] = jid
-    localStorage['password'] = password
+    $c.bind 'connected', ->
+      localStorage['jid'] = jid
+      localStorage['password'] = password
 
   $c.connect jid, password
   
 app.currentUser = null
 
-# app.spinner = ->
-#   $("#content").empty()
-#   $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
-# 
+app.spinner = ->
+  $("#content").fadeOut()
+  $('#spinner').remove()
+  $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
+
+app.removeSpinner = ->
+  $("#content").fadeIn()
+  $('#spinner').remove()
 
 # app.showLog = ->
 #   $("#log").show()
@@ -48,25 +51,24 @@ app.start = ->
   # Establish xmpp connection
   window.$c = new Connection
   
+  $c.bind 'authfail', ->
+    app.removeSpinner()
+
+    view = new CommonLoginView
+    view.render()
+    view.flashMessage("Incorrect username / password")
+
   $c.bind 'connecting', ->
-    new CommonConnectingView
+    if window.location.hash == "#login"
+      app.spinner()
+    else
+      new CommonConnectingView
     
   $c.bind 'connected', ->
-    jid = $c.jid
-    
-    alert "?"
-
-    # if not Users.findByJid(jid)
-    #   user = new User { jid : jid }
-    #   Users.add user
-    # 
-    app.currentUser = Users.findOrCreateByJid(jid)
-  
-    window.location.hash = "#home"
-
-    alert app.currentUser
-    
+    app.removeSpinner()
+    app.currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
+    window.location.hash = "#home"
 
   # $c.bind 'disconnect', ->
   #   ....

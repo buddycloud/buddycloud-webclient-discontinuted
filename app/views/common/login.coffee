@@ -30,7 +30,6 @@ class CommonLoginView extends Backbone.View
     
   events: {
     'submit form.signin' : 'signin'
-    'click button' : 'signin'
   }
   
   signin: (e) =>
@@ -38,16 +37,23 @@ class CommonLoginView extends Backbone.View
 
     jid = @el.find("input[name='jid']").val()
     password = @el.find("input[name='password']").val()
-
-    console.log [jid, password]
     
     if jid.match(/@/) && password.length > 0
       app.connect(jid, password, true)
-    else
-      alert "Invalid login / password..."
+    else    
+      @flashMessage "Invalid login / password..."
     
   render: =>
     @el.html(@template( { users : @collection })).hide().fadeIn()
     @delegateEvents()
+
+  flashMessage: (message) ->
+    @el.find('.form-flash').remove()
+    
+    div = $("<div />").addClass('form-flash').text(message)
+    div.appendTo @el.find('form')
+    div.hide().slideDown().delay(3000).slideUp()
+
+
 
 @CommonLoginView = CommonLoginView

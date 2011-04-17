@@ -4,7 +4,7 @@ class CommonConnectingView extends Backbone.View
 
     @template = _.template('''
       <div class="auth">
-        <img src="/public/icons/net_comp.png" class="micro avatar">
+        <img src="/public/spinner-dark.gif?force" class="micro spinner">
         Connecting....
         <a href="#logout" class="signout">Cancel</a>
       </div>
