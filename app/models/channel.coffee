@@ -59,6 +59,9 @@ class Channel extends Backbone.Model
   canPost: ->
     (@get('affiliation') == 'owner') || (@get('affiliation') == 'publisher') || (@get('default_affiliation') == 'publisher')
 
+  pubsubServiceDomain: ->
+    "buddycloud.com"
+    
   pubsubService: ->
     "broadcaster.buddycloud.com"
     

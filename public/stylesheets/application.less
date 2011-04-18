@@ -16,20 +16,20 @@
 /*
  * Buddycloud colors
  */
- 
-/*
-  @header-color: #132B36;
-  @body-color: #C4CED1 ;
-  @body-gradient: #e3e3e3;
-  @button-color: #3093D3;
-  @link-color: #132B36;
-  @hover-color: #CD3C40;
-  @active-color: #AC1D21;
-  @header-font: corbel, sans-serif;
-  @header-transform: lowercase;
-  @header-size: 35px;
-  */
-  
+
+/* 
+@header-color: #132B36;
+@body-color: #C4CED1;
+@body-gradient: #e3e3e3;
+@button-color: #3093D3;
+@link-color: #132B36;
+@hover-color: #CD3C40;
+@active-color: #AC1D21;
+@header-font: corbel, sans-serif;
+@header-transform: lowercase;
+@header-size: 35px;
+*/
+
 button, input[type='submit']{
   background: @button-color;
   -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.5);
@@ -155,7 +155,7 @@ input[type='text'], input[type='password'], textarea{
   padding: 0 10px;
 }
 .header .tabs .active a{
-  background: white;
+  background: @body-color;
   color: black;
   font-weight: bold;
 }
@@ -723,4 +723,13 @@ li:hover .inline-action{
     top: 5px;
     right: 5px;
   }
+}
+
+
+.big-channel-list{
+  li *{
+    margin: 0;
+    padding: 0;
+  }
+  
 }

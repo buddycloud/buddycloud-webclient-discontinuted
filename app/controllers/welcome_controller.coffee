@@ -17,4 +17,9 @@ class WelcomeController extends Backbone.Controller
     # user.fetchPosts()
     new UsersShowView { model : user }
     
+    # Focus the second tab
+    $("#main-tabs li").removeClass('active')
+    $("#main-tabs li:nth-child(1)").addClass('active')
+    
+    
 new WelcomeController
