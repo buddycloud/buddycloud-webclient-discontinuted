@@ -50,6 +50,9 @@ class Channel extends Backbone.Model
   isSubscribed: ->
     @get('subscription') == 'subscribed'
     
+  isWhitelisted: ->
+    true # @get('access_model') == 'whitelist'
+    
   canView: ->
     @get('access_model') == 'open'
     

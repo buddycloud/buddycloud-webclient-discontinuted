@@ -27,3 +27,10 @@ describe 'channel', ->
     c = new Channel { access_model : 'open', subscription : 'pending' }
     expect(c.canView()).toBeTruthy()
     
+  it 'should be isWhitelisted', ->
+    c = new Channel { access_model : 'whitelist', subscription : 'pending' }
+    expect(c.isWhitelisted()).toBeTruth()
+
+    c = new Channel { access_model : 'open', subscription : 'pending' }
+    expect(c.isWhitelisted()).toBeFalsy()
+  

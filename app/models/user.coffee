@@ -34,11 +34,16 @@ class User extends Backbone.Model
   #       console.log err
   #   )
   #   
+  
+  hasNoChannel: ->
+    false # true
+    
   getJid: ->
     @get('jid')
     
   getFullName: ->
-    "Ben Nolan"
+    # todo - implement me
+    @getName().capitalize()
     
   getName: ->
     @get('jid').toString().replace /@.+/, ''
