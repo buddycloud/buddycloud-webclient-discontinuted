@@ -7,17 +7,28 @@ class UsersShowView extends Backbone.View
     @collection = @model.getChannel().getPosts()
     
     @template = _.template('''
-      <h1>
-        <%= user.getName() %>
+      <h1 class="channel-name">
+        <%= user.getFullName() %>
       </h1>
       <p class="usermeta">
-        <img src="public/icons/globe_2.png" /> <%= user.get('jid') %>
+        <% if(channel.hasMetaData()){ %>
+          <img src="public/icons/globe_2.png" /> <%= user.get('jid') %>
+          <img src="public/icons/clock.png" /> Created <%= channel.escapeCreationDate() %>
+          <img src="public/icons/chart_bar.png" /> <%= channel.escape('num_subscribers') %> subscribers 
+        <% } else { %>
+          <img src="public/icons/sand.png" />Loading...
+        <% } %>
+
         |
         <% if(user.getChannel().isSubscribed()){ %>
           <a href="#users/<%= user.get('jid') %>/unsubscribe">Unsubscribe</a>
         <% }else{ %>
           <a href="#users/<%= user.get('jid') %>/subscribe">Subscribe</a>
         <% } %>
+
+      </p>
+      <p class="description">
+        <%= channel.escape('description') %>
       </p>
     
       <form action="#" class="new_activity status">
@@ -69,7 +80,7 @@ class UsersShowView extends Backbone.View
   #   ).reverse()
   #   
   render: =>
-    @el.html(@template( { view : this, user : @model })).find('.timeago').timeago()
+    @el.html(@template( { view : this, user : @model, channel : @model.getChannel() })).find('.timeago').timeago()
     @delegateEvents()
 
     new PostsListView { el : @el.find('.posts'), model : @model.getChannel() }

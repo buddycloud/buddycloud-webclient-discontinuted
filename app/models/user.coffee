@@ -37,6 +37,9 @@ class User extends Backbone.Model
   getJid: ->
     @get('jid')
     
+  getFullName: ->
+    "Ben Nolan"
+    
   getName: ->
     @get('jid').toString().replace /@.+/, ''
 
