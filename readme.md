@@ -18,7 +18,37 @@ The XMPP extensions that Buddycloud describes have been implemented in three pro
 
 # Installation
 
-Requires [capt](http://github.com/bnolan/capt) and php5. (todo - this section needs expansion)
+This repository needs to be in the webroot of your computer. On OS X - you can set up a vhost by editing:
+
+    /private/etc/apache2/extra/httpd-vhosts.conf
+    
+And adding a section like this:
+
+# Use name-based virtual hosting.
+NameVirtualHost *:80
+
+    <VirtualHost *:80>
+            ServerName buddycloud.local
+            DocumentRoot /Users/someone/programming/buddycloud-web-client
+            Options Indexes FollowSymLinks MultiViews
+            <Directory />
+                    AllowOverride All
+                    Order allow,deny
+                    Allow from all
+            </Directory>
+    </VirtualHost>
+
+Then edit your `/etc/hosts` file and add an entry like:
+
+    127.0.0.1       buddycloud.local
+    
+Restart apache with `sudo apachectl restart` and you should be able to browse to the web client at [http://buddycloud.local/](buddycloud.local). Linux is as above but your vhost configuration will be different.
+
+The PHP API isn't enabled at the moment, but in the future we will be using .htaccess and php5, so revisit this installation section in the future.
+
+# Compiling the .jst files
+
+You will see that we use .jst templates for index.html and /spec/index.html. These .jst templates are compiled using [capt](https://github.com/bnolan/capt). If you checkout capt and install it to `/usr/local/bin` you should be able to 
 
 # API
 

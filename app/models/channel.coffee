@@ -50,6 +50,9 @@ class Channel extends Backbone.Model
   isSubscribed: ->
     @get('subscription') == 'subscribed'
     
+  canView: ->
+    @get('access_model') == 'open'
+    
   canPost: ->
     (@get('affiliation') == 'owner') || (@get('affiliation') == 'publisher') || (@get('default_affiliation') == 'publisher')
 

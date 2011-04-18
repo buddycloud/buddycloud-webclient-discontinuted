@@ -20,3 +20,10 @@ describe 'channel', ->
     expect(c.getUserJid()).toEqual('ben@ben.com')
   
   
+  it 'should be not viewable', ->
+    c = new Channel { access_model : 'whitelist', subscription : 'pending' }
+    expect(c.canView()).toBeFalsy()
+
+    c = new Channel { access_model : 'open', subscription : 'pending' }
+    expect(c.canView()).toBeTruthy()
+    
