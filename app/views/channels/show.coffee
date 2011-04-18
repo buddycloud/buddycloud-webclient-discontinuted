@@ -12,29 +12,32 @@ class ChannelsShowView extends Backbone.View
     
     @template = _.template('''
 
-      <h1 class="channel-name">
-        <%= channel.getName().capitalize() %>
-      </h1>
-      <p class="usermeta">
-        <% if(channel.hasMetaData()){ %>
-          <img src="public/icons/user.png" /> Owned by <%= channel.escapeOwnerNode() %>
-          <img src="public/icons/clock.png" /> Created <%= channel.escapeCreationDate() %>
-          <img src="public/icons/chart_bar.png" /> <%= channel.escape('num_subscribers') %> subscribers 
-        <% } else { %>
-          <img src="public/icons/sand.png" />Loading...
-        <% } %>
-        
-        |
-        <% if(channel.isSubscribed()){ %>
-          <a class="unsubscribe" href="#unsubscribe">Unsubscribe</a>
-        <% }else{ %>
-          <a class="subscribe" href="#subscribe">Subscribe</a>
-        <% } %>
-      </p>
-      <p class="description">
-        <%= channel.escape('description') %>
-      </p>
-    
+      <div class="channel-info">
+        <p class="subscribe-buttons">
+          <% if(channel.isSubscribed()){ %>
+            <button class="unsubscribe">Unsubscribe</button>
+          <% }else{ %>
+            <button class="subscribe">Subscribe</button>
+          <% } %>
+        </p>
+      
+        <h1 class="channel-name">
+          <%= channel.getName().capitalize() %>
+        </h1>
+        <p class="usermeta">
+          <% if(channel.hasMetaData()){ %>
+            <img src="public/icons/user.png" /> Owned by <%= channel.escapeOwnerNode() %>
+            <img src="public/icons/clock.png" /> Created <%= channel.escapeCreationDate() %>
+            <img src="public/icons/chart_bar.png" /> <%= channel.escape('num_subscribers') %> subscribers 
+          <% } else { %>
+            <img src="public/icons/sand.png" />Loading...
+          <% } %>
+        </p>
+        <p class="description">
+          <%= channel.escape('description') %>
+        </p>
+      </div>
+      
       <% if(channel.canPost()){ %>
         <form action="#" class="new_activity status">
           <h4>New post</h4>
