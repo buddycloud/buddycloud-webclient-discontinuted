@@ -11,8 +11,9 @@ class ChannelsShowView extends Backbone.View
     @collection = @model.getPosts()
     
     @template = _.template('''
-
       <div class="channel-info">
+      </div>
+      
         <p class="subscribe-buttons">
           <% if(channel.isSubscribed()){ %>
             <button class="unsubscribe">Unsubscribe</button>

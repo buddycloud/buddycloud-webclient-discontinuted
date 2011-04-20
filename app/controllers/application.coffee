@@ -43,6 +43,11 @@ app.signout = ->
 
 app.start = ->
 
+  # Force start from clean...
+  localStorage.clear()
+  localStorage['jid'] = 'ben@diaspora-x.com'
+  localStorage['password'] = 'toast'
+  
   # Create collections
   window.Channels = new ChannelCollection
   window.Channels.fetch()

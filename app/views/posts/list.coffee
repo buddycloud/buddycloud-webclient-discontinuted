@@ -5,7 +5,7 @@ class PostsListView extends Backbone.View
           <div class="grid_1">
             <img class="thumb avatar" src="<%= post.getAuthorAvatar() %>" />
           </div>
-          <div class="grid_5">
+          <div class="grid_4">
             <h4>
               <a href="#users/<%= post.getAuthor().get('jid') %>"><%= post.getAuthorName() %> </a>
             </h4>
