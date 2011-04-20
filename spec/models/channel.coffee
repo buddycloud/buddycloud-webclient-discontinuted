@@ -1,5 +1,12 @@
 describe 'channel', ->
 
+  it 'should have status', ->
+    c = new Channel { node : '/user/ben@ben.com/channel' }
+    expect(c.status).toEqual(null)
+    
+    c.fetchPosts()
+    expect(c.status).toEqual('loading')
+    
   it 'should be user', ->
     c = new Channel { node : '/user/ben@ben.com/channel' }
     expect(c.isUserChannel()).toBeTruthy()
@@ -29,7 +36,7 @@ describe 'channel', ->
     
   it 'should be isWhitelisted', ->
     c = new Channel { access_model : 'whitelist', subscription : 'pending' }
-    expect(c.isWhitelisted()).toBeTruth()
+    expect(c.isWhitelisted()).toBeTruthy()
 
     c = new Channel { access_model : 'open', subscription : 'pending' }
     expect(c.isWhitelisted()).toBeFalsy()

@@ -1,5 +1,8 @@
 describe 'user', ->
 
+  beforeEach ->
+    window.Channels = new ChannelCollection
+  
   it 'should have a channel', ->
     u = new User { jid : 'ben@ben.com'}
     expect(u.hasNoChannel()).toBeFalsy()

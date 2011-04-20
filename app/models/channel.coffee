@@ -1,6 +1,7 @@
 class Channel extends Backbone.Model
   initialize: ->
     @posts = PostCollection.forChannel(this)
+    @status = null
     
   updateUsers: ->
     if @isUserChannel()
@@ -51,7 +52,7 @@ class Channel extends Backbone.Model
     @get('subscription') == 'subscribed'
     
   isWhitelisted: ->
-    true # @get('access_model') == 'whitelist'
+    @get('access_model') == 'whitelist'
     
   canView: ->
     @get('access_model') == 'open'
@@ -91,6 +92,8 @@ class Channel extends Backbone.Model
     if !$c.connected
       return
       
+    @status = 'loading'
+    
     request = $iq({ to : @serviceProvider(), type : 'get' })
       .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
       .c('items', { node : @getNode() })

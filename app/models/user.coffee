@@ -36,7 +36,7 @@ class User extends Backbone.Model
   #   
   
   hasNoChannel: ->
-    false # true
+    (@getChannel().status == null) || (@getChannel().status == 'loading') || (@getChannel().status == '200')
     
   getJid: ->
     @get('jid')
