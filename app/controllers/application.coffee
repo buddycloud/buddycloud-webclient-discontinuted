@@ -46,16 +46,18 @@ app.start = ->
   # Create collections
   window.Channels = new ChannelCollection
   window.Channels.fetch()
-
+  
   # Establish xmpp connection
   window.$c = new Connection
   
   $c.bind 'authfail', ->
     app.removeSpinner()
 
-    view = new CommonLoginView
-    view.render()
-    view.flashMessage("Incorrect username / password")
+    # view = new CommonLoginView
+    # view.render()
+    # view.flashMessage("Incorrect username / password")
+    # 
+    alert("Incorrect username / password")
 
   $c.bind 'connecting', ->
     if window.location.hash == "#login"

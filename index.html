@@ -22,7 +22,6 @@
   <script src='/app/controllers/.js/channels_controller.js' type='text/javascript'></script>
   <script src='/app/controllers/.js/users_controller.js' type='text/javascript'></script>
   <script src='/app/controllers/.js/welcome_controller.js' type='text/javascript'></script>
-  <script src='/app/views/auth/.js/login.js' type='text/javascript'></script>
   <script src='/app/views/channels/.js/index.js' type='text/javascript'></script>
   <script src='/app/views/channels/.js/list.js' type='text/javascript'></script>
   <script src='/app/views/channels/.js/show.js' type='text/javascript'></script>
@@ -35,6 +34,7 @@
   <script src='/app/views/posts/.js/list.js' type='text/javascript'></script>
   <script src='/app/views/users/.js/list.js' type='text/javascript'></script>
   <script src='/app/views/users/.js/show.js' type='text/javascript'></script>
+  <script src='/app/views/welcome/.js/home.js' type='text/javascript'></script>
   <script src='/app/views/welcome/.js/index.js' type='text/javascript'></script>
   <script src='/app/models/.js/post.js' type='text/javascript'></script>
   <script src='/app/models/.js/channel.js' type='text/javascript'></script>
@@ -51,8 +51,8 @@
   <div class='header'>
     <div class="container_12">
       <div class="grid_5">
-        <!--h1><a href="#home" class="name"><b>Diaspora</b>*x</a></h1-->
-        <h1><a href="#home" class="name"><b>buddy</b>cloud</a></h1>
+        <h1><a href="#home" class="name"><b>Diaspora</b>*x</a></h1>
+        <!--h1><a href="#home" class="name"><b>buddy</b>cloud</a></h1-->
       </div>
 
       <div class="grid_6" id="auth-container">
@@ -61,7 +61,7 @@
       <div class="clear"></div>
       
       <ul class="tabs" id="main-tabs">
-        <li><a href="#">Home</a></li>
+        <li class="active"><a href="#">Home</a></li>
         <li><a href="#channels">Channels</a></li>
         <li><a href="#friends">Friends</a></li>
         <li><a href="#settings">Settings</a></li>
