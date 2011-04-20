@@ -112,8 +112,8 @@ class Channel extends Backbone.Model
       (response) =>
         @posts.parseResponse(response)
       (err) =>
-        console.log 'err'
-        console.log err
+        @status = $(err).find('error').attr('code')
+        @trigger 'change'
     )
     
   parseSubscription: (subscription) ->
