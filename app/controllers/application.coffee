@@ -72,9 +72,9 @@ app.start = ->
     app.removeSpinner()
     app.currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
-
-    $c.fetchRoster()
-    Backbone.history.loadUrl()
+    
+    if window.location.hash == "#login"
+      window.location.hash = "#home"
 
   # $c.bind 'disconnect', ->
   #   ....

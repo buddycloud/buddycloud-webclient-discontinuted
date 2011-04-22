@@ -58,7 +58,7 @@ class CommonPageView extends Backbone.View
 
     @render()
 
-    new FriendsListView { collection : $c.roster }
+    new UsersListView { collection : Users.findFriends() }
     new ChannelsListView { collection : Channels.getStandalone() }
     
   events: {

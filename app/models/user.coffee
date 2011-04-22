@@ -10,9 +10,31 @@ class User extends Backbone.Model
   getNode: ->
     "/user/#{@get('jid')}/channel"
     
-  getMood: ->
-    @get('mood')
-    
+  # fetchPosts: ->
+  #   if !$c.connected
+  #     return
+  # 
+  #   # Discover...
+  #   request = $iq({ to: @serviceProvider(), type: 'get' })
+  #     .c('query', { xmlns: Strophe.NS.DISCO_ITEMS, node : @getNode() })
+  #     
+  #   $c.c.sendIQ(request)
+  #   
+  #   # Get....
+  #   request = $iq({ to : @serviceProvider(), type : 'get' })
+  #     .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
+  #     .c('items', { node : @getNode() })
+  #     
+  #   $c.c.sendIQ(
+  #     request,
+  #     (response) =>
+  #       @posts.parseResponse(response)
+  #     (err) =>
+  #       console.log 'err'
+  #       console.log err
+  #   )
+  #   
+  
   notFound: ->
     if @getChannel().isLoading()
       false

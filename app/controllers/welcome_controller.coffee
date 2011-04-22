@@ -13,7 +13,7 @@ class WelcomeController extends Backbone.Controller
       user = app.currentUser
       new UsersShowView { model : app.currentUser }
 
-      # Focus the first tab
+      # Focus the second tab
       $("#main-tabs li").removeClass('active')
       $("#main-tabs li:nth-child(1)").addClass('active')
     else
