@@ -8,6 +8,7 @@ class ChannelsController extends Backbone.Controller
     
   show: (node) ->
     channel = Channels.findOrCreateByNode("/channel/#{node}")
+    channel.markAllAsRead()
     new ChannelsShowView { model : channel }
         
 new ChannelsController

@@ -1,339 +1,61 @@
-PUBSUB_BRIDGE = "pubsub-bridge@broadcaster.buddycloud.com"
-BOSH_SERVICE = 'http://buddycloud.com/http-bind/'
 BOSH_SERVICE = 'http://bosh.metajack.im:5280/xmpp-httpbind'
 
 class Connection
   constructor: ->
     @connected = false
     @roster = new UserCollection
+    @roster.localStorage = new Store("Roster")
+    @roster.fetch()
     
     _.extend(@, Backbone.Events)
 
   connect: (jid, password)->
-    # @c.rawInput = (message) ->
-    #   c = if message.match(/<error/)
-    #     'error'
-    #   else
-    #     'input'
-    #   $("<div />").text(message).addClass(c).appendTo '#log'
-    # 
-    # @c.rawOutput = (message) ->
-    #   $("<div />").text(message).addClass('output').appendTo '#log'
-
     @c = new Strophe.Connection(BOSH_SERVICE)
-
-    @maxMessageId = 1292405757510
   
-    @bind 'connected', @afterConnected
-
     @jid = jid
     @password = password
+    @user = Users.findOrCreateByJid(@jid)
+    @connectors = [ new LegacyConnector ]
     
+    # After we are connected - do stuff
+    @bind 'connected', @afterConnected
     @c.connect @jid, @password, @onConnect
   
-  reconnect: ->
-    @c.connect @jid, @password, @onConnect
-    
+  # Convert the strophe messages to backbone bind/trigger events
   onConnect: (status) =>
     if (status == Strophe.Status.CONNECTING)
       @trigger('connecting')
-      console.log('Strophe is connecting.')
+
     else if (status == Strophe.Status.AUTHFAIL)
-      console.log('Strophe failed to authenticate.')
       @trigger('authfail')
+
     else if (status == Strophe.Status.CONNFAIL)
-      @trigger('connfail')
-      console.log('Strophe failed to connect.')
       @connected = false
-      # app.signout()
+      @trigger('connfail')
+
     else if (status == Strophe.Status.DISCONNECTING)
       @trigger('disconnecting')
-      console.log('Strophe is disconnecting.')
+
     else if (status == Strophe.Status.DISCONNECTED)
-      console.log('Strophe is disconnected.')
-      @trigger('disconnected')
       @connected = false
+      @trigger('disconnected')
+
     else if (status == Strophe.Status.CONNECTED)
       @connected = true
-      console.log('Strophe is connected.')
       @trigger('connected')
 
-      # @c.disconnect()
-
-  getSubscriptions: (node) ->
-    request = $iq({"to" : PUBSUB_BRIDGE, "type":"get"})
-      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-      .c("subscriptions")
-  
-    # Request..
-    @c.sendIQ(
-      request
-      (response) ->
-        console.log 'response'
-        for subscription in $(response).find('subscription')
-          Channels.findOrCreateByNode($(subscription).attr('node')).parseSubscription($(subscription)).save()
-      (err) ->
-        console.log 'getSubscriptions#err'
-        console.log err
-    )
-  
-  # sendPost: (post) ->
-  #   id = @c.getUniqueId("LM")
-  # 
-  #   stanza = $iq({"id" : id, "to" : PUBSUB_BRIDGE, "type" : "set"})
-  #     .c("pubsub", { "xmlns" : "http://jabber.org/protocol/pubsub" })
-  #     .c("publish", {"node":post.get('channel')})
-  #     .c("item")
-  #     .c("entry", {"xmlns":"http://www.w3.org/2005/Atom"})
-  #     .c("content", {"type" : "text"}).t(post.get("content")).up()
-  #     .c("author")
-  #     .c("jid", {"xmlns":"http://buddycloud.com/atom-elements-0"}).t(post.get("author")).up().up()
-  #     .c("in-reply-to", { "xmlns" : "http://purl.org/syndication/thread/1.0", "ref" : post.get('in_reply_to') }).up()
-  #     # ... geoloc ..
-  # 
-  #     
-  #     # <link rel="license" type="text/html"
-  #     #   href="http://creativecommons.org/licenses/by/2.5/" />      
-  # 
-  #   # console.log(stanza.tree())
-  #   
-  #   # Request..
-  #   @c.send(stanza.tree());
-  #   
-  #   # console.log "sent!"
-    
-  getMetaData: (channel) ->
-    id = @c.getUniqueId("LM");
-    request = $iq( { "id" : id, "to" : PUBSUB_BRIDGE, "type" : "get" })
-      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.getNode() })
-
-    # connection.addHandler(Pref.onNodeMetaData, 
-    #                               EVERY_NAMESPACE, 
-    #                               "iq", 
-    #                               EVERY_IQ_TYPE, 
-    #                               uniqueID, 
-    #                               FROM_ANY_SERNDER);
-
-    @c.send(request.tree())
-    
-    # <iq to="broadcaster.buddycloud.com" type="get" id="13:01">
-    #    <pubsub xmlns="http://jabber.org/protocol/pubsub">
-    #      <subscriptions/>
-    #      <set xmlns="http://jabber.org/protocol/rsm">
-    #        <max>50</max>
-    #      </set>
-    #    </pubsub>
-    #  </iq>    
-
-  getAllChannels: ->
-    stanza = $pres( { "to" : PUBSUB_BRIDGE } )
-    
-    stanza
-      .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-      .c("after").t(@maxMessageId + "")
-      # .up()
-      # .c("max").t("100")
-      # .up()
-      # .c("before")
-
-    # 
-    # id = @c.getUniqueId("LM")
-    # 
-    # stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"get"})
-    #   .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-    #   .c("items")
-    #   .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-    #   .c("after").t(@maxMessageId)
-    # 
-    # # Request..
-    # @c.send(stanza.tree());
-
-    @c.send stanza.tree()
-    
-  subscribeToUser: (jid) ->
-    @c.send($pres( { "type" : "subscribe", "to" : jid } ).tree())
-    
-  unsubscribeFromUser: (jid) ->
-    @c.send($pres( { "type" : "unsubscribe", "to" : jid } ).tree())
-    
-  getChannel: (node) ->
-    id = @c.getUniqueId("LM")
-
-    stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"get"})
-      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-      .c("items", {"node":node})
-      .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-      .c("after").t("100")
-
-    # Request..
-    @c.send(stanza.tree());
-    
-  onSubscriptionIq: (iq) =>
-    # console.log iq
-    true
-    
-    
-  onMessage: (message) =>
-    console.log 'message'
-    console.log message
-
-    true
-    
-  onPresence: (stanza) =>
-    console.log 'presence'
-    console.log stanza
-
-    return
-    
-    stanza = $(stanza)
-    
-    jid = stanza.attr('from')
-    type = stanza.attr('type')
-
-    # # Subscription request from service?
-    # if (jid.indexOf('@') < 0 && type === 'subscribe') {
-
-    # Always allow
-    @c.send($pres({ type: 'subscribed', to: jid }));
-
-    presence = $(stanza)
-    
-    jid = presence.attr('from').replace(/\/.+/,'')
-      
-    user = if Users.findByJid(jid)
-      Users.findByJid(jid)
-    else
-      user = new User {
-        jid : jid
-      }
-      
-      if presence.find('status')
-        user.set { status : presence.find('status').text() }
-      
-      Users.add user
-      
-      user
-
-    user.grantChannelPermissions()
-             
-    true
-
-  grantChannelPermissions: (jid, node) ->
-    id = @c.getUniqueId("LM")
-
-    stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"set"})
-      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-      .c("affiliations", { "node" : node })
-      .c("affiliation", { "jid" : jid, affiliation : "follower+post" })
-
-    @c.send(stanza.tree())
-
   onIq: (iq) =>
-    for items in $(iq).find('items')
-      channel = Channels.findOrCreateByNode($(items).attr('node'))
-      channel.posts.parseResponse(items)
+    for connector in @connectors
+      connector.onIq(iq)
     
     true
     
-  # createMyChannel: ->
-  #   id = @c.getUniqueId("LM")
-  # 
-  #   stanza = $iq({"id":id, "to":PUBSUB_BRIDGE, "type":"set"})
-  #     .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-  #     .c("create", { "node" : app.currentUser.channelId() }).up()
-  # 
-  #   @c.send(stanza.tree())
-  #   
-  #   @grantChannelPermissions app.currentUser.get('jid'), app.currentUser.channelId()
-    
-  fetchRoster: ->
-    request = $iq({ type : 'get' })
-      .c('query', { xmlns: Strophe.NS.ROSTER })
-      
-    @c.sendIQ(
-      request
-      (response) =>
-        @_parseRoster $(response)
-      (err) ->
-        console.log 'Error recieving roster'
-        console.log err
-    )
-    
-  _parseRoster: (response) ->
-    addItem = (item) =>
-      user = Users.findOrCreateByJid item.attr('jid')
-      user.set { subscription : item.attr('subscription'), group : item.find('group:first').text()  }
-      @roster.add user
-    
-    for item in response.find('item')
-      addItem($(item))
-      
-    # Channels.XmppClient.prototype.getRoster = function(cb) {
-    #     this.request($iq({ type: 'get' }).c('query', { xmlns: Strophe.NS.ROSTER }),
-    #     function(reply) {
-    #   var results = [];
-    #   var queryEl = reply && reply.getElementsByTagName('query')[0];
-    #   if (queryEl) {
-    #       var itemEls = queryEl.getElementsByTagName('item');
-    #       for(var i = 0; i < itemEls.length; i++) {
-    #     var itemEl = itemEls[i];
-    #     results.push({ jid: itemEl.getAttribute('jid'),
-    #              name: itemEl.getAttribute('name')
-    #     });
-    #       }
-    #   }
-    #   cb(null, results);
-    #     }, function(reply) {
-    #   cb(new Error('Failed to get roster'));
-    #     });
-    # };
-    
-  afterConnected: ->
-    # @c.pubsub.setService(PUBSUB_BRIDGE)
+  afterConnected: =>
+    # Tell the pubsub service i'm here - (todo - find out which ones work)
+    for connector in @connectors
+      connector.announcePresence(@user)
 
-    # Tell the pubsub service i'm here
-    @c.send($pres().c('status').t('buddycloud channels'))
-    @c.send($pres().tree())
-    @c.send($pres( { "to" : PUBSUB_BRIDGE, "from" : app.currentUser.get('jid') } ).tree())
-    @c.send($pres( { "type" : "subscribe", "to" : PUBSUB_BRIDGE } ).tree())
-    @c.send($pres( { "type" : "subscribe", "to" : PUBSUB_BRIDGE, "from" : app.currentUser.get('jid') } ).tree())
-
-    # Create channel for currentUser
-    # @createMyChannel()
-
-    # Add handlers for messages and iq stanzas
-
-    # @c.addHandler (stanza) ->
-    #   console.log 'recieved...'
-    #   console.log Strophe.serialize(stanza)
-    #   true
-
-    console.log "After connection done..."
-    
-    # @c.addHandler(@onMessage, null, 'message', null, null,  null); 
+    # Listen for iq messages
     @c.addHandler @onIq, null, 'iq' # , null, null,  null); 
-    # @c.addHandler(@onPresence, null, 'presence', null, null,  null); 
-
-    @getAllChannels()
-
-    @getSubscriptions()
-    # @getChannel(CHANNEL)
-
-    # connection.pubsub.subscribe(CHANNEL_NODE, null, null, Rcf.onSubscriptionIq, true);
-    # Rcf.requestNodeMetaData(CHANNEL_NODE);
-
-    # @c.pubsub.subscribe(CHANNEL, null, @onSubscriptionIq, @eh);
-
-    #@c.pubsub.subscribe(CHANNEL, null, @eh, @eh, @onSubscriptionIq, @eh);
-
-    #         Client.connection.pubsub.subscribe(
-    #           Client.connection.jid,
-    # 'pubsub.' + Config.XMPP_SERVER,
-    #           Config.PUBSUB_NODE,
-    #           [],
-    #           Client.on_event,
-    #           Client.on_subscribe
-    #         );
-
 
 this.Connection = Connection
