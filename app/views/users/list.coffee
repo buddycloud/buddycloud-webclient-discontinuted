@@ -7,6 +7,7 @@ class UsersListView extends Backbone.View
         <li>
           <img class="micro avatar" src="<%= user.getAvatar() %>" />
           <b><a href="#users/<%= user.get('jid') %>"><%= user.getName() %></a></b>
+            - <span class="status"><%= user.getStatus() %></span>
         </li>
       <% }); %>
     ''')

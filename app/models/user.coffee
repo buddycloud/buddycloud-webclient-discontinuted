@@ -83,51 +83,6 @@ class User extends Backbone.Model
   #   for jid in @get('friends')
   #     Users.findOrCreateByJid jid
     
-  fetchSubscriptions: () ->
-    # <iq to='maitred.buddycloud.com' type='get' id='channels1'>
-    #   <query xmlns='http://buddycloud.com/protocol/channels'>
-    #     <items var='member' id='simon@buddycloud.com' />
-    #   </query>
-    # </iq>
-
-    request = $iq({ to : @getChannel().getMaitred(), type : 'get' })
-      .c('query', { xmlns : "http://buddycloud.com/protocol/channels" })
-      .c('items', { 'var' : 'member', 'id' : @getJid() })
-      
-    # 
-    # request = $iq({"to" : @getChannel().serviceProvider(), "type":"get"})
-    #   .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-    #   .c("subscriptions", { jid : @getJid() })
-  
-    console.log Strophe.serialize(request)
-    
-    # Request..
-    $c.c.sendIQ(
-      request
-      (response) ->
-        console.log 'response'
-        # console.log response
-        console.log Strophe.serialize(response)
-        
-        channels = for item in $(response).find('item')
-          Channels.findOrCreateByNode $(item).find('id').text()
-          
-        for c in channels
-          console.log c.getNode()
-          
-        # console.log channels.pluck('node')
-        
-        # for s in $(response).find('subscription')
-        #   console.log $(s).attr('node')
-
-        # for s in $(response).find('subscription')
-        #   console.log $(s).attr('node')
-        # console.log response
-      (err) ->
-        console.log 'getSubscriptions#err'
-        console.log err
-    )
-  
   getAvatar: ->
     if @get('jid').toString().match /@buddycloud/
       "http://media.buddycloud.com/channel/54x54/buddycloud.com/#{@getName()}.png"

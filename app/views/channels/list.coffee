@@ -6,9 +6,7 @@ class ChannelsListView extends Backbone.View
       <% channels.each(function(channel){ %>
         <li>
           <b><a href="#channels/<%= channel.getName() %>"><%= channel.getName() %></a></b>
-          <% if (channel.hasNewPosts()){ %>
-            <span><%= channel.getNewPosts() %></span>
-          <% } %>
+          <span data-id="<%= channel.id %>" class="remove inline-action" title="Remove this channel from my favourites"><img src="/public/icons/trash.png" /></span>
         </li>
       <% }); %>
     ''')
@@ -20,8 +18,15 @@ class ChannelsListView extends Backbone.View
 
     @render()
     
+  events: 
+    'click .remove' : "onRemove"
+    
   render: =>
-    @el.html(@template( { channels : @collection.sortByNewPosts() }))
+    @el.html(@template( { channels : @collection }))
     @delegateEvents()
+    
+  onRemove: (e) =>
+    id = $(e.currentTarget).attr('data-id')
+    @collection.get(id).destroy()
 
 @ChannelsListView = ChannelsListView

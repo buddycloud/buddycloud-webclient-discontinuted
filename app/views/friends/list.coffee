@@ -7,9 +7,7 @@ class FriendsListView extends Backbone.View
         <li>
           <img class="micro avatar" src="<%= user.getAvatar() %>" />
           <b><a href="#users/<%= user.get('jid') %>"><%= user.getName() %></a></b>
-          <% if(user.getMood()){ %>
-            - <span class="mood"><%= user.getMood() %></span>
-          <% } %>
+            - <span class="status"><%= user.getStatus() %></span>
         </li>
       <% }); %>
     ''')

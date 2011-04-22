@@ -87,6 +87,65 @@ class Post extends Backbone.Model
   #   else
   #     true
     
+Post.parseFromItem = (item) ->
+  post = new Post { 
+    id : parseInt(item.find('id').text().replace(/.+:/,''))
+    content : item.find('content').text() 
+    author : item.find('author jid').text()
+    published : item.find('published').text()
+  }
+
+  if item.find 'in-reply-to'
+    post.set { 'in_reply_to' : parseInt(item.find('in-reply-to').attr('ref')) }
+    
+  if item.find 'geoloc'
+    post.set { 
+      geoloc_country : item.find('geoloc country').text()
+      geoloc_locality : item.find('geoloc locality').text()
+      geoloc_text : item.find('geoloc text').text()
+    }
+
+  post
   
 this.Post = Post
 
+class PostCollection extends Backbone.Collection
+  model: Post
+
+  comparator: (post) ->
+    post.get('published')
+    
+  notReplies: ->
+    @filter( (post) =>
+      !post.get('in_reply_to')
+    )
+
+  parseResponse: (response) ->
+    for item in $(response).find('item')
+      post = Post.parseFromItem($(item))
+      
+      if (@get(post.id)) || (!post.valid())
+        continue
+
+      @add post
+      post.save()
+  
+# Todo - refactor me - this should be a hasMany or something....
+PostCollection.forChannel = (model) ->
+  unique = "channel-#{model.getNode()}"
+
+  collection = new PostCollection
+  collection.localStorage = new Store("PostCollection-#{unique}")
+  collection.fetch()
+  collection
+
+PostCollection.forUser = (model) ->
+  unique = "user-#{model.getNode()}"
+
+  collection = new PostCollection
+  collection.localStorage = new Store("PostCollection-#{unique}")
+  collection.fetch()
+  collection
+  
+this.PostCollection = PostCollection
+this.Posts = new PostCollection

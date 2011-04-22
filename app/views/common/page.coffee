@@ -4,22 +4,13 @@ class CommonPageView extends Backbone.View
 
     @template = _.template('''
 
-      <div class="grid_2">
-        <h4>
-          <img alt="User" class="icon" src="public/icons/folder.png" /> Channels
-        </h4>
-
-        <ul class="channels" id="channels-list">
-        </ul>
-      </div>
-
-      <div class="grid_6">
+      <div class="grid_7">
         <div id="main">
         </div>
       </div>
       
 
-      <div class="grid_3 sidebar">
+      <div class="grid_4 sidebar">
 
           <div class="intro">
             <h4>
@@ -37,6 +28,13 @@ class CommonPageView extends Backbone.View
             </p>
 
           </div>
+
+          <h4>
+            <img alt="User" class="icon" src="public/icons/folder.png" /> Channels
+          </h4>
+
+          <ul class="channels" id="channels-list">
+          </ul>
 
           <h4>
             <img alt="User" class="icon" src="public/icons/user.png" /> Friends

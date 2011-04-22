@@ -16,7 +16,6 @@ class ChannelsIndexView extends Backbone.View
             <p class="description">
               <%= channel.escape('description') %>
             </p>
-            <span data-id="<%= channel.id %>" class="remove inline-action" title="Remove this channel from my favourites"><img src="/public/icons/trash.png" /></span>
           </li>
         <% }); %>
       </ul>
@@ -33,15 +32,11 @@ class ChannelsIndexView extends Backbone.View
     
     @render()
   
-  events:
+  events: {
     'click .unsubscribe' : 'unsubscribe'
     'click .subscribe' : 'subscribe'
-    'click .remove' : "onRemove"
+  }
   
-  onRemove: (e) =>
-    id = $(e.currentTarget).attr('data-id')
-    @collection.get(id).destroy()
-
   subscribe: (e) =>
     # e.preventDefault()
     # @model.subscribe()
