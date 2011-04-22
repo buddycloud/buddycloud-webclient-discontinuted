@@ -93,13 +93,7 @@ class Channel extends Backbone.Model
       this, 
       (posts) =>
         for post in posts
-          if p = @posts.get(post.id)
-            p.set(post)
-            p.save()
-          else
-            p = new Post(post)
-            @posts.add(p)
-            p.save()
+          p = @posts.findOrCreate(post.id).set(post).save()
       (errCode) =>
         @status = errCode
         @trigger 'change'

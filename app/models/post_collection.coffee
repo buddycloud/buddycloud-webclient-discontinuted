@@ -9,6 +9,15 @@ class PostCollection extends Backbone.Collection
       !post.get('in_reply_to')
     )
 
+  findOrCreate: (id) ->
+    if @get(id) 
+      @get(id)
+    else
+      post = new Post { id : id }
+      @add(post)
+      post.save()
+      post
+
 # Todo - refactor me - this should be a hasMany or something....
 PostCollection.forChannel = (model) ->
   unique = "channel-#{model.getNode()}"
