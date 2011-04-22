@@ -5,12 +5,11 @@ BOSH_SERVICE = 'http://bosh.metajack.im:5280/xmpp-httpbind'
 class Connection
   constructor: ->
     @connected = false
+    @roster = new UserCollection
     
     _.extend(@, Backbone.Events)
 
   connect: (jid, password)->
-    @c = new Strophe.Connection(BOSH_SERVICE)
-
     # @c.rawInput = (message) ->
     #   c = if message.match(/<error/)
     #     'error'
@@ -20,6 +19,8 @@ class Connection
     # 
     # @c.rawOutput = (message) ->
     #   $("<div />").text(message).addClass('output').appendTo '#log'
+
+    @c = new Strophe.Connection(BOSH_SERVICE)
 
     @maxMessageId = 1292405757510
   
@@ -244,6 +245,48 @@ class Connection
   #   @c.send(stanza.tree())
   #   
   #   @grantChannelPermissions app.currentUser.get('jid'), app.currentUser.channelId()
+    
+  fetchRoster: ->
+    request = $iq({ type : 'get' })
+      .c('query', { xmlns: Strophe.NS.ROSTER })
+      
+    @c.sendIQ(
+      request
+      (response) =>
+        @_parseRoster $(response)
+      (err) ->
+        console.log 'Error recieving roster'
+        console.log err
+    )
+    
+  _parseRoster: (response) ->
+    addItem = (item) =>
+      user = Users.findOrCreateByJid item.attr('jid')
+      user.set { subscription : item.attr('subscription'), group : item.find('group:first').text()  }
+      @roster.add user
+    
+    for item in response.find('item')
+      addItem($(item))
+      
+    # Channels.XmppClient.prototype.getRoster = function(cb) {
+    #     this.request($iq({ type: 'get' }).c('query', { xmlns: Strophe.NS.ROSTER }),
+    #     function(reply) {
+    #   var results = [];
+    #   var queryEl = reply && reply.getElementsByTagName('query')[0];
+    #   if (queryEl) {
+    #       var itemEls = queryEl.getElementsByTagName('item');
+    #       for(var i = 0; i < itemEls.length; i++) {
+    #     var itemEl = itemEls[i];
+    #     results.push({ jid: itemEl.getAttribute('jid'),
+    #              name: itemEl.getAttribute('name')
+    #     });
+    #       }
+    #   }
+    #   cb(null, results);
+    #     }, function(reply) {
+    #   cb(new Error('Failed to get roster'));
+    #     });
+    # };
     
   afterConnected: ->
     # @c.pubsub.setService(PUBSUB_BRIDGE)

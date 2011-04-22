@@ -2,6 +2,12 @@ class Channel extends Backbone.Model
   initialize: ->
     @posts = PostCollection.forChannel(this)
     @status = null
+
+  getStatus: ->
+    new String(@status)
+    
+  isLoading: ->
+    (@status == null) || (@status == 'loading')
     
   updateUsers: ->
     if @isUserChannel()
@@ -89,11 +95,14 @@ class Channel extends Backbone.Model
     @escape('owner').replace(/@.+/,'')
     
   fetchPosts: ->
-    if !$c.connected
-      return
-      
     @status = 'loading'
-    
+
+    if $c.connected
+      @_fetchPosts()
+    else
+      $c.bind 'connected', @fetchPosts
+
+  _fetchPosts: =>
     request = $iq({ to : @serviceProvider(), type : 'get' })
       .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
       .c('items', { node : @getNode() })

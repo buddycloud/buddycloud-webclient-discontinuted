@@ -10,7 +10,7 @@ class UsersShowView extends Backbone.View
       <h1 class="channel-name">
         <%= user.getFullName() %>
       </h1>
-      <% if(user.hasNoChannel()){ %>
+      <% if(user.notFound()){ %>
         <p class="usermeta">
           <img src="public/icons/flag.png" /> <%= user.getFullName() %> hasn't signed up yet.
         </p>
@@ -39,7 +39,7 @@ class UsersShowView extends Backbone.View
         </p>
       <% } %>
 
-      <% if(user.hasNoChannel()){ %>
+      <% if(user.notFound()){ %>
 
       <div class="big-notice">
         <h4>
