@@ -35,11 +35,8 @@ class User extends Backbone.Model
   #   )
   #   
   
-  notFound: ->
-    if @getChannel().isLoading()
-      false
-    else
-      @getChannel().getStatus().toString() != '200'
+  hasNoChannel: ->
+    (@getChannel().status == null) || (@getChannel().status == 'loading') || (@getChannel().status == '200')
     
   getJid: ->
     @get('jid')
@@ -131,10 +128,6 @@ class UserCollection extends Backbone.Collection
     @smartFilter (user) ->
       user.getChannel().isSubscribed()
     
-  findByGroup : (group) ->
-    @smartFilter (user) ->
-      user.get('group') == group
-      
   findByJid : (jid) ->
     @find (user) ->
       user.get('jid') == jid
@@ -155,5 +148,5 @@ class UserCollection extends Backbone.Collection
   # comparator: (post) ->
   #   post.get('published')
   
-@UserCollection = UserCollection  
+this.Users = new UserCollection
 # this.Users.fetch()

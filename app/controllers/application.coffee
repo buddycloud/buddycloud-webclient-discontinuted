@@ -47,9 +47,6 @@ app.start = ->
   window.Channels = new ChannelCollection
   window.Channels.fetch()
   
-  window.Users = new UserCollection
-  window.Users.fetch()
-  
   # Establish xmpp connection
   window.$c = new Connection
   

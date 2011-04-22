@@ -1,7 +1,5 @@
 describe 'channel', ->
 
-  window.$c = new Connection
-
   it 'should have status', ->
     c = new Channel { node : '/user/ben@ben.com/channel' }
     expect(c.status).toEqual(null)
@@ -43,19 +41,3 @@ describe 'channel', ->
     c = new Channel { access_model : 'open', subscription : 'pending' }
     expect(c.isWhitelisted()).toBeFalsy()
   
-  it 'should be loading', ->
-    c = new Channel { node : '/user/ben@ben.com/channel' }
-    expect(c.isLoading()).toBeTruthy()
-
-    c.fetchPosts()
-    expect(c.isLoading()).toBeTruthy()
-    
-    c.status = 404
-    expect(c.isLoading()).toBeFalsy()
-
-    c.status = '404'
-    expect(c.isLoading()).toBeFalsy()
-
-    c.status = '200'
-    expect(c.isLoading()).toBeFalsy()
-    
