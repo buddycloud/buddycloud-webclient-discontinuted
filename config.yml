@@ -25,3 +25,4 @@ specs:
 
 templates:
   - 'app/templates/**/*.eco'
+  
