@@ -43,19 +43,29 @@ app.signout = ->
 
 app.start = ->
 
+  # Force start from clean...
+  localStorage.clear()
+  localStorage['jid'] = 'ben@diaspora-x.com'
+  localStorage['password'] = 'toast'
+  
   # Create collections
   window.Channels = new ChannelCollection
   window.Channels.fetch()
-
+  
+  window.Users = new UserCollection
+  window.Users.fetch()
+  
   # Establish xmpp connection
   window.$c = new Connection
   
   $c.bind 'authfail', ->
     app.removeSpinner()
 
-    view = new CommonLoginView
-    view.render()
-    view.flashMessage("Incorrect username / password")
+    # view = new CommonLoginView
+    # view.render()
+    # view.flashMessage("Incorrect username / password")
+    # 
+    alert("Incorrect username / password")
 
   $c.bind 'connecting', ->
     if window.location.hash == "#login"
@@ -67,9 +77,9 @@ app.start = ->
     app.removeSpinner()
     app.currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
-    
-    if window.location.hash == "#login"
-      window.location.hash = "#home"
+
+    $c.fetchRoster()
+    Backbone.history.loadUrl()
 
   # $c.bind 'disconnect', ->
   #   ....

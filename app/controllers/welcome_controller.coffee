@@ -1,20 +1,25 @@
 class WelcomeController extends Backbone.Controller
   routes :
     "" : "index"
-    "home" : "home"
+    "logout" : "logout"
+
+  logout: ->
+    app.signout()
     
   index: ->
-    if localStorage['jid'] && localStorage['password']
-      app.connect()
-    else
-      window.location.hash = "login"
-    
-  home: ->
     $("#spinner").remove()
 
-    user = app.currentUser
-    # user.subscribe()
-    # user.fetchPosts()
-    new UsersShowView { model : user }
+    if app.currentUser
+      user = app.currentUser
+      new UsersShowView { model : app.currentUser }
+
+      # Focus the first tab
+      $("#main-tabs li").removeClass('active')
+      $("#main-tabs li:nth-child(1)").addClass('active')
+    else
+      new WelcomeHomeView
+      new CommonLoginView
+    
+    
     
 new WelcomeController

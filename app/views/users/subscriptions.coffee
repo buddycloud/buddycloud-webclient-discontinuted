@@ -1,4 +1,4 @@
-class UsersShowView extends Backbone.View
+class UsersSubscriptionsView extends Backbone.View
   initialize: ->
     new CommonPageView
 
@@ -140,5 +140,4 @@ class UsersShowView extends Backbone.View
     $("#main-tabs li").removeClass('active')
     $("#main-tabs li:nth-child(3)").addClass('active')
     
-
-@UsersShowView = UsersShowView
+@UsersSubscriptionsView = UsersSubscriptionsView

@@ -11,8 +11,9 @@ class ChannelsShowView extends Backbone.View
     @collection = @model.getPosts()
     
     @template = _.template('''
-
       <div class="channel-info">
+      </div>
+      
         <p class="subscribe-buttons">
           <% if(channel.isSubscribed()){ %>
             <button class="unsubscribe">Unsubscribe</button>
@@ -29,6 +30,7 @@ class ChannelsShowView extends Backbone.View
             <img src="public/icons/user.png" /> Owned by <%= channel.escapeOwnerNode() %>
             <img src="public/icons/clock.png" /> Created <%= channel.escapeCreationDate() %>
             <img src="public/icons/chart_bar.png" /> <%= channel.escape('num_subscribers') %> subscribers 
+            <img src="public/icons/net_comp.png" /> Hosted by <%= channel.pubsubServiceDomain() %>
           <% } else { %>
             <img src="public/icons/sand.png" />Loading...
           <% } %>
@@ -56,8 +58,8 @@ class ChannelsShowView extends Backbone.View
   events: {
     'submit form.new_activity.status' : 'submit'
     'keydown textarea' : 'keydown'
-    'click a.unsubscribe' : 'unsubscribe'
-    'click a.subscribe' : 'subscribe'
+    'click button.unsubscribe' : 'unsubscribe'
+    'click button.subscribe' : 'subscribe'
   }
   
   keydown: (e) =>
@@ -93,16 +95,14 @@ class ChannelsShowView extends Backbone.View
     @model.unsubscribe()
 
   render: =>
-    if @renderTimeout
-      clearTimeout @renderTimeout
-      
-    @renderTimeout = setTimeout( =>
-      @el.html(@template( { channel : @model }))
-      @delegateEvents()
+    @el.html(@template( { channel : @model }))
+    @delegateEvents()
 
-      new PostsListView { el : @el.find('.posts'), model : @model }
-      
-      @renderTimeout = null
-    , 50)
+    new PostsListView { el : @el.find('.posts'), model : @model }
+    
+    # Focus the second tab
+    $("#main-tabs li").removeClass('active')
+    $("#main-tabs li:nth-child(2)").addClass('active')
+    
 
 @ChannelsShowView = ChannelsShowView

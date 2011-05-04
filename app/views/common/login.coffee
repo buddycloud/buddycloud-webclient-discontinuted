@@ -1,7 +1,7 @@
 class CommonLoginView extends Backbone.View
   initialize: ->
     @el = $("#auth-container")
-
+  
     @template = _.template('''
       <form action="#signin" class="signin">
         <div class="f">
@@ -11,7 +11,7 @@ class CommonLoginView extends Backbone.View
             <input checked="checked" name="remember_me" type="checkbox" value="1" /> Remember me
           </small>
         </div>
-
+  
         <div class="f">
           <label for="password">Password</label>
           <input name="password" size="30" style="width: 120px" type="password" />
@@ -19,13 +19,13 @@ class CommonLoginView extends Backbone.View
             <a href="#forgot">Forgot your password?</a>
           </small>
         </div>
-
+  
         <div class="f">
           <button type="submit">Sign in</button>
         </div>
       </form>
     ''')
-
+  
     @render()
     
   events: {
@@ -34,7 +34,7 @@ class CommonLoginView extends Backbone.View
   
   signin: (e) =>
     e.preventDefault()
-
+  
     jid = @el.find("input[name='jid']").val()
     password = @el.find("input[name='password']").val()
     
@@ -46,14 +46,12 @@ class CommonLoginView extends Backbone.View
   render: =>
     @el.html(@template( { users : @collection })).hide().fadeIn()
     @delegateEvents()
-
+  
   flashMessage: (message) ->
     @el.find('.form-flash').remove()
     
     div = $("<div />").addClass('form-flash').text(message)
     div.appendTo @el.find('form')
     div.hide().slideDown().delay(3000).slideUp()
-
-
 
 @CommonLoginView = CommonLoginView
