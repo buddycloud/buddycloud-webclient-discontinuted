@@ -22,3 +22,6 @@ stylesheets:
 specs:
   - 'lib/coffeescript.js'
   - 'spec/*/*.coffee'
+
+templates:
+  - 'app/templates/**/*.eco'

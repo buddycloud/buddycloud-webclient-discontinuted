@@ -1,0 +1,42 @@
+<h1>
+  <img src="/public/icons/cog.png" /> Profile Settings
+</h1>
+
+<form action="#settings/save">
+  <div class="f">
+    <label>Jid</label>
+    <%= @user.escape('jid') %>
+    <small>You cannot change this, sorry.</small>
+  </div>
+
+  <div class="f">
+    <label>First Name</label>
+    <input type="text" value="<%= @user.escape('firstName') %>" />
+    <small>Your full name and email address is shown to other users in your roster.</small>
+  </div>
+
+  <div class="f">
+    <label>Last Name</label>
+    <input type="text" value="<%= @user.escape('lastName') %>" />
+  </div>
+
+  <div class="f">
+    <label>Email address</label>
+    <input type="text" value="<%= @user.escape('email') %>" />
+    <small>
+      We send notifications and password reset messages to this email address, so be careful.
+    </small>
+  </div>
+
+  <div class="f">
+    <label>Description</label>
+    <textarea name="description"><%= @user.escape('description') %>"</textarea>
+    <small>
+      This is your profile description and is visible at the top of your channel.
+    </small>
+  </div>
+
+  <div class="f">
+    <button type="submit">Save Changes</button>
+  </div>
+</form>
