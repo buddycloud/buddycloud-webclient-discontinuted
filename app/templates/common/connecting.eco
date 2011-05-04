@@ -1,0 +1,5 @@
+<div class="auth">
+  <img src="/public/spinner-dark.gif" class="micro spinner">
+  Connecting....
+  <a href="#logout" class="signout">Cancel</a>
+</div>
