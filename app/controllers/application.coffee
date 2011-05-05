@@ -31,7 +31,7 @@ class Application
     $('#spinner').remove()
 
   signout: ->
-    delete app.currentUser
+    delete @currentUser
     window.location.hash = ""
   
     Channels.refresh []
@@ -62,7 +62,7 @@ class Application
 
     # Previously logged in and wants autologin
     if jid = localStorage['jid']
-      app.currentUser = Users.findOrCreateByJid(jid)
+      @currentUser = Users.findOrCreateByJid(jid)
       $c.connect(localStorage['jid'], localStorage['password'])
     else
       window.location.hash = ""
@@ -71,7 +71,7 @@ class Application
     Backbone.history.start();  
   
   onAuthfail: =>
-    app.removeSpinner()
+    @removeSpinner()
 
     # view = new CommonLoginView
     # view.render()
@@ -81,13 +81,13 @@ class Application
 
   onConnecting: =>
     if window.location.hash == "#login"
-      app.spinner()
+      @spinner()
     else
       new CommonConnectingView
 
   onConnected: =>
-    app.removeSpinner()
-    app.currentUser = Users.findOrCreateByJid($c.jid)
+    @removeSpinner()
+    @currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
     $c.fetchRoster()
     
