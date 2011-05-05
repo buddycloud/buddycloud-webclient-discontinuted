@@ -41,6 +41,7 @@ class Application
 
     # Force disconnect...
     $c.unbind()
+
     if $c.c
       $c.c.disconnect()
 

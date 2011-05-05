@@ -9,7 +9,7 @@
 @link-color: #107fc9;
 @hover-color: @link-color;
 @active-color: #005d9c;
-@header-font: BrandonGrotesqueLightRegular, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@header-font:  "Helvetica Neue Light", "HelveticaNeue-Light", Arial, Helvetica, sans-serif;
 @header-transform: uppercase;
 @header-size: 20px;
 
@@ -40,14 +40,6 @@ button, input[type='submit']{
   border-radius: 4px;
   color: white;
   text-shadow: 0 1px 1px rgba(0,0,0,0.5);
-}
-
-@font-face {
-  src: url("Brandon_light-webfont.eot");
-  src: local("â˜º"), url("Brandon_light-webfont.woff") format("woff"), url("Brandon_light-webfont.ttf") format("truetype"), url("Brandon_light-webfont.svg#webfont") format("svg");
-  font-family: "BrandonGrotesqueLightRegular";
-  font-weight: normal;
-  font-style: normal; 
 }
 
 html,body {
@@ -114,7 +106,7 @@ input[type='text'], input[type='password'], textarea{
 .header h1{
   color: #ccc;
   font-family: @header-font;
-  font-weight: normal;
+  font-weight: normal !important;
   font-size: @header-size;
   text-transform: @header-transform;
 }
