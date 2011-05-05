@@ -13,10 +13,9 @@ class WelcomeController extends Backbone.Controller
 
     if app.currentUser
       user = app.currentUser
-      new UsersShowView { el : $("#content"), model : app.currentUser }
+      new WelcomeIndexView { el : $("#content"), model : app.currentUser }
     else
-      new WelcomeHomeView
-      new CommonLoginView
+      new WelcomeHomeView { el : $("#content") }
     
     
     

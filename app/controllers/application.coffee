@@ -55,6 +55,9 @@ class Application
     
     window.Posts = new PostCollection
     window.Posts.fetch()
+    
+    window.Friends = new FriendCollection
+    window.Friends.fetch()
   
     # Establish xmpp connection
     window.$c = new Connection

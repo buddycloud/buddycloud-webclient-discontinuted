@@ -10,11 +10,11 @@ class PostsListView extends Backbone.View
               <a href="#users/<%= post.getAuthor().get('jid') %>"><%= post.getAuthorName() %> </a>
             </h4>
             <p class="content">
-              <%= view.formatContent(post) %>
+              <%= helpers.formatContent(post) %>
             </p>
             <p class="meta">
               <span class='timeago' title='<%= post.get('published') %>'><%= post.get('published') %></span>
-              <% if (model.canPost()){ %>
+              <% if (post.canReply()){ %>
                 | <a href="#" onclick="$(this).parents('.activity').find('form').show().find('textarea').focus(); return false">Comment</a>
               <% } %>
               <% if(post.hasGeoloc()){ %>
@@ -37,8 +37,8 @@ class PostsListView extends Backbone.View
         </div>
     ''')
     
-    @collection = @model.getPosts()
-
+    # @collection = @model.getPosts()
+    # 
     @collection.bind 'add', @addPost
     @collection.bind 'change', @updatePost
     @collection.bind 'remove', @removePost
@@ -109,7 +109,7 @@ class PostsListView extends Backbone.View
       @addReply(div, post)
       div.find('.comments').show()
     else
-      div = $(@template( { model : @model, view : this, post : post }))
+      div = $(@template({ helpers : this, post : post }))
       div.find('.timeago').timeago()
       div.insertBefore @el.find("div:first")
       div.find('a.inline-link').embedly { method : 'afterParent', maxWidth : 400 }
@@ -136,7 +136,7 @@ class PostsListView extends Backbone.View
   render: =>
     @el.html("<div />")
     
-    for post in @collection.notReplies()
+    for post in @collection.notReplies().slice(0,50)
       @addPost post
       
     @delegateEvents()

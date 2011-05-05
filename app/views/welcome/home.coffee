@@ -79,5 +79,8 @@ class WelcomeHomeView extends Backbone.View
     
     @el.html(@template( { users : @collection })).hide().fadeIn()
     @delegateEvents()
+    
+    new CommonLoginView
+    
 
 @WelcomeHomeView = WelcomeHomeView

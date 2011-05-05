@@ -2,6 +2,9 @@ class Post extends Backbone.Model
   initializer: ->
     # ...
 
+  canReply: ->
+    true
+    
   serviceProvider: ->
     "pubsub-bridge@broadcaster.buddycloud.com"
 

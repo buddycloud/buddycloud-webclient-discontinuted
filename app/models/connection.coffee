@@ -45,6 +45,8 @@ class Connection
       @trigger('connected')
 
   onIq: (iq) =>
+    alert "?"
+
     @connector.onIq(iq)
     
     true

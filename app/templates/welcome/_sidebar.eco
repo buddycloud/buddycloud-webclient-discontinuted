@@ -1,0 +1,30 @@
+<p>
+  This is a very early beta version, and it's pretty rough, but thanks for trying it out and helping me iron out the bugs!<br /><br />
+I've tried to strip out as many unnecessary functions as possible, and as such, may have removed some pretty vital features. The goal for D-X is to create a social network that can act as a replacement for the core facebook functionality of messaging people and sharing content. We don't have photo hosting, event planning or 'checkins', but we should have enough so that you can tell jokes, share stories and communicate with your friends.<br /><br />
+</p>
+
+<h3>What's new?</h3>
+
+<p>
+  Added a new home page with this message on it. Posted on reddit.com/r/diaspora to see if they want
+  to test out the new version. Removed legacy buddycloud channel code to make it compatible with
+  the distributed XEP. Added specs for the application and connection classes.
+</p>
+
+<h3>
+  Stats
+</h3>
+
+<div class="grid_2">
+  <a class="statsblock" href="#posts">
+    <b><%= @posts.length %></b>
+    <span>Posts</span>
+  </a>
+</div>
+
+<div class="grid_2">
+  <a class="statsblock" href="#posts">
+    <b><%= @friends.length %></b>
+    <span>Friends</span>
+  </a>
+</div>
