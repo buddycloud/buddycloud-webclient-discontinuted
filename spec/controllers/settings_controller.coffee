@@ -1,6 +1,7 @@
 describe 'settings controller', ->
 
   beforeEach ->
+    window.app = new Application
     app.currentUser = new User { jid : "ben@example.com" }
   
   it 'should handle the truth', ->

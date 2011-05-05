@@ -1,11 +1,22 @@
 describe 'application', ->
 
+  beforeEach ->
+    localStorage.clear()
+    
   it 'should exist', ->
     expect(Application).toBeTruthy()
 
   it 'should instantiate', ->
-    expect(app instanceof Application).toBeTruthy()
+    x = new Application
+    expect(x instanceof Application).toBeTruthy()
 
+  it 'should start', ->
+    window.app = new Application
+    app.start()
+    
+    expect(Channels?).toBeTruthy()
+    expect(Users?).toBeTruthy()
+    
   it 'should have spinner', ->
     x = new Application
     x.spinner()
@@ -38,4 +49,3 @@ describe 'application', ->
     expect(x.currentUser).toBeFalsy()
     expect(localStorage['jid']).toBeFalsy()
 
-  

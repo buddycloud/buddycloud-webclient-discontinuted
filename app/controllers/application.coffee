@@ -96,4 +96,3 @@ class Application
     Backbone.history.loadUrl()
 
 @Application = Application
-@app = new Application

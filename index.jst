@@ -39,8 +39,10 @@
   </div> 
   
   <script>
-    // It begins
-    app.start();
+    window.app = new Application;
+    $(document).ready(function(){
+      app.start()
+    });
   </script>
   
 </body>

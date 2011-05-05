@@ -6,8 +6,6 @@ class Channel extends Backbone.Model
 
     @bind 'add', =>
       @_incrementNewPosts()
-      
-    @connector()
 
   connector: ->
     @_connector ||= new Connector($c.c)
