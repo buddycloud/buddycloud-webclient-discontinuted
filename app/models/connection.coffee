@@ -15,7 +15,7 @@ class Connection
     @jid = jid
     @password = password
     @user = Users.findOrCreateByJid(@jid)
-    @connectors = [ new LegacyConnector ]
+    @connector = new Connector(@c)
     
     # After we are connected - do stuff
     @bind 'connected', @afterConnected
@@ -45,15 +45,13 @@ class Connection
       @trigger('connected')
 
   onIq: (iq) =>
-    for connector in @connectors
-      connector.onIq(iq)
+    @connector.onIq(iq)
     
     true
     
   afterConnected: =>
     # Tell the pubsub service i'm here - (todo - find out which ones work)
-    for connector in @connectors
-      connector.announcePresence(@user)
+    @connector.announcePresence(@user)
 
     # Listen for iq messages
     @c.addHandler @onIq, null, 'iq' # , null, null,  null); 

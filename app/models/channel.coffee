@@ -10,7 +10,7 @@ class Channel extends Backbone.Model
     @connector()
 
   connector: ->
-    @_connector ||= new LegacyConnector
+    @_connector ||= new Connector($c.c)
     
   markAllAsRead: ->
     @set { new_posts : 0 }
