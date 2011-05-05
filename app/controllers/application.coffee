@@ -52,6 +52,9 @@ class Application
   
     window.Users = new UserCollection
     window.Users.fetch()
+    
+    window.Posts = new PostCollection
+    window.Posts.fetch()
   
     # Establish xmpp connection
     window.$c = new Connection

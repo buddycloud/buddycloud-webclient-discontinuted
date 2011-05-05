@@ -24,6 +24,9 @@ specs:
   - 'lib/coffeescript.js'
   - 'spec/*/*.coffee'
 
+fixtures:
+  - 'spec/fixtures/*/*.xml'
+
 templates:
   - 'app/templates/**/*.eco'
   

@@ -127,6 +127,18 @@ class Connector
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid() } ).tree())
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid(), "from" : user.get('jid') } ).tree())
 
+  onIq : (stanza) ->
+    posts = for item in $(stanza).find('item')
+      @_parsePost($(item))
+
+    for obj in posts
+      if Posts.get(obj.id)
+        # do nothing
+      else
+        p = new Post(obj)
+        Posts.add(p)
+        p.save()
+    
   # Takes an <item /> stanza and returns a hash of it's attributes
   _parsePost : (item) ->
     post = { 

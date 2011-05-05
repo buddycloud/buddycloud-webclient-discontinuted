@@ -1,6 +1,7 @@
 class PostCollection extends Backbone.Collection
   model: Post
-
+  localStorage : new Store("PostCollection")
+  
   comparator: (post) ->
     post.get('published')
     
