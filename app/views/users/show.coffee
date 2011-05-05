@@ -50,10 +50,6 @@ class UsersShowView extends Backbone.View
     @delegateEvents()
 
     new PostsListView { el : @el.find('.posts'), model : @model.getChannel() }
-
-    # Select the friends tab
-    $("#main-tabs li").removeClass('active')
-    $("#main-tabs li:nth-child(3)").addClass('active')
     
 
 @UsersShowView = UsersShowView

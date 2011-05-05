@@ -54,8 +54,4 @@ class ChannelsIndexView extends Backbone.View
     @el.html(@template(this))
     @delegateEvents()
 
-    # Focus the second tab
-    $("#main-tabs li").removeClass('active')
-    $("#main-tabs li:nth-child(2)").addClass('active')
-
 @ChannelsIndexView = ChannelsIndexView

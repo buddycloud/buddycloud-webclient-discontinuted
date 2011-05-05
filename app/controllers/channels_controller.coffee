@@ -4,6 +4,7 @@ class ChannelsController extends Backbone.Controller
     "channels/:node" : "show"
     
   index: ->
+    app.focusTab('Channels')
     new ChannelsIndexView { el : $("#content"), collection : Channels.getStandalone() }
     
   show: (node) ->

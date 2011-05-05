@@ -14,6 +14,14 @@ app.connect = (jid, password, autologin)->
   
 app.currentUser = null
 
+# Focusses the tab specified by it's content
+app.focusTab = (tab) ->
+  $("#main-tabs li").removeClass('active')
+  
+  for li in $("#main-tabs li")
+    if li.innerHTML.match(tab)
+      $(li).addClass('active')
+  
 app.spinner = ->
   $("#content").fadeOut()
   $('#spinner').remove()

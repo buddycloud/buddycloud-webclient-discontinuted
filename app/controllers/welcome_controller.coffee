@@ -7,15 +7,13 @@ class WelcomeController extends Backbone.Controller
     app.signout()
     
   index: ->
+    app.focusTab('Home')
+
     $("#spinner").remove()
 
     if app.currentUser
       user = app.currentUser
-      new UsersShowView { model : app.currentUser }
-
-      # Focus the first tab
-      $("#main-tabs li").removeClass('active')
-      $("#main-tabs li:nth-child(1)").addClass('active')
+      new UsersShowView { el : $("#content"), model : app.currentUser }
     else
       new WelcomeHomeView
       new CommonLoginView
