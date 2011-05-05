@@ -94,4 +94,5 @@ class Application
     window.location.hash = "#"
     Backbone.history.loadUrl()
 
+@Application = Application
 @app = new Application

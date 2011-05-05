@@ -1,5 +1,8 @@
 describe 'settings controller', ->
 
+  beforeEach ->
+    app.currentUser = new User { jid : "ben@example.com" }
+  
   it 'should handle the truth', ->
     expect(true).toBeTruthy()
 
