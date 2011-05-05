@@ -16,6 +16,17 @@ describe 'connect', ->
     expect(c.bind).toBeTruthy()
     expect(c.trigger).toBeTruthy()
     
+  it 'should sendPresence after connect', ->
+    x = new Connection
+
+    spyOn(Strophe.Connection.prototype, 'connect')
+    x.connect()
+
+    spyOn(x.connector, 'announcePresence')
+    expect(x.afterConnected()).toBeTruthy()
+
+    expect(x.connector.announcePresence).toHaveBeenCalled()
+    
   it 'connect', ->
     c = new Connection
 

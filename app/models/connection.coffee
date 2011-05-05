@@ -45,10 +45,7 @@ class Connection
       @trigger('connected')
 
   onIq: (iq) =>
-    alert "?"
-
     @connector.onIq(iq)
-    
     true
     
   afterConnected: =>
@@ -57,5 +54,7 @@ class Connection
 
     # Listen for iq messages
     @c.addHandler @onIq, null, 'iq' # , null, null,  null); 
+    
+    true
 
 this.Connection = Connection
