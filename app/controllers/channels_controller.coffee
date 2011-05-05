@@ -4,11 +4,11 @@ class ChannelsController extends Backbone.Controller
     "channels/:node" : "show"
     
   index: ->
-    new ChannelsIndexView { collection : Channels.getStandalone() }
+    new ChannelsIndexView { el : $("#content"), collection : Channels.getStandalone() }
     
   show: (node) ->
     channel = Channels.findOrCreateByNode("/channel/#{node}")
     channel.markAllAsRead()
-    new ChannelsShowView { model : channel }
+    new ChannelsShowView { el : $("#content"), model : channel }
         
 new ChannelsController

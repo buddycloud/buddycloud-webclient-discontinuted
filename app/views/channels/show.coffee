@@ -1,8 +1,7 @@
 class ChannelsShowView extends Backbone.View
   initialize: ->
-    new CommonPageView
-
-    @el = $("#main")
+    # new CommonPageView
+    # @el = $("#main")
 
     # Get some meta data (subscribers / etc...)
     @model.fetchMetadata()

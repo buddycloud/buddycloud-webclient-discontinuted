@@ -3,6 +3,6 @@ class FriendsController extends Backbone.Controller
     "friends" : "index"
 
   index: (jid) ->
-    new FriendsIndexView { collection : $c.roster }
+    new FriendsIndexView { el : $("#content"), collection : $c.roster }
     
 new FriendsController

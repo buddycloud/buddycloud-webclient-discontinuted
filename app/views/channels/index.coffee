@@ -1,7 +1,7 @@
 class ChannelsIndexView extends Backbone.View
   initialize: ->
-    new CommonPageView
-    @el = $("#main")
+    # new CommonPageView
+    # @el = $("#main")
 
     @template = _.template('''
 

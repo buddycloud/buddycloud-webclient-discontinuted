@@ -1,8 +1,8 @@
 class FriendsIndexView extends Backbone.View
   initialize: ->
-    new CommonPageView
-    @el = $("#main")
-
+    # new CommonPageView
+    # @el = $("#main")
+    # 
     @template = _.template('''
 
       <h1>Friends</h1>
