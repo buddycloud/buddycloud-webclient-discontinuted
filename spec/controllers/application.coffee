@@ -10,6 +10,15 @@ describe 'application', ->
     x = new Application
     expect(x instanceof Application).toBeTruthy()
 
+  it 'should reload page onConnect', ->
+    x = new Application
+    spyOn(Backbone.history, 'loadUrl')
+    spyOn(CommonAuthView.prototype, 'render')
+    x.onConnected()
+    expect(Backbone.history.loadUrl).toHaveBeenCalled()
+    expect(CommonAuthView.prototype.render).toHaveBeenCalled()
+    
+    
   it 'should start', ->
     window.app = new Application
     app.start()

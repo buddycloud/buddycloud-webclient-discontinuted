@@ -89,10 +89,9 @@ class Application
     @removeSpinner()
     @currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
-    $c.fetchRoster()
+    # $c.fetchRoster()
     
     # Reload the welcome view
-    window.location.hash = "#"
     Backbone.history.loadUrl()
 
 @Application = Application
