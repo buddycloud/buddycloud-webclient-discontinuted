@@ -14,6 +14,7 @@ javascripts:
   - 'app/views/**/*.coffee'
   - 'app/models/post.coffee'
   - 'app/models/*.coffee'
+  - 'app/connectors/*.coffee'
 
 stylesheets:
   - 'public/stylesheets/*.css'

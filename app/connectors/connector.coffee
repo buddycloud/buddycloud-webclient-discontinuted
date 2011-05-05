@@ -22,6 +22,15 @@ class Connector
   removeUserFromRoster: (jid) ->
     @connection.send($pres( { "type" : "unsubscribe", "to" : jid } ))
 
+  # Parse a roster
+  # _parseRoster: (response) ->
+  #   addItem = (item) =>
+  #     user = @roster.findOrCreateByJid item.attr('jid')
+  #     user.set { subscription : item.attr('subscription'), group : item.find('group:first').text()  }
+  #     user.save()
+  #   
+  #   for item in response.find('item')
+  #     addItem($(item))
 
   #
   # Subscription request
