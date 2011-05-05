@@ -2,71 +2,74 @@
    return this.replace( /(^|\s)([a-z])/g , function(m,p1,p2){ return p1+p2.toUpperCase(); } );
 };`
 
-app = {}
+class Application
+  connect: (jid, password, autologin)->
+    if autologin
+      $c.bind 'connected', ->
+        localStorage['jid'] = jid
+        localStorage['password'] = password
 
-app.connect = (jid, password, autologin)->
-  if autologin
-    $c.bind 'connected', ->
-      localStorage['jid'] = jid
-      localStorage['password'] = password
+    $c.connect jid, password
+  
+  # Focusses the tab specified by it's content, eg focusTab('Home')
+  focusTab: (tab) ->
+    $("#main-tabs li").removeClass('active')
+  
+    for li in $("#main-tabs li")
+      if li.innerHTML.match(tab)
+        $(li).addClass('active')
+  
+  # Show the loading spinner
+  spinner: ->
+    $("#content").fadeOut()
+    $('#spinner').remove()
+    $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
 
-  $c.connect jid, password
-  
-app.currentUser = null
+  # Remove the loading spinner
+  removeSpinner: ->
+    $("#content").fadeIn()
+    $('#spinner').remove()
 
-# Focusses the tab specified by it's content
-app.focusTab = (tab) ->
-  $("#main-tabs li").removeClass('active')
+  signout: ->
+    delete app.currentUser
+    window.location.hash = ""
   
-  for li in $("#main-tabs li")
-    if li.innerHTML.match(tab)
-      $(li).addClass('active')
+    Channels.refresh []
+    Users.refresh []
   
-app.spinner = ->
-  $("#content").fadeOut()
-  $('#spinner').remove()
-  $("<div id='spinner'><img src='public/spinner.gif' /> Connecting...</div>").appendTo 'body'
+    localStorage.clear()
 
-app.removeSpinner = ->
-  $("#content").fadeIn()
-  $('#spinner').remove()
+    # Force disconnect...
+    $c.unbind()
+    if $c.c
+      $c.c.disconnect()
 
-# app.showLog = ->
-#   $("#log").show()
-#   
+  start: ->
+    # Create collections
+    window.Channels = new ChannelCollection
+    window.Channels.fetch()
   
-app.signout = ->
-  delete app.currentUser
-  window.location.hash = ""
+    window.Users = new UserCollection
+    window.Users.fetch()
   
-  Channels.refresh []
-  Users.refresh []
+    # Establish xmpp connection
+    window.$c = new Connection
   
-  localStorage.clear()
+    $c.bind 'authfail', @onAuthfail
+    $c.bind 'connecting', @onConnecting
+    $c.bind 'connected', @onConnected
 
-  # Force disconnect...
-  $c.unbind()
-  if $c.c
-    $c.c.disconnect()
+    # Previously logged in and wants autologin
+    if jid = localStorage['jid']
+      app.currentUser = Users.findOrCreateByJid(jid)
+      $c.connect(localStorage['jid'], localStorage['password'])
+    else
+      window.location.hash = ""
 
-app.start = ->
-
-  # Force start from clean...
-  localStorage.clear()
-  localStorage['jid'] = 'ben@diaspora-x.com'
-  localStorage['password'] = 'toast'
+    # Start the url router
+    Backbone.history.start();  
   
-  # Create collections
-  window.Channels = new ChannelCollection
-  window.Channels.fetch()
-  
-  window.Users = new UserCollection
-  window.Users.fetch()
-  
-  # Establish xmpp connection
-  window.$c = new Connection
-  
-  $c.bind 'authfail', ->
+  onAuthfail: =>
     app.removeSpinner()
 
     # view = new CommonLoginView
@@ -75,31 +78,20 @@ app.start = ->
     # 
     alert("Incorrect username / password")
 
-  $c.bind 'connecting', ->
+  onConnecting: =>
     if window.location.hash == "#login"
       app.spinner()
     else
       new CommonConnectingView
-    
-  $c.bind 'connected', ->
+
+  onConnected: =>
     app.removeSpinner()
     app.currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView
-
     $c.fetchRoster()
+    
+    # Reload the welcome view
+    window.location.hash = "#"
     Backbone.history.loadUrl()
 
-  # $c.bind 'disconnect', ->
-  #   ....
-    
-  # Previously logged in and wants autologin
-  if jid = localStorage['jid']
-    app.currentUser = Users.findOrCreateByJid(jid)
-    $c.connect(localStorage['jid'], localStorage['password'])
-  else
-    window.location.hash = ""
-
-  # Start the url router
-  Backbone.history.start();  
-
-@app = app
+@app = new Application
