@@ -1,0 +1,83 @@
+<h1 class="channel-name">
+  <%= @user.getFullName() %>
+</h1>
+<% if @user.notFound(): %>
+  <p class="usermeta">
+    <img src="public/icons/flag.png" /> <%= @user.getFullName() %> hasn't signed up yet.
+  </p>
+<% else if @channel.isWhitelisted(): %>
+  <p class="usermeta">
+    <img src="public/icons/users.png" /> <%= @user.getFullName() %> only shares with friends.
+  </p>
+<% else if @channel.hasMetaData(): %>
+  <p class="usermeta">
+    <img src="public/icons/globe_2.png" /> <%= @user.get('jid') %>
+    <img src="public/icons/clock.png" /> Created <%= @channel.escapeCreationDate() %>
+    <img src="public/icons/chart_bar.png" /> <%= @channel.escape('num_subscribers') %> subscribers
+    |
+    <% if user.getChannel().isSubscribed(): %>
+      <a href="#users/<%= @user.get('jid') %>/unsubscribe">Unfriend</a>
+    <% else: %>
+      <a href="#users/<%= @user.get('jid') %>/subscribe">Add as a friend</a>
+    <% end %>
+  </p>
+  <p class="description">
+    <%= @channel.escape('description') %>
+  </p>
+<% else: %>
+  <p class="usermeta">
+    <img src="public/icons/sand.png" />Loading...
+  </p>
+<% end %>
+
+<% if @user.notFound(): %>
+
+<div class="big-notice">
+  <h4>
+    <img src="public/icons/flag.png" class="big-icon" />
+    <%= user.getName().capitalize() %> hasn't signed up yet.
+  </h4>
+
+  <p>
+    We couldn't find a channel for <%= user.getName().capitalize() %>, which means
+    they haven't signed up yet. You can send an invitation to <%= user.getName().capitalize() %>
+    and we will add them to your friends list when they sign up.
+  </p>
+
+  <button>
+    Send invitation to <%= user.getName().capitalize() %>
+  </button>
+</div>
+
+<% else if @channel.isWhitelisted(): %>
+
+  <div class="big-notice">
+    <h4>
+      <img src="public/icons/users.png" class="big-icon" />
+      <%= @user.getName().capitalize() %> only shares with friends.
+    </h4>
+
+    <p>
+      <%= @user.getName().capitalize() %> has configured their privacy settings so that
+      only friends can view or post on their wall. You can add <%= user.getName().capitalize() %>
+      as a friend. Once <%= user.getName().capitalize() %> has confirmed your friendship, you
+      will be able to see their posts.
+    </p>
+
+    <button>
+      Add <%= @user.getName().capitalize() %> as a friend
+    </button>
+  </div>
+
+<% else: %>
+  <% if (@channel.hasMetaData()) && (@channel.canPost()): %>
+    <form action="#" class="new_activity status">
+      <h4>Write on <%= @user.getName() %>s wall</h4>
+      <textarea cols="40" id="activity_content" name="content" rows="20"></textarea>
+      <input name="commit" type="submit" value="Share" />
+    </form>
+  <% end %>
+  
+  <div class="posts"></div>
+<% end %>
+
