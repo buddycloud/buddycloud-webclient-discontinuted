@@ -128,6 +128,8 @@ class Connector
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid(), "from" : user.get('jid') } ).tree())
     
   onIq : (stanza) ->
+    console.log Strope.serialize(stanza)
+    
     posts = for item in $(stanza).find('item')
       @_parsePost($(item))
 
