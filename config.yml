@@ -18,8 +18,7 @@ javascripts:
   - 'app/connectors/*.coffee'
 
 stylesheets:
-  - 'public/stylesheets/*.css'
-  - 'public/stylesheets/*.less'
+  - 'public/stylesheets/application.less'
   
 specs:
   - 'lib/coffeescript.js'
