@@ -37,8 +37,8 @@ class PostsListView extends Backbone.View
         </div>
     ''')
     
-    # @collection = @model.getPosts()
-    # 
+    @collection = @model.getPosts()
+
     @collection.bind 'add', @addPost
     @collection.bind 'change', @updatePost
     @collection.bind 'remove', @removePost
