@@ -6,7 +6,9 @@ class SettingsView extends Backbone.View
     'submit form' : 'onSubmit'
   }
 
-  onSubmit: ->
+  onSubmit: (e) ->
+    
+    e.preventDefault()
     
   render: ->
     @el.html($templates.settingsIndex { user : @model })

@@ -23,6 +23,7 @@ stylesheets:
 specs:
   - 'lib/coffeescript.js'
   - 'spec/*/*.coffee'
+  - 'spec/views/*/*.coffee'
 
 fixtures:
   - 'spec/fixtures/*/*.xml'
