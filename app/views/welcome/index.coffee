@@ -16,7 +16,7 @@ class WelcomeIndexView extends Backbone.View
     })
     
   _renderPosts: ->
-    new PostsListView { el : @el.find('.posts'), collection : Posts }
+    new PostsListView { el : @el.find('.posts'), model : Posts }
     # @el.tml
     #  posts : Posts, )
 

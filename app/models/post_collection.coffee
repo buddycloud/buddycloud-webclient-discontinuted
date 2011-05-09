@@ -9,6 +9,9 @@ class PostCollection extends Backbone.Collection
     @filter( (post) =>
       !post.get('in_reply_to')
     )
+    
+  getPosts: ->
+    this
 
 # Todo - refactor me - this should be a hasMany or something....
 PostCollection.forChannel = (model) ->

@@ -1,6 +1,5 @@
 <h1>
-  <img src="/public/icons/emotion_smile.png" />
-  Hi <%= @user.getName().capitalize() %> and welcome to Diaspora*x!
+  Home - everyones recent posts
 </h1>
 
 <div class="grid_6 suffix_1 posts">
