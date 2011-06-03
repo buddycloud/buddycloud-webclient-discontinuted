@@ -9,13 +9,13 @@ class Channel extends Backbone.Model
 
   connector: ->
     @_connector ||= new Connector($c.c)
-    
+
   markAllAsRead: ->
     @set { new_posts : 0 }
 
   _incrementNewPosts: ->
     @set { new_posts : @getNewPosts() + 1 }
-    
+
   hasNewPosts: ->
     @getNewPosts() > 0
 
@@ -24,38 +24,38 @@ class Channel extends Backbone.Model
       parseInt @get('new_posts')
     else
       0
-    
+
   getStatus: ->
     new String(@status)
-    
+
   isLoading: ->
     (@status == null) || (@status == 'loading')
-    
+
   updateUsers: ->
     if @isUserChannel()
       Users.findOrCreateByJid @getUserJid()
-    
+
   # The node id of this chanel
   getNode: ->
     @get('node')
-    
+
   subscribe: ->
     @connector().subscribe(channel, app.currentUser)
     channel.set { subscription : 'subscribed' }
 
-  subscribe: ->
+  unsubscribe: ->
     @connector().unsubscribe(channel, app.currentUser)
     channel.set { subscription : null }
-    
+
   isSubscribed: ->
     @get('subscription') == 'subscribed'
-    
+
   isWhitelisted: ->
     @get('access_model') == 'whitelist'
-    
+
   canView: ->
     @get('access_model') == 'open'
-    
+
   canPost: ->
     (@get('affiliation') == 'owner') || (@get('affiliation') == 'publisher') || (@get('default_affiliation') == 'publisher')
 
@@ -65,19 +65,19 @@ class Channel extends Backbone.Model
 
   isUserChannel: ->
     @getNode().match(/^.user/)
-    
+
   getUserJid: ->
     @getNode().match(/user.(.+?)\//)[1]
-    
+
   escapeCreationDate: ->
     @escape('creation_date').replace(/T.+/,'')
-    
+
   hasMetaData: ->
     !!@get('owner')
-    
+
   escapeOwnerNode: ->
     @escape('owner').replace(/@.+/,'')
-    
+
   fetchPosts: ->
     @status = 'loading'
 
@@ -88,7 +88,7 @@ class Channel extends Backbone.Model
 
   _fetchPosts: =>
     @connector().getChannelPosts(
-      this, 
+      this,
       (posts) =>
         for post in posts
           if p = @posts.get(post.id)
@@ -102,7 +102,7 @@ class Channel extends Backbone.Model
         @status = errCode
         @trigger 'change'
     )
-    
+
   fetchMetadata: ->
     @connector().getMetadata(
       this,
@@ -113,13 +113,13 @@ class Channel extends Backbone.Model
         @set { status : errCode }
         @save()
     )
-    
+
   getPosts: ->
     @fetchPosts()
     @posts
 
   getName: ->
     @get('node').replace(/.+\//,'')
-    
+
 this.Channel = Channel
 
