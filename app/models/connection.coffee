@@ -49,6 +49,7 @@ class Connection
     true
     
   afterConnected: =>
+    console.log "acon", arguments
     # Tell the pubsub service i'm here - (todo - find out which ones work)
     @connector.announcePresence(@user)
 

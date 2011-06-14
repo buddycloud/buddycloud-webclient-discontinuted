@@ -1,5 +1,8 @@
+# first view after login
+# 
 class WelcomeIndexView extends Backbone.View
   initialize: ->
+    console.log "wii"
     @render()
     
   render: ->

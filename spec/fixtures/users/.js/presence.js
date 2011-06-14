@@ -1,0 +1,5 @@
+if(!this.$fixtures){
+  $fixtures={};
+};
+
+this.$fixtures.usersPresence=$("<?xml version=\"1.0\"?>\n<iq from=\"pubsub-bridge@broadcaster.buddycloud.com\" to=\"bnolan@buddycloud.com/356464516130273911041113\" type=\"set\" id=\"bc:qO7jK\">\n  <event xmlns=\"http://jabber.org/protocol/pubsub#event\">\n    <items node=\"/user/simon@buddycloud.com/geo/current\">\n      <item xmlns=\"http://jabber.org/protocol/pubsub\" id=\"1302331264664\">\n        <geoloc xmlns=\"http://jabber.org/protocol/geoloc\" xml:lang=\"en\">\n          <text>Somewhere new in M&#xFC;nchen</text>\n          <locality>M&#xFC;nchen</locality>\n          <region>Bayern</region>\n          <country>Germany</country>\n          <lat>48.17272283333333</lat>\n          <lon>11.588648</lon>\n          <accuracy>540.0</accuracy>\n        </geoloc>\n      </item>\n    </items>\n  </event>\n</iq>\n");

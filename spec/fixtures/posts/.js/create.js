@@ -1,0 +1,5 @@
+if(!this.$fixtures){
+  $fixtures={};
+};
+
+this.$fixtures.postsCreate=$("<?xml version=\"1.0\"?>\n<body xmlns=\"http://jabber.org/protocol/httpbind\" rid=\"1611105008\" sid=\"9dcc3abadd897635b77ad9c2219209ec\">\n  <iq xmlns=\"jabber:client\" id=\"4049:LM\" to=\"pubsub-bridge@broadcaster.buddycloud.com\" type=\"set\">\n    <pubsub xmlns=\"http://jabber.org/protocol/pubsub\">\n      <publish node=\"/user/bnolan@buddycloud.com/channel\">\n        <item>\n          <entry xmlns=\"http://www.w3.org/2005/Atom\">\n            <content type=\"text\">aergaergareg</content>\n            <author>\n              <jid xmlns=\"http://buddycloud.com/atom-elements-0\">bnolan@buddycloud.com</jid>\n            </author>\n            <in-reply-to xmlns=\"http://purl.org/syndication/thread/1.0\" ref=\"null\"/>\n          </entry>\n        </item>\n      </publish>\n    </pubsub>\n  </iq>\n</body>\n");

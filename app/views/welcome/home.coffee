@@ -1,7 +1,8 @@
+# s
 class WelcomeHomeView extends Backbone.View
   initialize: ->
     @el = $("#content")
-  
+    console.log "wch"
     @template = _.template('''
     
       <div class="grid_12">

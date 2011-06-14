@@ -92,6 +92,7 @@ class Application
       new CommonConnectingView
 
   onConnected: =>
+    console.log "test"
     @removeSpinner()
     @currentUser = Users.findOrCreateByJid($c.jid)
     new CommonAuthView

@@ -1,0 +1,5 @@
+<div class="image_box"><img src="<%= @gravatar_url %>" /></div>
+<ul class="user_details">
+  <li><%= @jid %></li>
+  <li><%= @display_name %></li>
+</ul>
