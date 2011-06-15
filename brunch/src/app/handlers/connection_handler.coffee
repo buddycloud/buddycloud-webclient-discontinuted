@@ -10,6 +10,13 @@ class exports.ConnectionHandler
     @connected = false
     @connection = new Strophe.Connection(BOSH_SERVICE)
     
+    #
+    temp = @connection.send
+    @connection.send = (stanza) =>
+      app.debug "dd", Strophe.serialize stanza
+      temp.apply @connection, arguments
+    
+    
     @connector = new Connector(@connection)
     
     # for debug purposes only
@@ -46,9 +53,46 @@ class exports.ConnectionHandler
       @trigger 'connected'
   
   after_connected : =>
-    app.debug "after connect"
     @connector.announcePresence @user
+    
+    @connector.getUserSubscriptions @user, ->
+      app.debug "gus_succ", arguments
+    , ->
+      app.debug "gus_error", arguments
+    
+    
     @connection.addHandler (stanza) ->
-      app.debug "onIq", stanza
+      app.debug "onIq", stanza, $(stanza).find('item')
+      posts = for item in $(stanza).find('item')
+        @_parse_post($(item))
+
+
+      app.debug "posts", posts
+      # for obj in posts
+      #   if Posts.get(obj.id)
+      #     # do nothing
+      #   else
+      #     p = new Post(obj)
+      #     Posts.add(p)
+      #     p.save()
+          
     , null, 'iq'
     return true
+
+  _parse_post : (item) ->
+    post = { 
+      id : parseInt(item.find('id').text().replace(/.+:/,''))
+      content : item.find('content').text() 
+      author : item.find('author jid').text()
+      published : item.find('published').text()
+    }
+
+    if item.find 'in-reply-to'
+      post.in_reply_to = parseInt(item.find('in-reply-to').attr('ref'))
+
+    if item.find 'geoloc'
+      post.geoloc_country = item.find('geoloc country').text()
+      post.geoloc_locality = item.find('geoloc locality').text()
+      post.geoloc_text = item.find('geoloc text').text()
+
+    post

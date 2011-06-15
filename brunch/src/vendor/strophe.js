@@ -2089,6 +2089,7 @@ Strophe.Connection.prototype = {
      */
     send: function (elem)
     {
+        
         if (elem === null) { return ; }
         if (typeof(elem.sort) === "function") {
             for (var i = 0; i < elem.length; i++) {
