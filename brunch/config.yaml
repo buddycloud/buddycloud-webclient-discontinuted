@@ -3,3 +3,4 @@ dependencies:
   - jquery-1.5.2.js
   - underscore-1.1.6.js
   - backbone-master.js
+  - strophe.js
