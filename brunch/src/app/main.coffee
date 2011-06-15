@@ -17,7 +17,9 @@ $(document).ready ->
   app.debug_mode = true
   app.debug = () ->
     console.log "DEBUG:", arguments if app.debug_mode
-  
+  Strophe.log = (level, msg) ->
+    console.log "STROPHE:", level, msg if app.debug_mode and level > 0
+
   app.initialize = ->
   
     # current user
