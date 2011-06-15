@@ -48,6 +48,7 @@ class exports.ConnectionHandler
   after_connected : =>
     app.debug "after connect"
     @connector.announcePresence @user
-    @connection.addHandle =>
-      app.debug "onIq", arguments
+    @connection.addHandler (stanza) ->
+      app.debug "onIq", stanza
     , null, 'iq'
+    return true
