@@ -11,7 +11,10 @@ class Connection
 
   connect: (jid, password)->
     @c = new Strophe.Connection(BOSH_SERVICE)
-  
+    temp = @c.send
+    @c.send = (stanza) =>
+      app.debug "dd", Strophe.serialize stanza
+      temp.apply @c, arguments
     @jid = jid
     @password = password
     @user = Users.findOrCreateByJid(@jid)
