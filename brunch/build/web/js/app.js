@@ -10407,10 +10407,10 @@ window.jQuery = window.$ = jQuery;
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   exports.User = (function() {
+    __extends(User, Backbone.Model);
     function User() {
       User.__super__.constructor.apply(this, arguments);
     }
-    __extends(User, Backbone.Model);
     User.prototype.defaults = {
       gravatar_url: "http://www.gravatar.com/avatar/09dbf9c8bf6ff0738d2dd83c832d1f93?s=50",
       display_name: "Bob Kelso",
@@ -10427,129 +10427,147 @@ window.jQuery = window.$ = jQuery;
   })();
 }).call(this);
 }, "templates/home/index": function(exports, require, module) {module.exports = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
   };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     };
+  }
+  (function() {
     (function() {
-      _print(_safe('<div id="home_content">\n  <div id="login" class="rounded_box login_box clearfix">\n  </div>\n  <h1>Welcome to the buddycloud beta</h1>\n  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n  <p>Maybe there will be a signup form here:</p>\n  <ul>\n    <li></li>\n  </ul>\n</div>'));
+      __out.push('<div id="home_content">\n  <div id="login" class="rounded_box login_box clearfix">\n  </div>\n  <h1>Welcome to the buddycloud beta</h1>\n  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n  <p>Maybe there will be a signup form here:</p>\n  <ul>\n    <li></li>\n  </ul>\n</div>');
     }).call(this);
     
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};}, "templates/home/login": function(exports, require, module) {module.exports = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/home/login": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
   };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     };
+  }
+  (function() {
     (function() {
     
     }).call(this);
     
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};}, "templates/shared/user_menu": function(exports, require, module) {module.exports = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/shared/user_menu": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
   };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     };
+  }
+  (function() {
     (function() {
-      _print(_safe('<div class="image_box"><img src="'));
-      _print(this.gravatar_url);
-      _print(_safe('" /></div>\n<ul class="user_details">\n  <li>'));
-      _print(this.jid);
-      _print(_safe('</li>\n  <li>'));
-      _print(this.display_name);
-      _print(_safe('</li>\n</ul>\n'));
+      __out.push('<div class="image_box"><img src="');
+      __out.push(__sanitize(this.gravatar_url));
+      __out.push('" /></div>\n<ul class="user_details">\n  <li>');
+      __out.push(__sanitize(this.jid));
+      __out.push('</li>\n  <li>');
+      __out.push(__sanitize(this.display_name));
+      __out.push('</li>\n</ul>\n');
     }).call(this);
     
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};}, "views/home/index": function(exports, require, module) {(function() {
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "views/home/index": function(exports, require, module) {(function() {
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -10559,10 +10577,10 @@ window.jQuery = window.$ = jQuery;
     return child;
   };
   exports.HomeView = (function() {
+    __extends(HomeView, Backbone.View);
     function HomeView() {
       HomeView.__super__.constructor.apply(this, arguments);
     }
-    __extends(HomeView, Backbone.View);
     HomeView.prototype.template = require('templates/home/index');
     HomeView.prototype.initialize = function() {
       return app.current_user.bind("logged_in", this.finish_view);
@@ -10588,10 +10606,11 @@ window.jQuery = window.$ = jQuery;
     return child;
   };
   exports.LoginView = (function() {
-    function LoginView() {
-      this.finish_view = __bind(this.finish_view, this);;      LoginView.__super__.constructor.apply(this, arguments);
-    }
     __extends(LoginView, Backbone.View);
+    function LoginView() {
+      this.finish_view = __bind(this.finish_view, this);
+      LoginView.__super__.constructor.apply(this, arguments);
+    }
     LoginView.prototype.template = require("templates/home/login");
     LoginView.prototype.initialize = function() {
       return app.current_user.bind("logged_in", this.finish_view);
@@ -10625,11 +10644,12 @@ window.jQuery = window.$ = jQuery;
     return child;
   };
   exports.UserMenu = (function() {
-    function UserMenu() {
-      this.finish_view = __bind(this.finish_view, this);;
-      this.render = __bind(this.render, this);;      UserMenu.__super__.constructor.apply(this, arguments);
-    }
     __extends(UserMenu, Backbone.View);
+    function UserMenu() {
+      this.finish_view = __bind(this.finish_view, this);
+      this.render = __bind(this.render, this);
+      UserMenu.__super__.constructor.apply(this, arguments);
+    }
     UserMenu.prototype.template = require('templates/shared/user_menu');
     UserMenu.prototype.initialize = function() {
       app.current_user.bind("logged_in", this.render);
