@@ -12,10 +12,10 @@ class exports.LoginView extends Backbone.View
       # the form sumbit will alwasy trigger a new connection
       that.start_connection()
 
-      #app.current_user.log_in()
-      $(this).hide()
+      #$(this).hide()
+      $('#home_login_submit').attr "disabled", "disabled"
       # TODO: show nicer spin
-      $(this).after '<img class="loading" src="/public/spinner2.gif" />'
+      #$(this).after '<img class="loading" src="/public/spinner2.gif" />'
       return false
   
   show : ->
@@ -23,6 +23,7 @@ class exports.LoginView extends Backbone.View
   
   start_connection : =>
     app.connection_handler = new ConnectionHandler()
+    # pretend we get an connection immediately
     app.connection_handler.connect "xxx", "xxx"
     app.connection_handler.bind "connected", @go_away
     app.connection_handler.bind "connfail", @sign_in_error
