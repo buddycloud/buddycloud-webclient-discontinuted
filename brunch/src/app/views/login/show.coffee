@@ -4,13 +4,13 @@ class exports.LoginView extends Backbone.View
   template : require 'templates/login/show'
   
   initialize : ->
+    that = this
     $('#login_form').submit (ev) ->
       ev.preventDefault()
       ev.stopPropagation()
       
       # the form sumbit will alwasy trigger a new connection
-      app.connection_handler = new ConnectionHandler()
-      app.connection_handler.connect "xxx", "xxx"
+      that.start_connection()
 
       #app.current_user.log_in()
       $(this).hide()
@@ -20,3 +20,23 @@ class exports.LoginView extends Backbone.View
   show : ->
     $('#login_form').delay(50).fadeIn()
   
+  start_connection : =>
+    app.connection_handler = new ConnectionHandler()
+    app.connection_handler.connect "xxx", "xxx"
+    app.connection_handler.bind "connected", @go_away
+    app.connection_handler.bind "disconnected", @sign_in_error
+  
+  go_away : =>
+    # nicely animate the login form away
+    el = $('#login')
+    curr_pos = el.position()
+    console.log curr_pos, el.height()
+    $('#login').css(
+      "position" : "absolute"
+      "top" : "#{curr_pos.top}px"
+      "left": "#{curr_pos.left}px"
+    ).animate({"top" : "#{curr_pos.top + 50}px"}, 200).animate("top" : "-800px")
+    
+  sign_in_error : =>
+    # shake-animation
+    # show error message, or can we do it without a message?
