@@ -4,16 +4,16 @@ class exports.LoginView extends Backbone.View
   template : require 'templates/login/show'
   
   initialize : ->
-    that = this
-    $('#login_form').submit (ev) ->
+    $('#login_form').submit (ev) =>
       ev.preventDefault()
       ev.stopPropagation()
       
       # the form sumbit will alwasy trigger a new connection
-      that.start_connection()
+      @start_connection()
 
-      #$(this).hide()
+      # disable the form
       $('#home_login_submit').attr "disabled", "disabled"
+      $('#login_waiting').css "visibility","visible"
       # TODO: show nicer spin
       #$(this).after '<img class="loading" src="/public/spinner2.gif" />'
       return false
@@ -25,9 +25,14 @@ class exports.LoginView extends Backbone.View
     app.connection_handler = new ConnectionHandler()
     # pretend we get an connection immediately
     app.connection_handler.connect "xxx", "xxx"
-    app.connection_handler.bind "connected", @go_away
+    app.connection_handler.bind "connected", @sign_in_success
     app.connection_handler.bind "connfail", @sign_in_error
     app.connection_handler.bind "disconnected", @sign_in_error
+  
+  sign_in_success : =>
+    $('#home_login_submit').removeAttr "disabled"
+    $('#login_waiting').css "visibility","hidden"
+    @go_away()
   
   go_away : =>
     # nicely animate the login form away
