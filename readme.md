@@ -13,10 +13,16 @@ This The XMPP extensions that Buddycloud describes have been implemented in two 
 
 # Installation
 
+make sure you have [npm](http://npmjs.org) installed.
+
+    ./configure
+    ./build.sh
+
+
 This repository needs to be in the webroot of your computer. On OS X - you can set up a vhost by editing:
 
     /private/etc/apache2/extra/httpd-vhosts.conf
-    
+
 And adding a section like this:
 
 # Use name-based virtual hosting.
@@ -36,5 +42,5 @@ NameVirtualHost *:80
 Then edit your `/etc/hosts` file and add an entry like:
 
     127.0.0.1       buddycloud.local
-    
+
 Restart apache with `sudo apachectl restart` and you should be able to browse to the web client at [http://buddycloud.local/](buddycloud.local). Linux is as above but your vhost configuration will be different.
