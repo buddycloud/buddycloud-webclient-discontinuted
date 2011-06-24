@@ -12,7 +12,7 @@ class exports.MainController extends Backbone.Controller
 
   constructor: ->
     super
-    app.connection_handler.get_user_subscriptions()
+    app.handlers.data_handler.get_user_subscriptions()
     app.collections.user_subscriptions = new UserSubscriptions(app.current_user)
     app.collections.user_subscriptions.fetch()
     new Sidebar().render()

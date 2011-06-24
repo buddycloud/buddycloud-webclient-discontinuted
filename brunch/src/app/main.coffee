@@ -3,6 +3,7 @@ app.controllers = {}
 app.models = {}
 app.collections = {}
 app.views = {}
+app.handlers = {} 
 
 MainController = require('controllers/main_controller').MainController
 ConnectionHandler = require('handlers/connection_handler').ConnectionHandler

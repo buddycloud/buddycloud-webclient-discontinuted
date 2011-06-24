@@ -1,5 +1,6 @@
 BOSH_SERVICE = 'http://bosh.metajack.im:5280/xmpp-httpbind'
 Connector = require('connectors/connector').Connector
+DataHandler = require('handlers/data_handler').DataHandler
 User = require('models/user').User
 
 class exports.ConnectionHandler
@@ -13,11 +14,12 @@ class exports.ConnectionHandler
     #
     temp = @connection.send
     @connection.send = (stanza) =>
-      app.debug "dd", Strophe.serialize stanza
+      app.debug Strophe.serialize stanza
       temp.apply @connection, arguments
     
     
     @connector = new Connector(@connection)
+    app.handlers.data_handler = new DataHandler(@connector, @connection)
     
     # for debug purposes only
     @bind "all", (status) -> app.debug "connection_event", status
@@ -54,46 +56,3 @@ class exports.ConnectionHandler
   
   announce_presence : =>
     @connector.announcePresence @user
-  
-  get_user_subscriptions : =>
-    # TODO: move to dedicated data handler
-    @connector.getUserSubscriptions @user, (subscriptions) =>
-      @trigger 'on_user_subscriptions_sync', subscriptions
-    , =>
-      app.debug "gus_error", arguments
-    
-    @connection.addHandler (stanza) ->
-      app.debug "onIq", stanza, $(stanza).find('item')
-      posts = for item in $(stanza).find('item')
-        @_parse_post($(item))
-
-
-      app.debug "posts", posts
-      # for obj in posts
-      #   if Posts.get(obj.id)
-      #     # do nothing
-      #   else
-      #     p = new Post(obj)
-      #     Posts.add(p)
-      #     p.save()
-          
-    , null, 'iq'
-    return true
-
-  _parse_post : (item) ->
-    post = { 
-      id : parseInt(item.find('id').text().replace(/.+:/,''))
-      content : item.find('content').text() 
-      author : item.find('author jid').text()
-      published : item.find('published').text()
-    }
-
-    if item.find 'in-reply-to'
-      post.in_reply_to = parseInt(item.find('in-reply-to').attr('ref'))
-
-    if item.find 'geoloc'
-      post.geoloc_country = item.find('geoloc country').text()
-      post.geoloc_locality = item.find('geoloc locality').text()
-      post.geoloc_text = item.find('geoloc text').text()
-
-    post

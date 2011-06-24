@@ -9,7 +9,7 @@ class exports.UserSubscriptions extends Backbone.Collection
     app.debug "nr of subscriptions in cache: #{@localStorage.records.length}"
     
     # register for user_subscription event
-    app.connection_handler.bind "on_user_subscriptions_sync", @on_user_subscriptions_sync
+    app.handlers.data_handler.bind "on_user_subscriptions_sync", @on_user_subscriptions_sync
     
   on_user_subscriptions_sync : (subscriptions) =>
     for sub in subscriptions

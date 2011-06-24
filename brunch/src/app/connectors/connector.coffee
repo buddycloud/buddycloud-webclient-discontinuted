@@ -77,7 +77,7 @@ class exports.Connector
   # Get metadata, calls succ with a hash of metadata
   getMetadata: (channel, succ, err)->
     request = $iq( { "to" : @pubsubJid(), "type" : "get" })
-      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.getNode() })
+      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.get('node') })
 
     @connection.sendIQ(
       request,
