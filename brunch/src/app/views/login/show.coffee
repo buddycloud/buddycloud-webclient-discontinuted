@@ -10,6 +10,7 @@ class exports.LoginView extends Backbone.View
       jid = $('#home_login_jid').val()
       password = $('#home_login_pwd').val()
       if jid.length > 0 and password.length > 0
+        app.current_user.set "jid" : jid
         @start_connection(jid, password)
         # disable the form
         $('#home_login_submit').attr "disabled", "disabled"

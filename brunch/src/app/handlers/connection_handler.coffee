@@ -56,11 +56,11 @@ class exports.ConnectionHandler
     @connector.announcePresence @user
   
   get_user_subscriptions : =>
+    # TODO: move to dedicated data handler
     @connector.getUserSubscriptions @user, (subscriptions) =>
       @trigger 'on_user_subscriptions_sync', subscriptions
     , =>
       app.debug "gus_error", arguments
-    
     
     @connection.addHandler (stanza) ->
       app.debug "onIq", stanza, $(stanza).find('item')

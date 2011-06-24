@@ -8,8 +8,6 @@ MainController = require('controllers/main_controller').MainController
 ConnectionHandler = require('handlers/connection_handler').ConnectionHandler
 # models
 User = require('models/user').User
-# collections
-UserSubscriptions = require('collections/user_subscriptions').UserSubscriptions
 LoginView = require('views/login/show').LoginView
 HomeView = require('views/home/index').HomeView
 

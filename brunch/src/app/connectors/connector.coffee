@@ -63,9 +63,9 @@ class exports.Connector
       (response) =>
         channels = for subscription in $(response).find('subscription')
           {
-            jid : $(subscription).attr('jid') + "@#{@domain()}"
-            description : $(subscription).attr('description')
+            jid : "#{$(subscription).attr('jid')}@#{@domain()}"
             node : $(subscription).attr('node')
+            affiliation : $(subscription).attr('affiliation')
           }
         if succ?
           succ(channels)
