@@ -43,21 +43,15 @@ $(document).ready ->
     el = $('#home_login_pwd')
     pw = el.val()
     unless pw.length > 0
-      # no prefilled password so we show the login
-      login.show()
-      
       # the home view sould display some additional info in the future
       #app.views.home = new HomeView()
     else
       # prefilled password detected, sign in the user automatically
       $('#login_form').trigger "submit"
+    login.show()
   
   
   app.initialize()
-  
-  # add the collections
-  app.collections.user_subscriptions = new UserSubscriptions()
-  app.collections.user_subscriptions.fetch()
   
   # bootstrapping after login
   app.connection_handler.bind "connected", ->

@@ -6,7 +6,7 @@ class exports.UserSubscriptions extends Backbone.Collection
     # initialize the store
     # TODO: add username to the name of the store
     @localStorage = new Store("test-subscriptions")#new Store("#{user.get('name')}-subscriptions")
-    app.debug "nr of subscriptions in cache #{@localStorage.records.length}"
+    app.debug "nr of subscriptions in cache: #{@localStorage.records.length}"
     
     # register for user_subscription event
     app.connection_handler.bind "on_user_subscriptions_sync", @on_user_subscriptions_sync

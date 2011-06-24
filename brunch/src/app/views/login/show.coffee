@@ -7,20 +7,22 @@ class exports.LoginView extends Backbone.View
       ev.stopPropagation()
       
       # the form sumbit will alwasy trigger a new connection
-      @start_connection()
+      jid = $('#home_login_jid').val()
+      password = $('#home_login_pwd').val()
+      if jid.length > 0 and password.length > 0
+        @start_connection(jid, password)
+        # disable the form
+        $('#home_login_submit').attr "disabled", "disabled"
+        $('#login_waiting').css "visibility","visible"
 
-      # disable the form
-      $('#home_login_submit').attr "disabled", "disabled"
-      $('#login_waiting').css "visibility","visible"
-      # TODO: show nicer spin
-      #$(this).after '<img class="loading" src="/public/spinner2.gif" />'
       return false
   
   show : ->
     $('#login_form').delay(50).fadeIn()
   
-  start_connection : =>
+  start_connection : (jid, password )=>
     # pretend we get a connection immediately
+    app.connection_handler.connect jid, password
     app.connection_handler.bind "connected", @sign_in_success
     # TODO: find out which is the correct fail callback and remove it on success
     app.connection_handler.bind "connfail", @sign_in_error
