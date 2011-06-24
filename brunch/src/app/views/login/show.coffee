@@ -22,10 +22,9 @@ class exports.LoginView extends Backbone.View
     $('#login_form').delay(50).fadeIn()
   
   start_connection : =>
-    app.connection_handler = new ConnectionHandler()
-    # pretend we get an connection immediately
-    app.connection_handler.connect "xxx", "xxx"
+    # pretend we get a connection immediately
     app.connection_handler.bind "connected", @sign_in_success
+    # TODO: find out which is the correct fail callback and remove it on success
     app.connection_handler.bind "connfail", @sign_in_error
     app.connection_handler.bind "disconnected", @sign_in_error
   

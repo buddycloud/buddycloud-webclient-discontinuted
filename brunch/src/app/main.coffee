@@ -6,7 +6,6 @@ app.views = {}
 
 MainController = require('controllers/main_controller').MainController
 User = require('models/user').User
-UserMenu = require('views/shared/user_menu').UserMenu
 LoginView = require('views/login/show').LoginView
 HomeView = require('views/home/index').HomeView
 
@@ -25,8 +24,10 @@ $(document).ready ->
     # current user
     app.current_user = new User()
     
+    # add a new Connection Handler
+    app.connection_handler = new ConnectionHandler()
+    
     # initialize the user menu
-    #user_menu = new UserMenu()
     login = new LoginView()
     
     ### the password hack ###
