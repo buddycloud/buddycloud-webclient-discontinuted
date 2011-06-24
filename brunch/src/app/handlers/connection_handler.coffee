@@ -49,15 +49,16 @@ class exports.ConnectionHandler
 
     else if status == Strophe.Status.CONNECTED
       @connected = true
-      @after_connected()
+      @announce_presence()
       @trigger 'connected'
   
-  after_connected : =>
+  announce_presence : =>
     @connector.announcePresence @user
-    
-    @connector.getUserSubscriptions @user, ->
-      app.debug "gus_succ", arguments
-    , ->
+  
+  get_user_subscriptions : =>
+    @connector.getUserSubscriptions @user, (subscriptions) =>
+      @trigger 'on_user_subscriptions_sync', subscriptions
+    , =>
       app.debug "gus_error", arguments
     
     

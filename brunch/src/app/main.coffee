@@ -5,7 +5,11 @@ app.collections = {}
 app.views = {}
 
 MainController = require('controllers/main_controller').MainController
+ConnectionHandler = require('handlers/connection_handler').ConnectionHandler
+# models
 User = require('models/user').User
+# collections
+UserSubscriptions = require('collections/user_subscriptions').UserSubscriptions
 LoginView = require('views/login/show').LoginView
 HomeView = require('views/home/index').HomeView
 
@@ -20,7 +24,6 @@ $(document).ready ->
     console.log "STROPHE:", level, msg if app.debug_mode and level > 0
 
   app.initialize = ->
-  
     # current user
     app.current_user = new User()
     
@@ -49,6 +52,15 @@ $(document).ready ->
       # prefilled password detected, sign in the user automatically
       $('#login_form').trigger "submit"
   
-  app.controllers.main = new MainController()
+  
   app.initialize()
-  Backbone.history.start()
+  
+  # add the collections
+  app.collections.user_subscriptions = new UserSubscriptions()
+  app.collections.user_subscriptions.fetch()
+  
+  # bootstrapping after login
+  app.connection_handler.bind "connected", ->
+    app.controllers.main = new MainController()
+    
+    Backbone.history.start()

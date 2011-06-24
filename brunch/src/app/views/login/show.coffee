@@ -1,5 +1,3 @@
-ConnectionHandler = require('handlers/connection_handler').ConnectionHandler
-
 class exports.LoginView extends Backbone.View
   template : require 'templates/login/show'
   
