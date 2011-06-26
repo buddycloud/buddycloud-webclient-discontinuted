@@ -1,0 +1,5 @@
+<div class="channel selected">
+  <div class="avatar glowy" title="<%= @node %>" style="background-image: url(/public/avatars/channel.jpg)">
+    <span class="counter">2</span>
+  </div>
+</div>

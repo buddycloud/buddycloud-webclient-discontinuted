@@ -63,9 +63,9 @@ class exports.Connector
       (response) =>
         channels = for subscription in $(response).find('subscription')
           {
-            jid : $(subscription).attr('jid') + "@#{@domain()}"
-            description : $(subscription).attr('description')
+            jid : "#{$(subscription).attr('jid')}@#{@domain()}"
             node : $(subscription).attr('node')
+            affiliation : $(subscription).attr('affiliation')
           }
         if succ?
           succ(channels)
@@ -77,7 +77,7 @@ class exports.Connector
   # Get metadata, calls succ with a hash of metadata
   getMetadata: (channel, succ, err)->
     request = $iq( { "to" : @pubsubJid(), "type" : "get" })
-      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.getNode() })
+      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.get('node') })
 
     @connection.sendIQ(
       request,
