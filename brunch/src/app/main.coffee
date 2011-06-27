@@ -3,14 +3,16 @@ app.controllers = {}
 app.models = {}
 app.collections = {}
 app.views = {}
-app.handlers = {} 
+app.handlers = {}
 
-MainController = require('controllers/main_controller').MainController
-ConnectionHandler = require('handlers/connection_handler').ConnectionHandler
+{ MainController } = require('controllers/main_controller')
+{ ConnectionHandler } = require('handlers/connection_handler')
 # models
-User = require('models/user').User
-LoginView = require('views/login/show').LoginView
-HomeView = require('views/home/index').HomeView
+{ User } = require('models/user')
+# views
+{ RegisterView } = require('views/register/show')
+{ LoginView } = require('views/login/show')
+{ HomeView } = require('views/home/index')
 
 # app bootstrapping on document ready
 $(document).ready ->
@@ -25,17 +27,22 @@ $(document).ready ->
   app.initialize = ->
     # current user
     app.current_user = new User()
-    
+
     # add a new Connection Handler
     app.connection_handler = new ConnectionHandler()
-    
+
     # initialize the user menu
-    login = new LoginView()
-    
+    # TODO
+
+    # initialize start view
+    start_view = null
+    start_view = new RegisterView() if window.location.hash is '#register'
+    start_view or= new LoginView()
+
     ### the password hack ###
     ###
     Normally a webserver would return user information for a current session. But there is no such thing in buddycloud.
-    To achieve an auto-login we do a little trick here. Once a user has signed in, his browser asks him to store 
+    To achieve an auto-login we do a little trick here. Once a user has signed in, his browser asks him to store
     the password for him. If the user accepts that, the login form will get filled automatically the next time he signs in.
     So when something is typed into the form on document ready we know that it must be the stored password and can just submit the form.
     ###
@@ -47,13 +54,13 @@ $(document).ready ->
     else
       # prefilled password detected, sign in the user automatically
       $('#login_form').trigger "submit"
-    login.show()
-  
-  
+    start_view.show()
+
+
   app.initialize()
-  
+
   # bootstrapping after login
   app.connection_handler.bind "connected", ->
     app.controllers.main = new MainController()
-    
+
     Backbone.history.start()

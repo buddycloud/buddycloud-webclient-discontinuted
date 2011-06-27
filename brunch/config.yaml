@@ -5,3 +5,4 @@ dependencies:
   - backbone-master.js
   - backbone-localstorage.js
   - strophe.js
+  - strophe.register.js
