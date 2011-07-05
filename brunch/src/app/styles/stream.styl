@@ -5,83 +5,98 @@
     border-right 0 1px black
     position relative
 
-    #channels 
-      position fixed
-      > .personal.channel
-        border-bottom 1px solid rgba(255, 255, 255, 0.89)
-        box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
-        .avatar
-          margin 13px
-        + .channel .avatar
-          margin-top 13px
-      > .channel
-        margin 0
-        position relative
-        overflow hidden
-        cursor pointer
-        .avatar
-          position relative
-          transition(125ms)
-        .channelmessage.counter, .personalmessage.counter
-          right -5px
-          width 18px
-          height 17px
-          color white
-          text-align center
-          line-height 18px
-          text-shadow 0 -1px rgba(0,0,0,.21)
-          linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
-          border-radius 100%
-          box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black
-          position absolute
-          &.admin
-            background-color admin_highlight
-        .channelmessage.counter
-            bottom -5px
-            background-color default_highlight
-        .personalmessage.counter
-            top -5px
-            background-color personal_color
-        .avatar
-          height 50px
-          width 50px
-          margin 7px 13px
-          border-radius 3px
-          &.glowy
-            box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
-        &:hover .avatar.glowy
-          box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px rgba(255,255,255,.55), 0 0 0 4px rgba(255,255,255,.89)
-      .selected .avatar.glowy
-        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
-  #more_channels
-    width 74px
-    position fixed
-    bottom 0
-    left 1px
-    color white
-    line-height 27px
-    text-align center
-    text-shadow 0 1px black
-    cursor pointer
-    border-top 1px solid black
-    background rgba(0,0,0,.89)
-    box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
-  #active_channel_indicator
-    top 108px
-    right 0
-    width 10px
-    height 12px
+#channels 
+  position fixed
+  > .personal.channel
+    height 76px
+    border-bottom 1px solid rgba(255, 255, 255, 0.89)
+    box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
+    .avatar
+      margin 13px
+    + .channel
+      padding-top 6px
+  &.makePlace > .personal.channel
+    margin-bottom 64px
+  &.makePlace > .channel.bubbleUp + .channel
+    margin-top -64px
+  &.curtainsDown > .personal.channel
+    transition none
+  &.curtainsDown > .channel
+    transition none
+  > .channel
+    height 64px
+    margin 0
+    position relative
     overflow hidden
-    position absolute
-    > div
-      top -1px
-      left 7px
-      width 14px
-      height 14px
-      background #eee
-      transform rotate(45deg)
-      transform-origin center center
+    cursor pointer
+    transition 500ms
+    transform-origin top
+    &.bubbleUp
+      z-index 1
+    .avatar
+      position relative
+      transition 125ms
+    .channelmessage.counter, .personalmessage.counter
+      right -5px
+      width 18px
+      height 17px
+      color white
+      text-align center
+      line-height 18px
+      text-shadow 0 -1px rgba(0,0,0,.21)
+      linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
+      border-radius 9px
+      box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black
       position absolute
+      &.admin
+        background-color admin_highlight
+    .channelmessage.counter
+        bottom -5px
+        background-color default_highlight
+    .personalmessage.counter
+        top -5px
+        background-color personal_color
+    .avatar
+      height 50px
+      width 50px
+      margin 7px 13px
+      border-radius 3px
+      &.glowy
+        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
+    &:hover .avatar.glowy123
+      box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px rgba(255,255,255,.55), 0 0 0 4px rgba(255,255,255,.89)
+  .selected .avatar.glowy
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
+#more_channels
+  width 74px
+  position fixed
+  bottom 0
+  left 1px
+  color white
+  line-height 27px
+  text-align center
+  text-shadow 0 1px black
+  cursor pointer
+  border-top 1px solid black
+  background rgba(0,0,0,.89)
+  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
+  z-index 10
+#active_channel_indicator
+  top 108px
+  right 0
+  width 10px
+  height 12px
+  overflow hidden
+  position absolute
+  > div
+    top -1px
+    left 7px
+    width 14px
+    height 14px
+    background #eee
+    transform rotate(45deg)
+    transform-origin center center
+    position absolute
       
 
 #content
