@@ -229,4 +229,60 @@
     
     </div><!-- /detail -->
   </div><!-- /content -->
+<script type="text/javascript">
+  var channels = $('#channels');
+  var channel = channels.find('.channel');
+  var personal_channel = channels.find('.personal.channel');
+  var canidate;
+  var transEndEventNames = {
+    '-webkit-transition' : 'webkitTransitionEnd',
+    '-moz-transition' : 'transitionend',
+    '-o-transition' : 'oTransitionEnd',
+    'transition' : 'transitionEnd'
+  };
+  var prefix = getBrowserPrefix();
+  var transitionendEvent = transEndEventNames[prefix+'transition'];
+  
+  function getBrowserPrefix(){
+      var regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/;
+      var tester = document.getElementsByTagName('script')[0];
+      var prefix = "";
+      for(var prop in tester.style) {
+          if(regex.test(prop)) {
+              prefix = prop.match(regex)[0];
+              break;
+          }
+      }
+      if('WebkitOpacity' in tester.style) prefix = 'Webkit';
+      return prefix === "" ? "" : '-' + prefix.charAt(0).toLowerCase() + prefix.slice(1) +'-';
+  }
+  console.log(prefix, transitionendEvent);
+  
+  function bubble(){
+    var offset = $(this).offset().top;
+    var distance = -offset+20;
+    canidate = $(this);
+    // enable transitions
+    channels.removeClass('curtainsDown');
+    // undock => sets z-index 
+    canidate.addClass('bubbleUp');
+    // bind the transitionend to the reset function which resets the DOM after the animation
+    canidate.one(transitionendEvent, reset);
+    // enable transitions again and start to move the channels above the moved channel to close the gap
+    channels.addClass('makePlace');
+    // animate the channel to bubble up
+    canidate.css(prefix+'transform', "translateY("+distance+"px)");
+  }
+  
+  function reset(event){
+    // disable transitions
+    channels.addClass('curtainsDown');
+    // extract the bubbling channel from the DOM, remove the classes, reset the transformation and add it at the top
+    canidate.detach().removeClass('undock bubbleUp').css(prefix+'transform', "").insertAfter(personal_channel);
+    // move the channels back in place
+    channels.removeClass('makePlace');
+  }
+  
+  channel.bind('click', bubble);
+</script>
 </body>
