@@ -19,6 +19,12 @@ border-top-radius()
 border-bottom-radius() 
   vendor('border-bottom-left-radius', arguments)
   vendor('border-bottom-right-radius', arguments)
+  
+border-bottom-left-radius()
+  vendor('border-bottom-left-radius', arguments)
+  
+border-bottom-right-radius()
+  vendor('border-bottom-right-radius', arguments)
 
 linear-bg-gradient(from, to)
   background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
@@ -45,8 +51,11 @@ box(orient, pack, align)
   vendor('box-align', align)
   vendor('box-lines', multiple)
 
-box_flex()
+box-flex()
   vendor('box-flex', arguments)
+  
+box-sizing()
+  vendor('box-sizing', arguments)
 
 text-fill-color()
   vendor('text-fill-color', arguments)
