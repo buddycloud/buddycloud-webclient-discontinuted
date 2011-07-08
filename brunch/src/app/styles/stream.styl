@@ -29,7 +29,7 @@
     position relative
     overflow hidden
     cursor pointer
-    transition 500ms
+    transition 480ms
     transform-origin top
     &.bubbleUp
       z-index 1
@@ -46,7 +46,7 @@
       text-shadow 0 -1px rgba(0,0,0,.21)
       linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
       border-radius 9px
-      box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black
+      box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black, 0 1px rgba(255,255,255,.55) inset
       position absolute
       &.admin
         background-color admin_highlight
@@ -100,32 +100,108 @@
       
 
 #content
-  background rgba(255,255,255,.21)
   color rgba(0,0,0,.89)
-  box_flex 1
+  box-flex 1
   
-#stream 
+.channelView 
   width 500px
   padding 13px
-  border-right 1px solid rgba(0,0,0,.21)
   header
     position relative
-    padding 0 8px
-    .follow
-      right 0
-      top 5px
-      position absolute
+    padding-left 8px
+    overflow hidden
+    h2
+      float left
+    nav
+      margin-top 6px
+      float right
+      > div
+        margin-left 5px
+        float left
     + .topic
       border-radius 3px 3px 0 0
-  .topic
+    .loggedIn
+      .follow, .newTopic
+        display none
+  .stream
+    overflow hidden
+    border-radius 5px
+    
+.stream
+  -webkit-transform-style: preserve-3d;
+  -webkit-perspective: 1000;
+  article
     padding 13px
-    box-shadow inset 0 -1px rgba(0,0,0,.21)
     background white
     position relative
+    border-right 1px solid rgba(0,0,0,.13)
+    border-left 1px solid rgba(0,0,0,.13)
+    box-shadow inset 0 -1px rgba(0,0,0,.21)
+    overflow hidden
     &:last-child
       border-radius 0 0 3px 3px
-  &.important .topic
-    border-left 5px solid rgba(0,255,0,.34)
+  .notification
+    height 50px
+    margin-top -76px
+    color white
+    background-color rgba(0, 0, 0, 0.89)
+    linear-bg-gradient transparent, rgba(0,0,0,.13)
+    border-left-color black
+    border-right-color black
+    transition 500ms 
+    transform-origin bottom
+    transform rotateX(70deg)
+    opacity 0
+    &.visible
+      opacity 1
+      margin-top 0
+      transform rotateX(0deg)
+    .name
+      vertical-align top
+      transition 500ms
+    .controls
+      right 13px
+      top 30px
+      position absolute
+    img
+      width 50px
+      transition 500ms
+    &.log
+      height 25px
+      padding-top 5px
+      padding-bottom 5px
+      color rgba(0, 0, 0, 0.55)
+      background-color rgba(255, 255, 255, 0.95)
+      border-left-color rgba(0,0,0,.13)
+      border-right-color rgba(0,0,0,.13)
+      box-shadow 0 -1px rgba(0, 0, 0, 0.08) inset
+      section
+        line-height 25px
+        min-height 25px
+      img
+        left 38px
+        width 25px
+      p
+        display none
+      .name
+        opacity 0
+      &.granted .name,
+      &.denied .name
+        opacity 1
+      .controls 
+        display none
+      &.granted .granted,
+      &.denied .denied
+        max-width 9999px
+        opacity 1
+    .granted, .denied
+      height 25px
+      max-width 0
+      line-height 25px
+      overflow hidden
+      opacity 0
+      display inline-block
+      transition 500ms
   section
     padding-left 63px
   section section
@@ -133,49 +209,123 @@
     padding-left 40px
   .opener
     min-height 50px
+  .location
+    margin-left 5px
+    font-size 11px
+    line-height 19.5px
+    color rgba(0,0,0,.34)
+  .postmeta
+    float right
+    margin 0 0 0 13px
+    text-align right
+    nav
+      visibility hidden
+    span
+      color rgba(0,0,0,.5)
+      font-size 11.5px
+      line-height 19.5px
+      &.time
+        display block
+        color rgba(0,0,0,.34)
   .name
     font-weight bold
-  nav, .time 
-    float right
-  nav
-    display none
-    margin-top -3px
-  nav span 
-    color rgba(0,0,0,.5)
-    font-size 11px
-    padding-left 3px
-    cursor pointer
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
   .opener:hover nav, .comment:hover nav
-    display block
-  .time, .service
-    padding-left 5px
-    color rgba(0,0,0,.34)
-    font-size 0.9em
-  .opener:hover .time, .comment:hover .time
-    display none
+    visibility visible
   img
     left 13px
     position absolute
     border-radius 3px
   section.answer
     margin-top 5px
-    padding 5px 8px 8px 36px
     position relative
     overflow hidden
     textarea
-      width 100%
+      width 361px
+      padding 1px 3px
       margin-bottom 5px
       font 12px/18px sans-serif
       border 1px solid rgba(0,0,0,.21)
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
-    button
+    .button
+      margin-bottom 1px
       float right
   section section img 
       top 6px
       left 5px
       width 25px
       border-radius 2px
+  section.newTopic
+    padding 13px 13px 12px 51px
+    linear-bg-gradient white, #F2F2F2
+    border 1px solid rgba(0,0,0,.13)
+    border-radius 5px 5px 0 0
+    overflow hidden
+    position relative
+    z-index 1
+    img
+      left 38px
+      top 16px
+      width 25px
+      position absolute
+      z-index 2
+      transition 250ms
+    &.write img
+      left 13px
+      top 13px
+      width 50px
+    textarea
+      width 397px // 422 in big
+      height 19px
+      padding 5px
+      margin 0
+      border 1px solid rgba(0, 0, 0, 0.13)
+      font 13px/19.5px sans-serif
+      display block
+      float right
+      position relative
+      z-index 2
+      transition 250ms
+    &.write textarea
+      height 89px
+      margin-bottom 29px
+    .controls
+      bottom 13px
+      right 13px
+      font-size 11px
+      position absolute
+      .button
+        display inline-block
+  
 
 .comments
   .comment
     position relative
+    .location
+      display none
+
+.moderationPanel
+  display none
+.moderate .moderationPanel
+  height 28px
+  width 100%
+  margin 5px 0 13px
+  linear-bg-gradient rgba(0,0,0,.08), rgba(0,0,0,.21)
+  color black
+  box-shadow 0 1px 2px rgba(0,0,0,.4) inset, 0 -1px rgba(0,0,0,.03),0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03)
+  border-radius 0 0 5px 5px
+  box horizontal justify center
+  > div
+    padding 5px 0
+    text-align center
+    cursor pointer
+    box-flex 1
+    transition 500ms
+    &:first-child
+      border-bottom-left-radius 5px
+    &:last-child
+      border-bottom-right-radius 5px
+    &:hover
+      linear-bg-gradient rgba(0,0,0,.05), rgba(0,0,0,.13)
