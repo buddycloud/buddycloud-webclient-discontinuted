@@ -1,18 +1,21 @@
+body
+  height 100%
+  overflow-x hidden
+
 #sidebar
-    width 76px
-    color white
-    background rgba(0,0,0,.89)
-    border-right 0 1px black
-    position relative
+  color white
 
 #channels 
+  width 76px
+  height 100%
+  background url(/public/images/smooth-aura.jpg)
+  border-right 0 1px black
   position fixed
-  > .personal.channel
+  transition width 500ms
+  .personal.channel
     height 76px
     border-bottom 1px solid rgba(255, 255, 255, 0.89)
     box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
-    .avatar
-      margin 13px
     + .channel
       padding-top 6px
   &.makePlace > .personal.channel
@@ -23,19 +26,30 @@
     transition none
   &.curtainsDown > .channel
     transition none
-  > .channel
+  .channel
+    width 76px
     height 64px
-    margin 0
     position relative
     overflow hidden
-    cursor pointer
-    transition 480ms
+    transition 500ms
     transform-origin top
+    float left
     &.bubbleUp
       z-index 1
-    .avatar
-      position relative
-      transition 125ms
+    .name  
+      width 100%
+      top 50%
+      left 50%
+      margin 11px 0 0 -50%
+      font-size 11px
+      text-align center
+      color rgba(255, 255, 255, 0.5)
+      text-shadow 0 0 5px rgba(0,0,0,.5)
+      position absolute
+      opacity 0
+      transition 500ms
+      .domain
+        display none
     .channelmessage.counter, .personalmessage.counter
       right -5px
       width 18px
@@ -59,14 +73,39 @@
     .avatar
       height 50px
       width 50px
-      margin 7px 13px
+      top 50%
+      left 50%
+      margin -25px 0 0 -25px
       border-radius 3px
+      position absolute
+      transition 500ms
+      cursor pointer
+      z-index 1
       &.glowy
-        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
-    &:hover .avatar.glowy123
-      box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px rgba(255,255,255,.55), 0 0 0 4px rgba(255,255,255,.89)
+        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
   .selected .avatar.glowy
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
+
+.channelOverview #channels
+  width 100%
+  .personal.channel
+    border-bottom none
+    box-shadow none
+    + .channel
+      padding-top 0
+  .channel
+    height 160px
+    width 12.5%
+    .name
+      margin-top 30px
+      opacity 1
+      transition 500ms
+      transition-delay 500ms
+  #active_channel_indicator
+    display none
+.channelOverview.stateArrived #channels
+  overflow-y scroll
+
 #more_channels
   width 74px
   position fixed
@@ -81,13 +120,16 @@
   background rgba(0,0,0,.89)
   box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
   z-index 10
+  .channelOverview #more_channels
+    border-top-right-radius 5px
 #active_channel_indicator
-  top 108px
+  top 25px
   right 0
   width 10px
   height 12px
   overflow hidden
   position absolute
+  transition 50
   > div
     top -1px
     left 7px
@@ -97,12 +139,29 @@
     transform rotate(45deg)
     transform-origin center center
     position absolute
-      
+.personal.channel + .channel #active_channel_indicator
+    top 31px
+.channelOverview #active_channel_indicator, .inTransition #active_channel_indicator
+  right -10px
+  
 
 #content
+  width 100%
   color rgba(0,0,0,.89)
-  box-flex 1
-  
+  overflow hidden
+  transition margin-left 500ms
+  .holder
+    margin-left 76px
+    background #eee
+    position relative
+    transition 500ms
+.channelOverview #content
+  margin-left 100%
+  .holder
+    margin-left 0
+.channelOverview.stateArrived #content
+  height 400px // variable height
+
 .channelView 
   width 500px
   padding 13px
@@ -156,6 +215,8 @@
       opacity 1
       margin-top 0
       transform rotateX(0deg)
+    section
+      padding-left 63px
     .name
       vertical-align top
       transition 500ms
@@ -192,6 +253,7 @@
         display none
       &.granted .granted,
       &.denied .denied
+        display inline-block
         max-width 9999px
         opacity 1
     .granted, .denied
@@ -200,15 +262,11 @@
       line-height 25px
       overflow hidden
       opacity 0
-      display inline-block
+      display none
       transition 500ms
-  section
-    padding-left 63px
-  section section
-    padding-top 5px
-    padding-left 40px
   .opener
     min-height 50px
+    padding-left 63px
   .location
     margin-left 5px
     font-size 11px
@@ -252,10 +310,15 @@
     .button
       margin-bottom 1px
       float right
-  section section img 
+  .comments
+    padding-left 13px
+    section
+      padding-top 5px
+      padding-left 63px 
+    img
       top 6px
-      left 5px
-      width 25px
+      left 11px
+      width 40px
       border-radius 2px
   section.newTopic
     padding 13px 13px 12px 51px
