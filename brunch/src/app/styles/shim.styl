@@ -19,7 +19,10 @@ border-top-radius()
 border-bottom-radius() 
   vendor('border-bottom-left-radius', arguments)
   vendor('border-bottom-right-radius', arguments)
-  
+
+border-top-right-radius()
+  vendor('border-top-right-radius', arguments)
+
 border-bottom-left-radius()
   vendor('border-bottom-left-radius', arguments)
   
@@ -68,18 +71,6 @@ transform-origin()
 
 transition()
   vendor('transition', arguments)
-
-transform()
-  vendor('transform', arguments)
   
-.clearfix {
-  display: inline-block;
-}
-
-html[xmlns] .clearfix {
-  display: block;
-}
-
-* html .clearfix {
-  height: 1%;
-}
+transition-delay()
+  vendor('transition-delay', arguments)
