@@ -7,6 +7,9 @@ class exports.User extends Backbone.Model
   
   initialize : ->
     
+  getNode: ->
+    "/user/#{@get('jid')}/channel"  
+  
   log_in : ->
     setTimeout =>
       @trigger "logged_in"

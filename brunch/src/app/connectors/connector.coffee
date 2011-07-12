@@ -2,15 +2,15 @@ class exports.Connector
   constructor: (@connection) ->
 
   # Only buddycloud afaik
-  domain: ->
+  domain: =>
     "buddycloud.com"
 
   # The broadcaster
-  pubsubService: ->
+  pubsubService: =>
     "broadcaster.#{@domain()}"
 
   # The pubsub bridge jid
-  pubsubJid: ->
+  pubsubJid: =>
     "pubsub-bridge@#{@pubsubService()}"
 
   # Add a user to your roster
@@ -50,7 +50,7 @@ class exports.Connector
     )
 
   # Get the subscriptions for a user, calls succ with an array of hashes of channels
-  getUserSubscriptions: (user, succ, err) ->
+  getUserSubscriptions: (user, succ, err) =>
     node = user.getNode()
 
     request = $iq({"to" : @pubsubJid(), "type":"get"})
@@ -60,11 +60,12 @@ class exports.Connector
     # Request..
     @connection.sendIQ(
       request
-      (response) ->
+      (response) =>
         channels = for subscription in $(response).find('subscription')
           {
-            jid : $(subscription).attr('jid') + "@#{@domain()}"
-            description : $(subscription).attr('description')
+            jid : "#{$(subscription).attr('jid')}@#{@domain()}"
+            node : $(subscription).attr('node')
+            affiliation : $(subscription).attr('affiliation')
           }
         if succ?
           succ(channels)
@@ -76,7 +77,7 @@ class exports.Connector
   # Get metadata, calls succ with a hash of metadata
   getMetadata: (channel, succ, err)->
     request = $iq( { "to" : @pubsubJid(), "type" : "get" })
-      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.getNode() })
+      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.get('node') })
 
     @connection.sendIQ(
       request,
@@ -116,15 +117,9 @@ class exports.Connector
     maxMessageId = "1292405757510"
 
     # Todo - find out which one of these works and delete the rest
-    request = $pres( { "to" : @pubsubJid() } )
-      .c("set", {"xmlns":"http://jabber.org/protocol/rsm"})
-      .c("after").t(maxMessageId)
-    @connection.send request
+
     @connection.send($pres().c('status').t('buddycloud channels'))
-    @connection.send($pres().tree())
-    @connection.send($pres( { "to" : @pubsubJid(), "from" : user.get('jid') } ).tree())
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid() } ).tree())
-    @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid(), "from" : user.get('jid') } ).tree())
     
   onIq : (stanza) ->
     posts = for item in $(stanza).find('item')
