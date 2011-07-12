@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/brunch/build/web/css/main.css" type="text/css" media="screen">
-  <script src="/brunch/build/web/js/app.js"></script>
+  <link rel="stylesheet" href="/web/css/main.css" type="text/css" media="screen">
+  <script src="/web/js/app.js"></script>
   <script>require('main');</script>
 </head>
 <body>
@@ -779,15 +779,15 @@
         </section><!-- /stream -->
       </div><!-- /channelView -->
       <div id="detailView">
-      
+
       </div><!-- /detail -->
     </div><!-- /holder -->
   </div><!-- /content -->
 <script type="text/javascript">
   /* ###
-  
+
     Channel bubbling
-  
+
     ### */
   var channels = $('#channels');
   var channel = channels.find('.channel');
@@ -801,7 +801,7 @@
   };
   var prefix = getBrowserPrefix();
   var transitionendEvent = transEndEventNames[prefix+'transition'];
-  
+
   function getBrowserPrefix(){
       var regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/;
       var tester = document.getElementsByTagName('script')[0];
@@ -815,7 +815,7 @@
       if('WebkitOpacity' in tester.style) prefix = 'Webkit';
       return prefix === "" ? "" : '-' + prefix.charAt(0).toLowerCase() + prefix.slice(1) +'-';
   }
-  
+
   function bubble(){
     var offset = $(this).position().top;
     if(offset === 0) return false; // the channel has an offset of 0 - it should stay where it is. so stop
@@ -823,7 +823,7 @@
     canidate = $(this);
     // enable transitions
     channels.removeClass('curtainsDown');
-    // undock => sets z-index 
+    // undock => sets z-index
     canidate.addClass('bubbleUp');
     // bind the transitionend to the reset function which resets the DOM after the animation
     canidate.one(transitionendEvent, reset);
@@ -832,7 +832,7 @@
     // animate the channel to bubble up
     canidate.css(prefix+'transform', "translateY("+distance+"px)");
   }
-  
+
   function reset(event){
     // disable transitions
     channels.addClass('curtainsDown');
@@ -841,21 +841,21 @@
     // move the channels back in place
     channels.removeClass('makePlace');
   }
-  
+
   channel.bind('click', bubble);
-  
+
   /* ###
-    
+
     More Channels
-    
+
     ### */
   var moreChannels = $('#more_channels');
-  
+
   function channelOverview(){
     $('body').addClass('inTransition').toggleClass('channelOverview');
     channels.one(transitionendEvent, transitionEnd);
   }
-  
+
   function transitionEnd(){
     $('body').removeClass('inTransition');
     if($('body').hasClass('channelOverview')){
@@ -864,16 +864,16 @@
       $('body').removeClass('stateArrived');
     }
   }
-  
+
   moreChannels.click(channelOverview);
-  
+
   /* ###
-    
+
     Moderation Panel
-    
+
     ### */
   var comments = $('.comment, .opener');
-  
+
   function moderate(){
     var el = $(this);
     if(!el.data('hasModeratorPanel')){
@@ -882,17 +882,17 @@
     }
     el.toggleClass('moderate');
   }
-  
+
   comments.click(moderate);
-  
+
   /* ###
-    
+
     new topic animation
-    
+
     ### */
   var newTopic = $('.newTopic');
   var topicTextarea = newTopic.find('textarea');
-  
+
   function openArea(event){
     // prevent bubbling!
     event.stopPropagation();
@@ -901,33 +901,33 @@
       $(document).one('click', closeArea);
     }
   }
-  
+
   function closeArea(){
     // minimize the textarea only if the textarea is empty
     if(topicTextarea.val() === ""){
       newTopic.removeClass('write');
     }
   }
-  
+
   newTopic.click(openArea);
-  
+
   /* ###
-    
+
     notification animation
-    
+
     ### */
   var notification = $('.notification');
   var notificationButtons = notification.find('.controls > div');
-  
+
   function notify(){
     notification.addClass('visible');
   }
-  
+
   function logNotifaction(){
     var reaction = $(this).hasClass('positive') ? 'granted' : 'denied';
     notification.addClass('log '+reaction);
   }
-  
+
   notificationButtons.click(logNotifaction);
   setTimeout('notify()', 2000);
 </script>

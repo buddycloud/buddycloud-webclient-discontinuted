@@ -6,5 +6,8 @@ dependencies:
   - backbone-localstorage.js
   - base64.js
   - strophe.js
+  - strophe.disco.js
+  - strophe.roster.js
   - strophe.pubsub.js
   - strophe.register.js
+  - strophe.buddycloud.js
