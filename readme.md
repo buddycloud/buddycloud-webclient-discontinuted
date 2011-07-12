@@ -19,6 +19,8 @@ make sure you have [npm](http://npmjs.org) installed.
     ./build.sh
 
 
+or just download the [tarball](https://github.com/downloads/buddycloud/channel-webclient/buddycloud-webclient-wip0001.tar.gz) and extract it in your webroot.
+
 This repository needs to be in the webroot of your computer. On OS X - you can set up a vhost by editing:
 
     /private/etc/apache2/extra/httpd-vhosts.conf
