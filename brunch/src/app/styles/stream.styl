@@ -1,0 +1,100 @@
+#sidebar
+    width 76px
+    color white
+    background rgba(0,0,0,.89)
+    border-right 0 1px black
+
+    #channels 
+      position fixed
+      > div
+        margin 0
+        position relative
+        cursor pointer
+        > .avatar
+          position relative
+      .counter
+        top -5px
+        right -5px
+        width 18px
+        height 17px
+        color white
+        text-align center
+        line-height 18px
+        text-shadow 0 -1px rgba(0,0,0,.21)
+        background-color default_highlight
+        linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
+        border-radius 100%
+        box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black
+        position absolute
+        &.admin
+          background-color admin_highlight
+      .avatar
+        height 50px
+        width 50px
+        margin 13px 13px 5px
+        border-radius 3px
+        &.glowy
+          box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.55)
+      .selected .avatar.glowy
+        box-shadow 0 1px 0 1px rgba(0,0,0,0.55), inset 0 1px rgba(255,255,255,.55), 0 1px 0 4px transparent_select_color
+
+#content
+  background rgba(255,255,255,.21)
+  color rgba(0,0,0,.89)
+  box-flex 1
+  
+  #stream 
+    width 500px
+    border-right 1px solid rgba(0,0,0,.21)
+    article 
+      min-height 50px
+      padding 13px
+      box-shadow inset 0 -1px rgba(0,0,0,.21)
+      background white
+      position relative
+    &.important article
+      border-left 5px solid rgba(0,255,0,.34)
+    section
+      padding-left 63px
+    .name
+      font-weight bold
+    nav, .time 
+      float right
+    nav
+      display none
+      margin-top -3px
+    nav span 
+      color rgba(0,0,0,.5)
+      font-size 11px
+      padding-left 3px
+      cursor pointer
+    article:hover nav
+      display block
+    .time, .service
+      padding-left 5px
+      color rgba(0,0,0,.34)
+      font-size 0.9em
+    article:hover .time
+      display none
+    img
+      left 13px
+      position absolute
+      border-radius 3px
+    section.answer
+      margin-top 5px
+      padding 5px 8px 8px 36px
+      position relative
+      overflow hidden
+      textarea
+        width 100%
+        margin-bottom 5px
+        font 12px/18px sans-serif
+        border 1px solid rgba(0,0,0,.21)
+        box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
+      button
+        float right
+      img 
+        top 6px
+        left 5px
+        width 25px
+        border-radius 2px

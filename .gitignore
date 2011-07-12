@@ -1,0 +1,8 @@
+*swp
+.tmproj
+.DS_Store
+.DS_Store
+public/.DS_Store
+brunch/build/web/css/main.css
+brunch/build/web/js/app.js
+node_modules/*

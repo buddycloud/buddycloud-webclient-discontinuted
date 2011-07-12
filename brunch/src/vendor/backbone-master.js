@@ -939,7 +939,6 @@
       } else if (_.isString(this.el)) {
         this.el = $(this.el).get(0);
       }
-      this.el = $(this.el);
     }
 
   });

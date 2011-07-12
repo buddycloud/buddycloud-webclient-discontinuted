@@ -13,12 +13,21 @@ javascripts:
   - 'app/controllers/*.coffee'
   - 'app/views/**/*.coffee'
   - 'app/models/post.coffee'
+  - 'app/models/user.coffee'
   - 'app/models/*.coffee'
+  - 'app/connectors/*.coffee'
 
 stylesheets:
-  - 'public/stylesheets/*.css'
-  - 'public/stylesheets/*.less'
+  - 'public/stylesheets/application.less'
   
 specs:
   - 'lib/coffeescript.js'
   - 'spec/*/*.coffee'
+  - 'spec/views/*/*.coffee'
+
+fixtures:
+  - 'spec/fixtures/*/*.xml'
+
+templates:
+  - 'app/templates/**/*.eco'
+  

@@ -1,0 +1,70 @@
+// MIXINS
+
+vendor(prop, args)
+  -webkit-{prop} args
+  -moz-{prop} args
+  -o-{prop} args
+  {prop} args
+
+animation()
+  vendor('animation', arguments)
+
+border-radius()
+  vendor('border-radius', arguments)
+
+border-top-radius() 
+  vendor('border-top-left-radius', arguments)
+  vendor('border-top-right-radius', arguments)
+
+border-bottom-radius() 
+  vendor('border-bottom-left-radius', arguments)
+  vendor('border-bottom-right-radius', arguments)
+
+linear-bg-gradient(from, to)
+  background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
+  background-image -webkit-linear-gradient(top, from, to)
+  background-image -moz-linear-gradient(top, from, to)
+  background-image -o-linear-gradient(top, from, to)
+  background-image -ms-linear-gradient(top, from, to)
+  background-image linear-gradient(top, from, to)
+  
+background-clip()
+  vendor('background-clip', arguments)
+
+box-shadow() 
+  -moz-box-shadow arguments
+  -webkit-box-shadow arguments
+  box-shadow arguments
+
+box(orient, pack, align) 
+  display -webkit-box
+  display -moz-box
+  display box
+  vendor('box-orient', orient)
+  vendor('box-pack', pack)
+  vendor('box-align', align)
+  vendor('box-lines', multiple)
+
+box_flex()
+  vendor('box-flex', arguments)
+
+text-fill-color()
+  vendor('text-fill-color', arguments)
+
+transition()
+  vendor('transition', arguments)
+
+transform()
+  vendor('transform', arguments)
+  
+.clearfix {
+  display: inline-block;
+}
+
+html[xmlns] .clearfix {
+  display: block;
+}
+
+* html .clearfix {
+  height: 1%;
+}
