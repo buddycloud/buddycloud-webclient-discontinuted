@@ -20,6 +20,15 @@ border-bottom-radius()
   vendor('border-bottom-left-radius', arguments)
   vendor('border-bottom-right-radius', arguments)
 
+border-top-right-radius()
+  vendor('border-top-right-radius', arguments)
+
+border-bottom-left-radius()
+  vendor('border-bottom-left-radius', arguments)
+  
+border-bottom-right-radius()
+  vendor('border-bottom-right-radius', arguments)
+
 linear-bg-gradient(from, to)
   background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
   background-image -webkit-linear-gradient(top, from, to)
@@ -45,26 +54,23 @@ box(orient, pack, align)
   vendor('box-align', align)
   vendor('box-lines', multiple)
 
-box_flex()
+box-flex()
   vendor('box-flex', arguments)
+  
+box-sizing()
+  vendor('box-sizing', arguments)
 
 text-fill-color()
   vendor('text-fill-color', arguments)
-
-transition()
-  vendor('transition', arguments)
-
+  
 transform()
   vendor('transform', arguments)
   
-.clearfix {
-  display: inline-block;
-}
+transform-origin()
+  vendor('transform-origin', arguments)
 
-html[xmlns] .clearfix {
-  display: block;
-}
-
-* html .clearfix {
-  height: 1%;
-}
+transition()
+  vendor('transition', arguments)
+  
+transition-delay()
+  vendor('transition-delay', arguments)

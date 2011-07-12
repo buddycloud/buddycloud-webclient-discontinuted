@@ -1,100 +1,394 @@
-#sidebar
-    width 76px
-    color white
-    background rgba(0,0,0,.89)
-    border-right 0 1px black
+body
+  height 100%
+  overflow-x hidden
 
-    #channels 
-      position fixed
-      > div
-        margin 0
-        position relative
-        cursor pointer
-        > .avatar
-          position relative
-      .counter
-        top -5px
-        right -5px
-        width 18px
-        height 17px
-        color white
-        text-align center
-        line-height 18px
-        text-shadow 0 -1px rgba(0,0,0,.21)
+#sidebar
+  color white
+
+#channels 
+  width 76px
+  height 100%
+  background url(/public/images/smooth-aura.jpg)
+  border-right 0 1px black
+  position fixed
+  transition width 500ms
+  .personal.channel
+    height 76px
+    border-bottom 1px solid rgba(255, 255, 255, 0.89)
+    box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
+    + .channel
+      padding-top 6px
+  &.makePlace > .personal.channel
+    margin-bottom 64px
+  &.makePlace > .channel.bubbleUp + .channel
+    margin-top -64px
+  &.curtainsDown > .personal.channel
+    transition none
+  &.curtainsDown > .channel
+    transition none
+  .channel
+    width 76px
+    height 64px
+    position relative
+    overflow hidden
+    transition 500ms
+    transform-origin top
+    float left
+    &.bubbleUp
+      z-index 1
+    .name  
+      width 100%
+      top 50%
+      left 50%
+      margin 11px 0 0 -50%
+      font-size 11px
+      text-align center
+      color rgba(255, 255, 255, 0.5)
+      text-shadow 0 0 5px rgba(0,0,0,.5)
+      position absolute
+      opacity 0
+      transition 500ms
+      .domain
+        display none
+    .channelmessage.counter, .personalmessage.counter
+      right -5px
+      width 18px
+      height 17px
+      color white
+      text-align center
+      line-height 18px
+      text-shadow 0 -1px rgba(0,0,0,.21)
+      linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
+      border-radius 9px
+      box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black, 0 1px rgba(255,255,255,.55) inset
+      position absolute
+      &.admin
+        background-color admin_highlight
+    .channelmessage.counter
+        bottom -5px
         background-color default_highlight
-        linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
-        border-radius 100%
-        box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black
-        position absolute
-        &.admin
-          background-color admin_highlight
-      .avatar
-        height 50px
-        width 50px
-        margin 13px 13px 5px
-        border-radius 3px
-        &.glowy
-          box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.55)
-      .selected .avatar.glowy
-        box-shadow 0 1px 0 1px rgba(0,0,0,0.55), inset 0 1px rgba(255,255,255,.55), 0 1px 0 4px transparent_select_color
+    .personalmessage.counter
+        top -5px
+        background-color personal_color
+    .avatar
+      height 50px
+      width 50px
+      top 50%
+      left 50%
+      margin -25px 0 0 -25px
+      border-radius 3px
+      position absolute
+      transition 500ms
+      cursor pointer
+      z-index 1
+      &.glowy
+        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
+  .selected .avatar.glowy
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
+
+.channelOverview #channels
+  width 100%
+  .personal.channel
+    border-bottom none
+    box-shadow none
+    + .channel
+      padding-top 0
+  .channel
+    height 160px
+    width 12.5%
+    .name
+      margin-top 30px
+      opacity 1
+      transition 500ms
+      transition-delay 500ms
+  #active_channel_indicator
+    display none
+.channelOverview.stateArrived #channels
+  overflow-y scroll
+
+#more_channels
+  width 74px
+  position fixed
+  bottom 0
+  left 1px
+  color white
+  line-height 27px
+  text-align center
+  text-shadow 0 1px black
+  cursor pointer
+  border-top 1px solid black
+  background rgba(0,0,0,.89)
+  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
+  z-index 10
+  .channelOverview #more_channels
+    border-top-right-radius 5px
+#active_channel_indicator
+  top 25px
+  right 0
+  width 10px
+  height 12px
+  overflow hidden
+  position absolute
+  transition 50
+  > div
+    top -1px
+    left 7px
+    width 14px
+    height 14px
+    background #eee
+    transform rotate(45deg)
+    transform-origin center center
+    position absolute
+.personal.channel + .channel #active_channel_indicator
+    top 31px
+.channelOverview #active_channel_indicator, .inTransition #active_channel_indicator
+  right -10px
+  
 
 #content
-  background rgba(255,255,255,.21)
+  width 100%
   color rgba(0,0,0,.89)
-  box-flex 1
-  
-  #stream 
-    width 500px
-    border-right 1px solid rgba(0,0,0,.21)
-    article 
-      min-height 50px
-      padding 13px
-      box-shadow inset 0 -1px rgba(0,0,0,.21)
-      background white
-      position relative
-    &.important article
-      border-left 5px solid rgba(0,255,0,.34)
+  overflow hidden
+  transition margin-left 500ms
+  .holder
+    margin-left 76px
+    background #eee
+    position relative
+    transition 500ms
+.channelOverview #content
+  margin-left 100%
+  .holder
+    margin-left 0
+.channelOverview.stateArrived #content
+  height 400px // variable height
+
+.channelView 
+  width 500px
+  padding 13px
+  header
+    position relative
+    padding-left 8px
+    overflow hidden
+    h2
+      float left
+    nav
+      margin-top 6px
+      float right
+      > div
+        margin-left 5px
+        float left
+    + .topic
+      border-radius 3px 3px 0 0
+    .loggedIn
+      .follow, .newTopic
+        display none
+  .stream
+    overflow hidden
+    border-radius 5px
+    
+.stream
+  -webkit-transform-style: preserve-3d;
+  -webkit-perspective: 1000;
+  article
+    padding 13px
+    background white
+    position relative
+    border-right 1px solid rgba(0,0,0,.13)
+    border-left 1px solid rgba(0,0,0,.13)
+    box-shadow inset 0 -1px rgba(0,0,0,.21)
+    overflow hidden
+    &:last-child
+      border-radius 0 0 3px 3px
+  .notification
+    height 50px
+    margin-top -76px
+    color white
+    background-color rgba(0, 0, 0, 0.89)
+    linear-bg-gradient transparent, rgba(0,0,0,.13)
+    border-left-color black
+    border-right-color black
+    transition 500ms 
+    transform-origin bottom
+    transform rotateX(70deg)
+    opacity 0
+    &.visible
+      opacity 1
+      margin-top 0
+      transform rotateX(0deg)
     section
       padding-left 63px
     .name
-      font-weight bold
-    nav, .time 
-      float right
-    nav
-      display none
-      margin-top -3px
-    nav span 
-      color rgba(0,0,0,.5)
-      font-size 11px
-      padding-left 3px
-      cursor pointer
-    article:hover nav
-      display block
-    .time, .service
-      padding-left 5px
-      color rgba(0,0,0,.34)
-      font-size 0.9em
-    article:hover .time
-      display none
-    img
-      left 13px
+      vertical-align top
+      transition 500ms
+    .controls
+      right 13px
+      top 30px
       position absolute
-      border-radius 3px
-    section.answer
-      margin-top 5px
-      padding 5px 8px 8px 36px
-      position relative
-      overflow hidden
-      textarea
-        width 100%
-        margin-bottom 5px
-        font 12px/18px sans-serif
-        border 1px solid rgba(0,0,0,.21)
-        box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
-      button
-        float right
-      img 
-        top 6px
-        left 5px
+    img
+      width 50px
+      transition 500ms
+    &.log
+      height 25px
+      padding-top 5px
+      padding-bottom 5px
+      color rgba(0, 0, 0, 0.55)
+      background-color rgba(255, 255, 255, 0.95)
+      border-left-color rgba(0,0,0,.13)
+      border-right-color rgba(0,0,0,.13)
+      box-shadow 0 -1px rgba(0, 0, 0, 0.08) inset
+      section
+        line-height 25px
+        min-height 25px
+      img
+        left 38px
         width 25px
-        border-radius 2px
+      p
+        display none
+      .name
+        opacity 0
+      &.granted .name,
+      &.denied .name
+        opacity 1
+      .controls 
+        display none
+      &.granted .granted,
+      &.denied .denied
+        display inline-block
+        max-width 9999px
+        opacity 1
+    .granted, .denied
+      height 25px
+      max-width 0
+      line-height 25px
+      overflow hidden
+      opacity 0
+      display none
+      transition 500ms
+  .opener
+    min-height 50px
+    padding-left 63px
+  .location
+    margin-left 5px
+    font-size 11px
+    line-height 19.5px
+    color rgba(0,0,0,.34)
+  .postmeta
+    float right
+    margin 0 0 0 13px
+    text-align right
+    nav
+      visibility hidden
+    span
+      color rgba(0,0,0,.5)
+      font-size 11.5px
+      line-height 19.5px
+      &.time
+        display block
+        color rgba(0,0,0,.34)
+  .name
+    font-weight bold
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+  .opener:hover nav, .comment:hover nav
+    visibility visible
+  img
+    left 13px
+    position absolute
+    border-radius 3px
+  section.answer
+    margin-top 5px
+    position relative
+    overflow hidden
+    textarea
+      width 361px
+      padding 1px 3px
+      margin-bottom 5px
+      font 12px/18px sans-serif
+      border 1px solid rgba(0,0,0,.21)
+      box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
+    .button
+      margin-bottom 1px
+      float right
+  .comments
+    padding-left 13px
+    section
+      padding-top 5px
+      padding-left 63px 
+    img
+      top 6px
+      left 11px
+      width 40px
+      border-radius 2px
+  section.newTopic
+    padding 13px 13px 12px 51px
+    linear-bg-gradient white, #F2F2F2
+    border 1px solid rgba(0,0,0,.13)
+    border-radius 5px 5px 0 0
+    overflow hidden
+    position relative
+    z-index 1
+    img
+      left 38px
+      top 16px
+      width 25px
+      position absolute
+      z-index 2
+      transition 250ms
+    &.write img
+      left 13px
+      top 13px
+      width 50px
+    textarea
+      width 397px // 422 in big
+      height 19px
+      padding 5px
+      margin 0
+      border 1px solid rgba(0, 0, 0, 0.13)
+      font 13px/19.5px sans-serif
+      display block
+      float right
+      position relative
+      z-index 2
+      transition 250ms
+    &.write textarea
+      height 89px
+      margin-bottom 29px
+    .controls
+      bottom 13px
+      right 13px
+      font-size 11px
+      position absolute
+      .button
+        display inline-block
+  
+
+.comments
+  .comment
+    position relative
+    .location
+      display none
+
+.moderationPanel
+  display none
+.moderate .moderationPanel
+  height 28px
+  width 100%
+  margin 5px 0 13px
+  linear-bg-gradient rgba(0,0,0,.08), rgba(0,0,0,.21)
+  color black
+  box-shadow 0 1px 2px rgba(0,0,0,.4) inset, 0 -1px rgba(0,0,0,.03),0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03)
+  border-radius 0 0 5px 5px
+  box horizontal justify center
+  > div
+    padding 5px 0
+    text-align center
+    cursor pointer
+    box-flex 1
+    transition 500ms
+    &:first-child
+      border-bottom-left-radius 5px
+    &:last-child
+      border-bottom-right-radius 5px
+    &:hover
+      linear-bg-gradient rgba(0,0,0,.05), rgba(0,0,0,.13)

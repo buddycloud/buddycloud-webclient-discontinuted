@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <title>Buddycloud Streams</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
@@ -19,56 +20,915 @@
   </div>-->
   <div id="sidebar">
     <div id="channels">
-      <div class="channel selected">
-        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel.jpg)">
-          <span class="counter">2</span>
+      <div class="personal channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
         </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
       </div>
       <div class="channel">
         <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
-          <span class="counter admin">1</span>
+          <span class="channelmessage counter admin">1</span>
         </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
       </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user1.jpg)">
+          <span class="channelmessage counter">2</span>
+          <span class="personalmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel selected">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user2.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div id="active_channel_indicator"><div></div></div>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel2.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">princesses<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel3.jpg)">
+          <span class="channelmessage counter admin">1</span>
+        </div>
+        <span class="name">ladys<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel4.jpg)">
+          <span class="channelmessage counter">2</span>
+        </div>
+        <span class="name">donald<span class="domain">@duck.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user4.jpg)">
+        </div>
+        <span class="name">mickey<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel6.jpg)">
+        </div>
+        <span class="name">cats<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel7.jpg)">
+        </div>
+        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/channel8.jpg)">
+        </div>
+        <span class="name">hercules<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user9.jpg)">
+        </div>
+        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user8.jpg)">
+        </div>
+        <span class="name">mulan<span class="domain">@disney.com</span></span>
+      </div>
+      <div class="channel">
+        <div class="avatar glowy" title="channel@domain.com" style="background-image: url(/public/avatars/user11.jpg)">
+        </div>
+        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+      </div>
+    </div>
+    <div id="more_channels">
+      more...
     </div>
   </div>
   <div id="content">
-    <div id="stream">
-      <article>
-        <img src="/public/avatars/tom.jpg" />
-        <section>
-          <div class="info">
-            <span class="name">Tom</span>
-            <nav>
-              <span class="answer">answer</span>
-              <span class="mark">mark</span>
-            </nav>
-            <span class="time">5 minutes</span>
-          </div>
-          Munich is great. Look at the view (img)
-          <section class="answer">
-            <img src="/public/avatars/me.jpg" />
-            <textarea></textarea>
-            <button type="submit" class="main">send</button>
+    <div class="holder">
+      <div class="channelView">
+        <header>
+          <h2>Daisy@disney.com</h2>
+          <nav class="loggedIn">
+            <div class="newTopic button">+ Topic</div>
+            <div class="follow button">Follow</div>
+            <div class="unfollow button unprominent">Unfollow</div>
+            <div class="info button round" title="info">Channel Info</div>
+          </nav>
+        </header>
+        <section class="stream">
+          <section class="newTopic">
+            <img src="/public/avatars/user1.jpg" />
+            <textarea placeholder="New Topic..."></textarea>
+            <div class="controls">
+              <div class="button small checkbox">
+                <input type="checkbox" id="shouldShareLocation" />
+                <label for="shouldShareLocation">Share Location: Munich</label>
+              </div>
+              <div class="button small prominent" id="createNewTopic">Post</div>
           </section>
-        </section>
-      </article>
-      <article>
-        <img src="/public/avatars/tom.jpg" />
-        <section>
-          <div class="info">
-            <span class="name">Tom</span>
-            <nav>
-              <span class="answer">answer</span>
-              <span class="mark">mark</span>
-            </nav>
-            <span class="time">3 days</span>
-          </div>
-          I love disney!
-        </section>
-      </article>
-    </div><!-- /feed -->
-    <div id="detail">
-    
-    </div><!-- /detail -->
+          <!--<article class="notification small">
+            <section>
+              <img src="/public/avatars/user3.jpg" />
+              <span class="name">Mini</span>
+              <p>joined the Channel.</p>
+            </section>
+          </article>-->
+          <article class="notification">
+            <section>
+              <img src="/public/avatars/user4.jpg" />
+              <span class="name">Mickey</span>
+              <p>wants to follow this channel.</p>
+              <span class="granted">started following this channel.</span>
+              <span class="denied">was denied to follow this channel.</span>
+              <div class="controls">
+                <div class="button small negative light">Deny</div>
+                <div class="button small prominent positive light">Grant Mickey to join</div>
+              </div>
+            </section>
+          </article>
+          <article class="topic">
+            <section class="opener">
+              <img src="/public/avatars/user2.jpg" />
+              <div class="postmeta">
+                <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
+              </div>
+              <span class="name">Daisy</span><span class="location">from Donald's Place</span>
+              <p>I'm a sociopath; there's not much he can do for me. I have a dark side, too. I will not kill my sister. I will not kill my sister. I will not kill my sister. He taught me a code. To survive. Under normal circumstances, I'd take that as a compliment. I'm generally confused most of the time.</p>
+            </section>
+            <section class="comments">
+              <section class="answer">
+                <img src="/public/avatars/user1.jpg" />
+                <textarea></textarea>
+                <span class="button small prominent">Post</span>
+              </section>
+            </section>
+          </article>
+          <article class="topic">
+            <section class="opener">
+              <img class="avatar" src="/public/avatars/user2.jpg" />
+              <div class="postmeta">
+                <span class="time">3 days</span>
+              </div>
+              <span class="name">Daisy</span><span class="location">from Disneyland Paris</span>
+              <p>Pretend. You pretend the feelings are there, for the world, for the people around you.</p>
+            </section>
+            <section class="comments">
+              <section class="comment">
+                <img src="/public/avatars/user6.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Princess Jasmine</span><span class="location">from Disneyland Paris</span>
+                <p>Who knows? Maybe one day they will be. I like seafood.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user8.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Mulan</span><span class="location">from Disneyland Paris</span>
+                <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user11.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Pocahontas</span><span class="location">Disneyland California</span>
+                <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user8.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Mulan</span><span class="location">from Disneyland California</span>
+                <p>I'm going to tell you something that I've never told anyone before.</p>
+              </section>
+            </section>
+          </article>
+          <article class="topic">
+            <section class="opener">
+              <img class="avatar" src="/public/avatars/user2.jpg" />
+              <div class="postmeta">
+                <span class="time">3 days</span>
+              </div>
+              <span class="name">Daisy</span><span class="location">from Disneyland Paris</span>
+              <p>Pretend. You pretend the feelings are there, for the world, for the people around you.</p>
+            </section>
+            <section class="comments">
+              <section class="comment">
+                <img src="/public/avatars/user6.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Princess Jasmine</span><span class="location">from Disneyland Paris</span>
+                <p>Who knows? Maybe one day they will be. I like seafood.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user8.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Mulan</span><span class="location">from Disneyland Paris</span>
+                <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user11.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Pocahontas</span><span class="location">Disneyland California</span>
+                <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
+              </section>
+              <section class="comment">
+                <img src="/public/avatars/user8.jpg" />
+                <div class="postmeta">
+                  <span class="time">3 days</span>
+                </div>
+                <span class="name">Mulan</span><span class="location">from Disneyland California</span>
+                <p>I'm going to tell you something that I've never told anyone before.</p>
+              </section>
+            </section>
+          </article>
+        </section><!-- /stream -->
+      </div><!-- /channelView -->
+      <div id="detailView">
+      
+      </div><!-- /detail -->
+    </div><!-- /holder -->
   </div><!-- /content -->
+<script type="text/javascript">
+  /* ###
+  
+    Channel bubbling
+  
+    ### */
+  var channels = $('#channels');
+  var channel = channels.find('.channel');
+  var personal_channel = channels.find('.personal.channel');
+  var canidate;
+  var transEndEventNames = {
+    '-webkit-transition' : 'webkitTransitionEnd',
+    '-moz-transition' : 'transitionend',
+    '-o-transition' : 'oTransitionEnd',
+    'transition' : 'transitionEnd'
+  };
+  var prefix = getBrowserPrefix();
+  var transitionendEvent = transEndEventNames[prefix+'transition'];
+  
+  function getBrowserPrefix(){
+      var regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/;
+      var tester = document.getElementsByTagName('script')[0];
+      var prefix = "";
+      for(var prop in tester.style) {
+          if(regex.test(prop)) {
+              prefix = prop.match(regex)[0];
+              break;
+          }
+      }
+      if('WebkitOpacity' in tester.style) prefix = 'Webkit';
+      return prefix === "" ? "" : '-' + prefix.charAt(0).toLowerCase() + prefix.slice(1) +'-';
+  }
+  
+  function bubble(){
+    var offset = $(this).position().top;
+    if(offset === 0) return false; // the channel has an offset of 0 - it should stay where it is. so stop
+    var distance = -offset+20;
+    canidate = $(this);
+    // enable transitions
+    channels.removeClass('curtainsDown');
+    // undock => sets z-index 
+    canidate.addClass('bubbleUp');
+    // bind the transitionend to the reset function which resets the DOM after the animation
+    canidate.one(transitionendEvent, reset);
+    // enable transitions again and start to move the channels above the moved channel to close the gap
+    channels.addClass('makePlace');
+    // animate the channel to bubble up
+    canidate.css(prefix+'transform', "translateY("+distance+"px)");
+  }
+  
+  function reset(event){
+    // disable transitions
+    channels.addClass('curtainsDown');
+    // extract the bubbling channel from the DOM, remove the classes, reset the transformation and add it at the top
+    canidate.detach().removeClass('undock bubbleUp').css(prefix+'transform', "").insertAfter(personal_channel);
+    // move the channels back in place
+    channels.removeClass('makePlace');
+  }
+  
+  channel.bind('click', bubble);
+  
+  /* ###
+    
+    More Channels
+    
+    ### */
+  var moreChannels = $('#more_channels');
+  
+  function channelOverview(){
+    $('body').addClass('inTransition').toggleClass('channelOverview');
+    channels.one(transitionendEvent, transitionEnd);
+  }
+  
+  function transitionEnd(){
+    $('body').removeClass('inTransition');
+    if($('body').hasClass('channelOverview')){
+      $('body').addClass('stateArrived');
+    } else {
+      $('body').removeClass('stateArrived');
+    }
+  }
+  
+  moreChannels.click(channelOverview);
+  
+  /* ###
+    
+    Moderation Panel
+    
+    ### */
+  var comments = $('.comment, .opener');
+  
+  function moderate(){
+    var el = $(this);
+    if(!el.data('hasModeratorPanel')){
+      $('<div class="moderationPanel"><div class="ban">Ban Author</div><div class="promote">Promote to Moderator</div><div class="delete">Delete</div></div>').appendTo(el);
+      el.data('hasModeratorPanel', true);
+    }
+    el.toggleClass('moderate');
+  }
+  
+  comments.click(moderate);
+  
+  /* ###
+    
+    new topic animation
+    
+    ### */
+  var newTopic = $('.newTopic');
+  var topicTextarea = newTopic.find('textarea');
+  
+  function openArea(event){
+    // prevent bubbling!
+    event.stopPropagation();
+    if(!newTopic.hasClass('write')){
+      newTopic.addClass('write');
+      $(document).one('click', closeArea);
+    }
+  }
+  
+  function closeArea(){
+    // minimize the textarea only if the textarea is empty
+    if(topicTextarea.val() === ""){
+      newTopic.removeClass('write');
+    }
+  }
+  
+  newTopic.click(openArea);
+  
+  /* ###
+    
+    notification animation
+    
+    ### */
+  var notification = $('.notification');
+  var notificationButtons = notification.find('.controls > div');
+  
+  function notify(){
+    notification.addClass('visible');
+  }
+  
+  function logNotifaction(){
+    var reaction = $(this).hasClass('positive') ? 'granted' : 'denied';
+    notification.addClass('log '+reaction);
+  }
+  
+  notificationButtons.click(logNotifaction);
+  setTimeout('notify()', 2000);
+</script>
 </body>
