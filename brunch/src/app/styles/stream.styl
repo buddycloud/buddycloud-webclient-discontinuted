@@ -1,6 +1,8 @@
 body
-  height 100%
   overflow-x hidden
+  background-image url(/public/images/smooth-aura.jpg)
+  background-size cover
+  background-attachment fixed
 
 #sidebar
   color white
@@ -8,7 +10,6 @@ body
 #channels 
   width 76px
   height 100%
-  background url(/public/images/smooth-aura.jpg)
   border-right 0 1px black
   position fixed
   transition width 500ms
@@ -91,11 +92,14 @@ body
   .personal.channel
     border-bottom none
     box-shadow none
+    transition none
     + .channel
       padding-top 0
+      transition none
   .channel
     height 160px
     width 12.5%
+    transition 500ms
     .name
       margin-top 30px
       opacity 1
@@ -120,8 +124,8 @@ body
   background rgba(0,0,0,.89)
   box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
   z-index 10
-  .channelOverview #more_channels
-    border-top-right-radius 5px
+.channelOverview #more_channels
+  border-top-right-radius 5px
 #active_channel_indicator
   top 25px
   right 0
@@ -146,25 +150,23 @@ body
   
 
 #content
-  width 100%
+  margin-left 76px
   color rgba(0,0,0,.89)
+  background #eee
   overflow hidden
+  position relative
   transition margin-left 500ms
-  .holder
-    margin-left 76px
-    background #eee
-    position relative
-    transition 500ms
 .channelOverview #content
   margin-left 100%
-  .holder
-    margin-left 0
 .channelOverview.stateArrived #content
-  height 400px // variable height
+  height 400px // variable height to disable the vertical scrollbar
 
 .channelView 
   width 500px
   padding 13px
+  float left
+  position relative
+  z-index 1
   header
     position relative
     padding-left 8px
@@ -185,6 +187,7 @@ body
   .stream
     overflow hidden
     border-radius 5px
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
     
 .stream
   -webkit-transform-style: preserve-3d;
@@ -193,8 +196,6 @@ body
     padding 13px
     background white
     position relative
-    border-right 1px solid rgba(0,0,0,.13)
-    border-left 1px solid rgba(0,0,0,.13)
     box-shadow inset 0 -1px rgba(0,0,0,.21)
     overflow hidden
     &:last-child
@@ -204,9 +205,7 @@ body
     margin-top -76px
     color white
     background-color rgba(0, 0, 0, 0.89)
-    linear-bg-gradient transparent, rgba(0,0,0,.13)
-    border-left-color black
-    border-right-color black
+    linear-bg-gradient transparent, rgba(0,0,0,.08)
     transition 500ms 
     transform-origin bottom
     transform rotateX(70deg)
@@ -233,8 +232,6 @@ body
       padding-bottom 5px
       color rgba(0, 0, 0, 0.55)
       background-color rgba(255, 255, 255, 0.95)
-      border-left-color rgba(0,0,0,.13)
-      border-right-color rgba(0,0,0,.13)
       box-shadow 0 -1px rgba(0, 0, 0, 0.08) inset
       section
         line-height 25px
@@ -292,16 +289,21 @@ body
     text-overflow ellipsis
   .opener:hover nav, .comment:hover nav
     visibility visible
-  img
-    left 13px
-    position absolute
-    border-radius 3px
+  section 
+    > img
+      left 13px
+      position absolute
+      border-radius 3px
+    > p 
+      img
+        width 411px
+        vertical align
   section.answer
     margin-top 5px
     position relative
     overflow hidden
     textarea
-      width 361px
+      width 390px
       padding 1px 3px
       margin-bottom 5px
       font 12px/18px sans-serif
@@ -320,10 +322,12 @@ body
       left 11px
       width 40px
       border-radius 2px
+    .postmeta
+      display none
   section.newTopic
     padding 13px 13px 12px 51px
     linear-bg-gradient white, #F2F2F2
-    border 1px solid rgba(0,0,0,.13)
+    border-bottom 1px solid rgba(0,0,0,.13)
     border-radius 5px 5px 0 0
     overflow hidden
     position relative
@@ -340,7 +344,7 @@ body
       top 13px
       width 50px
     textarea
-      width 397px // 422 in big
+      width 400px
       height 19px
       padding 5px
       margin 0
@@ -392,3 +396,68 @@ body
       border-bottom-right-radius 5px
     &:hover
       linear-bg-gradient rgba(0,0,0,.05), rgba(0,0,0,.13)
+      
+.detailView
+  width 222px
+  padding 8px
+  font-size 12px
+  color rgba(0,0,0,.55)
+  text-shadow 0 1px white
+  float left
+  position relative
+  transition 500ms
+  &.hidden
+    margin-left -252px
+    opacity 0
+  .meta
+    margin-top 55px
+    p
+      margin-bottom 8px
+      .title
+        margin-right 5px
+        font-weight bold
+        position relative
+      &.public .title
+        margin-right 2px
+        &:after
+          margin-left 5px
+          width 16px
+          height 18px
+          content ""
+          vertical-align top
+          background url(/public/images/icons/unlock-small.png) no-repeat center
+          display inline-block
+  .channelPreview
+    margin 13px 0 8px
+    border-bottom 1px solid rgba(0,0,0,.03)
+    box-shadow 0 1px rgba(255,255,255,.55)
+    overflow hidden
+    h3
+      margin-bottom 3px
+      .count
+        font-size 18px
+        line-height 30px
+        color default_highlight
+        &:before
+          content "("
+        &:after
+          content ")"
+    img
+      margin 0 7px 7px 0
+      vertical-align bottom
+      border-radius 3px
+      float left
+      display block
+      &:nth-child(4n)
+        margin-right 0
+    .showAll
+      padding-top 3px
+      line-height 19px
+      text-align center
+      linear-bg-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.03))
+      box-shadow 0 1px rgba(0, 0, 0, 0.03), 0 1px rgba(0, 0, 0, 0.03) inset
+      clear left
+      cursor pointer
+      &:hover
+        color default_highlight
+        background default_highlight - rgba(0,0,0,0.89) + 50%
