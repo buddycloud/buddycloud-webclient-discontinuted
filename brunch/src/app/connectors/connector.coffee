@@ -47,22 +47,8 @@ class exports.Connector
     @connection.buddycloud.getMetadata channel.get('node'), succ, err
 
   # Get channel posts, calls succ with a array of hashes of posts
-  getChannelPosts: (channel, succ, err) ->
-    request = $iq({ to : @pubsubJid(), type : 'get' })
-      .c('pubsub', { xmlns : Strophe.NS.PUBSUB })
-      .c('items', { node : channel.getNode() })
-
-    @connection.sendIQ(
-      request,
-      (response) =>
-        posts = for item in $(response).find('item')
-          @_parsePost($(item))
-
-        succ(posts)
-      (e) =>
-        if err?
-          err($(e).find('error').attr('code'))
-    )
+  getChannelPosts: (channel, succ, err) =>
+    @connection.buddycloud.getChannelPosts channel.getNode(), succ, err
 
   # Sends a presence stanza to the server, subscribing to new IQs
   announcePresence: (user) ->
@@ -73,33 +59,33 @@ class exports.Connector
     @connection.send($pres().c('status').t('buddycloud channels'))
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid() } ).tree())
 
-  onIq : (stanza) ->
-    posts = for item in $(stanza).find('item')
-      @_parsePost($(item))
+#   onIq : (stanza) ->
+#     posts = for item in $(stanza).find('item')
+#       @_parsePost($(item))
+#
+#     for obj in posts
+#       if Posts.get(obj.id)
+#         # do nothing
+#       else
+#         p = new Post(obj)
+#         Posts.add(p)
+#         p.save()
 
-    for obj in posts
-      if Posts.get(obj.id)
-        # do nothing
-      else
-        p = new Post(obj)
-        Posts.add(p)
-        p.save()
-
-  # Takes an <item /> stanza and returns a hash of it's attributes
-  _parsePost : (item) ->
-    post = {
-      id : parseInt(item.find('id').text().replace(/.+:/,''))
-      content : item.find('content').text()
-      author : item.find('author jid').text()
-      published : item.find('published').text()
-    }
-
-    if item.find 'in-reply-to'
-      post.in_reply_to = parseInt(item.find('in-reply-to').attr('ref'))
-
-    if item.find 'geoloc'
-      post.geoloc_country = item.find('geoloc country').text()
-      post.geoloc_locality = item.find('geoloc locality').text()
-      post.geoloc_text = item.find('geoloc text').text()
-
-    post
+#   # Takes an <item /> stanza and returns a hash of it's attributes
+#   _parsePost : (item) ->
+#     post = {
+#       id : parseInt(item.find('id').text().replace(/.+:/,''))
+#       content : item.find('content').text()
+#       author : item.find('author jid').text()
+#       published : item.find('published').text()
+#     }
+#
+#     if item.find 'in-reply-to'
+#       post.in_reply_to = parseInt(item.find('in-reply-to').attr('ref'))
+#
+#     if item.find 'geoloc'
+#       post.geoloc_country = item.find('geoloc country').text()
+#       post.geoloc_locality = item.find('geoloc locality').text()
+#       post.geoloc_text = item.find('geoloc text').text()
+#
+#     post
