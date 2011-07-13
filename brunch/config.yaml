@@ -10,4 +10,5 @@ dependencies:
   - strophe.roster.js
   - strophe.pubsub.js
   - strophe.register.js
+  - strophe.dataforms.js
   - strophe.buddycloud.js

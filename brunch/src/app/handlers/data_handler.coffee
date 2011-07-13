@@ -4,6 +4,7 @@ class exports.DataHandler
     _.extend @, Backbone.Events
     @user = app.current_user
     @connection.addHandler @on_iq, null, 'iq'
+    @getMetadata = @connector.getMetadata
 
   get_user_subscriptions : ->
     @connector.getUserSubscriptions @user, (subscriptions) =>
@@ -11,9 +12,6 @@ class exports.DataHandler
       app.debug "SUBSCRIPTIONS", subscriptions
     , =>
       app.debug "gus_error", arguments
-
-  get_metadata : (chan, succ, err) ->
-    @connector.getMetadata chan, succ, err
 
 
   on_iq : (stanza) =>

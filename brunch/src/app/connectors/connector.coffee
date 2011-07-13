@@ -43,24 +43,8 @@ class exports.Connector
     @connection.buddycloud.getUserSubscriptions succ, err
 
   # Get metadata, calls succ with a hash of metadata
-  getMetadata: (channel, succ, err)->
-    request = $iq( { "to" : @pubsubJid(), "type" : "get" })
-      .c( "query", { "xmlns" : "http://jabber.org/protocol/disco#info", "node" : channel.get('node') })
-
-    @connection.sendIQ(
-      request,
-      (response) =>
-        # Flatten the namespaced fields into a hash
-        obj = {}
-        for field in $(response).find('x field')
-          key = $(field).attr('var').replace(/.+#/,'')
-          value = $(field).text()
-          obj[key] = value
-        succ(obj)
-      (e) ->
-        if err?
-          err($(e).find('error').attr('code'))
-    )
+  getMetadata: (channel, succ, err) =>
+    @connection.buddycloud.getMetadata channel.get('node'), succ, err
 
   # Get channel posts, calls succ with a array of hashes of posts
   getChannelPosts: (channel, succ, err) ->

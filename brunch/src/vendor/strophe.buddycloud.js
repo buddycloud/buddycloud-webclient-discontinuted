@@ -25,7 +25,7 @@ Strophe.addConnectionPlugin('buddycloud', {
         this._connection = conn;
 
         // checking all required plugins
-        ["roster", "pubsub", "register", "disco"].forEach(function (plugin) {
+        ["roster","pubsub","register","disco","dataforms"].forEach(function (plugin) {
             if (conn[plugin] === undefined)
                 throw new Error(plugin + " plugin required!");
         });
@@ -74,6 +74,37 @@ Strophe.addConnectionPlugin('buddycloud', {
         );
     },
 
+    getMetadata: function (jid, node, succ, err) {
+        var that = this._connection;
+        if (err === undefined) {
+            err = succ;
+            succ = node;
+            node = jid;
+            jid = undefined;
+        }
+        jid = jid || this.channels.jid;
+        that.disco.info(jid, node,
+            function /*success*/ (stanza) {
+                if (!succ) return;
+                // Flatten the namespaced fields into a hash
+                var i,key,field, res = {}, form = that.dataforms.parse(stanza);
+                for (i = 0; i < form.fields.length; i++) {
+                    field = form.fields[i];
+                    key = field.variable.replace(/.+#/,'');
+                    res[key] = {
+                        value: field.value,
+                        label: field.label,
+                        type:  field.type,
+                    };
+                }
+                succ(res);
+            },function /*error*/ (stanza) {
+                if (!err) return;
+                var errors = stanza.getElementsByTagName("error");
+                var code = errors[0].getAttribute('code');
+                err(code);
+            });
+    },
 });
 
 
