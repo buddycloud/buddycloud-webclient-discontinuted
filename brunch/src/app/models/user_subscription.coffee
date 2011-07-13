@@ -11,7 +11,3 @@ class exports.UserSubscription extends Backbone.Model
       @save()
     , ->
       app.debug "metadata_err", arguments
-
-  # TODO: remove
-  test_func : ->
-    app.debug "subsc_test"

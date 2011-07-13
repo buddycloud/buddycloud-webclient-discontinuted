@@ -2,8 +2,10 @@
 
 # The sidebar shows all channels the user subscribed to
 class exports.Sidebar extends Backbone.View
+  template : require 'templates/sidebar/show'
 
   initialize : ->
+    $('#sidebar').html @template()
     @el = $('#channels')
     app.collections.user_subscriptions.bind "add", @add_one
 

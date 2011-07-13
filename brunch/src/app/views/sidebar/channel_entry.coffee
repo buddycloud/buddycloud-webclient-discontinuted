@@ -1,17 +1,21 @@
 class exports.ChannelEntry extends Backbone.View
-  template : require('templates/sidebar/channel_entry')
+  template : require 'templates/sidebar/channel_entry'
 
-  initialize : ->
+  initialize : =>
     @el = $(@el)
     unless @model.get('metadata')?
       @model.get_metadata()
-    @model.bind "change", @on_change
+    @model.bind "change", @render
 
-  render : ->
+  render : =>
     vals = @model.toJSON()
-    console.log vals
-    @el.html @template vals
-    @
+    console.log ">>>>>>>>>>>>>>>>>>>>><", vals, this
+    @channel = vals
+    @el = $(@template this)
+    this
 
-  on_change : =>
-    app.debug "the model changed, lets do sth.", @
+  isPersonal : (a, b) =>
+    @model.get('metadata')?.owner.value is @model.get('jid')? and a or b
+
+  isSelected : (a, b) =>
+    off and a or b
