@@ -3,6 +3,7 @@ body
   background-image url(../../public/images/smooth-aura.jpg)
   background-size cover
   background-attachment fixed
+  transition background-size 250ms
 
 #sidebar
   color white
@@ -18,7 +19,7 @@ body
     border-bottom 1px solid rgba(255, 255, 255, 0.89)
     box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
     + .channel
-      padding-top 6px
+      margin-top 6px
   &.makePlace > .personal.channel
     margin-bottom 64px
   &.makePlace > .channel.bubbleUp + .channel
@@ -87,24 +88,22 @@ body
   .selected .avatar.glowy
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
 
-.channelOverview #channels
-  width 100%
+.inTransition #channels, .channelOverview #channels
   .personal.channel
     border-bottom none
     box-shadow none
-    transition none
     + .channel
-      padding-top 0
-      transition none
+      margin-top 0
+.channelOverview #channels
+  width 100%
   .channel
     height 160px
     width 12.5%
-    transition 500ms
     .name
       margin-top 30px
       opacity 1
-      transition 500ms
-      transition-delay 500ms
+      transition 250ms
+      transition-delay 450ms
   #active_channel_indicator
     display none
 .channelOverview.stateArrived #channels

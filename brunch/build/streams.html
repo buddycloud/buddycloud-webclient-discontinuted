@@ -810,6 +810,31 @@
     </div><!-- /holder -->
   </div><!-- /content -->
 <script type="text/javascript">
+  !function(document){
+
+      // (C) WebReflection (As It Is) - Mit Style
+
+      // we all love function declarations
+      function redraw() {
+
+          // clientHeight returns 0 if not present in the DOM
+          // e.g. document.removeChild(document.documentElement);
+          // also some crazy guy may swap runtime the whole HTML element
+          // this is why the documentElement should be always discovered
+          // and if present, it should be a node of the document
+          // In all these cases the returned value is true
+          // otherwise what is there cannot really be considered as painted
+
+          return !!(document.documentElement || 0).clientHeight;
+      }
+
+      // ideally an Object.defineProperty
+      // unfortunately some engine will complain
+      // if used against DOM objects
+      document.redraw = redraw;
+
+  }(document);
+  
   /* ###
   
     Channel bubbling
@@ -876,19 +901,26 @@
     
     ### */
   var moreChannels = $('#more_channels');
+  var areChannelsOpen = false;
   
   function channelOverview(){
-    $('body').addClass('inTransition').toggleClass('channelOverview');
+    if(areChannelsOpen){
+      $('body').removeClass('stateArrived');
+      document.redraw();
+      $('body').addClass('inTransition');
+      $('body').removeClass('channelOverview');
+      areChannelsOpen = false;
+    } else {
+      $('body').addClass('inTransition');
+      $('body').addClass('channelOverview');
+      areChannelsOpen = true;
+    }
     channels.one(transitionendEvent, transitionEnd);
   }
   
   function transitionEnd(){
     $('body').removeClass('inTransition');
-    if($('body').hasClass('channelOverview')){
-      $('body').addClass('stateArrived');
-    } else {
-      $('body').removeClass('stateArrived');
-    }
+    if($('body').hasClass('channelOverview')) $('body').addClass('stateArrived');
   }
   
   moreChannels.click(channelOverview);
