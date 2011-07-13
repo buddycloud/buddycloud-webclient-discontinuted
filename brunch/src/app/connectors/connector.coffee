@@ -27,52 +27,20 @@ class exports.Connector
   #     user = @roster.findOrCreateByJid item.attr('jid')
   #     user.set { subscription : item.attr('subscription'), group : item.find('group:first').text()  }
   #     user.save()
-  #   
+  #
   #   for item in response.find('item')
   #     addItem($(item))
 
   #
   # Subscription request
   #
-  subscribeToChannel: (channel, user, succ, error) ->
-    request = $iq( { to : @pubsubJid(), type : 'set' })
-      .c('pubsub', { xmlns: Strophe.NS.PUBSUB })
-      .c('subscribe', { node: channel.getNode(), jid : user.getJid() })
-
-    @connection.sendIQ(
-      request
-      (response) =>
-        if succ?
-          succ true
-      (e) =>
-        if err?
-          err e
-    )
+  subscribeToChannel: (channel, user, succ, err) =>
+    @connection.buddycloud.subscribeChannel(channel.getNode(),
+      ((response) => succ? true), ((e) => err? e))
 
   # Get the subscriptions for a user, calls succ with an array of hashes of channels
-  getUserSubscriptions: (user, succ, err) =>
-    node = user.getNode()
-
-    request = $iq({"to" : @pubsubJid(), "type":"get"})
-      .c("pubsub", {"xmlns":"http://jabber.org/protocol/pubsub"})
-      .c("subscriptions")
-
-    # Request..
-    @connection.sendIQ(
-      request
-      (response) =>
-        channels = for subscription in $(response).find('subscription')
-          {
-            jid : "#{$(subscription).attr('jid')}@#{@domain()}"
-            node : $(subscription).attr('node')
-            affiliation : $(subscription).attr('affiliation')
-          }
-        if succ?
-          succ(channels)
-      (e) ->
-        if err?
-          err($(e).find('error').attr('code'))
-    )
+  getUserSubscriptions: (_, succ, err) => # ???
+    @connection.buddycloud.getUserSubscriptions succ, err
 
   # Get metadata, calls succ with a hash of metadata
   getMetadata: (channel, succ, err)->

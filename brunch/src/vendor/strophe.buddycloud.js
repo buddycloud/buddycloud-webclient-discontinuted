@@ -30,13 +30,67 @@ Strophe.addConnectionPlugin('buddycloud', {
                 throw new Error(plugin + " plugin required!");
         });
     },
+
     connect: function (channelserver) {
+        var that = this._connection;
         this.channels = {jid:channelserver};
+        that.pubsub.connect(channelserver);
     },
+
     createChannel: function (success, error) {
         var register, that = this._connection;
-        register = $iq({from:that.jid, to:this.channels.jid, type:"set"}).c(
-            "query", {xmlns: Strophe.NS.REGISTER});
+        register = $iq({from:that.jid, to:this.channels.jid, type:'set'})
+            .c('query', {xmlns: Strophe.NS.REGISTER});
         that.sendIQ(register, success, error);
     },
+
+    subscribeChannel: function (node, succ, err) {
+        this._connection.pubsub.subscribe(node, null, null, iqcbsoup(succ,err));
+    },
+
+    // Get the subscriptions for a user, calls succ with an array of hashes of channels
+    getUserSubscriptions: function (succ, err) {
+        var that = this._connection;
+        that.pubsub.getSubscriptions(iqcbsoup(
+            function  /*success*/ (stanza) {
+                if (!succ) return;
+                var i, sub, channels = [],
+                    subscriptions = stanza.getElementsByTagName("subscription");
+                for (i = 0; i < subscriptions.length; i++) {
+                    sub = subscriptions[i];
+                    channels.push({
+                        jid : sub.getAttribute('jid'),
+                        node: sub.getAttribute('node'),
+                        affiliation: sub.getAttribute('affiliation'),
+                    });
+                }
+                succ(channels);
+            }, function /*error*/ (stanza) {
+                if (!err) return;
+                var errors = stanza.getElementsByTagName("error");
+                var code = errors[0].getAttribute('code');
+                err(code);
+            })
+        );
+    },
+
 });
+
+
+// helper
+
+var iqcbsoup = function (success, error) {
+    return function (stanza) {
+        var iqtype = stanza.getAttribute('type');
+        if (iqtype == 'result') {
+            if (success) success(stanza);
+        } else if (iqtype == 'error') {
+            if (error) error(stanza);
+        } else {
+            throw {
+                name: "StropheError",
+                message: "Got bad IQ type of " + iqtype
+            };
+        }
+    };
+};

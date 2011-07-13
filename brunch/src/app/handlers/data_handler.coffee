@@ -1,20 +1,21 @@
 class exports.DataHandler
-  
+
   constructor : (@connector, @connection) ->
     _.extend @, Backbone.Events
     @user = app.current_user
     @connection.addHandler @on_iq, null, 'iq'
-    
+
   get_user_subscriptions : ->
     @connector.getUserSubscriptions @user, (subscriptions) =>
       @trigger 'on_user_subscriptions_sync', subscriptions
+      app.debug "SUBSCRIPTIONS", subscriptions
     , =>
       app.debug "gus_error", arguments
-      
+
   get_metadata : (chan, succ, err) ->
     @connector.getMetadata chan, succ, err
-    
-      
+
+
   on_iq : (stanza) =>
     app.debug "onIq", stanza, $(stanza).find('item')
     posts = for item in $(stanza).find('item')

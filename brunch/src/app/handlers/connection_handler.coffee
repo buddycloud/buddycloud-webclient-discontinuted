@@ -29,6 +29,7 @@ class exports.ConnectionHandler
   connect : (jid, password) ->
     @user = new User({jid})
     @connection.connect jid, password, @connection_event
+    @connection.buddycloud.connect @connector.pubsubJid()
 
   register : (username, password) ->
     @user = new User(jid:"#{username}@#{DOMAIN}")
@@ -51,11 +52,15 @@ class exports.ConnectionHandler
 
       else if status is Strophe.Status.SBMTFAIL
         @trigger 'sbmtfail'
-        @connection.register.authenticate() if @connection.register.registered
+        if @isRegistered()
+          @connection.register.authenticate()
+          @connection.buddycloud.connect @connector.pubsubJid()
 
       else if status is Strophe.Status.REGISTERED
         @trigger 'registered'
+        @_new_register = yes
         @connection.register.authenticate()
+        @connection.buddycloud.connect @connector.pubsubJid()
 
       else @connection_event.apply(this, arguments)
 
@@ -85,6 +90,7 @@ class exports.ConnectionHandler
       @connected = true
       @announce_presence()
       @trigger 'connected'
+      @connection.buddycloud.createChannel() if @_new_register
 
     else if status is Strophe.Status.DISCONNECTED
       @connected = false
