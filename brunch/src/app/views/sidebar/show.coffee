@@ -19,6 +19,8 @@ class exports.Sidebar extends Backbone.View
 
   # add a channel template to the list of channels
   add_one : (model) =>
+    # FIXME just display main channel
+    return unless /\/user\/.+@.+\/channel/.test(model.id)
     @el.append new ChannelEntry("model" : model).render().el
     @el.css(left:-@el.width()) if @hidden
 

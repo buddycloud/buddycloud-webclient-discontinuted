@@ -3,6 +3,7 @@
 class exports.UserSubscriptions extends Backbone.Collection
   model : UserSubscription
   initialize : (user) ->
+
     # initialize the store
     # TODO: add username to the name of the store
     @localStorage = new Store("#{user.get('jid')}-subscriptions")
