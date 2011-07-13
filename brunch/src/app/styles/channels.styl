@@ -10,7 +10,7 @@
   .personal.channel
     height 76px
     border-bottom 1px solid rgba(255, 255, 255, 0.89)
-    box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
+    box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px rgba(0,0,0,.34)
     + .channel
       margin-top 6px
   &.makePlace > .personal.channel
@@ -31,20 +31,26 @@
     float left
     &.bubbleUp
       z-index 1
-    .name  
-      width 100%
+    .info
       top 50%
-      left 50%
-      margin 11px 0 0 -50%
-      font-size 11px
-      text-align center
-      color rgba(255, 255, 255, 0.5)
-      text-shadow 0 0 5px rgba(0,0,0,.5)
+      margin-top -39px
+      padding 22px 17px 22px 0
+      font-size 12px
+      line-height 17px
+      color rgba(255, 255, 255, 0.89)
+      text-shadow 0 0 1px rgba(0, 0, 0, 0.55)
       position absolute
       opacity 0
-      transition 500ms
+      border-radius 5px
+      cursor pointer
+      transition opacity 500ms 500ms, margin-left 500ms 500ms, padding-left 500ms 500ms, background 500ms
+      .title
+        font-weight bold
+      .owner
+        color rgba(255,255,255,.55)
+        display block
       .domain
-        display none
+        width auto
     .channelmessage.counter, .personalmessage.counter
       right -5px
       width 18px
@@ -78,7 +84,7 @@
       z-index 1
       box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
   .selected .avatar
-    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c, 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
 .inTransition #channels, .channelOverview #channels
   .personal.channel
@@ -90,12 +96,18 @@
   width 100%
   .channel
     height 160px
-    width 12.5%
-    .name
-      margin-top 30px
+    width 20%
+    .avatar
+      left 0
+      margin-left 21px
+    .info
       opacity 1
-      transition 250ms
-      transition-delay 450ms
+      margin-left 6px
+      padding-left 76px
+      padding-left
+    &:hover .info
+      linear-bg-gradient rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.21)
+      box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
   #active_channel_indicator
     display none
 .channelOverview.stateArrived #channels
