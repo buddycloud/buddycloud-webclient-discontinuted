@@ -2,7 +2,7 @@
   <div id="channels">
     <% for channel in @channels: %>
     <div class="<%= "personal" if channel.isPersonal %>channel <%= "selected" if channel.isSelected %>">
-      <div class="avatar glowy" title="<%= channel.jid %>" style="background-image: url(<%= channel.avatar %>)">
+      <div class="avatar" title="<%= channel.jid %>" style="background-image: url(<%= channel.avatar %>)">
         <% if channel.channelmessage %><span class="channelmessage counter"><%= channel.channelmessage.count %></span><% end %>
         <% if channel.personalmessage %><span class="personalmessage counter"><%= channel.personalmessage.count %></span><% end %>
       </div>
