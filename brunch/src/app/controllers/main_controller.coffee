@@ -15,7 +15,9 @@ class exports.MainController extends Backbone.Controller
     app.handlers.data_handler.get_user_subscriptions()
     app.collections.user_subscriptions = new UserSubscriptions(app.current_user)
     app.collections.user_subscriptions.fetch()
-    new Sidebar().render()
+    app.sidebar = new Sidebar()
+    app.sidebar.render()
+    app.sidebar.moveIn()
 
   index : ->
     app.debug "dd"

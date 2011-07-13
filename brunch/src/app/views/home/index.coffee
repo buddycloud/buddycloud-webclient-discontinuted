@@ -5,12 +5,5 @@ class exports.HomeView extends Backbone.View
     app.current_user.bind "logged_in", @finish_view
 
   render : ->
-    $('#main_content').html @template()
-    
-    @after_render()
-    
-  after_render : ->
-    $('#home_content').delay(10).fadeIn()
+    $('#content').html @template()
 
-  finish_view : ->
-    #$('#home_content').slideUp("slow")
