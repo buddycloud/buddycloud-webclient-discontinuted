@@ -1,7 +1,7 @@
 # needed views
-Sidebar = require('views/sidebar/show').Sidebar
+{ Sidebar } = require('views/sidebar/show')
 # needed collection
-UserSubscriptions = require('collections/user_subscriptions').UserSubscriptions
+{ UserSubscriptions } = require('collections/user_subscriptions')
 
 class exports.MainController extends Backbone.Controller
   routes :

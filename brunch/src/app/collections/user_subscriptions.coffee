@@ -1,4 +1,4 @@
-UserSubscription = require('models/user_subscription').UserSubscription
+{ UserSubscription } = require('models/user_subscription')
 
 class exports.UserSubscriptions extends Backbone.Collection
   model : UserSubscription

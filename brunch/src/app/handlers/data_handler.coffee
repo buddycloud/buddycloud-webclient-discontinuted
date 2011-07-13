@@ -28,13 +28,13 @@ class exports.DataHandler
     #   else
     #     p = new Post(obj)
     #     Posts.add(p)
-    #     p.save()        
+    #     p.save()
     return true
 
   _parse_post : (item) ->
-    post = { 
+    post = {
       id : parseInt(item.find('id').text().replace(/.+:/,''))
-      content : item.find('content').text() 
+      content : item.find('content').text()
       author : item.find('author jid').text()
       published : item.find('published').text()
     }

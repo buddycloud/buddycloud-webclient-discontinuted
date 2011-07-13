@@ -15,11 +15,11 @@ class exports.Connector
 
   # Add a user to your roster
   addUserToRoster: (jid) ->
-    @connection.send($pres( { "type" : "subscribe", "to" : jid } ))
+    @connection.roster.subscribe(jid)
 
   # Remove a user from your roster
   removeUserFromRoster: (jid) ->
-    @connection.send($pres( { "type" : "unsubscribe", "to" : jid } ))
+    @connection.roster.unsubscribe(jid)
 
   # Parse a roster
   # _parseRoster: (response) ->
@@ -120,7 +120,7 @@ class exports.Connector
 
     @connection.send($pres().c('status').t('buddycloud channels'))
     @connection.send($pres( { "type" : "subscribe", "to" : @pubsubJid() } ).tree())
-    
+
   onIq : (stanza) ->
     posts = for item in $(stanza).find('item')
       @_parsePost($(item))
@@ -132,12 +132,12 @@ class exports.Connector
         p = new Post(obj)
         Posts.add(p)
         p.save()
-    
+
   # Takes an <item /> stanza and returns a hash of it's attributes
   _parsePost : (item) ->
-    post = { 
+    post = {
       id : parseInt(item.find('id').text().replace(/.+:/,''))
-      content : item.find('content').text() 
+      content : item.find('content').text()
       author : item.find('author jid').text()
       published : item.find('published').text()
     }
