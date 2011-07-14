@@ -1,12 +1,9 @@
-#sidebar
-  color white
-
 #channels 
   width 76px
   height 100%
+  color white
   border-right 0 1px black
   position fixed
-  transition width 500ms
   .personal.channel
     height 76px
     border-bottom 1px solid rgba(255, 255, 255, 0.89)
@@ -38,16 +35,20 @@
       font-size 12px
       line-height 17px
       color rgba(255, 255, 255, 0.89)
-      text-shadow 0 0 1px rgba(0, 0, 0, 0.55)
+      text-shadow 0 0 1px rgba(0, 0, 0, 0.13)
       position absolute
       opacity 0
       border-radius 5px
       cursor pointer
-      transition opacity 500ms 500ms, margin-left 500ms 500ms, padding-left 500ms 500ms, background 500ms
+      .title, .owner
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
       .title
         font-weight bold
       .owner
-        color rgba(255,255,255,.55)
+        color rgba(255,255,255,.65)
         display block
       .domain
         width auto
@@ -86,32 +87,33 @@
   .selected .avatar
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c, 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
-.inTransition #channels, .channelOverview #channels
+.channelOverview #channels
+  width 100%
   .personal.channel
     border-bottom none
     box-shadow none
     + .channel
       margin-top 0
-.channelOverview #channels
-  width 100%
   .channel
     height 160px
     width 20%
+    transition none
     .avatar
       left 0
       margin-left 21px
+      transition margin-left 500ms, left 500ms
     .info
       opacity 1
       margin-left 6px
       padding-left 76px
-      padding-left
+      transition opacity 500ms, margin-left 500ms, padding-left 500ms
     &:hover .info
       linear-bg-gradient rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.21)
       box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
   #active_channel_indicator
     display none
-.channelOverview.stateArrived #channels
-  overflow-y scroll
+.channelOverview.stateArrived #channels 
+  overflow-y scroll // scroll-y otherwise prevents all transitions
 
 #more_channels
   width 74px
@@ -136,7 +138,7 @@
   height 12px
   overflow hidden
   position absolute
-  transition 50
+  //transition 50
   > div
     top -1px
     left 7px
