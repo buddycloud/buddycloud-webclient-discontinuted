@@ -4,10 +4,9 @@
   background #eee
   overflow hidden
   position relative
-  transition margin-left 500ms
 .channelOverview #content
   margin-left 100%
-.channelOverview.stateArrived #content
+.channelOverview #content
   height 400px // variable height to disable the vertical scrollbar
 
 .channelView
@@ -18,12 +17,17 @@
   header
     width 492px
     padding-left 8px
-    overflow hidden
     position relative
+    &:after
+      content ""
+      clear both
+      display block
+      height 0
     h2
       float left
     nav
       margin-top 6px
+      margin-right -1px
       float right
       > div
         margin-left 5px
@@ -151,19 +155,38 @@
         width 411px
         vertical align
   section.answer
-    margin-top 5px
     position relative
     overflow hidden
     textarea
-      width 390px
-      padding 1px 3px
-      margin-bottom 5px
+      margin-top 13px
+      padding 4px 5px 2px
+      height 18px
+      width 386px
       font 12px/18px sans-serif
       border 1px solid rgba(0,0,0,.21)
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
+      position relative
+      resize none
+    img
+      width 26px
+      left 63px
+      top 18px
+      transition none
     .button
+      margin-top -24px
       margin-bottom 1px
       float right
+      transition none
+    &.write
+      img
+        width 40px
+        left 11px
+      textarea
+        margin-bottom 3px
+        height 37px
+        resize vertical
+      .button
+        margin-top 0
   .comments
     padding-left 13px
     section
@@ -250,7 +273,7 @@
   padding 21px
   font-size 12px
   color rgba(0,0,0,.55)
-  text-shadow 0 1px white
+  text-shadow 0 1px rgba(255,255,255,.34)
   float left
   position relative
   transition 500ms
@@ -264,7 +287,7 @@
         margin-right 5px
         font-weight bold
         position relative
-      &.public .title
+      &.open .title, &.closed .title
         margin-right 2px
         &:after
           margin-left 5px
@@ -274,7 +297,10 @@
           vertical-align top
           background url(../../public/icons/unlock-small.png) no-repeat center
           display inline-block
-  .channelPreview
+      &.closed .title
+        &:after
+          background url(../../public/icons/lock-small.png) no-repeat center
+  .channelList
     margin 13px 0 8px
     &:after
       content ""
