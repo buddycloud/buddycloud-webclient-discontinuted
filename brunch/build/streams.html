@@ -18,6 +18,7 @@
       <input type="submit" id="home_login_submit" class="basic_button" value="Log in" />
     </form>
   </div>-->
+  <div class="headbar"></div>
   <div id="sidebar">
     <div id="channels">
       <div class="personal channel">
@@ -625,48 +626,12 @@
               <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
             </div>
             <span class="name">Daisy</span><span class="location">from Donald's Place</span>
-            <p>
-              <iframe width="411" height="338" src="http://www.youtube.com/embed/0Bmhjf0rKe8" frameborder="0" allowfullscreen></iframe>
-              Isn't that cute
-            </p>
-          </section>
-          <section class="comments">
-            <section class="comment">
-              <img src="public/avatars/user6.jpg" />
-              <div class="postmeta">
-                <span class="time">3 days</span>
-              </div>
-              <span class="name">Princess Jasmine</span><span class="location">from Disneyland Paris</span>
-              <p>Indeed it is! :)</p>
-            </section>
-          </section>
-        </article>
-        <article class="topic">
-          <section class="opener">
-            <img src="public/avatars/user2.jpg" />
-            <div class="postmeta">
-              <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
-            </div>
-            <span class="name">Daisy</span><span class="location">from Donald's Place</span>
-            <p>
-              Look at my puppy
-              <img src="public/images/nodeploy/pug.jpg" />
-            </p>
-          </section>
-        </article>
-        <article class="topic">
-          <section class="opener">
-            <img src="public/avatars/user2.jpg" />
-            <div class="postmeta">
-              <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
-            </div>
-            <span class="name">Daisy</span><span class="location">from Donald's Place</span>
             <p>I'm a sociopath; there's not much he can do for me. I have a dark side, too. I will not kill my sister. I will not kill my sister. I will not kill my sister. He taught me a code. To survive. Under normal circumstances, I'd take that as a compliment. I'm generally confused most of the time.</p>
           </section>
           <section class="comments">
             <section class="answer">
               <img src="public/avatars/user1.jpg" />
-              <textarea></textarea>
+              <textarea placeholder="post a comment..."></textarea>
               <span class="button small prominent">Post</span>
             </section>
           </section>
@@ -712,6 +677,11 @@
               </div>
               <span class="name">Mulan</span><span class="location">from Disneyland California</span>
               <p>I'm going to tell you something that I've never told anyone before.</p>
+            </section>
+            <section class="answer">
+              <img src="public/avatars/user1.jpg" />
+              <textarea placeholder="post a comment..."></textarea>
+              <span class="button small prominent">Post</span>
             </section>
           </section>
         </article>
@@ -779,7 +749,7 @@
             <img src="public/avatars/user2.jpg" />
           </div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>followers <span class="count">20</count></h3>
           <div class="list">
             <img src="public/avatars/user3.jpg" />
@@ -797,7 +767,7 @@
           </div>
           <div class="showAll">show all</div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>channels nearby <span class="count">10</count></h3>
           <div class="list">
             <img src="public/avatars/channel1.jpg" />
@@ -807,7 +777,7 @@
           </div>
           <div class="showAll">show all</div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>similar channels <span class="count">8</count></h3>
           <div class="list">
             <img src="public/avatars/channel5.jpg" />
@@ -975,22 +945,26 @@
     new topic animation
     
     ### */
-  var newTopic = $('.newTopic');
+  
+  // works for both new topic field and all the small answer fields
+  var newTopic = $('.newTopic, .answer');
   var topicTextarea = newTopic.find('textarea');
   
   function openArea(event){
     // prevent bubbling!
     event.stopPropagation();
-    if(!newTopic.hasClass('write')){
-      newTopic.addClass('write');
-      $(document).one('click', closeArea);
+    if(!$(this).hasClass('write')){
+      $(this).addClass('write');
+      $(document).one('click', {self: this}, closeArea);
     }
   }
   
-  function closeArea(){
+  function closeArea(event){
+    var self = event.data.self;
+    var textarea = $(self).find('textarea');
     // minimize the textarea only if the textarea is empty
-    if(topicTextarea.val() === ""){
-      newTopic.removeClass('write');
+    if(textarea.val() === ""){
+      $(self).removeClass('write');
     }
   }
   
