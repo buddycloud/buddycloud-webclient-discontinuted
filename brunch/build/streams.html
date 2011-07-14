@@ -9,7 +9,7 @@
   <script src="web/js/app.js"></script>
   <script>require('main');</script>
 </head>
-<body>
+<body class="wideChannelView">
   <!--<div id="login">
     <h1>buddycloud beta</h1>
     <form id="login_form">
@@ -18,7 +18,9 @@
       <input type="submit" id="home_login_submit" class="basic_button" value="Log in" />
     </form>
   </div>-->
-  <div class="headbar"></div>
+  <header id="globalHeader">
+    <div class="search"><input type="text" placeholder="Search..." /></div>
+  </header>
   <div id="sidebar">
     <div id="channels">
       <div class="personal channel">
@@ -578,14 +580,16 @@
     </div>
   </div>
   <div id="content">
-    <div class="channelView">
+    <div class="channelView myChannel">
       <header>
         <h2>Daisys World</h2>
-        <nav class="loggedIn">
+        <nav>
           <div class="newTopic button">+ Topic</div>
           <div class="follow button">Follow</div>
           <div class="unfollow button unprominent">Unfollow</div>
           <div class="info button round" title="show/hide Channel Info">Channel Info</div>
+          <div class="tab">Private Messages<span class="personalmessage counter">2</span></div>
+          <div class="tab active">Wall</div>
         </nav>
       </header>
       <section class="stream">
@@ -738,7 +742,7 @@
           <p>
             <span class="title">About me:</span>I'm Daisy, I love icecream, sunny days, window shopping and most of all: Donald
           </p>
-          <p class="public">
+          <p class="open">
             <span class="title">This Channel is:</span>Public
           </p>
         </section>
