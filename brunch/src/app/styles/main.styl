@@ -10,12 +10,12 @@
 html
   height 100%
   font 13px/17px sans-serif  
-  background #8fc0ba url(../../public/images/bg.png)
+  background black url(../../public/images/smooth-aura.jpg) fixed
   
 body
-  height 100%
+  min-height 100%
   overflow-x hidden
-  radial-bg-gradient rgba(255,255,255,.34), rgba(255,255,255,0)
+  //radial-bg-gradient rgba(255,255,255,.34), rgba(255,255,255,0)
   
 .headbar
   top 0
@@ -23,6 +23,7 @@ body
   height 8px
   background url(../../public/images/headbar.png)
   position absolute
+  display none
   &:after
     top 8px
     height 8px
@@ -30,8 +31,7 @@ body
     content ""
     position absolute
     background #f2f2f2
-    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset
-    
+    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset 
 
 h1
   font-size 34px
