@@ -1,9 +1,11 @@
-#channels 
+#sidebar 
   width 76px
   height 100%
   color white
   border-right 0 1px black
   position fixed
+#channels
+  overflow hidden
   .personal.channel
     height 76px
     border-bottom 1px solid rgba(255, 255, 255, 0.89)
@@ -87,8 +89,10 @@
   .selected .avatar
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c, 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
-.channelOverview #channels
+.channelOverview #sidebar
   width 100%
+.channelOverview #channels
+  padding 21px 55px
   .personal.channel
     border-bottom none
     box-shadow none
@@ -112,7 +116,7 @@
       box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
   #active_channel_indicator
     display none
-.channelOverview.stateArrived #channels 
+.channelOverview.stateArrived #sidebar 
   overflow-y scroll // scroll-y otherwise prevents all transitions
 
 #more_channels
