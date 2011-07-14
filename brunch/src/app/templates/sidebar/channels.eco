@@ -4,10 +4,10 @@
     <div class="<%= "personal" if channel.isPersonal %>channel <%= "selected" if channel.isSelected %>">
       <div class="holder">
         <div class="avatar" title="<%= channel.title %>" style="background-image: url(<%= channel.avatar %>)">
-          <% if channel.channelmessage %>
+          <% if channel.channelmessage: %>
             <span class="channelmessage counter"><%= channel.channelmessage.count %></span>
           <% end %>
-          <% if channel.personalmessage %>
+          <% if channel.personalmessage: %>
             <span class="personalmessage counter"><%= channel.personalmessage.count %></span>
           <% end %>
         </div>
@@ -15,7 +15,7 @@
           <span class="title"><%= channel.title %></span>
           <span class="owner"><%= channel.name %><span class="domain"><%= "@" + channel.domain %></span></span>
         </div>
-        <% if channel.isSelected %><div id="active_channel_indicator"><div></div></div><% end %>
+        <% if channel.isSelected: %><div id="active_channel_indicator"><div></div></div><% end %>
       </div>
     </div>
   </div>
