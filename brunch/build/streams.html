@@ -9,7 +9,7 @@
   <script src="web/js/app.js"></script>
   <script>require('main');</script>
 </head>
-<body>
+<body class="wideChannelView">
   <!--<div id="login">
     <h1>buddycloud beta</h1>
     <form id="login_form">
@@ -18,555 +18,561 @@
       <input type="submit" id="home_login_submit" class="basic_button" value="Log in" />
     </form>
   </div>-->
+  <header id="globalHeader">
+    <div class="search"><input type="text" placeholder="Search..." /></div>
+  </header>
   <div id="sidebar">
     <div id="channels">
       <div class="personal channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Lazy Lizard Loft - donald@disney.com" style="background-image: url(public/avatars/user1.jpg)">
           <span class="channelmessage counter">2</span>
           <span class="personalmessage counter">2</span>
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Lazy Lizard Loft</span>
+          <span class="owner">donald<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel selected">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="avatar" title="Daisy's World - daisy@disney.com" style="background-image: url(public/avatars/user2.jpg)">
           <span class="channelmessage counter">2</span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Daisy's World</span>
+          <span class="owner">daisy<span class="domain">@disney.com</span></span>
+        </div>
         <div id="active_channel_indicator"><div></div></div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Disney's Beautiful Princesses - princesses@disney.com" style="background-image: url(public/avatars/channel2.jpg)">
           <span class="channelmessage counter admin">1</span>
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Disney's Beautiful Princesses</span>
+          <span class="owner">princesses<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="avatar" title="Disney's Bewitching Fairies - fairies@disney.com" style="background-image: url(public/avatars/channel3.jpg)">
           <span class="channelmessage counter admin">1</span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Disney's Bewitching Fairies</span>
+          <span class="owner">fairies<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Duck's House - ducks@disney.com" style="background-image: url(public/avatars/channel4.jpg)">
           <span class="channelmessage counter">2</span>
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Duck's House</span>
+          <span class="owner">ducks<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
-        <div id="active_channel_indicator"><div></div></div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
-      </div>
-      <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user1.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
-        <span class="name">donald<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user2.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">daisy<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel2.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
-        <span class="name">princesses<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel3.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">ladys<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel4.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">donald<span class="domain">@duck.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user4.jpg)">
+        <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
-        <span class="name">mickey<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Get of my lawn!</span>
+          <span class="owner">mickey<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel6.jpg)">
+        <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
-        <span class="name">cats<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Don't mess with us!</span>
+          <span class="owner">cats<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel7.jpg)">
+        <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Falcon Punch!</span>
+          <span class="owner">toy-story<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">toy-story<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/channel8.jpg)">
+        <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
-        <span class="name">hercules<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Mencave</span>
+          <span class="owner">hercules<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user9.jpg)">
+        <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Wonderland</span>
+          <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">sleeping-beauty<span class="domain">@disney.com</span></span>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user8.jpg)">
+        <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
-        <span class="name">mulan<span class="domain">@disney.com</span></span>
+        <div class="info">
+          <span class="title">Sahara</span>
+          <span class="owner">mulan<span class="domain">@disney.com</span></span>
+        </div>
       </div>
       <div class="channel">
-        <div class="avatar" title="channel@domain.com" style="background-image: url(public/avatars/user11.jpg)">
+        <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
+        </div>
+        <div class="info">
+          <span class="title">Dschungel</span>
+          <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
         </div>
-        <span class="name">pocahontas<span class="domain">@disney.com</span></span>
       </div>
     </div>
     <div id="more_channels">
@@ -574,14 +580,16 @@
     </div>
   </div>
   <div id="content">
-    <div class="channelView">
+    <div class="channelView myChannel">
       <header>
         <h2>Daisys World</h2>
-        <nav class="loggedIn">
+        <nav>
           <div class="newTopic button">+ Topic</div>
           <div class="follow button">Follow</div>
           <div class="unfollow button unprominent">Unfollow</div>
           <div class="info button round" title="show/hide Channel Info">Channel Info</div>
+          <div class="tab">Private Messages<span class="personalmessage counter">2</span></div>
+          <div class="tab active">Wall</div>
         </nav>
       </header>
       <section class="stream">
@@ -622,48 +630,12 @@
               <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
             </div>
             <span class="name">Daisy</span><span class="location">from Donald's Place</span>
-            <p>
-              <iframe width="411" height="338" src="http://www.youtube.com/embed/0Bmhjf0rKe8" frameborder="0" allowfullscreen></iframe>
-              Isn't that cute
-            </p>
-          </section>
-          <section class="comments">
-            <section class="comment">
-              <img src="public/avatars/user6.jpg" />
-              <div class="postmeta">
-                <span class="time">3 days</span>
-              </div>
-              <span class="name">Princess Jasmine</span><span class="location">from Disneyland Paris</span>
-              <p>Indeed it is! :)</p>
-            </section>
-          </section>
-        </article>
-        <article class="topic">
-          <section class="opener">
-            <img src="public/avatars/user2.jpg" />
-            <div class="postmeta">
-              <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
-            </div>
-            <span class="name">Daisy</span><span class="location">from Donald's Place</span>
-            <p>
-              Look at my puppy
-              <img src="public/images/nodeploy/pug.jpg" />
-            </p>
-          </section>
-        </article>
-        <article class="topic">
-          <section class="opener">
-            <img src="public/avatars/user2.jpg" />
-            <div class="postmeta">
-              <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
-            </div>
-            <span class="name">Daisy</span><span class="location">from Donald's Place</span>
             <p>I'm a sociopath; there's not much he can do for me. I have a dark side, too. I will not kill my sister. I will not kill my sister. I will not kill my sister. He taught me a code. To survive. Under normal circumstances, I'd take that as a compliment. I'm generally confused most of the time.</p>
           </section>
           <section class="comments">
             <section class="answer">
               <img src="public/avatars/user1.jpg" />
-              <textarea></textarea>
+              <textarea placeholder="post a comment..."></textarea>
               <span class="button small prominent">Post</span>
             </section>
           </section>
@@ -709,6 +681,11 @@
               </div>
               <span class="name">Mulan</span><span class="location">from Disneyland California</span>
               <p>I'm going to tell you something that I've never told anyone before.</p>
+            </section>
+            <section class="answer">
+              <img src="public/avatars/user1.jpg" />
+              <textarea placeholder="post a comment..."></textarea>
+              <span class="button small prominent">Post</span>
             </section>
           </section>
         </article>
@@ -765,18 +742,18 @@
           <p>
             <span class="title">About me:</span>I'm Daisy, I love icecream, sunny days, window shopping and most of all: Donald
           </p>
-          <p class="public">
+          <p class="open">
             <span class="title">This Channel is:</span>Public
           </p>
         </section>
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>moderators <span class="count">2</count></h3>
           <div class="list">
             <img src="public/avatars/user1.jpg" />
             <img src="public/avatars/user2.jpg" />
           </div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>followers <span class="count">20</count></h3>
           <div class="list">
             <img src="public/avatars/user3.jpg" />
@@ -794,7 +771,7 @@
           </div>
           <div class="showAll">show all</div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>channels nearby <span class="count">10</count></h3>
           <div class="list">
             <img src="public/avatars/channel1.jpg" />
@@ -804,7 +781,7 @@
           </div>
           <div class="showAll">show all</div>
         </section><!-- /followers -->
-        <section class="channelPreview">
+        <section class="channelList">
           <h3>similar channels <span class="count">8</count></h3>
           <div class="list">
             <img src="public/avatars/channel5.jpg" />
@@ -972,22 +949,26 @@
     new topic animation
     
     ### */
-  var newTopic = $('.newTopic');
+  
+  // works for both new topic field and all the small answer fields
+  var newTopic = $('.newTopic, .answer');
   var topicTextarea = newTopic.find('textarea');
   
   function openArea(event){
     // prevent bubbling!
     event.stopPropagation();
-    if(!newTopic.hasClass('write')){
-      newTopic.addClass('write');
-      $(document).one('click', closeArea);
+    if(!$(this).hasClass('write')){
+      $(this).addClass('write');
+      $(document).one('click', {self: this}, closeArea);
     }
   }
   
-  function closeArea(){
+  function closeArea(event){
+    var self = event.data.self;
+    var textarea = $(self).find('textarea');
     // minimize the textarea only if the textarea is empty
-    if(topicTextarea.val() === ""){
-      newTopic.removeClass('write');
+    if(textarea.val() === ""){
+      $(self).removeClass('write');
     }
   }
   

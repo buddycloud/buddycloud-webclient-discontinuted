@@ -1,20 +1,21 @@
-#sidebar
-  color white
-
-#channels 
+#sidebar 
   width 76px
   height 100%
+  color white
   border-right 0 1px black
   position fixed
-  transition width 500ms
+#channels
+  overflow hidden
   .personal.channel
     height 76px
-    border-bottom 1px solid rgba(255, 255, 255, 0.89)
-    box-shadow 0 1px rgba(255, 255, 255, 0.55), 0 2px black
+    linear-bg-gradient rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.21)
+    box-shadow 0 1px rgba(0, 0, 0, 0.99), 0 2px rgba(255, 255, 255, 0.34)
+    transition none
     + .channel
       margin-top 6px
   &.makePlace > .personal.channel
     margin-bottom 64px
+    transition 500ms
   &.makePlace > .channel.bubbleUp + .channel
     margin-top -64px
   &.curtainsDown > .personal.channel
@@ -30,41 +31,32 @@
     transform-origin top
     float left
     &.bubbleUp
-      z-index 1
-    .name  
-      width 100%
+      z-index 2
+    .info
       top 50%
-      left 50%
-      margin 11px 0 0 -50%
-      font-size 11px
-      text-align center
-      color rgba(255, 255, 255, 0.5)
-      text-shadow 0 0 5px rgba(0,0,0,.5)
+      margin-top -39px
+      padding 22px 17px 22px 50px
+      font-size 12px
+      line-height 17px
+      text-shadow 0 0 1px rgba(0, 0, 0, 0.13)
       position absolute
       opacity 0
-      transition 500ms
+      border-radius 5px
+      cursor pointer
+      .title, .owner
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        display block
+      .title
+        font-weight bold
+        color white
+      .owner
+        color rgba(255,255,255,.65)
+        display block
       .domain
-        display none
-    .channelmessage.counter, .personalmessage.counter
-      right -5px
-      width 18px
-      height 17px
-      color white
-      text-align center
-      line-height 18px
-      text-shadow 0 -1px rgba(0,0,0,.21)
-      linear-bg-gradient(rgba(255,255,255,0.21), rgba(0,0,0,0))
-      border-radius 9px
-      box-shadow 0 0 0 2px rgba(0,0,0,.13), 0 0 1px black, 0 1px rgba(255,255,255,.55) inset
-      position absolute
-      &.admin
-        background-color admin_highlight
-    .channelmessage.counter
-        bottom -5px
-        background-color default_highlight
-    .personalmessage.counter
-        top -5px
-        background-color personal_color
+        width auto
     .avatar
       height 50px
       width 50px
@@ -78,30 +70,82 @@
       z-index 1
       box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
   .selected .avatar
-    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px #83AC35, 0 0 0 4px #94c23c
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px default_highlight, 0 0 0 4px lighten(default_highlight, 8%), 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
-.inTransition #channels, .channelOverview #channels
+.wideChannelView
+  #content
+    margin-left 233px
+  #sidebar
+    width 233px
+  #channels
+    .channel
+      width 233px
+    .avatar
+      left 13px
+      margin-left 0
+    .info
+      width 148px
+      padding-left 77px
+      opacity 1
+  #more_channels
+    width 231px
+    
+.counter
+  top -6px
+  right -6px
+  width 19px
+  height 19px
+  color white
+  font-size 12px
+  text-align center
+  line-height 18px
+  text-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
+  linear-bg-gradient rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.01)
+  border 1px solid rgba(0, 0, 0, 0.21)
+  border-radius 10px
+  box-shadow 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 2px rgba(0, 0, 0, 0.21)
+  position absolute
+  box-sizing border-box
+  &.channelmessage
+    top auto
+    bottom -6px
+    background-color default_highlight
+  &.personalmessage
+    background-color personal_color
+  &.admin
+    background-color admin_highlight
+
+.channelOverview #sidebar
+  width 100%
+.channelOverview #channels
+  padding 21px 55px
   .personal.channel
-    border-bottom none
+    linear-bg-gradient transparent transparent
     box-shadow none
     + .channel
       margin-top 0
-.channelOverview #channels
-  width 100%
   .channel
     height 160px
-    width 12.5%
-    .name
-      margin-top 30px
+    width 20%
+    transition none
+    .avatar
+      left 0
+      margin-left 21px
+      transition margin-left 500ms, left 500ms
+    .info
       opacity 1
-      transition 250ms
-      transition-delay 450ms
+      margin-left 6px
+      padding-left 76px
+      transition opacity 500ms, margin-left 500ms, padding-left 500ms
+    &:hover .info
+      linear-bg-gradient rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.21)
+      box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
   #active_channel_indicator
     display none
-.channelOverview.stateArrived #channels
-  overflow-y scroll
+.channelOverview.stateArrived #sidebar 
+  overflow-y scroll // scroll-y otherwise prevents all transitions
 
-#more_channels
+#more_channels, .channelOverview #more_channels
   width 74px
   position fixed
   bottom 0
@@ -113,10 +157,11 @@
   cursor pointer
   border-top 1px solid black
   background rgba(0,0,0,.89)
-  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.34)
+  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.21)
   z-index 10
 .channelOverview #more_channels
   border-top-right-radius 5px
+  
 #active_channel_indicator
   top 25px
   right 0
@@ -124,7 +169,7 @@
   height 12px
   overflow hidden
   position absolute
-  transition 50
+  z-index 10
   > div
     top -1px
     left 7px
@@ -134,7 +179,5 @@
     transform rotate(45deg)
     transform-origin center center
     position absolute
-.personal.channel + .channel #active_channel_indicator
-    top 31px
 .channelOverview #active_channel_indicator, .inTransition #active_channel_indicator
   right -10px

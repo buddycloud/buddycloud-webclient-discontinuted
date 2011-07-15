@@ -1,53 +1,47 @@
 #login
-  width 390px
-  margin 140px auto
+  width 308px
   position absolute
   left 50%
   top 50%
-  margin-top -200px
-  margin-left -195px
-  height 200px
+  margin-top -154px
+  margin-left -154px
+  height 217px
+  h1
+    margin 5px 21px
+    color rgba(255, 255, 255, 0.95)
+    text-align center
+    text-shadow 0 1px rgba(0, 0, 0, 0.13), 1px 0 rgba(0, 0, 0, 0.13), 0 -1px rgba(0, 0, 0, 0.13), -1px 0 rgba(0, 0, 0, 0.13), 0 1px 7px rgba(0, 0, 0, 0.21)
 
 #login_form
   display none
-  padding 21px
-  margin 0 auto
-  linear-bg-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.13))
-  border 1px solid rgba(0,0,0,.13)
-  border-radius 1px
-  box-shadow 0 1px 7px rgba(0,0,0,.13), 0 1px white inset
+  padding 13px 21px
+  linear-bg-gradient(white, #ddd)
+  border-radius 5px
+  box-shadow 0 0 0 1px rgba(0, 0, 0, 0.13), 0 1px 7px rgba(0, 0, 0, 0.21), 0 1px rgba(255, 255, 255, 0.21) inset
+  overflow hidden
+  .button
+    float right
+  input[type="text"], input[type="password"]
+    padding 7px 8px
+    margin 8px 0
+    font-size 18px
+    vertical-align bottom
+    border-radius 3px
+    border 1px solid rgba(0, 0, 0, 0.21)
+    box-shadow 0 1px rgba(0,0,0,.05) inset, 0 1px rgba(255,255,255,.34)
+    display block
+    &:focus
+      border-color rgba(0, 0, 0, 0.34)
 
-h1
-  margin 5px 21px
-
-input[type="text"], input[type="password"]
-  padding 7px 8px
-  margin 8px 0
-  font-size 24px
-  vertical-align bottom
-  border-radius 3px
-  border 1px solid #ddd
-  box-shadow 0 1px white, 0 1px rgba(0,0,0,.05) inset
-  display block
-
-input[type="text"]focus, input[type="password"]focus
-  border-color #aaa
-
-#login_form .basic_button
-  margin-top 3px
-  font-size 16px
-
-#login_form [disabled]
-  background rgba(0,0,0,0.5)
-  color rgba(200,200,200,1)
-
-#login_waiting
-  width 200px
-  visibility hidden
-
-#login_waiting img
-  float left
-  margin 10px
-
-#login_waiting_text
-  margin 10px
+.connecting
+  padding-top 7px
+  text-shadow 0 1px rgba(255, 255, 255, 0.55)
+  opacity 0
+  transition 250ms
+  img
+    line-height 19.5px
+    vertical-align top
+  span
+    margin-left 3px
+  &.visible
+    opacity 1

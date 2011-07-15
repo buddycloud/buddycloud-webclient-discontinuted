@@ -37,6 +37,14 @@ linear-bg-gradient(from, to)
   background-image -ms-linear-gradient(top, from, to)
   background-image linear-gradient(top, from, to)
   
+radial-bg-gradient(from, to)
+  background-image -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
+  background-image -webkit-radial-gradient(center center, cover, from, to)
+  background-image -moz-radial-gradient(center center, circle cover, from, to)
+  background-image -o-radial-gradient(center center, cover, from, to)
+  background-image -ms-radial-gradient(center center, cover, from, to)
+  background-image radial-gradient(center center, cover, from, to)
+  
 background-clip()
   vendor('background-clip', arguments)
 

@@ -8,10 +8,31 @@
 @import "stream"
 
 html
-  font 13px/17px sans-serif
-
-body
   height 100%
+  font 13px/17px sans-serif  
+  background black url(../../public/images/smooth-aura.jpg) fixed
+  -webkit-font-smoothing antialiased
+  
+body
+  min-height 100%
+  overflow-x hidden
+  //radial-bg-gradient rgba(255,255,255,.34), rgba(255,255,255,0)
+  
+.headbar
+  top 0
+  width 100%
+  height 8px
+  background url(../../public/images/headbar.png)
+  position absolute
+  display none
+  &:after
+    top 8px
+    height 8px
+    width 100%
+    content ""
+    position absolute
+    background #f2f2f2
+    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset 
 
 h1
   font-size 34px

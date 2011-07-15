@@ -1,12 +1,24 @@
 <div class="<%= @isPersonal("personal","") %> channel <%= @isSelected("selected","") %>">
-  <div class="avatar" title="<%= @channel.jid %>" style="background-image: url(<%= @avatar %>)">
-    <% if @channelmessage: %>
-      <span class="channelmessage counter"><%= @channel.channelmessage.count %></span>
-    <% end %>
-    <% if @personalmessage: %>
-      <span class="personalmessage counter"><%= @channel.personalmessage.count %></span>
+  <div class="holder">
+    <div class="avatar" title="<%= @channel.metadata?.title?.value or "OT" %>" style="background-image: url(<%= @avatar %>)">
+      <% if @channelmessage: %>
+        <span class="channelmessage counter"><%= @channel.channelmessage.count %></span>
+      <% end %>
+      <% if @personalmessage: %>
+        <span class="personalmessage counter"><%= @channel.personalmessage.count %></span>
+      <% end %>
+    </div>
+    <div class="info">
+      <span class="title"><%= @channel.metadata?.title?.value or "OT" %></span>
+      <span class="name">
+        <%= @channel.jid.split('@')[0] %>
+        <span class="domain">
+          <%= @channel.jid.replace(/.+@/,'@') %>
+        </span>
+      </span>
+    </div>
+    <% if @isSelected(): %>
+      <div id="active_channel_indicator"><div>
     <% end %>
   </div>
-  <span class="name"><%= @channel.jid.split('@')[0] %><span class="domain"><%= @channel.jid.replace(/.+@/,'@') %></span></span>
-  <% if @isSelected(): %><div id="active_channel_indicator"><div></div></div><% end %>
 </div>
