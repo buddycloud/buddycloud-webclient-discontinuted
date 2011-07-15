@@ -9,8 +9,7 @@ class exports.ChannelView extends Backbone.View
   render : =>
     @channel = @model.toJSON()
     console.log "|||", this
-    @el.replaceWith nel = $(@template this).attr id:@cid
-    @el = nel
+    old = @el; old.replaceWith @el = $(@template this).attr id:@cid
     @info = @el.find('.channelDetails')
     console.warn "asasfasfasfasdfasdf", @info, @el, @el.find('.info.button')
     @el.find('.info.button').click => @info.toggleClass('hidden')

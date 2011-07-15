@@ -15,6 +15,7 @@ class exports.DataHandler
 
 
   on_iq : (stanza) =>
+    #FIXME
     app.debug "onIq", stanza, $(stanza).find('item')
     posts = for item in $(stanza).find('item')
       @_parse_post($(item))

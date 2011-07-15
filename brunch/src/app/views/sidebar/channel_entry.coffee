@@ -13,10 +13,10 @@ class exports.ChannelEntry extends Backbone.View
 
   render : =>
     @channel = @model.toJSON()
-    #console.log ">>>>>>>>>>>>>>>>>>>>>", this
+    console.log ">>>>>>>>>>>>>>>>>>>>>", this, @model.toJSON()
     @avatar = gravatar @channel.jid, s:50, d:'retro'
-    @el = @el.replaceWith $(@template this).attr id:@cid
-    @el.parent().remove(@el).prepend(@el) if @isPersonal()
+    old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+    #@el.parent().remove(@el).prepend(@el) if @isPersonal()
     this
 
   isPersonal : (a, b) =>

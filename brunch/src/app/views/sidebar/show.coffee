@@ -9,9 +9,10 @@ class exports.Sidebar extends Backbone.View
     # default's not visible due to nice animation
     $('#sidebar').html @template()
     @el = $('#channels')
-    $('#more_channels').hide()
+    $('#more_channels').hide().click @channelOverview
     @hidden = yes
     @channel = {}
+    @areChannelsOpen = no
     @current_channel = null
     app.collections.user_subscriptions.bind "add", @add_one
 
@@ -24,6 +25,7 @@ class exports.Sidebar extends Backbone.View
   add_one : (model) =>
     # FIXME  this just display main channel
     return unless /\/user\/.+@.+\/channel/.test(model.id)
+    console.error "MODEL", model, model.toJSON()
     @el.append new ChannelEntry({model}).render().el
     @el.css(left:-@el.width()) if @hidden
 
@@ -53,4 +55,20 @@ class exports.Sidebar extends Backbone.View
     @el.animate(left:"-#{@el.width()}px", t)
     $('#more_channels').delay(t * 0.1).fadeOut()
     @hidden = yes
+
+  channelOverview: =>
+    body = $('body')
+    if @areChannelsOpen
+      body.removeClass 'stateArrived'
+      document.redraw()
+      body.addClass 'inTransition'
+      body.removeClass 'channelOverview'
+    else
+      body.addClass 'inTransition'
+      body.addClass 'channelOverview'
+    @areChannelsOpen = not @areChannelsOpen
+    @el.one transitionendEvent, ->
+      body.removeClass 'inTransition'
+      body.addClass('stateArrived') if body.hasClass 'channelOverview'
+
 

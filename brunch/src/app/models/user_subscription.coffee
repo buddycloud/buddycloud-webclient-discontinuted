@@ -7,7 +7,7 @@ class exports.UserSubscription extends Backbone.Model
   # fetches and saves the metadata of the subscription
   get_metadata : ->
     app.handlers.data_handler.getMetadata this, (metadata) =>
-      @set "metadata" : metadata
+      @set {metadata}
       @save()
     , ->
       app.debug "metadata_err", arguments

@@ -15,10 +15,11 @@ class exports.UserSubscriptions extends Backbone.Collection
   on_user_subscriptions_sync : (subscriptions) =>
     for sub in subscriptions
       existing = @get(sub.node)
+      sub = new UserSubscription sub
       unless existing
-        @create(new UserSubscription(sub))
+        @create sub
       else
-        existing.save(sub)
+        existing.save sub.toJSON()
 
   destroyAll : =>
     # IMPORTANT: clone the models, because the @models array shrinks when models are removed from the collection
