@@ -6,21 +6,21 @@ class exports.ChannelEntry extends Backbone.View
   template : require 'templates/sidebar/channel_entry'
 
   initialize : =>
+    @selected = no
     @el = $("<div>").attr id:@cid
     @model.get_metadata() unless @model.get('metadata')?
     @model.bind "change", @render
 
   render : =>
-    vals = @model.toJSON()
-    console.log ">>>>>>>>>>>>>>>>>>>>>", vals, this
-    @channel = vals
+    @channel = @model.toJSON()
+    #console.log ">>>>>>>>>>>>>>>>>>>>>", this
     @avatar = gravatar @channel.jid, s:50, d:'retro'
-    x = $(@template this).attr id:@cid
-    @el = @el.replaceWith(x)
+    @el = @el.replaceWith $(@template this).attr id:@cid
+    @el.parent().remove(@el).prepend(@el) if @isPersonal()
     this
 
   isPersonal : (a, b) =>
-    @channel?.metadata?.owner?.value is @model.jid? and a or b
+    @channel?.metadata?.owner?.value is @model.jid? and (a ? true) or (b ? false)
 
   isSelected : (a, b) =>
-    off and a or b
+    @selected and (a ? true) or (b ? false)

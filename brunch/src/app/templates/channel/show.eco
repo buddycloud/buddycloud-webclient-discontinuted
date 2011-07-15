@@ -1,40 +1,40 @@
 <div class="channelView">
   <header>
-    <h2><%= channel.title %></h2>
+    <h2><%= @channel.metadata?.title?.value %></h2>
     <nav class="loggedIn"><!-- this here is still a mess.. -->
-      <% if user.notFollowingThisChannel: %><div class="follow button">Follow</div>
+      <% if @user?.notFollowingThisChannel: %><div class="follow button">Follow</div>
       <% else: %><div class="unfollow button unprominent">Unfollow</div><% end %>
       <div class="info button round" title="show/hide Channel Info">Channel Info</div>
     </nav>
   </header>
   <section class="stream">
-    <% if user.hasRightToPost: %>
+    <% if @user?.hasRightToPost: %>
     <section class="newTopic">
-      <img src="<%= user.avatar %>" />
+      <img src="<%= @channel.avatar %>" />
       <textarea placeholder="New Topic..."></textarea>
       <div class="controls">
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
-          <label for="shouldShareLocation">Share Location: <%= user.location %></label>
+          <label for="shouldShareLocation">Share Location: <%= @channel.metadata?['geoloc-text']?.value %></label>
         </div>
         <div class="button small prominent" id="createNewTopic">Post</div>
     </section>
     <% end %>
     <!--
-    
+
       Channel Notifications should be placed here - before .topics or as first inside of topic;
       template: channelNotification.eco
-      
+
     -->
-    <% if @topics.length: %>
+    <% if @topics?.length: %>
     <section class="topics">
-      <% for topic in @topics: %>
+      <% for topic in (@topics ? []): %>
       <article class="topic">
         <section class="opener">
           <img src="<%= topic.autor.avatar %>" />
           <div class="postmeta">
             <span class="time" title="<%= topic.creationDate %>"><%= topic.passedTime %></span>
-            <!-- 
+            <!--
               creationDate: hh:mm dd/mm/yyyy
               -> we'll probably need to have an option to choose ones date-format
               passedTime: 5 Minutes ago
@@ -68,23 +68,24 @@
       </article>
       <% end %>
     </section>
+    <% end %>
   </section><!-- /stream -->
   <div class="channelDetails">
     <section class="meta">
-      <p><span class="title">Owner:</span><%= channel.owner %></p>
-      <p><span class="title">Description:</span><%= channel.description %></p>
-      <p class="<%= channel.stateLowercase %>"><span class="title">This Channel is:</span><%= channel.state %></p>
+      <p><span class="title"><%= @channel.metadata?.owner?.label %>:</span><%= @channel.metadata?.owner?.value %></p>
+      <p><span class="title"><%= @channel.metadata?.description?.label %>:</span></p><%= @channel.metadata?.description?.value %>
+      <p class="<%= @channel.metadata?.access_model?.value %>"><span class="title"><%= @channel.metadata?.access_model?.label %>:</span></p><%= @channel.metadata?.access_model?.value %>
       <!--
         the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
       -->
     </section>
     <!--
-      echo here a list of 
+      echo here a list of
         - moderators
         - followers
         - channels nearby
         - similar channels
-        
+
       template: channelList.eco
     -->
   </div>

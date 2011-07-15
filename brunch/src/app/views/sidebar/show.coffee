@@ -1,4 +1,5 @@
 { ChannelEntry } = require('views/sidebar/channel_entry')
+{ ChannelView } = require('views/channel/show')
 
 # The sidebar shows all channels the user subscribed to
 class exports.Sidebar extends Backbone.View
@@ -10,6 +11,8 @@ class exports.Sidebar extends Backbone.View
     @el = $('#channels')
     $('#more_channels').hide()
     @hidden = yes
+    @channel = {}
+    @current_channel = null
     app.collections.user_subscriptions.bind "add", @add_one
 
   # renders all cached channels
@@ -21,9 +24,23 @@ class exports.Sidebar extends Backbone.View
   add_one : (model) =>
     # FIXME  this just display main channel
     return unless /\/user\/.+@.+\/channel/.test(model.id)
-    @el.append new ChannelEntry("model" : model).render().el
+    @el.append new ChannelEntry({model}).render().el
     @el.css(left:-@el.width()) if @hidden
 
+    if model.get "metadata"
+      @channel[model.cid] ?= new ChannelView {model}
+      @setCurrentChannel(model.cid) unless @current_channel
+    model.bind 'change', =>
+      @channel[model.cid] ?= new ChannelView {model}
+      @setCurrentChannel(model.cid) unless @current_channel
+
+  setCurrentChannel : (id) =>
+    @current_channel?.selected = no
+    @current_channel?.render()
+    @current_channel = @channel[id]
+    $('#content').html @current_channel.el
+    @current_channel.selected = yes
+    @current_channel.render()
 
   # sliding in animation
   moveIn: (t = 200) =>
@@ -36,3 +53,4 @@ class exports.Sidebar extends Backbone.View
     @el.animate(left:"-#{@el.width()}px", t)
     $('#more_channels').delay(t * 0.1).fadeOut()
     @hidden = yes
+
