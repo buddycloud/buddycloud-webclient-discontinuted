@@ -29,13 +29,13 @@ border-bottom-left-radius()
 border-bottom-right-radius()
   vendor('border-bottom-right-radius', arguments)
 
-linear-bg-gradient(from, to)
-  background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
-  background-image -webkit-linear-gradient(top, from, to)
-  background-image -moz-linear-gradient(top, from, to)
-  background-image -o-linear-gradient(top, from, to)
-  background-image -ms-linear-gradient(top, from, to)
-  background-image linear-gradient(top, from, to)
+linear-bg-gradient()
+  //background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
+  background-image -webkit-linear-gradient(top, arguments)
+  background-image -moz-linear-gradient(top, arguments)
+  background-image -o-linear-gradient(top, arguments)
+  background-image -ms-linear-gradient(top, arguments)
+  background-image linear-gradient(top, arguments)
   
 radial-bg-gradient(from, to)
   background-image -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
@@ -88,3 +88,12 @@ transform-style()
   
 perspective()
   vendor('perspective', arguments)
+  
+user-select()
+  vendor('user-select', arguments)
+  
+.clearfix:after
+  content ""
+  clear both
+  display block
+  height 0
