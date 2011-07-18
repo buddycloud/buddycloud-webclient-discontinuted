@@ -29,17 +29,20 @@
           <span class="personalmessage counter">2</span>
         </div>
         <div class="info">
-          <span class="title">Lazy Lizard Loft</span>
           <span class="owner">donald<span class="domain">@disney.com</span></span>
+          <span class="status">On my way to Daisy</span>
         </div>
+      </div>
+      <div class="search">
+        <input type="search" results="5" autosave="channelSearch" placeholder="Search Channels ..." />
       </div>
       <div class="channel selected">
         <div class="avatar" title="Daisy's World - daisy@disney.com" style="background-image: url(public/avatars/user2.jpg)">
           <span class="channelmessage counter">2</span>
         </div>
         <div class="info">
-          <span class="title">Daisy's World</span>
           <span class="owner">daisy<span class="domain">@disney.com</span></span>
+          <span class="status">What a wonderful day</span>
         </div>
         <div id="active_channel_indicator"><div></div></div>
       </div>
@@ -48,8 +51,8 @@
           <span class="channelmessage counter admin">1</span>
         </div>
         <div class="info">
-          <span class="title">Disney's Beautiful Princesses</span>
           <span class="owner">princesses<span class="domain">@disney.com</span></span>
+          <span class="status">Haters gonna hate</span>
         </div>
       </div>
       <div class="channel">
@@ -57,8 +60,8 @@
           <span class="channelmessage counter admin">1</span>
         </div>
         <div class="info">
-          <span class="title">Disney's Bewitching Fairies</span>
           <span class="owner">fairies<span class="domain">@disney.com</span></span>
+          <span class="status">Hold on, be strong</span>
         </div>
       </div>
       <div class="channel">
@@ -66,64 +69,64 @@
           <span class="channelmessage counter">2</span>
         </div>
         <div class="info">
-          <span class="title">Duck's House</span>
           <span class="owner">ducks<span class="domain">@disney.com</span></span>
+          <span class="status">Donald's out of town. Free crib. Party!!</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Get of my lawn! - mickey@disney.com" style="background-image: url(public/avatars/user4.jpg)">
         </div>
         <div class="info">
-          <span class="title">Get of my lawn!</span>
           <span class="owner">mickey<span class="domain">@disney.com</span></span>
+          <span class="status">Get of my lawn!</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Don't mess with us! - cats@disney.com" style="background-image: url(public/avatars/channel6.jpg)">
         </div>
         <div class="info">
-          <span class="title">Don't mess with us!</span>
           <span class="owner">cats<span class="domain">@disney.com</span></span>
+          <span class="status">Dogfood sucks</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Falcon Punch! - toy-story@disney.com" style="background-image: url(public/avatars/channel7.jpg)">
         </div>
         <div class="info">
-          <span class="title">Falcon Punch!</span>
           <span class="owner">toy-story<span class="domain">@disney.com</span></span>
+          <span class="status">Wooah, new trailer <a href="http://www.youtube.com/watch?v=TNMpa5yBf5o">http://www.youtube.com/watch?v=TNMpa5yBf5o</a></span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Mencave - hercules@disney.com" style="background-image: url(public/avatars/channel8.jpg)">
         </div>
         <div class="info">
-          <span class="title">Mencave</span>
           <span class="owner">hercules<span class="domain">@disney.com</span></span>
+          <span class="status">Mencave</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Wonderland - sleeping-beauty@disney.com" style="background-image: url(public/avatars/user9.jpg)">
         </div>
         <div class="info">
-          <span class="title">Wonderland</span>
           <span class="owner">sleeping-beauty<span class="domain">@disney.com</span></span>
+          <span class="status">I'm in my wonderland</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Sahara - mulan@disney.com" style="background-image: url(public/avatars/user8.jpg)">
         </div>
         <div class="info">
-          <span class="title">Sahara</span>
           <span class="owner">mulan<span class="domain">@disney.com</span></span>
+          <span class="status">feeding camels</span>
         </div>
       </div>
       <div class="channel">
         <div class="avatar" title="Dschungel - pocahontas@disney.com" style="background-image: url(public/avatars/user11.jpg)">
         </div>
         <div class="info">
-          <span class="title">Dschungel</span>
           <span class="owner">pocahontas<span class="domain">@disney.com</span></span>
+          <span class="status">Where is my romeo when you need him?</span>
         </div>
       </div>
       <div class="channel">
@@ -579,22 +582,22 @@
       more...
     </div>
   </div>
-  <div id="content">
-    <div class="channelView myChannel">
-      <header>
+  <div id="content" class="clearfix">
+    <div class="channelView">
+      <header class="clearfix">
         <h2>Daisys World</h2>
-        <nav>
+        <nav class="loggedIn">
           <div class="newTopic button">+ Topic</div>
           <div class="follow button">Follow</div>
           <div class="unfollow button unprominent">Unfollow</div>
           <div class="info button round" title="show/hide Channel Info">Channel Info</div>
-          <div class="tab">Private Messages<span class="personalmessage counter">2</span></div>
-          <div class="tab active">Wall</div>
+          <div class="tab">Private Conversation<span class="personalmessage counter">2</span></div>
+          <div class="tab active">Channel</div>
         </nav>
       </header>
-      <section class="stream">
+      <section class="stream clearfix">
         <section class="newTopic">
-          <img src="public/avatars/user1.jpg" />
+          <img class="avatar" src="public/avatars/user1.jpg" />
           <textarea placeholder="New Topic..."></textarea>
           <div class="controls">
             <div class="button small checkbox">
@@ -605,14 +608,14 @@
         </section>
         <!--<article class="notification small">
           <section>
-            <img src="public/avatars/user3.jpg" />
+            <img class="avatar" src="public/avatars/user3.jpg" />
             <span class="name">Mini</span>
             <p>joined the Channel.</p>
           </section>
         </article>-->
         <article class="notification">
           <section>
-            <img src="public/avatars/user4.jpg" />
+            <img class="avatar" src="public/avatars/user4.jpg" />
             <span class="name">Mickey</span>
             <p>wants to follow this channel.</p>
             <span class="granted">started following this channel.</span>
@@ -625,7 +628,7 @@
         </article>
         <article class="topic">
           <section class="opener">
-            <img src="public/avatars/user2.jpg" />
+            <img class="avatar" src="public/avatars/user2.jpg" />
             <div class="postmeta">
               <span class="time" title="5:06pm 06.06.2011">5 minutes</span>
             </div>
@@ -634,7 +637,7 @@
           </section>
           <section class="comments">
             <section class="answer">
-              <img src="public/avatars/user1.jpg" />
+              <img class="avatar" src="public/avatars/user1.jpg" />
               <textarea placeholder="post a comment..."></textarea>
               <span class="button small prominent">Post</span>
             </section>
@@ -651,7 +654,7 @@
           </section>
           <section class="comments">
             <section class="comment">
-              <img src="public/avatars/user6.jpg" />
+              <img class="avatar" src="public/avatars/user6.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -659,7 +662,7 @@
               <p>Who knows? Maybe one day they will be. I like seafood.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user8.jpg" />
+              <img class="avatar" src="public/avatars/user8.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -667,7 +670,7 @@
               <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user11.jpg" />
+              <img class="avatar" src="public/avatars/user11.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -675,7 +678,7 @@
               <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user8.jpg" />
+              <img class="avatar" src="public/avatars/user8.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -683,7 +686,7 @@
               <p>I'm going to tell you something that I've never told anyone before.</p>
             </section>
             <section class="answer">
-              <img src="public/avatars/user1.jpg" />
+              <img class="avatar" src="public/avatars/user1.jpg" />
               <textarea placeholder="post a comment..."></textarea>
               <span class="button small prominent">Post</span>
             </section>
@@ -700,7 +703,7 @@
           </section>
           <section class="comments">
             <section class="comment">
-              <img src="public/avatars/user6.jpg" />
+              <img class="avatar" src="public/avatars/user6.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -708,7 +711,7 @@
               <p>Who knows? Maybe one day they will be. I like seafood.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user8.jpg" />
+              <img class="avatar" src="public/avatars/user8.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -716,7 +719,7 @@
               <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user11.jpg" />
+              <img class="avatar" src="public/avatars/user11.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -724,7 +727,7 @@
               <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
             </section>
             <section class="comment">
-              <img src="public/avatars/user8.jpg" />
+              <img class="avatar" src="public/avatars/user8.jpg" />
               <div class="postmeta">
                 <span class="time">3 days</span>
               </div>
@@ -827,7 +830,7 @@
     ### */
   var channels = $('#channels');
   var channel = channels.find('.channel');
-  var personal_channel = channels.find('.personal.channel');
+  var personal_channel = channels.find('.search');
   var canidate;
   var transEndEventNames = {
     '-webkit-transition' : 'webkitTransitionEnd',
@@ -855,7 +858,7 @@
   function bubble(){
     var offset = $(this).position().top;
     if(offset === 0) return false; // the channel has an offset of 0 - it should stay where it is. so stop
-    var distance = -offset+20;
+    var distance = -offset+20+31; // 31 is searchbar height
     canidate = $(this);
     // enable transitions
     channels.removeClass('curtainsDown');
