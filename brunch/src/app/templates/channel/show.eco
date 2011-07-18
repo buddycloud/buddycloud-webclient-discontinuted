@@ -31,7 +31,7 @@
       <% for topic in (@topics ? []): %>
       <article class="topic">
         <section class="opener">
-          <img src="<%= topic.autor.avatar %>" />
+          <img class="avatar" src="<%= topic.autor.avatar %>" />
           <div class="postmeta">
             <span class="time" title="<%= topic.creationDate %>"><%= topic.passedTime %></span>
             <!--
@@ -48,7 +48,7 @@
         <section class="comments">
           <% for comment in @comments: %>
           <section class="comment">
-            <img src="<%= comment.user.avatar %>" />
+            <img class="avatar" src="<%= comment.user.avatar %>" />
             <div class="postmeta">
               <span class="time" title="<%= comment.creationDate %>"><%= comment.passedTime %></span>
             </div>
@@ -58,7 +58,7 @@
           <% end %>
           <% if user.allowedToPost: %>
           <section class="answer">
-            <img src="<%= answer.user.avatar %>" />
+            <img class="avatar" src="<%= answer.user.avatar %>" />
             <textarea placeholder="post a comment..."></textarea>
             <span class="button small prominent">Post</span>
           </section>

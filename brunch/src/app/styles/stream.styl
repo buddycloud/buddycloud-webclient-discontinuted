@@ -1,24 +1,43 @@
 #globalHeader
-  height 34px
-  linear-bg-gradient white #ddd
+  height 21px
+  padding 0 13px
+  linear-bg-gradient #333, #111
+  color white
+  text-shadow 0 1px black
   box-shadow 0 1px 2px rgba(0,0,0,.13)
+  position relative
+  z-index 5
   display none
+  .logo
+    float right
   .search
     input
       padding 2px 5px
       box-shadow 0 1px white, 0 1px rgba(0,0,0,.03) inset
       border 1px solid rgba(0,0,0,.08)
       border-radius 3px
+      display none
 
 #content
   margin-left 76px
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
-  background #eee
-  overflow hidden
   position relative
   box-shadow 0 0 7px black
   z-index 1
+  &.overlapping
+    min-height 100%
+    position absolute
+    .channelView
+      height 100%
+      position fixed
+    .messageView
+      min-height 100%
+      margin-left 200px
+      box-shadow 0 0 13px rgba(0, 0, 0, 0.55), 0 0 34px rgba(0, 0, 0, 0.55), 0 0 55px rgba(0, 0, 0, 0.55)
+      float none
+      position absolute
+      z-index 4
 .channelOverview #content
   margin-left 100%
 .channelOverview.stateArrived #content
@@ -26,18 +45,14 @@
 
 .channelView
   padding 13px
+  background #eee
   overflow hidden
   position relative
   z-index 1
-  header
+  > header
     width 492px
     padding-left 8px
     position relative
-    &:after
-      content ""
-      clear both
-      display block
-      height 0
     h2
       float left
     nav
@@ -68,7 +83,7 @@
     + .topic
       border-radius 3px 3px 0 0
     .loggedIn
-      .follow, .newTopic
+      .follow, .newTopic, .tab
         display none
 .myChannel
   .follow, .newTopic, .unfollow, .info
@@ -86,7 +101,6 @@
   border-radius 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
   float left
-  overflow hidden
   position relative
   z-index 2
   transform-style preserve-3d
@@ -98,7 +112,7 @@
     box-shadow inset 0 -1px rgba(0,0,0,.21)
     overflow hidden
     &:last-child
-      border-radius 0 0 3px 3px
+      border-radius 0 0 5px 5px
     &.new
       box-shadow inset 0 -1px rgba(0,0,0,.21), 3px 0 0 default_highlight inset
   .notification
@@ -128,7 +142,7 @@
       position absolute
       > div
         margin-left 5px
-    img
+    .avatar
       width 50px
       transition 500ms
     &.log
@@ -142,7 +156,7 @@
       section
         line-height 25px
         min-height 25px
-      img
+      .avatar
         left 38px
         width 25px
       p
@@ -195,15 +209,13 @@
     text-overflow ellipsis
   .opener:hover nav, .comment:hover nav
     visibility visible
-  section 
-    > img
-      left 13px
-      position absolute
-      border-radius 3px
-    > p 
-      img
-        width 411px
-        vertical align
+  .avatar
+    left 13px
+    position absolute
+    border-radius 3px
+  section > p 
+    width 398px
+    vertical align
   section.answer
     position relative
     overflow hidden
@@ -217,7 +229,7 @@
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
       position relative
       resize none
-    img
+    .avatar
       width 26px
       left 63px
       top 18px
@@ -229,7 +241,7 @@
       transition none
       opacity 0
     &.write
-      img
+      .avatar
         width 40px
         left 11px
       textarea
@@ -247,7 +259,7 @@
     section
       padding-top 5px
       padding-left 63px 
-    img
+    .avatar
       top 6px
       left 11px
       width 40px
@@ -265,7 +277,7 @@
     overflow hidden
     position relative
     z-index 1
-    img
+    .avatar
       left 13px
       top 13px
       width 50px
@@ -293,8 +305,68 @@
       font-size 11px
       position absolute
       .button
-        display inline-block
+        display inline-block  
+  .message
+    min-height 14px
+    padding-left 66px
+    color rgba(0,0,0,.55)
+    cursor pointer
+    &.new
+      background-color rgba(0,0,0,.08)
+    &.selected
+      color darken(light_highlight, 55%)
+      background light_highlight
+      .location, .time
+        color rgba(darken(light_highlight, 55%), 0.55)
+    &:last-child
+      box-shadow none
+    .avatar
+      width 40px
+    p
+      overflow hidden
+      white-space nowrap
+      text-overflow ellipsis
         
+.conversation
+  .newTopic
+  article
+    padding 13px 13px 13px 46px
+    background white
+    box-shadow 0 0 3px rgba(0,0,0,.13 inset)
+    position relative
+    &:last-child
+      border-radius 0 0 5px 5px
+    .avatar
+      left 13px
+      width 25px
+      border-radius 2px
+      position absolute
+    .postmeta
+      color rgba(0,0,0,.34)
+      float none
+      display none
+    p
+      margin-top 3px
+      padding 0 8px
+      font-size 12px
+      background #eee
+      border-radius 5px
+      display inline-block
+      float left
+      clear left
+      .time
+        display none
+  .me
+    padding-left 13px
+    padding-right 46px
+    p
+      clear right
+      float right
+    .avatar
+      left auto
+      right 13px
+    .postmeta
+      text-align right
 
 .moderationPanel
   display none
@@ -363,23 +435,11 @@
     h3
       margin-bottom 3px
       font-size 18px
-      .count
-        font-size 14px
-        line-height 27px
-        color default_highlight
-        &:before
-          content "("
-        &:after
-          content ")"
     img
-      margin 0 7px 7px 0
-      vertical-align bottom
+      margin 0 3px 3px 0
       border-radius 3px
-      float left
-      display block
+      display inline-block
       cursor pointer
-      &:nth-child(4n)
-        margin-right 0
     .showAll
       padding-top 3px
       line-height 19px
@@ -392,3 +452,12 @@
       &:hover
         color default_highlight
         background default_highlight - rgba(0,0,0,0.89) + 50%
+        
+.count
+  font-size 14px
+  line-height 27px
+  color default_highlight
+  &:before
+    content "("
+  &:after
+    content ")"

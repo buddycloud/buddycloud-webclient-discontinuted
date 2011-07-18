@@ -9,16 +9,32 @@
   .personal.channel
     height 76px
     linear-bg-gradient rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.21)
-    box-shadow 0 1px rgba(0, 0, 0, 0.99), 0 2px rgba(255, 255, 255, 0.34)
+    box-shadow 0 1px rgba(0, 0, 0, 0.99), 0 2px rgba(255, 255, 255, 0.21)
     transition none
+  .search
+    width 100%
+    linear-bg-gradient rgba(255, 255, 255, 0.21), rgba(0, 0, 0, 0.13), rgba(255, 255, 255, 0.21)
+    float left
+    box-shadow 0 1px rgba(0, 0, 0, 0.55), 0 2px rgba(255, 255, 255, 0.21)
+    input
+      width 210px
+      height 18px
+      padding 1px 8px
+      margin 6px auto 5px
+      color black
+      background white
+      border none
+      border-radius 10px
+      box-shadow 0 1px rgba(255, 255, 255, 0.21), 0 1px rgba(0, 0, 0, 0.34) inset
+      display block
     + .channel
       margin-top 6px
-  &.makePlace > .personal.channel
+  &.makePlace > .search
     margin-bottom 64px
     transition 500ms
   &.makePlace > .channel.bubbleUp + .channel
     margin-top -64px
-  &.curtainsDown > .personal.channel
+  &.curtainsDown > .search
     transition none
   &.curtainsDown > .channel
     transition none
@@ -43,16 +59,16 @@
       opacity 0
       border-radius 5px
       cursor pointer
-      .title, .owner
+      .owner, .status
         width 100%
         white-space nowrap
         overflow hidden
         text-overflow ellipsis
         display block
-      .title
+      .owner
         font-weight bold
         color white
-      .owner
+      .status
         color rgba(255,255,255,.65)
         display block
       .domain
@@ -120,8 +136,10 @@
 .channelOverview #channels
   padding 21px 55px
   .personal.channel
-    linear-bg-gradient transparent transparent
+    linear-bg-gradient transparent, transparent
     box-shadow none
+  .search
+    display none
     + .channel
       margin-top 0
   .channel
@@ -147,17 +165,17 @@
 
 #more_channels, .channelOverview #more_channels
   width 74px
-  position fixed
   bottom 0
-  left 1px
+  margin-left 1px
   color white
   line-height 27px
   text-align center
   text-shadow 0 1px black
-  cursor pointer
   border-top 1px solid black
   background rgba(0,0,0,.89)
   box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.21)
+  cursor pointer
+  position fixed
   z-index 10
 .channelOverview #more_channels
   border-top-right-radius 5px
@@ -181,3 +199,5 @@
     position absolute
 .channelOverview #active_channel_indicator, .inTransition #active_channel_indicator
   right -10px
+.personal.channel #active_channel_indicator
+  top 32px
