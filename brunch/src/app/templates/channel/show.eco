@@ -23,52 +23,12 @@
     <!--
 
       Channel Notifications should be placed here - before .topics or as first inside of topic;
-      template: channelNotification.eco
+      template: notififications.eco
 
     -->
-    <% if @topics?.length: %>
     <section class="topics">
-      <% for topic in (@topics ? []): %>
-      <article class="topic">
-        <section class="opener">
-          <img class="avatar" src="<%= topic.autor.avatar %>" />
-          <div class="postmeta">
-            <span class="time" title="<%= topic.creationDate %>"><%= topic.passedTime %></span>
-            <!--
-              creationDate: hh:mm dd/mm/yyyy
-              -> we'll probably need to have an option to choose ones date-format
-              passedTime: 5 Minutes ago
-              -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
-            -->
-          </div>
-          <span class="name"><%= topic.autor.name %></span><span class="location"><%= topic.location %></span>
-          <p><%= topic.body %></p>
-        </section>
-        <% if @comments.length: %>
-        <section class="comments">
-          <% for comment in @comments: %>
-          <section class="comment">
-            <img class="avatar" src="<%= comment.user.avatar %>" />
-            <div class="postmeta">
-              <span class="time" title="<%= comment.creationDate %>"><%= comment.passedTime %></span>
-            </div>
-            <span class="name"><%= comment.user.name %></span><span class="location"><%= comment.location %></span>
-            <p><%= comment.body %></p>
-          </section>
-          <% end %>
-          <% if user.allowedToPost: %>
-          <section class="answer">
-            <img class="avatar" src="<%= answer.user.avatar %>" />
-            <textarea placeholder="post a comment..."></textarea>
-            <span class="button small prominent">Post</span>
-          </section>
-          <% end %>
-        </section>
-        <% end %>
-      </article>
-      <% end %>
+
     </section>
-    <% end %>
   </section><!-- /stream -->
   <div class="channelDetails">
     <section class="meta">

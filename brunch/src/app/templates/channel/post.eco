@@ -1,0 +1,14 @@
+<section class="opener">
+  <img class="avatar" src="<%= topic.autor.avatar %>" />
+  <div class="postmeta">
+    <span class="time" title="<%= topic.creationDate %>"><%= topic.passedTime %></span>
+    <!--
+      creationDate: hh:mm dd/mm/yyyy
+      -> we'll probably need to have an option to choose ones date-format
+      passedTime: 5 Minutes ago
+      -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
+    -->
+  </div>
+  <span class="name"><%= topic.autor.name %></span><span class="location"><%= topic.location %></span>
+  <p><%= topic.body %></p>
+</section>
