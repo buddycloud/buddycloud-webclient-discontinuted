@@ -9,10 +9,9 @@ class exports.Sidebar extends Backbone.View
     # default's not visible due to nice animation
     $('#sidebar').html @template()
     @el = $('#channels')
-    $('#more_channels').hide().click @channelOverview
+    $('#more_channels').hide()
     @hidden = yes
     @channel = {}
-    @areChannelsOpen = no
     @current_channel = null
     app.collections.user_subscriptions.bind "add", @add_one
 
@@ -55,20 +54,3 @@ class exports.Sidebar extends Backbone.View
     @el.animate(left:"-#{@el.width()}px", t)
     $('#more_channels').delay(t * 0.1).fadeOut()
     @hidden = yes
-
-  channelOverview: =>
-    body = $('body')
-    if @areChannelsOpen
-      body.removeClass 'stateArrived'
-      document.redraw()
-      body.addClass 'inTransition'
-      body.removeClass 'channelOverview'
-    else
-      body.addClass 'inTransition'
-      body.addClass 'channelOverview'
-    @areChannelsOpen = not @areChannelsOpen
-    @el.one transitionendEvent, ->
-      body.removeClass 'inTransition'
-      body.addClass('stateArrived') if body.hasClass 'channelOverview'
-
-

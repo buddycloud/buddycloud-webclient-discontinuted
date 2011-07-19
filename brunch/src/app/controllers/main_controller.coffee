@@ -1,6 +1,7 @@
 # needed collection
 { UserSubscriptions } = require('collections/user_subscriptions')
 # views
+{ ChannelOverView } = require('views/sidebar/more')
 { RegisterView } = require('views/register/show')
 { LoginView } = require('views/login/show')
 { IndexView } = require('views/home/index')
@@ -15,6 +16,7 @@ class exports.MainController extends Backbone.Router
     "/home"      :"home"
     "/register"  :"register"
     "/login"     :"login"
+    "/more"      :"more_channels"
 
   initialize: =>
     app.debug "initialize main controller"
@@ -51,4 +53,7 @@ class exports.MainController extends Backbone.Router
 
   register: =>
     @setView app.views.register = new RegisterView
+
+  more_channels: =>
+    @setView app.views.overview = new ChannelOverView
 
