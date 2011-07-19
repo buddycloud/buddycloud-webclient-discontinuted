@@ -10,8 +10,8 @@
 
 class exports.MainController extends Backbone.Router
   routes : # eg http://localhost:8080/#/index
-    ""           :"index"
-    "/"          :"index"
+    ""           :"login"
+    "/"          :"login"
     "/index"     :"index"
     "/home"      :"home"
     "/register"  :"register"
@@ -46,7 +46,7 @@ class exports.MainController extends Backbone.Router
     @setView app.views.home = new HomeView
 
   index: =>
-    @setView app.views.home = new IndexView
+    @setView app.views.index = new IndexView
 
   login: =>
     @setView app.views.login = new LoginView
