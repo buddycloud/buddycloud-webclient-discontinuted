@@ -7,7 +7,7 @@
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
   <script src="web/js/app.js"></script>
-  <script>require('main');</script>
+  <!--<script>require('main');</script>-->
 </head>
 <body class="wideChannelView">
   <!--<div id="login">
@@ -590,7 +590,6 @@
           <div class="newTopic button">+ Topic</div>
           <div class="follow button">Follow</div>
           <div class="unfollow button unprominent">Unfollow</div>
-          <div class="info button round" title="show/hide Channel Info">Channel Info</div>
           <div class="tab">Private Conversation<span class="personalmessage counter">2</span></div>
           <div class="tab active">Channel</div>
         </nav>
@@ -738,62 +737,91 @@
         </article>
       </section><!-- /stream -->
       <div class="channelDetails">
-        <section class="meta">
-          <p>
-            <span class="title">Owner:</span>daisy@disney.com</span>
-          </p>
-          <p>
-            <span class="title">About me:</span>I'm Daisy, I love icecream, sunny days, window shopping and most of all: Donald
-          </p>
-          <p class="open">
-            <span class="title">This Channel is:</span>Public
-          </p>
-        </section>
-        <section class="channelList">
-          <h3>moderators <span class="count">2</count></h3>
-          <div class="list">
-            <img src="public/avatars/user1.jpg" />
-            <img src="public/avatars/user2.jpg" />
-          </div>
-        </section><!-- /followers -->
-        <section class="channelList">
-          <h3>followers <span class="count">20</count></h3>
-          <div class="list">
-            <img src="public/avatars/user3.jpg" />
-            <img src="public/avatars/user4.jpg" />
-            <img src="public/avatars/user5.jpg" />
-            <img src="public/avatars/user6.jpg" />
-            <img src="public/avatars/user7.jpg" />
-            <img src="public/avatars/user8.jpg" />
-            <img src="public/avatars/user9.jpg" />
-            <img src="public/avatars/user10.jpg" />
-            <img src="public/avatars/user11.jpg" />
-            <img src="public/avatars/user12.jpg" />
-            <img src="public/avatars/user13.jpg" />
-            <img src="public/avatars/channel8.jpg" />
-          </div>
-          <div class="showAll">show all</div>
-        </section><!-- /followers -->
-        <section class="channelList">
-          <h3>channels nearby <span class="count">10</count></h3>
-          <div class="list">
-            <img src="public/avatars/channel1.jpg" />
-            <img src="public/avatars/channel2.jpg" />
-            <img src="public/avatars/channel3.jpg" />
-            <img src="public/avatars/channel4.jpg" />
-          </div>
-          <div class="showAll">show all</div>
-        </section><!-- /followers -->
-        <section class="channelList">
-          <h3>similar channels <span class="count">8</count></h3>
-          <div class="list">
-            <img src="public/avatars/channel5.jpg" />
-            <img src="public/avatars/channel6.jpg" />
-            <img src="public/avatars/channel7.jpg" />
-            <img src="public/avatars/channel8.jpg" />
-          </div>
-          <div class="showAll">show all</div>
-        </section><!-- /followers -->
+        <div class="toggle"><span class="title">Channel Info</span><span class="icon">i</span></div>
+        <div class="holder">
+            <section class="meta">
+              <p>
+                <span class="title">Owner:</span>daisy@disney.com</span>
+              </p>
+              <p>
+                <span class="title">About me:</span>I'm Daisy, I love icecream, sunny days, window shopping and most of all: Donald
+              </p>
+              <table>
+                <tr>
+                  <th>Status</th>
+                  <th>Since</th>
+                </tr>
+                <tr>
+                  <td><span class="open">Public</span></td>
+                  <td>188 days</td>
+                </tr>
+                <tr>
+                  <th colspan="2">Location</th>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <span class="previous">Home</span> → 
+                    <span class="current">Shopping</span> → 
+                    <span class="future">Home</span>
+                  </td>
+                </tr>
+              </table>
+              <!--<p class="open">
+                <span class="title">This Channel is:</span>Public
+              </p>
+              <p class="broadcast">
+                <span class="title">Broadcast Time:</span>188 days
+              </p>
+              <p class="location">
+                <span class="previous">previous-place</span> → <span class="current">current place</span> → <span class="future">future place</span>
+              </p>-->
+            </section>
+            <section class="channelList">
+              <h3>moderators <span class="count">2</count></h3>
+              <div class="list">
+                <img src="public/avatars/user1.jpg" />
+                <img src="public/avatars/user2.jpg" />
+              </div>
+            </section><!-- /followers -->
+            <section class="channelList">
+              <h3>followers <span class="count">20</count></h3>
+              <div class="list">
+                <img src="public/avatars/user3.jpg" />
+                <img src="public/avatars/user4.jpg" />
+                <img src="public/avatars/user5.jpg" />
+                <img src="public/avatars/user6.jpg" />
+                <img src="public/avatars/user7.jpg" />
+                <img src="public/avatars/user8.jpg" />
+                <img src="public/avatars/user9.jpg" />
+                <img src="public/avatars/user10.jpg" />
+                <img src="public/avatars/user11.jpg" />
+                <img src="public/avatars/user12.jpg" />
+                <img src="public/avatars/user13.jpg" />
+                <img src="public/avatars/channel8.jpg" />
+              </div>
+              <div class="showAll">show all</div>
+            </section><!-- /followers -->
+            <section class="channelList">
+              <h3>channels nearby <span class="count">10</count></h3>
+              <div class="list">
+                <img src="public/avatars/channel1.jpg" />
+                <img src="public/avatars/channel2.jpg" />
+                <img src="public/avatars/channel3.jpg" />
+                <img src="public/avatars/channel4.jpg" />
+              </div>
+              <div class="showAll">show all</div>
+            </section><!-- /followers -->
+            <section class="channelList">
+              <h3>similar channels <span class="count">8</count></h3>
+              <div class="list">
+                <img src="public/avatars/channel5.jpg" />
+                <img src="public/avatars/channel6.jpg" />
+                <img src="public/avatars/channel7.jpg" />
+                <img src="public/avatars/channel8.jpg" />
+              </div>
+              <div class="showAll">show all</div>
+            </section><!-- /followers -->
+        </div><!-- /holder -->
       </div><!-- /detail -->
     </div><!-- /channelView -->
   </div><!-- /content -->
@@ -936,8 +964,8 @@
     show/hide channel info
     
     ### */
-  var channelInfoToggle = $('.info.button');
-  var channelInfo = $('.channelDetails');
+  var channelInfo = $('.channelDetails');  
+  var channelInfoToggle = channelInfo.find('> .toggle');
   
   channelInfoToggle.click(function(){ channelInfo.toggleClass('hidden'); });
   
