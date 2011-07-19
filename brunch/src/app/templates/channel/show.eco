@@ -2,15 +2,15 @@
   <header>
     <h2><%= @channel.metadata?.title?.value %></h2>
     <nav class="loggedIn"><!-- this here is still a mess.. -->
-      <% if @user?.notFollowingThisChannel: %><div class="follow button">Follow</div>
+      <% if @user.notFollowingThisChannel: %><div class="follow button">Follow</div>
       <% else: %><div class="unfollow button unprominent">Unfollow</div><% end %>
       <div class="info button round" title="show/hide Channel Info">Channel Info</div>
     </nav>
   </header>
   <section class="stream">
-    <% if @user?.hasRightToPost: %>
+    <% if @user.hasRightToPost: %>
     <section class="newTopic">
-      <img class="avatar" src="<%= @channel.avatar %>" />
+      <img class="avatar" src="<%= app.current_user.avatar() %>" />
       <textarea placeholder="New Topic..."></textarea>
       <div class="controls">
         <div class="button small checkbox">

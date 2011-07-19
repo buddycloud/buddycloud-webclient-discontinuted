@@ -1,6 +1,3 @@
-gravatar = (mail, opts) ->
-    hash = MD5.hexdigest mail.toLowerCase()
-    "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
 
 class exports.ChannelEntry extends Backbone.View
   template : require 'templates/sidebar/channel_entry'
@@ -12,9 +9,9 @@ class exports.ChannelEntry extends Backbone.View
     @model.bind "change", @render
 
   render : =>
+    @avatar = @model.avatar
     @channel = @model.toJSON()
     console.log ">>>>>>>>>>>>>>>>>>>>>", this, @model.toJSON()
-    @avatar = gravatar @channel.jid, s:50, d:'retro'
     old = @el; old.replaceWith @el = $(@template this).attr id:@cid
     @el.click =>
         app.sidebar.setCurrentChannel @model.cid

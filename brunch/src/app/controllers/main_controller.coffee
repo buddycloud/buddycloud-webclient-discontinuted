@@ -34,6 +34,7 @@ class exports.MainController extends Backbone.Router
 
 
   bootstrap: =>
+    app.views.overview ?= new ChannelOverView
     app.handlers.data_handler.get_user_subscriptions()
     app.collections.user_subscriptions = new UserSubscriptions(app.current_user)
     app.collections.user_subscriptions.fetch()

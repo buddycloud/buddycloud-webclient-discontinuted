@@ -11,7 +11,7 @@ class exports.Sidebar extends Backbone.View
     $('#sidebar').html @template()
     @el = $('#channels')
     $('#more_channels').hide()
-    app.views.overview ?= new ChannelOverView
+    app.views.overview.initialize() # hacky
     @hidden = yes
     @channel = {}
     @current_channel = null
