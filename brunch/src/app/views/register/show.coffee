@@ -1,8 +1,8 @@
 class exports.RegisterView extends Backbone.View
   template : require 'templates/register/show'
 
-  initialize : =>
-    $('#register').html(@template())
+  initialize : ->
+    $('#register').html @template()
     $('#register_form').submit (ev) =>
       ev.preventDefault()
       ev.stopPropagation()
@@ -21,7 +21,7 @@ class exports.RegisterView extends Backbone.View
   show : ->
     $('#register').show()
     $('#register_form').delay(50).fadeIn()
-    $('#login_form').hide()
+    $('#login_form').fadeOut()
 
   start_registration : (name, password) =>
     app.connection_handler.register(name, password)

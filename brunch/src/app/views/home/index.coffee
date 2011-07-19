@@ -1,9 +1,11 @@
-class exports.HomeView extends Backbone.View
-  template : require('templates/home/index')
+class exports.IndexView extends Backbone.View
+  template: require 'templates/home/index'
 
-  initialize : ->
-    app.current_user.bind "logged_in", @finish_view
+  initialize: =>
 
-  render : ->
-    $('#content').html @template()
+  render: =>
+    $('#content').html @el = $(@template())
+
+  show: =>
+    @render()
 

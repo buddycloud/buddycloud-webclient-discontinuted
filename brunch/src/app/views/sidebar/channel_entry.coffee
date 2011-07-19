@@ -16,6 +16,8 @@ class exports.ChannelEntry extends Backbone.View
     console.log ">>>>>>>>>>>>>>>>>>>>>", this, @model.toJSON()
     @avatar = gravatar @channel.jid, s:50, d:'retro'
     old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+    @el.click =>
+        app.sidebar.setCurrentChannel @model.cid
     #@el.parent().remove(@el).prepend(@el) if @isPersonal()
     this
 

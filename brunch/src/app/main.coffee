@@ -9,10 +9,6 @@ app.handlers = {}
 { ConnectionHandler } = require('handlers/connection_handler')
 # models
 { User } = require('models/user')
-# views
-{ RegisterView } = require('views/register/show')
-{ LoginView } = require('views/login/show')
-{ HomeView } = require('views/home/index')
 
 # app bootstrapping on document ready
 $(document).ready ->
@@ -22,22 +18,16 @@ $(document).ready ->
   app.debug = () ->
     console.log "DEBUG:", arguments if app.debug_mode
   Strophe.log = (level, msg) ->
-    console.log "STROPHE:", level, msg if app.debug_mode and level > 0
+    console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
+
 
   app.initialize = ->
     # current user
-    app.current_user = new User()
+    app.current_user = new User
 
-    # add a new Connection Handler
-    app.connection_handler = new ConnectionHandler()
+    app.connection_handler = new ConnectionHandler
 
-    # initialize the user menu
-    # TODO
-
-    # initialize start view
-    start_view = null
-    start_view = new RegisterView() if window.location.hash is '#register'
-    start_view or= new LoginView()
+    app.controllers.main = new MainController
 
     ### the password hack ###
     ###
@@ -54,13 +44,6 @@ $(document).ready ->
     else
       # prefilled password detected, sign in the user automatically
       $('#login_form').trigger "submit"
-    start_view.show()
 
 
   app.initialize()
-
-  # bootstrapping after login
-  app.connection_handler.bind "connected", ->
-    app.controllers.main = new MainController()
-
-    Backbone.history.start()

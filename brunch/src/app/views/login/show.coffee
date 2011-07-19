@@ -20,7 +20,7 @@ class exports.LoginView extends Backbone.View
 
   show : ->
     $('#login_form').delay(50).fadeIn()
-    $('#register').hide()
+    $('#register').fadeOut()
 
   start_connection : (jid, password )=>
     # pretend we get a connection immediately
