@@ -16,7 +16,7 @@ class exports.MainController extends Backbone.Router
     "/home"      :"home"
     "/register"  :"register"
     "/login"     :"login"
-    "/more"      :"more_channels"
+    "/more"      :"overview"
 
   initialize: =>
     app.debug "initialize main controller"
@@ -54,6 +54,6 @@ class exports.MainController extends Backbone.Router
   register: =>
     @setView app.views.register = new RegisterView
 
-  more_channels: =>
+  overview: =>
     @setView app.views.overview = new ChannelOverView
 

@@ -1,3 +1,4 @@
+{ ChannelOverView } = require('views/sidebar/more')
 { ChannelEntry } = require('views/sidebar/channel_entry')
 { ChannelView } = require('views/channel/show')
 
@@ -10,6 +11,7 @@ class exports.Sidebar extends Backbone.View
     $('#sidebar').html @template()
     @el = $('#channels')
     $('#more_channels').hide()
+    app.views.overview ?= new ChannelOverView
     @hidden = yes
     @channel = {}
     @current_channel = null
