@@ -328,45 +328,51 @@
       text-overflow ellipsis
         
 .conversation
-  .newTopic
   article
-    padding 13px 13px 13px 46px
-    background white
-    box-shadow 0 0 3px rgba(0,0,0,.13 inset)
+    min-height 40px
+    padding 13px 13px 13px 64px
+    box-shadow 0 -1px rgba(0, 0, 0, 0.13) inset
     position relative
     &:last-child
       border-radius 0 0 5px 5px
+      box-shadow none
     .avatar
       left 13px
-      width 25px
+      width 40px
       border-radius 2px
       position absolute
     .postmeta
-      color rgba(0,0,0,.34)
+      margin 0
       float none
-      display none
+      text-align left
+      span
+        color #ddd
     p
-      margin-top 3px
-      padding 0 8px
+      margin-top 2px
+      margin-bottom 5px
       font-size 12px
-      background #eee
-      border-radius 5px
-      display inline-block
-      float left
-      clear left
+      &:last-child
+        margin-bottom 0
       .time
-        display none
+        float right
+        color rgba(0, 0, 0, 0.21)
+        font-size 11.5px
+        line-height 19.5px
   .me
     padding-left 13px
-    padding-right 46px
+    padding-right 64px
     p
+      width 100%
+      text-align right
       clear right
       float right
+      .time
+        float left
     .avatar
       left auto
       right 13px
     .postmeta
-      text-align right
+      float right
 
 .moderationPanel
   display none
@@ -391,38 +397,76 @@
       border-bottom-right-radius 5px
     &:hover
       linear-bg-gradient rgba(0,0,0,.05), rgba(0,0,0,.13)
-      
+
 .channelDetails
-  width 222px
-  padding 21px
+  width 264px
   font-size 12px
   color rgba(0,0,0,.55)
   float left
   position relative
-  transition 500ms
-  &.hidden
+  .toggle
+    width 250px
+    height 25px
+    margin-top 13px
+    padding 3px 13px 0 21px
+    font-weight bold
+    line-height 23px
+    border-radius 0 14px 14px 0
+    background rgba(0,0,0,.05)
+    transition 500ms
+    cursor pointer
+    .icon
+      font-family "Nunito",sans-serif
+      font-size 16px
+      float right
+  &.hidden .toggle
+    margin-left -250px
+  .holder
+    width 264px
+    padding 8px 21px
+    font-size 12px
+    color rgba(0,0,0,.55)
+    float left
+    position relative
+    transition 500ms
+  &.hidden .holder
     margin-left -252px
     opacity 0
   .meta
+    table
+      margin 13px 0
+      th
+        margin-right 2px
+        padding 1px 5px
+        font-size 11px
+        text-align center
+        background rgba(0,0,0,.05)
+        &:last-child
+          margin-right 0
+      td
+        padding 2px 5px
+        text-align center
     p
       margin-bottom 8px
       .title
         margin-right 5px
         font-weight bold
         position relative
-      &.open .title, &.closed .title
-        margin-right 2px
-        &:after
-          margin-left 5px
-          width 16px
-          height 18px
-          content ""
-          vertical-align top
-          background url(../../public/icons/unlock-small.png) no-repeat center
-          display inline-block
-      &.closed .title
-        &:after
-          background url(../../public/icons/lock-small.png) no-repeat center
+  .open, .closed
+    margin-right 2px
+    &:after
+      margin-left 5px
+      width 16px
+      height 18px
+      content ""
+      vertical-align top
+      background url(../../public/icons/unlock-small.png) no-repeat center
+      display inline-block
+  .closed
+    &:after
+      background url(../../public/icons/lock-small.png) no-repeat center
+  .previous
+    text-decoration line-through
   .channelList
     margin 13px 0 8px
     &:after
