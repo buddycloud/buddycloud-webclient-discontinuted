@@ -1,26 +1,37 @@
+input[type=submit].button
+  height 27px
+  
 .button
-  margin 1px
-  padding 0 13px
-  font-size 11px
-  line-height 23px
-  color black
-  text-shadow 0 1px rgba(255,255,255,.75)
-  background-color rgba(255,255,255,.89)
-  linear-bg-gradient transparent, rgba(0,0,0,.13)
-  border none
+  height 26px
+  padding 0 15px
+  font-size 12px
+  line-height 26px
+  color rgba(0,0,0,.67)
+  text-shadow 0 1px rgba(255,255,255,.55)
+  background #eee
+  border 1px solid rgba(0, 0, 0, 0.21)
+  border-bottom-color rgba(0,0,0,.34)
   border-radius 3px
-  box-shadow 0 1px rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0, 0, 0, 0.13), 0 0 0 1px rgba(0, 0, 0, 0.13)
+  box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
   display inline-block
-  transition 250ms
+  position relative
   cursor pointer
+    
+  &.active, &.active:hover
+    color white
+    text-shadow 0 1px rgba(0, 0, 0, 0.21)
+    linear-bg-gradient #999, #aaa
+    border-color rgba(0,0,0,.21)
+    border-top-color rgba(0,0,0,.34)
+    box-shadow 0 1px 3px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255, 255, 255, 0.89)
+    cursor default
 
   &:hover
-    linear-bg-gradient transparent, rgba(0,0,0,.05)
+    linear-bg-gradient #fff, #eee
   
   &:active
-    linear-bg-gradient rgba(0,0,0,.13), transparent
-    position relative
-    top 1px
+    background #eee
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset
   
   &.tall
     padding 5px 21px
@@ -28,9 +39,10 @@
   
   &.small
     height 20px
+    line-height 20px
     padding 0 10px
     font-size 11px
-    line-height 22px
+    line-height 20px
     border-radius 3px
   
   &.callToAction
@@ -50,5 +62,30 @@
     box-shadow inset 0 1px rgba(255,255,255,.89), 0 1px rgba(0,0,0,.05), 0 0 0 1px rgba(0, 0, 0, 0.08)
     
   &.light
-    background-color white
+    border none
     box-shadow 0 1px rgba(255, 255, 255, 0.89) inset, 0 1px 0 rgba(0, 0, 0, 0.21), 0 0 0 3px rgba(0, 0, 0, 0.13)
+    
+  &.onDark
+    color white
+    text-shadow 0 1px rgba(0,0,0,.55)
+    background transparent
+    border-color rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.55)
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.34) inset, 0 1px rgba(0, 0, 0, 0.08)
+  
+  &.double
+    span
+      margin-right 12px
+      padding-right 12px
+      border-right 1px solid rgba(0, 0, 0, 0.34)
+  
+  &.unfollow123
+    padding-left 21px
+    position relative
+    &:before
+      content ""
+      left 7px
+      top 8px
+      width 9px
+      height 9px
+      background url(../../public/icons/minus.png) no-repeat
+      position absolute
