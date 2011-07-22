@@ -6,30 +6,62 @@
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
   <script src="web/js/app.js"></script>
-  <script>require('main');</script>
+  <!--<script>require('main');</script>-->
 </head>
-<body>
-
-    <!--debugging-->
-  <a href="#/login">login</a>
-  <a href="#/register">register</a>
-  <a href="#/home">home</a>
-  <a href="#/index">index</a>
-
-  <div id="login">
-    <div id="user_menu"></div>
-    <h1>buddycloud beta</h1>
-    <form id="login_form">
-      <input type="text" id="home_login_jid" placeholder="Jabber ID" />
-      <input type="password" id="home_login_pwd" placeholder="Password" />
-      <input type="submit" id="home_login_submit" class="button tall" value="Log in" />
-      <div class="connecting">
-        <img src="public/spinner.gif" />
-        <span>Logging you in...</span>
-      </div>
-    </form>
+<body class="start">
+  
+  <div class="centerBox">
+    <div class="welcome">
+      <section class="hero">
+        <img src="public/images/hero.jpg" />
+      </section>
+      <section class="content">
+        <h1>Buddycloud</h1>
+        <p>Social Networking done right</p>
+      </section>
+      <section class="navigation clearfix">
+        <div id="goLogin" class="button">Login</div>
+        <div id="goRegister" class="button">Register</div>
+      </section>
+    </div>
+    <div class="login">
+      <section class="content">
+        <h2>Buddycloud Login</h2>
+        <input type="text" id="home_login_jid" placeholder="Jabber ID" />
+        <input type="password" id="home_login_pwd" placeholder="Password" />
+      </section>
+      <section class="navigation clearfix">
+        <div class="button back">Back</div>
+        <div class="button">Login</div>
+      </section>
+    </div>
+    <div class="register">
+      <section class="content">
+        <h2>Register for Free</h2>
+        <input type="text" id="home_register_jid" placeholder="Jabber ID" />
+        <input type="password" id="home_register_pwd" placeholder="Password" />
+      </section>
+      <section class="navigation clearfix">
+        <div class="button back">Back</div>
+        <div class="button">Login</div>
+      </section>
+    </div>
   </div>
-  <div id="register"></div>
+  
   <div id="sidebar"></div>
   <div id="content"></div>
+  <script>
+    var box = $('.centerBox');
+    
+    $('.back').click(function(){
+      box.removeClass('loginPicked registerPicked');
+    });
+    
+    $('#goLogin').click(function(){
+      box.addClass('loginPicked');
+    });
+    $('#goRegister').click(function(){
+      box.addClass('registerPicked');
+    });
+  </script>
 </body>
