@@ -8,9 +8,11 @@
 @import "stream"
 
 html
-  height 100%
+  min-height 100%
   font 13px/17px "Helvetica Neue", Helvetica, Arial, sans-serif
-  background black url(../../public/images/smooth-aura.jpg) fixed
+  //background black url(../../public/images/smooth-aura.jpg) fixed
+  //linear-bg-gradient #024, #909, #035
+  linear-bg-gradient #024, #049, #035 //blau
   -webkit-font-smoothing antialiased
   
 body
@@ -41,8 +43,22 @@ h2
   font-size 26px
   font-family "Nunito", sans-serif
 h3
-  font-size 20px
+  font-size 18px
   font-family "Nunito", sans-serif
+  
+h4
+  width 100%
+  font-size 14px
+  font-weight bold
+  color rgba(0,0,0,.89)
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+  
+h5
+  margin-bottom 5px
+  font-size 12px
+  font-weight bold
 
 ul
   list-style-type none
