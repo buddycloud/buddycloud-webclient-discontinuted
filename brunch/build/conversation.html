@@ -25,8 +25,8 @@
     <div id="channels">
       <div class="personal channel">
         <div class="avatar" title="Lazy Lizard Loft - donald@disney.com" style="background-image: url(public/avatars/user1.jpg)">
-          <span class="channelmessage counter">2</span>
-          <span class="personalmessage counter">2</span>
+          <span class="channelpost counter">2</span>
+          <span class="message counter">2</span>
         </div>
         <div class="info">
           <span class="owner">donald<span class="domain">@disney.com</span></span>
@@ -38,7 +38,7 @@
       </div>
       <div class="channel selected">
         <div class="avatar" title="Daisy's World - daisy@disney.com" style="background-image: url(public/avatars/user2.jpg)">
-          <span class="channelmessage counter">2</span>
+          <span class="channelpost counter">2</span>
         </div>
         <div class="info">
           <span class="owner">daisy<span class="domain">@disney.com</span></span>
@@ -48,7 +48,7 @@
       </div>
       <div class="channel">
         <div class="avatar" title="Disney's Beautiful Princesses - princesses@disney.com" style="background-image: url(public/avatars/channel2.jpg)">
-          <span class="channelmessage counter admin">1</span>
+          <span class="channelpost counter admin">1</span>
         </div>
         <div class="info">
           <span class="owner">princesses<span class="domain">@disney.com</span></span>
@@ -57,7 +57,7 @@
       </div>
       <div class="channel">
         <div class="avatar" title="Disney's Bewitching Fairies - fairies@disney.com" style="background-image: url(public/avatars/channel3.jpg)">
-          <span class="channelmessage counter admin">1</span>
+          <span class="channelpost counter admin">1</span>
         </div>
         <div class="info">
           <span class="owner">fairies<span class="domain">@disney.com</span></span>
@@ -66,7 +66,7 @@
       </div>
       <div class="channel">
         <div class="avatar" title="Duck's House - ducks@disney.com" style="background-image: url(public/avatars/channel4.jpg)">
-          <span class="channelmessage counter">2</span>
+          <span class="channelpost counter">2</span>
         </div>
         <div class="info">
           <span class="owner">ducks<span class="domain">@disney.com</span></span>
@@ -583,9 +583,15 @@
     </div>
   </div>
   <div id="content" class="clearfix">
-    <div class="channelView myChannel">
+    <div class="channelView">
       <header class="clearfix">
-        <h2>Daisys World</h2>
+        <h2 class="title">Daisys World</h2>
+        <span class="mood">Hanging out with the world at my feet</span>
+        <div class="location">
+          <span class="previous">Home</span> → 
+          <span class="current">Shopping</span> → 
+          <span class="future">Home</span>
+        </div>
         <nav>
           <div class="newTopic button">+ Topic</div>
           <div class="follow button">Follow</div>
@@ -606,7 +612,7 @@
             </div>
             <div class="button small prominent" id="createNewTopic">Post</div>
         </section>
-        <article class="you">
+        <article class="me">
           <img class="avatar" src="public/avatars/user1.jpg" />
           <div class="postmeta">
             <span class="name">Donald</span>
@@ -628,7 +634,7 @@
             I'm fine as well. We plan on going to the Carpe tonight. Are you in?
           </p>
         </article>
-        <article class="you">
+        <article class="me">
           <img class="avatar" src="public/avatars/user1.jpg" />
           <div class="postmeta">
             <span class="name">Donald</span>
@@ -656,7 +662,7 @@
         </article>
       </section><!-- /stream -->
       <div class="channelDetails">
-        <div class="toggle"><span class="title">Channel Info</span><span class="icon">i</span></div>
+        <div class="toggle"><span class="title">Channel Info</span><span class="icon"></span></div>
         <div class="holder">
             <section class="meta">
               <p>
@@ -665,35 +671,12 @@
               <p>
                 <span class="title">About me:</span>I'm Daisy, I love icecream, sunny days, window shopping and most of all: Donald
               </p>
-              <table>
-                <tr>
-                  <th>Status</th>
-                  <th>Since</th>
-                </tr>
-                <tr>
-                  <td><span class="open">Public</span></td>
-                  <td>188 days</td>
-                </tr>
-                <tr>
-                  <th colspan="2">Location</th>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <span class="previous">Home</span> → 
-                    <span class="current">Shopping</span> → 
-                    <span class="future">Home</span>
-                  </td>
-                </tr>
-              </table>
-              <!--<p class="open">
+              <p class="open">
                 <span class="title">This Channel is:</span>Public
               </p>
               <p class="broadcast">
-                <span class="title">Broadcast Time:</span>188 days
+                <span class="title">Broadcasting since:</span>188 days
               </p>
-              <p class="location">
-                <span class="previous">previous-place</span> → <span class="current">current place</span> → <span class="future">future place</span>
-              </p>-->
             </section>
             <section class="channelList">
               <h3>moderators <span class="count">2</count></h3>
