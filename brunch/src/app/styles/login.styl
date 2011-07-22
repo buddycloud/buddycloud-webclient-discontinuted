@@ -1,48 +1,96 @@
-#login
-  width 308px
-  position absolute
-  left 50%
-  top 50%
-  margin-top -154px
-  margin-left -154px
-  height 217px
-  h1
-    margin 5px 21px
-    color rgba(255, 255, 255, 0.95)
-    text-align center
-    text-shadow 0 1px rgba(0, 0, 0, 0.13), 1px 0 rgba(0, 0, 0, 0.13), 0 -1px rgba(0, 0, 0, 0.13), -1px 0 rgba(0, 0, 0, 0.13), 0 1px 7px rgba(0, 0, 0, 0.21)
+.start
+  transform-style preserve-3d
+  perspective 1000
 
-#login_form
-  display none
-  padding 13px 21px
-  linear-bg-gradient white, #ddd
-  border-radius 5px
-  box-shadow 0 0 0 1px rgba(0, 0, 0, 0.13), 0 1px 7px rgba(0, 0, 0, 0.21), 0 1px rgba(255, 255, 255, 0.21) inset
-  overflow hidden
-  .button
-    float right
+.centerBox
+  width 566px
+  height 480px
+  margin 144px auto 89px
+  position relative
+  > div
+    top 0
+    width 566px
+    height 480px
+    background #f7f7f7
+    border-radius 3px
+    box-shadow 0 0 0 1px rgba(0,0,0,.55), 0 1px 13px rgba(0,0,0,.55), 0 1px white inset
+    position absolute
+    transition 1000ms
+    -webkit-backface-visibility hidden
+  .hero
+    padding 13px 13px 0
+    width 540px
+    height 320px
+    position relative
+    img
+      width 540px
+  .content
+    padding 13px
+  .navigation
+    bottom 0
+    width 550px
+    border-top 1px solid rgba(0,0,0,.21)
+    padding 5px 8px
+    linear-bg-gradient #eee, #ccc
+    border-radius 0 0 3px 3px
+    box-shadow 0 1px white inset
+    position absolute
+    .button
+      margin-left 8px
+      float right
+      &.back
+        margin-left 0
+        float left
   input[type="text"], input[type="password"]
+    width 215px
     padding 7px 8px
     margin 8px 0
     font-size 18px
     vertical-align bottom
+    background white
     border-radius 3px
     border 1px solid rgba(0, 0, 0, 0.21)
-    box-shadow 0 1px rgba(0,0,0,.05) inset, 0 1px rgba(255,255,255,.34)
+    box-shadow 0 1px 3px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255, 255, 255, 0.34)
     display block
     &:focus
       border-color rgba(0, 0, 0, 0.34)
-
-.connecting
-  padding-top 7px
-  text-shadow 0 1px rgba(255, 255, 255, 0.55)
-  float left
-  opacity 0
-  transition 250ms
-  img
-    line-height 19.5px
-    vertical-align top
-  span
-    margin-left 3px
-  &.visible
-    opacity 1
+  .login, .register
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 13px rgba(0, 0, 0, 0.55), 0 1px rgba(255, 255, 255, 0.21) inset
+    overflow hidden
+    display block
+    transform rotate3d(0,1,0,-180deg)
+    > section
+      transform rotate3d(0,1,0,-360deg)
+    h2
+      color #ddd
+    .content
+      width 233px
+      padding 13px
+      margin 138px auto 0
+  .register
+    background 
+  &.loginPicked,
+  &.registerPicked
+    .welcome
+      transform rotate3d(0,1,0,-180deg)
+  &.loginPicked
+    .login
+      transform rotate3d(0,1,0,-360deg)
+  &.registerPicked
+    .register
+      transform rotate3d(0,1,0,-360deg)
+  
+      
+.no-csstransforms3d .centerBox
+  .login, .register
+    display none
+  &.loginPicked,
+  &.registerPicked
+    .welcome
+      display none
+  &.loginPicked
+    .login
+      display block
+  &.registerPicked
+    .register
+      display block
