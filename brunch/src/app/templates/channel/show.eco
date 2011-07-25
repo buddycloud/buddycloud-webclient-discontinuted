@@ -1,21 +1,21 @@
 <div class="channelView">
   <header>
-    <h2><%= @channel.metadata?.title?.value %></h2>
+    <h2><%= @channel?.metadata?.title?.value %></h2>
     <nav class="loggedIn"><!-- this here is still a mess.. -->
-      <% if @user.notFollowingThisChannel: %><div class="follow button">Follow</div>
+      <% if @user?.notFollowingThisChannel?: %><div class="follow button">Follow</div>
       <% else: %><div class="unfollow button unprominent">Unfollow</div><% end %>
       <div class="info button round" title="show/hide Channel Info">Channel Info</div>
     </nav>
   </header>
   <section class="stream">
-    <% if @user.hasRightToPost: %>
+    <% if @user?.hasRightToPost?: %>
     <section class="newTopic">
-      <img class="avatar" src="<%= app.current_user.avatar() %>" />
+      <img class="avatar" src="<%= app.users.current.avatar %>" />
       <textarea placeholder="New Topic..."></textarea>
       <div class="controls">
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
-          <label for="shouldShareLocation">Share Location: <%= @channel.metadata?['geoloc-text']?.value %></label>
+          <label for="shouldShareLocation">Share Location: <%= @channel?.metadata?['geoloc-text']?.value %></label>
         </div>
         <div class="button small prominent" id="createNewTopic">Post</div>
     </section>
@@ -32,9 +32,9 @@
   </section><!-- /stream -->
   <div class="channelDetails">
     <section class="meta">
-      <p><span class="title"><%= @channel.metadata?.owner?.label %>:</span><%= @channel.metadata?.owner?.value %></p>
-      <p><span class="title"><%= @channel.metadata?.description?.label %>:</span></p><%= @channel.metadata?.description?.value %>
-      <p class="<%= @channel.metadata?.access_model?.value %>"><span class="title"><%= @channel.metadata?.access_model?.label %>:</span></p><%= @channel.metadata?.access_model?.value %>
+      <p><span class="title"><%= @channel?.metadata?.owner?.label %>:</span><%= @channel?.metadata?.owner?.value %></p>
+      <p><span class="title"><%= @channel?.metadata?.description?.label %>:</span></p><%= @channel?.metadata?.description?.value %>
+      <p class="<%= @channel?.metadata?.access_model?.value %>"><span class="title"><%= @channel?.metadata?.access_model?.label %>:</span></p><%= @channel?.metadata?.access_model?.value %>
       <!--
         the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
       -->

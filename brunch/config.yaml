@@ -4,6 +4,7 @@ dependencies:
   - underscore-1.1.6.js
   - backbone-master.js
   - backbone-localstorage.js
+  - backbone-extensions.js
   - base64.js
   - strophe.js
   - strophe.disco.js

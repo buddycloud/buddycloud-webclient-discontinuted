@@ -1,30 +1,37 @@
-{ transitionendEvent } = require('helper')
+{ transitionendEvent } = require 'helper'
 
 class exports.ChannelOverView extends Backbone.View
 
-  initialize: =>
-    @el = $('#more_channels')
-    @el.one 'click', @show
+    initialize: ->
+        @el = $('#more_channels')
+        @el.one 'click', @expand
+        @el.hide()
 
-  show: =>
-    app.router.navigate "/more"
-    body = $('body')
-    body.addClass 'inTransition'
-    body.addClass 'channelOverview'
-    @el.one('click', @remove).text "← back"
-    @render()
+    show: (t = 200) ->
+        @el.delay(t * 0.1).fadeIn()
 
-  remove: =>
-    app.router.navigate "/home"
-    body = $('body')
-    body.removeClass 'stateArrived'
-    # document.redraw() # FIXME doenst work?
-    body.addClass 'inTransition'
-    body.removeClass 'channelOverview'
-    @el.one('click', @show).text "more …"
-    @render()
+    hide: (t = 200) ->
+        @el.delay(t * 0.1).fadeOut()
 
-  render: =>
-    app.sidebar.el.one transitionendEvent, ->
-      body.removeClass 'inTransition'
-      body.addClass('stateArrived') if body.hasClass 'channelOverview'
+    expand: =>
+        app.router.navigate "/more"
+        body = $('body')
+        body.addClass 'inTransition'
+        body.addClass 'channelOverview'
+        @el.one('click', @collapse).text "← back"
+        @render()
+
+    collapse: =>
+        app.router.navigate "/home"
+        body = $('body')
+        body.removeClass 'stateArrived'
+        # document.redraw() # FIXME doenst work?
+        body.addClass 'inTransition'
+        body.removeClass 'channelOverview'
+        @el.one('click', @expand).text "more …"
+        @render()
+
+    render: ->
+        app.views.home.sidebar.el.one transitionendEvent, ->
+            body.removeClass 'inTransition'
+            body.addClass('stateArrived') if body.hasClass 'channelOverview'
