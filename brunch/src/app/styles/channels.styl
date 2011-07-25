@@ -8,16 +8,20 @@
   overflow hidden
   .personal.channel
     height 76px
-    linear-bg-gradient rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.21)
+    linear-bg-gradient rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21)
     box-shadow 0 1px rgba(0, 0, 0, 0.99), 0 2px rgba(255, 255, 255, 0.21)
+    position relative
+    z-index 5
     transition none
   .search
     width 100%
     linear-bg-gradient rgba(255, 255, 255, 0.21), rgba(0, 0, 0, 0.13), rgba(255, 255, 255, 0.21)
     float left
     box-shadow 0 1px rgba(0, 0, 0, 0.55), 0 2px rgba(255, 255, 255, 0.21)
+    position relative
+    z-index 4
     input
-      width 210px
+      width 207px
       height 18px
       padding 1px 8px
       margin 6px auto 5px
@@ -38,6 +42,8 @@
     transition none
   &.curtainsDown > .channel
     transition none
+  .search + .channel.selected
+    box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
   .channel
     width 76px
     height 64px
@@ -46,6 +52,10 @@
     transition 500ms
     transform-origin top
     float left
+    &.selected
+      box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21), 0 1px black inset, 0 -1px rgba(255, 255, 255, 0.21)
+      .info
+        linear-bg-gradient rgba(0, 0, 0, .13) 50%, rgba(255, 255, 255, 0.21)
     &.bubbleUp
       z-index 2
     .info
@@ -122,11 +132,11 @@
   box-shadow 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 2px rgba(0, 0, 0, 0.21)
   position absolute
   box-sizing border-box
-  &.channelmessage
+  &.channelpost
     top auto
     bottom -6px
     background-color default_highlight
-  &.personalmessage
+  &.message
     background-color personal_color
   &.admin
     background-color admin_highlight

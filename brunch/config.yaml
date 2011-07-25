@@ -13,3 +13,4 @@ dependencies:
   - strophe.register.js
   - strophe.dataforms.js
   - strophe.buddycloud.js
+  - modernizr.custom.39957.js

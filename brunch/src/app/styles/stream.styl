@@ -17,6 +17,16 @@
       border 1px solid rgba(0,0,0,.08)
       border-radius 3px
       display none
+      
+#powerdby
+  left 534px
+  top 34px
+  margin-top 2px
+  width 76px
+  height 27px
+  text-indent -9999px
+  background url(../../public/images/powerdby.png)
+  position absolute
 
 #content
   margin-left 76px
@@ -42,6 +52,7 @@
   margin-left 100%
 .channelOverview.stateArrived #content
   height 400px // variable height to disable the vertical scrollbar
+  overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
   padding 13px
@@ -50,34 +61,62 @@
   position relative
   z-index 1
   > header
-    width 492px
-    padding-left 8px
+    width 500px
+    height 58px
+    margin-top 13px
     position relative
+    h2, .mood, .location
+      margin-left 8px
+      width 305px
+      white-space nowrap
+      overflow hidden
+      text-overflow ellipsis
+      display block
     h2
-      float left
+      line-height 30px
+    .mood
+      font-size 12px
+      color rgba(0, 0, 0, 0.55)
+      clear left
+    .location
+      display none
+      .previous
+        text-decoration line-through
     nav
-      margin-top 6px
-      margin-right -1px
-      float right
+      right 0
+      top 8px
+      position absolute
       > div
         margin-left 5px
-        float left
-      .tab
-        margin-top 5px
-        padding 0 13px
-        height 27px
-        font-size 12px
-        line-height 30px
-        color rgba(0, 0, 0, 0.55)
-        background rgba(0, 0, 0, 0.08)
-        border 1px solid rgba(0, 0, 0, 0.05)
-        border-bottom none
-        border-radius 5px 5px 0 0
-        position relative
-        cursor pointer
         &.active
+          display none
+      .tab  
+        height 29px
+        padding 1px 1px 0
+        margin-right -1px
+        vertical-align bottom
+        overflow hidden
+        position relative
+        display inline-block
+        .holder
+          padding 5px 13px 6px
+          font-size 12px
+          color rgba(0, 0, 0, 0.76)
+          text-shadow 0 1px rgba(255, 255, 255, 0.55)
+          linear-bg-gradient rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08)
+          border-radius 3px 3px 0 0
+          box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
+          display block
+          position relative
+          cursor pointer
+        &.newMessage
+          .holder
+            padding-right 33px
+          .counter
+            right 8px
+            top 5px
+        &.active .holder
           background white
-          border-color rgba(0, 0, 0, 0.13)
           z-index 3
           cursor default
     + .topic
@@ -88,12 +127,6 @@
 .myChannel
   .follow, .newTopic, .unfollow, .info
     display none
-
-/* my Channel specials for the tabs */
-.myChannel .stream
-  border-radius 5px 0 5px 5px
-  section.newTopic
-    border-radius 5px 0 0 0
   
   
 .stream  
@@ -111,6 +144,8 @@
     position relative
     box-shadow inset 0 -1px rgba(0,0,0,.21)
     overflow hidden
+    &:first-child
+      border-radius 5px 5px 0 0
     &:last-child
       border-radius 0 0 5px 5px
     &.new
@@ -138,10 +173,11 @@
       transition 500ms
     .controls
       right 13px
-      top 30px
+      top 28px
       position absolute
-      > div
+      > .button
         margin-left 5px
+        color black
     .avatar
       width 50px
       transition 500ms
@@ -254,6 +290,7 @@
   .comments
     padding-left 13px
     .comment
+      margin-top 8px
       min-height 40px
       position relative
     section
@@ -264,10 +301,6 @@
       left 11px
       width 40px
       border-radius 2px
-    .postmeta
-      display none
-    .location
-      display none
   section.newTopic
     padding 13px 13px 12px 51px
     linear-bg-gradient white, #F2F2F2
@@ -345,8 +378,11 @@
       margin 0
       float none
       text-align left
-      span
-        color #ddd
+      .name
+        color black
+      .location
+        margin-left 0
+        display none
     p
       margin-top 2px
       margin-bottom 5px
@@ -355,24 +391,11 @@
         margin-bottom 0
       .time
         float right
-        color rgba(0, 0, 0, 0.21)
+        color rgba(0, 0, 0, 0.34)
         font-size 11.5px
         line-height 19.5px
-  .me
-    padding-left 13px
-    padding-right 64px
-    p
-      width 100%
-      text-align right
-      clear right
-      float right
-      .time
-        float left
-    .avatar
-      left auto
-      right 13px
-    .postmeta
-      float right
+  .you
+    background #f7f7f7
 
 .moderationPanel
   display none
@@ -405,31 +428,43 @@
   float left
   position relative
   .toggle
-    width 250px
-    height 25px
+    width 220px
+    height 26px
+    margin-left -1px
     margin-top 13px
-    padding 3px 13px 0 21px
+    padding 0 13px 0 21px
     font-weight bold
-    line-height 23px
+    line-height 26px
+    border 1px solid rgba(0, 0, 0, 0.21)
+    border-bottom-color rgba(0,0,0,.34)
     border-radius 0 14px 14px 0
-    background rgba(0,0,0,.05)
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
     transition 500ms
     cursor pointer
+    h4
+      color rgba(0,0,0,.67)
+      display inline
     .icon
-      font-family "Nunito",sans-serif
-      font-size 16px
+      margin-top 6px
+      width 9px
+      height 15px
+      background url("../../public/icons/info.png")
+      opacity 0.67
+      display block
       float right
+  &.hidden .toggle .icon
+    opacity 0.55
   &.hidden .toggle
-    margin-left -250px
-  .holder
-    width 264px
+    margin-left -224px
+  > .holder
+    width 222px
     padding 8px 21px
     font-size 12px
     color rgba(0,0,0,.55)
     float left
     position relative
     transition 500ms
-  &.hidden .holder
+  &.hidden > .holder
     margin-left -252px
     opacity 0
   .meta
@@ -452,7 +487,7 @@
         margin-right 5px
         font-weight bold
         position relative
-  .open, .closed
+  .open .title, .closed .title
     margin-right 2px
     &:after
       margin-left 5px
@@ -462,7 +497,7 @@
       vertical-align top
       background url(../../public/icons/unlock-small.png) no-repeat center
       display inline-block
-  .closed
+  .closed .title
     &:after
       background url(../../public/icons/lock-small.png) no-repeat center
   .previous
@@ -478,12 +513,13 @@
       height 0
     h3
       margin-bottom 3px
-      font-size 18px
     img
       margin 0 3px 3px 0
       border-radius 3px
       display inline-block
       cursor pointer
+      &.selected
+        box-shadow 0 0 0 1px #83AC35, 0 0 0 2px #8DBA39
     .showAll
       padding-top 3px
       line-height 19px
@@ -496,6 +532,126 @@
       &:hover
         color default_highlight
         background default_highlight - rgba(0,0,0,0.89) + 50%
+        
+.adminAction
+  width 218px
+  padding 8px 1px 0
+  margin-bottom 13px
+  position relative
+  overflow hidden
+  &:after
+    margin-top 0
+    margin-left 2px
+    left 19px
+    bottom 5px
+    width 9px
+    height 9px
+    content ""
+    background #eee
+    position absolute
+    transform rotate(45deg)
+    transition 500ms
+    display none
+  .arrow
+    height 11px
+    width 13px
+    top -1px
+    left 19px
+    position absolute
+    overflow hidden
+    transition 500ms
+    &:before
+      left 1px
+      top 5px
+      width 9px
+      height 9px
+      content ""
+      background #adadad
+      border 1px solid #909090
+      box-shadow 0 0 0 2px #eee
+      position absolute
+      transform rotate(45deg)
+  &.second .arrow,
+  &.second:after
+    left 75px
+  &.third .arrow
+  &.third:after
+    left 131px
+  &.fourth .arrow
+  &.fourth:after
+    left 187px
+  .box 
+    padding 1px
+    background rgba(0,0,0,.08)
+    border 1px solid rgba(0,0,0,.34)
+    border-radius 3px
+    box-shadow 0 1px 3px rgba(0, 0, 0, 0.34) inset, 0 1px white
+    overflow hidden
+  .channelInfo
+    padding 5px 8px
+    margin-bottom 1px
+    linear-bg-gradient #fafafa, #f7f7f7
+    box-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
+  .action
+    padding 5px 8px
+    margin-bottom 1px
+    background #f7f7f7
+    box-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
+    display none
+  .currentRole
+    font-size 11px
+    line-height 15px
+  &.follower
+    .moderator, .followerPlus
+      display none
+  &.moderator
+    .follower, .followerPlus
+      display none
+  .info
+    margin 5px 0
+    li
+      padding-left 18px
+      line-height 21px
+      background url(../../public/icons/plus.png) no-repeat 2px center
+      &.negative
+        background url(../../public/icons/minus.png) no-repeat 2px center
+  .actionRow
+    width 100%
+    box horizontal justify center
+    &.confirm
+      display none
+    > div
+      padding 5px
+      margin-right 2px
+      text-align center
+      linear-bg-gradient #f7f7f7, #e5e5e5
+      box-shadow 0 1px 1px white inset, 0 1px 1px rgba(0, 0, 0, 0.34)
+      box-flex 1
+      cursor pointer
+      transition background-image 300ms
+      &:first-child
+        border-bottom-left-radius 2px
+      &:last-child
+        margin-right 0
+        border-bottom-right-radius 2px
+      &:hover
+        linear-bg-gradient #f7f7f7, #eee
+      &:active
+        padding 6px 5px 4px
+        linear-bg-gradient #f7f7f7, #ccc
+        box-shadow 0 2px white inset, 0 1px rgba(0, 0, 0, 0.05)
+  &.choosen
+    .actionRow
+      display none
+      &.confirm
+        box horizontal justify center
+    &.role
+      .changeRole
+        display block
+    &.ban
+      .banUser
+        display block
+        
         
 .count
   font-size 14px
