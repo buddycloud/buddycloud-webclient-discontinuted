@@ -20,10 +20,10 @@
       
 #powerdby
   left 534px
-  top 34px
+  top 29px
   margin-top 2px
   width 76px
-  height 27px
+  height 26px
   text-indent -9999px
   background url(../../public/images/powerdby.png)
   position absolute
@@ -32,6 +32,7 @@
   margin-left 76px
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
+  background #eee url("../../public/images/logo.png") no-repeat center center
   position relative
   box-shadow 0 0 7px black
   z-index 1
@@ -56,14 +57,13 @@
 
 .channelView
   padding 13px
-  background #eee
   overflow hidden
   position relative
   z-index 1
   > header
     width 500px
     height 58px
-    margin-top 13px
+    margin-top 8px
     position relative
     h2, .mood, .location
       margin-left 8px
@@ -249,9 +249,6 @@
     left 13px
     position absolute
     border-radius 3px
-  section > p 
-    width 398px
-    vertical align
   section.answer
     position relative
     overflow hidden
@@ -269,6 +266,7 @@
       width 26px
       left 63px
       top 18px
+      opacity 0
       transition none
     .button
       margin-top -24px
@@ -280,6 +278,7 @@
       .avatar
         width 40px
         left 11px
+        opacity 1
       textarea
         margin-bottom 3px
         height 37px
@@ -295,7 +294,13 @@
       position relative
     section
       padding-top 5px
-      padding-left 63px 
+      padding-left 63px
+      &.answer:first-child
+        padding-left 50px
+        &.write .avatar
+          left -2px
+        textarea
+          width 399px
     .avatar
       top 6px
       left 11px
@@ -359,6 +364,34 @@
       overflow hidden
       white-space nowrap
       text-overflow ellipsis
+  .topic.ghost
+    .name,
+    .location,
+    p span
+      display inline-block
+    .name
+      height 16px
+      width 89px
+      background rgba(0,0,0,.21)
+    .location
+      width 144px
+      height 14px
+      background rgba(0,0,0,.08)
+    .time
+      width 50px
+      height 16px
+      background rgba(0,0,0,.08)
+    .avatar
+      height 50px
+      width 50px
+      background rgba(0,0,0,.13)
+    .comments .avatar
+      height 40px
+      width 40px
+    p span
+      height 16px
+      margin-right 3px
+      background rgba(0,0,0,.21)
         
 .conversation
   article
