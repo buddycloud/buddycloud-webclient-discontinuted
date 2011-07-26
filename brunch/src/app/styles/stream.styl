@@ -29,11 +29,13 @@
   position absolute
 
 #content
+  min-height 100%
+  width 100%
   margin-left 76px
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
   background #eee url("../../public/images/logo.png") no-repeat center center
-  position relative
+  position absolute
   box-shadow 0 0 8px black
   z-index 1
   &.overlapping
@@ -155,17 +157,21 @@
     margin-top -76px
     color white
     text-shadow 0 1px 1px rgba(0,0,0,.21)
-    background admin_highlight
+    background-color admin_highlight
     transition 500ms 
     transform-origin bottom
     transform rotateX(70deg)
     opacity 0
-    &.new
-      box-shadow 3px 0 0 default_highlight inset
     &.visible
       opacity 1
       margin-top 0
       transform rotateX(0deg)
+    &.private
+      background-image url("../../public/icons/padlock_closed.png")
+      background-repeat no-repeat
+      background-position 21px center
+      section
+        padding-top 16px
     section
       padding-left 63px
     .name
