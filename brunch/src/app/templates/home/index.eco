@@ -1,9 +1,7 @@
-<section class="hero">
-  <img src="public/images/hero.jpg" />
-</section>
+<section class="hero"></section>
 <section class="content">
   <h1>Buddycloud</h1>
-  <p>Social Networking done right</p>
+  <p class="subtitle">Social Networking done right</p>
 </section>
 <section class="navigation clearfix">
   <div id="goLogin" class="button">Login</div>

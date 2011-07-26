@@ -28,7 +28,7 @@
     padding 13px
     .subtitle
       color default_highlight
-  .welcome
+  #index
     .content
       box-shadow 0 -1px rgba(0, 0, 0, 0.13), 0 -2px rgba(0, 0, 0, 0.08), 0 -3px rgba(0, 0, 0, 0.05)
   .navigation
@@ -64,7 +64,7 @@
     line-height 38px
     position absolute
     display none
-  .login, .register
+  #login, #register
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 13px rgba(0, 0, 0, 0.55), 0 1px rgba(255, 255, 255, 0.21) inset
     overflow hidden
     display block
@@ -77,30 +77,28 @@
       width 233px
       padding 13px
       margin 138px auto 0
-  .register
-    background
   &.loginPicked,
   &.registerPicked
-    .welcome
+    #index
       transform rotate3d(0,1,0,-180deg)
   &.loginPicked
-    .login
+    #login
       transform rotate3d(0,1,0,-360deg)
   &.registerPicked
-    .register
+    #register
       transform rotate3d(0,1,0,-360deg)
-
-
+  
+      
 .no-csstransforms3d .centerBox
-  .login, .register
+  #login, #register
     display none
   &.loginPicked,
   &.registerPicked
-    .welcome
+    #index
       display none
   &.loginPicked
-    .login
+    #login
       display block
   &.registerPicked
-    .register
+    #register
       display block
