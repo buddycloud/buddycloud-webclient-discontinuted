@@ -4,13 +4,15 @@
 
 .centerBox
   width 566px
-  height 480px
-  margin 144px auto 89px
-  position relative
+  height 462px
+  top 50%
+  left 50%
+  margin -224px 0 0 -283px
+  position absolute
   > div
     top 0
     width 566px
-    height 480px
+    height 462px
     background #f7f7f7
     border-radius 3px
     box-shadow 0 0 0 1px rgba(0,0,0,.55), 0 1px 13px rgba(0,0,0,.55), 0 1px white inset
@@ -18,14 +20,17 @@
     transition 1000ms
     -webkit-backface-visibility hidden
   .hero
-    padding 13px 13px 0
-    width 540px
-    height 320px
-    position relative
-    img
-      width 540px
+    height 319px
+    background url(../../public/images/hero.jpg)
+    border-radius 3px 3px 0 0
+    box-shadow 0 1px rgba(255,255,255,.34) inset, 0 0 1px rgba(255,255,255,.34) inset
   .content
     padding 13px
+    .subtitle
+      color default_highlight
+  .welcome
+    .content
+      box-shadow 0 -1px rgba(0, 0, 0, 0.13), 0 -2px rgba(0, 0, 0, 0.08), 0 -3px rgba(0, 0, 0, 0.05)
   .navigation
     bottom 0
     width 550px
@@ -54,6 +59,11 @@
     display block
     &:focus
       border-color rgba(0, 0, 0, 0.34)
+  label
+    left -100px
+    line-height 38px
+    position absolute
+    display none
   .login, .register
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 13px rgba(0, 0, 0, 0.55), 0 1px rgba(255, 255, 255, 0.21) inset
     overflow hidden
