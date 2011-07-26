@@ -11,22 +11,23 @@ Channel (in global app.channels) [jid==id]
     jid
 
 ChannelNode extends Node
-    topics (Topics)
+    topics (Posts)
 
 MoodNode extends Node
-    moods (Posts)
+    moods (Single entry Posts)
 
 Node
     users (Users)
         owner (User)
         moderators (Users)
+        followers+post (Users)
         followers (Users)
         outcasts (Users)
     metadata (NodeMetadata)
     jid, avatar
 
-Topic
-    opener (Post)
+Post
+    topics (Posts)
     comments (Posts)
 
 Post
