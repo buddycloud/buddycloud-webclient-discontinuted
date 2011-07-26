@@ -17,6 +17,7 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_connection_established: =>
+        # query for metadata updates for all nodes of each channel where the current user is involved
         user = app.users.current
         app.channels.forEach (channel) ->
             channel.nodes.forEach (node) ->

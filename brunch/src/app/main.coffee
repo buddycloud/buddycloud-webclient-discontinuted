@@ -4,6 +4,7 @@ window.app =
     affiliations: [ # all possible pubsub affiliations
         "owner"
         "moderator"
+        "followers+post"
         "publisher"
         "member"
         "none"
