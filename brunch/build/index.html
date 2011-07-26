@@ -21,24 +21,29 @@
     </div>
     <div id="login" class="login">
       <section class="content">
-        <h2>Buddycloud Login</h2>
-        <input type="text" id="home_login_jid" placeholder="Jabber ID" autofocus />
-        <input type="password" id="home_login_pwd" placeholder="password" />
+        <form class="clearfix">
+          <h2>Buddycloud Login</h2>
+          <input type="email" id="home_login_jid" placeholder="Jabber ID" required />
+          <input type="password" id="home_login_pwd" placeholder="Password" required />
+          <a href="#">Forgot password?</a>
+          <button type="submit" id="home_login_submit">Login</button>
+        </form>
       </section>
       <section class="navigation clearfix">
         <div class="back button">Back</div>
-        <div class="login button">Login</div>
       </section>
     </div>
     <div id="register" class="register">
       <section class="content">
-        <h2>Register for Free</h2>
-        <input type="text" id="home_register_jid" placeholder="Jabber ID" />
-        <input type="password" id="home_register_pwd" placeholder="Password" />
+        <form>
+          <h2>Register for Free</h2>
+          <input type="text" id="home_register_jid" placeholder="Jabber ID" />
+          <input type="password" id="home_register_pwd" placeholder="Password" />
+          <button type="submit" id="home_login_submit">Register</button>
+        </form>
       </section>
       <section class="navigation clearfix">
         <div class="back button">Back</div>
-        <div class="register button">Register</div>
       </section>
     </div>
   </div>
