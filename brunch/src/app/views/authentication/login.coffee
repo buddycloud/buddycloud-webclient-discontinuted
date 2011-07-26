@@ -1,15 +1,10 @@
 { AuthenticationView } = require 'views/authentication/skeleton'
 
 class exports.LoginView extends AuthenticationView
-    template: require 'templates/login/show'
-
+    cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        @form = $('#login_form')
-        @form.submit (ev) =>
-            ev.preventDefault()
-            ev.stopPropagation()
-
+        @el.find('.login.button').live 'click', =>
             # the form sumbit will always trigger a new connection
             jid = $('#home_login_jid').val()
             password = $('#home_login_pwd').val()
@@ -18,7 +13,7 @@ class exports.LoginView extends AuthenticationView
                 # disable the form
                 $('#home_login_submit').attr "disabled", "disabled"
                 $('#login_waiting').css "visibility","visible"
-            return false
+        super
 
     start_connection: (jid, password) ->
         @unbind 'hide', @hide

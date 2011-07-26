@@ -5,6 +5,7 @@ class exports.HomeView extends Backbone.View
 
     initialize: ->
         @el = $('#content')
+        $('.centerBox').remove() # FIXME ugly
         @sidebar = new Sidebar
         @bind 'show', @show
         @bind 'hide', @hide

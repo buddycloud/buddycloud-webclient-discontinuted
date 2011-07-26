@@ -1,16 +1,10 @@
 { AuthenticationView } = require 'views/authentication/skeleton'
 
 class exports.RegisterView extends AuthenticationView
-    template: require 'templates/register/show'
-
+    cssclass: 'registerPicked'
     initialize: ->
         @el = $('#register')
-        @el.html @template()
-        @form = $('#register_form')
-        @form.submit (ev) =>
-            ev.preventDefault()
-            ev.stopPropagation()
-
+        @el.find('.register.button').live 'click', =>
             # the form sumbit will always trigger a new connection
             name = $('#home_register_name').val()
             password = $('#home_register_pwd').val()
@@ -19,7 +13,7 @@ class exports.RegisterView extends AuthenticationView
                 # disable the form
                 $('#home_register_submit').attr "disabled", "disabled"
                 $('#register_waiting').css "visibility","visible"
-            return false
+        super
 
     start_registration: (name, password) ->
         @unbind 'hide', @hide

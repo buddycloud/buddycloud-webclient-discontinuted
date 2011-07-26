@@ -7,12 +7,12 @@
 
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:8080/#/index
-        ""           :"login"
-        "/"          :"login"
+        ""           :"index"
+        "/"          :"index"
         "/index"     :"index"
         "/home"      :"home"
-        "/register"  :"register"
         "/login"     :"login"
+        "/register"  :"register"
         "/more"      :"overview"
 
     initialize: ->

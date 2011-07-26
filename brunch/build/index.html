@@ -6,62 +6,43 @@
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
   <script src="web/js/app.js"></script>
-  <!--<script>require('main');</script>-->
+  <script>require('main');</script>
 </head>
 <body class="start">
-  
+
   <div class="centerBox">
-    <div class="welcome">
-      <section class="hero">
-        <img src="public/images/hero.jpg" />
-      </section>
-      <section class="content">
-        <h1>Buddycloud</h1>
-        <p>Social Networking done right</p>
-      </section>
-      <section class="navigation clearfix">
-        <div id="goLogin" class="button">Login</div>
-        <div id="goRegister" class="button">Register</div>
-      </section>
+    <div class="welcome" id="index">
+    <!--
+
+      welcome message
+      template: home/index.eco
+
+    -->
     </div>
-    <div class="login">
+    <div id="login" class="login">
       <section class="content">
         <h2>Buddycloud Login</h2>
         <input type="text" id="home_login_jid" placeholder="Jabber ID" />
         <input type="password" id="home_login_pwd" placeholder="Password" />
       </section>
       <section class="navigation clearfix">
-        <div class="button back">Back</div>
-        <div class="button">Login</div>
+        <div class="back button">Back</div>
+        <div class="login button">Login</div>
       </section>
     </div>
-    <div class="register">
+    <div id="register" class="register">
       <section class="content">
         <h2>Register for Free</h2>
         <input type="text" id="home_register_jid" placeholder="Jabber ID" />
         <input type="password" id="home_register_pwd" placeholder="Password" />
       </section>
       <section class="navigation clearfix">
-        <div class="button back">Back</div>
-        <div class="button">Login</div>
+        <div class="back button">Back</div>
+        <div class="register button">Register</div>
       </section>
     </div>
   </div>
-  
+
   <div id="sidebar"></div>
   <div id="content"></div>
-  <script>
-    var box = $('.centerBox');
-    
-    $('.back').click(function(){
-      box.removeClass('loginPicked registerPicked');
-    });
-    
-    $('#goLogin').click(function(){
-      box.addClass('loginPicked');
-    });
-    $('#goRegister').click(function(){
-      box.addClass('registerPicked');
-    });
-  </script>
 </body>

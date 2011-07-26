@@ -1,17 +1,21 @@
 
 class exports.AuthenticationView extends Backbone.View
-
-    constructor: ->
+    initialize: ->
         super
         @bind 'show', @show
         @bind 'hide', @hide
+        @box = $('.centerBox')
+        @el.find('.back.button').live 'click', =>
+            app.router.navigate "/index", true
 
     show: =>
-        @form?.fadeIn()
-        @el.delay(50).fadeIn()
+        @box.addClass @cssclass
+        #@el.delay(50).fadeIn()
+        #@el.find('.button').fadeIn('slow')
 
     hide: =>
-        @el.fadeOut()
+        #@el.fadeOut()
+        #@el.find('.button').fadeOut('slow')
 
     go_away: =>
         # nicely animate the login form away

@@ -2,8 +2,7 @@
 @import "shim"
 @import "colors"
 @import "buttons"
-@import "login"
-@import "register"
+@import "authentication"
 @import "channels"
 @import "stream"
 
@@ -14,12 +13,12 @@ html
   //linear-bg-gradient #024, #909, #035
   linear-bg-gradient #024, #049, #035 //blau
   -webkit-font-smoothing antialiased
-  
+
 body
   min-height 100%
   overflow-x hidden
   //radial-bg-gradient rgba(255,255,255,.34), rgba(255,255,255,0)
-  
+
 .headbar
   top 0
   width 100%
@@ -34,7 +33,7 @@ body
     content ""
     position absolute
     background #f2f2f2
-    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset 
+    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset
 
 h1
   font-size 34px
@@ -45,7 +44,7 @@ h2
 h3
   font-size 18px
   font-family "Nunito", sans-serif
-  
+
 h4
   width 100%
   font-size 14px
@@ -54,7 +53,7 @@ h4
   white-space nowrap
   overflow hidden
   text-overflow ellipsis
-  
+
 h5
   margin-bottom 5px
   font-size 12px
