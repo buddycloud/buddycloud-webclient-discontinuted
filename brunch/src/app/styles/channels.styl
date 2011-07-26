@@ -32,7 +32,7 @@
       box-shadow 0 1px rgba(255, 255, 255, 0.21), 0 1px rgba(0, 0, 0, 0.34) inset
       display block
     + .channel
-      margin-top 6px
+      padding-top 6px
   &.makePlace > .search
     margin-bottom 64px
     transition 500ms
@@ -53,9 +53,8 @@
     transform-origin top
     float left
     &.selected
+      linear-bg-gradient rgba(0, 0, 0, .13) 50%, rgba(255, 255, 255, 0.21)
       box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21), 0 1px black inset, 0 -1px rgba(255, 255, 255, 0.21)
-      .info
-        linear-bg-gradient rgba(0, 0, 0, .13) 50%, rgba(255, 255, 255, 0.21)
     &.bubbleUp
       z-index 2
     .info
@@ -151,11 +150,14 @@
   .search
     display none
     + .channel
-      margin-top 0
+      padding-top 0
   .channel
     height 160px
     width 20%
     transition none
+    &.selected
+      background none
+      box-shadow none
     .avatar
       left 0
       margin-left 21px
@@ -172,6 +174,8 @@
     display none
 .channelOverview.stateArrived #sidebar 
   overflow-y scroll // scroll-y otherwise prevents all transitions
+  .channel
+    transition 500ms height
 
 #more_channels, .channelOverview #more_channels
   width 74px
@@ -188,6 +192,7 @@
   position fixed
   z-index 10
 .channelOverview #more_channels
+  width 231px
   border-top-right-radius 5px
   
 #active_channel_indicator
