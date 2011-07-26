@@ -1,6 +1,0 @@
-<form id="register_form">
-    <input type="text" id="home_register_name" placeholder="Username" />
-    <input type="password" id="home_register_pwd" placeholder="Password" />
-    <input type="submit" id="home_register_submit" class="basic_button" value="Register" />
-    <div id="register_waiting" class="clearfix"><img src="/public/spinner2.gif" /><div id="register_waiting_text">Creating new Jabber ID ...</div></div>
-</form>

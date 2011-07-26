@@ -1,19 +1,19 @@
 <div class="<%= @isPersonal("personal","") %> channel <%= @isSelected("selected","") %>">
   <div class="holder">
-    <div class="avatar" title="<%= @channel.metadata?.title?.value or "OT" %>" style="background-image: url(<%= @avatar %>)">
-      <% if @channelmessage: %>
+    <div class="avatar" title="<%= @channel?.metadata?.title?.value or @model.get('jid') %>" style="background-image: url(<%= @model.avatar %>)">
+      <% if @channelmessage?: %>
         <span class="channelmessage counter"><%= @channel.channelmessage.count %></span>
       <% end %>
-      <% if @personalmessage: %>
+      <% if @personalmessage?: %>
         <span class="personalmessage counter"><%= @channel.personalmessage.count %></span>
       <% end %>
     </div>
     <div class="info">
-      <span class="title"><%= @channel.metadata?.title?.value or "OT" %></span>
+      <span class="title"><%= @channel?.metadata?.title?.value? or "OT" %></span>
       <span class="name">
-        <%= @channel.jid.split('@')[0] %>
+        <%= @model.get('jid').split('@')[0] %>
         <span class="domain">
-          <%= @channel.jid.replace(/.+@/,'@') %>
+          <%= @model.get('jid').replace(/.+@/,'@') %>
         </span>
       </span>
     </div>

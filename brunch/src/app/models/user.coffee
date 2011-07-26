@@ -1,20 +1,14 @@
-{ gravatar } = require('helper')
+{ AffiliationStore } = require 'collections/affiliation'
+{ UserMetadata } = require 'models/metadata/user'
+{ Channels } = require 'collections/channel'
+{ gravatar } = require 'helper'
 
 class exports.User extends Backbone.Model
-  defaults :
-    display_name : "Bob Kelso"
-    jid : "bob.kelso@sacredheart.com"
-    logged_in : no
 
-  initialize : ->
+    initialize : ->
+        @set id:@id = @get('jid')
+        @channels = new Channels
+        @metadata = new UserMetadata this, @id
+        @avatar = gravatar @id, s:50, d:'retro'
+        @affiliations = new AffiliationStore this
 
-  avatar: ->
-    gravatar @get('jid'), s:50, d:'retro'
-
-  getNode: ->
-    "/user/#{@get('jid')}/channel"
-
-  log_in : ->
-    setTimeout =>
-      @trigger "logged_in"
-    , 1500
