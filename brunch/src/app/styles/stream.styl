@@ -30,12 +30,11 @@
 
 #content
   min-height 100%
-  width 100%
   margin-left 76px
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
   background #eee url("../../public/images/logo.png") no-repeat center center
-  position absolute
+  position relative
   box-shadow 0 0 8px black
   z-index 1
   &.overlapping
@@ -691,7 +690,6 @@
       .banUser
         display block
         
-        
 .count
   font-size 14px
   line-height 27px
@@ -700,3 +698,42 @@
     content "("
   &:after
     content ")"
+    
+.overlay
+  width 100%
+  height 100%
+  radial-bg-gradient cover, rgba(0,0,0,.55), rgba(0,0,0,.89)
+  position fixed
+  z-index 10
+  transition opacity 500ms
+  &.visible
+    opacity 1
+  .modal
+    padding 21px
+    top 50%
+    left 50%
+    margin -134px 0 0 -138px
+    text-shadow 0 1px rgba(255,255,255,.89)
+    linear-bg-gradient #f7f7f7, #eee
+    border-radius 5px
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.21), 0 1px 8px rgba(0, 0, 0, 0.55), 0 1px white inset
+    position absolute
+    .close
+      height 24px
+      width 55px
+      margin -21px -21px 8px 0
+      line-height 24px
+      text-align center
+      color rgba(0, 0, 0, 0.34)
+      border-bottom 1px solid white
+      border-left 1px solid white
+      border-radius 0 5px 0 5px
+      box-shadow 0 0 2px rgba(0,0,0,.13) inset
+      float right
+      cursor pointer
+      &:hover
+        color rgba(0,0,0,.55)
+        text-shadow 0 1px rgba(255, 255, 255, 0.13)
+        background rgba(0,0,0,.13)
+      + form
+        clear right
