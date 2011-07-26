@@ -21,6 +21,7 @@ class exports.DataHandler extends Backbone.EventHandler
         user = app.users.current
         app.channels.forEach (channel) ->
             channel.nodes.forEach (node) ->
+                node.fetch()
                 if user.affiliations.get node.get 'nodeid'
                     node.metadata.query()
 
