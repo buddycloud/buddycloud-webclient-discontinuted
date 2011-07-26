@@ -10,12 +10,9 @@ class exports.AuthenticationView extends Backbone.View
 
     show: =>
         @box.addClass @cssclass
-        #@el.delay(50).fadeIn()
-        #@el.find('.button').fadeIn('slow')
 
     hide: =>
-        #@el.fadeOut()
-        #@el.find('.button').fadeOut('slow')
+        @box.removeClass @cssclass
 
     go_away: =>
         # nicely animate the login form away

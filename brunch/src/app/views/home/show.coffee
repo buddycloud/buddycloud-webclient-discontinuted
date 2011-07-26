@@ -4,9 +4,9 @@
 class exports.HomeView extends Backbone.View
 
     initialize: ->
-        @el = $('#content')
-        $('.centerBox').remove() # FIXME ugly
         @sidebar = new Sidebar
+        $('body').append @el = $("<div>").attr id:"content"
+        $('.centerBox').remove() # FIXME ugly
         @bind 'show', @show
         @bind 'hide', @hide
         @current = undefined
@@ -31,6 +31,7 @@ class exports.HomeView extends Backbone.View
         # if we already found a view in the cache
         if @current
             @el.html @current.el
+        @el.show()
 
     setCurrentChannel: (cid) ->
         @current = @channels[cid]
