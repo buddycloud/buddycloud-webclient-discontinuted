@@ -10,6 +10,7 @@ class exports.AuthenticationView extends Backbone.View
 
     show: =>
         @box.addClass @cssclass
+        @el.find('input').first().focus()
 
     hide: =>
         @box.removeClass @cssclass
