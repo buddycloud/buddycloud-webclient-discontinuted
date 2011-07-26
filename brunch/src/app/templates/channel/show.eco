@@ -1,10 +1,22 @@
 <div class="channelView">
-  <header>
-    <h2><%= @channel?.metadata?.title?.value %></h2>
-    <nav class="loggedIn"><!-- this here is still a mess.. -->
-      <% if @user?.notFollowingThisChannel?: %><div class="follow button">Follow</div>
-      <% else: %><div class="unfollow button unprominent">Unfollow</div><% end %>
-      <div class="info button round" title="show/hide Channel Info">Channel Info</div>
+  <header class="clearfix">
+    <h2 class="title"><%= @channel?.metadata?.title?.value %></h2>
+    <span class="mood"><%= @channel?.metadata?.mood?.value? %></span>
+    <nav class="<%= @viewname %>"> <!-- viewname = either 'inMessages' or 'inChannel' to show/hide the messages or channel button -->
+      <% if @user.followingThisChannel?: %>
+      <div class="messages button <% 'newMessage' if @channel.gotNewMessage %>">
+        <span class="holder">Messages</span>
+        <% if @channel?.gotNewMessage %>
+          <span class="message counter"><%= @channel?.messageCount %></span>
+        <% end %>
+      </div>
+      <div class="channel button">
+        <span class="holder">Channel</span>
+      </div>
+      <div class="button unfollow">Unfollow</div>
+      <% else: %>
+      <div class="button follow">Follow</div>
+      <% end %>
     </nav>
   </header>
   <section class="stream">
@@ -38,6 +50,17 @@
       <!--
         the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
       -->
+      <!-- Broadcasting since: 182 days (beautiful time)-->
+      <p class="broadcast" title="<%= @channel?.metadata?.channelCreationTime?.label %>">
+        <span class="title"><%= @channel?.metadata?.channelCreationTime?.label %>:</span>
+        <%= @channel?.metadata?.beautifulChannelCreationTime?.value %>
+      </p>
+      <p class="location">
+        <span class="title"><%= @channel?.metadata?['geoloc-text']?.label %>:</span>
+        <span class="previous"><%= @channel?.metadata?['geoloc-text-previous']?.value %></span> → 
+        <span class="current"><%= @channel?.metadata?['geoloc-text']?.value %></span> → 
+        <span class="future"><%= @channel?.metadata?['geoloc-future']?.value %></span>
+      </p>
     </section>
     <!--
       echo here a list of
