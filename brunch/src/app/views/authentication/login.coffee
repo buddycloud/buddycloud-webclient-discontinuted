@@ -4,7 +4,9 @@ class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        @el.find('form').live 'submit', =>
+        @el.find('form').live 'submit', (ev) =>
+            ev.preventDefault()
+            ev.stopPropagation()
             # the form sumbit will always trigger a new connection
             jid = $('#home_login_jid').val()
             password = $('#home_login_pwd').val()
@@ -12,8 +14,9 @@ class exports.LoginView extends AuthenticationView
                 @start_connection(jid, password)
                 # disable the form and give feedback
                 $('#home_login_submit')
-                  .prop "disabled", true
-                  .text "Logging in..."
+                    .prop("disabled", yes)
+                    .text "Logging in..."
+            return false
         super
 
     start_connection: (jid, password) ->
