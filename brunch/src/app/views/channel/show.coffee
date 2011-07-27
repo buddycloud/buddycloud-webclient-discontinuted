@@ -3,7 +3,7 @@
 class exports.ChannelView extends Backbone.View
     template: require 'templates/channel/show'
 
-    initialize: ->
+    initialize: ({@parent}) ->
         @el = $("<div>").attr id:@cid
         @model.bind 'change:node:metadata', @render
 

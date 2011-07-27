@@ -4,7 +4,7 @@
 class exports.HomeView extends Backbone.View
 
     initialize: ->
-        @sidebar = new Sidebar
+        @sidebar = new Sidebar parent:this
         $('body').append @el = $("<div>").attr id:"content"
         $('.centerBox').remove() # FIXME ugly
         @bind 'show', @show
@@ -15,13 +15,15 @@ class exports.HomeView extends Backbone.View
         new_channel_view = (channel) =>
             view = @channels[channel.cid]
             if not view
-                @channels[channel.cid] = view = new ChannelView model:channel
+                view = new ChannelView model:channel, parent:this
+                @channels[channel.cid] = view
                 @current ?= view
 
         app.users.current.channels.forEach        new_channel_view
         app.users.current.channels.bind 'change', new_channel_view
         app.users.current.channels.bind 'add', (channel) =>
-            @channels[channel.cid] = view = new ChannelView model:channel
+            view = new ChannelView model:channel, parent:this
+            @channels[channel.cid] = view
             unless @current?
                 @current = view
                 @el.html @current.el
