@@ -25,7 +25,6 @@ class exports.DataHandler extends Backbone.EventHandler
                 if user.affiliations.get node.get 'nodeid'
                     node.metadata.query()
 
-
     on_prefill_from_cache: =>
         app.users.fetch()
         app.channels.fetch()

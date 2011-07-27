@@ -3,10 +3,10 @@
     <h2 class="title"><%= @channel?.metadata?.title?.value %></h2>
     <span class="mood"><%= @channel?.metadata?.mood?.value? %></span>
     <nav class="<%= @viewname %>"> <!-- viewname = either 'inMessages' or 'inChannel' to show/hide the messages or channel button -->
-      <% if @user.followingThisChannel?: %>
-      <div class="messages button <% 'newMessage' if @channel.gotNewMessage %>">
+      <% if @user?.followingThisChannel: %>
+      <div class="messages button <%= @channel?.gotNewMessage and 'newMessage' %>">
         <span class="holder">Messages</span>
-        <% if @channel?.gotNewMessage %>
+        <% if @channel?.gotNewMessage: %>
           <span class="message counter"><%= @channel?.messageCount %></span>
         <% end %>
       </div>
@@ -57,8 +57,8 @@
       </p>
       <p class="location">
         <span class="title"><%= @channel?.metadata?['geoloc-text']?.label %>:</span>
-        <span class="previous"><%= @channel?.metadata?['geoloc-text-previous']?.value %></span> → 
-        <span class="current"><%= @channel?.metadata?['geoloc-text']?.value %></span> → 
+        <span class="previous"><%= @channel?.metadata?['geoloc-text-previous']?.value %></span> →
+        <span class="current"><%= @channel?.metadata?['geoloc-text']?.value %></span> →
         <span class="future"><%= @channel?.metadata?['geoloc-future']?.value %></span>
       </p>
     </section>

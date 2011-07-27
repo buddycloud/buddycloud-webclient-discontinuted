@@ -20,6 +20,8 @@ class exports.ChannelView extends Backbone.View
             @mood = mood.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
-#         @user =
-#             notFollowingThisChannel: @channel.sink isnt app.current_user.get('jid')
-#             hasRightToPost: @channel.affiliation in ["owner", "publisher"] #permissions
+        #permissions
+        affiliation = app.users.current.affiliations.get(@model.nodes.get('channel')?.get 'nodeid')
+        @user =
+            followingThisChannel: affiliation in ["owner", "publisher", "moderator", "member", "outcast"]
+            hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]
