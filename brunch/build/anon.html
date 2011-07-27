@@ -14,13 +14,21 @@
     <div class="search"><input type="text" placeholder="Search..." /></div>
   </header>
   <div class="overlay">
-    <div class="modal">
+    <div class="modal twoWindowed">
       <div class="close">Close</div>
-      <form class="clearfix">
-        <h2>Buddycloud Login</h2>
+      <div class="left">
+        <h2>buddycloud login</h2>
         <p>Not yet a member? <a href="#">Register</a></p>
-        <input type="email" id="home_login_jid" placeholder="Jabber ID" required />
-        <input type="password" id="home_login_pwd" placeholder="Password" required />
+      </div>
+      <form class="right clearfix">
+        <div>
+          <label for="home_login_jid">Jabber ID</label>
+          <input type="email" id="home_login_jid" placeholder="name@domain.com" required />
+        </div>
+        <div>
+          <label for="home_login_pwd">Password</label>
+          <input type="password" id="home_login_pwd" required />
+        </div>
         <p class="left"><a href="#">Forgot password?</a></p>
         <button type="submit" id="home_login_submit" class="callToAction">Login</button>
       </form>

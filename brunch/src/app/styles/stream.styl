@@ -708,6 +708,7 @@
   width 100%
   height 100%
   radial-bg-gradient cover, rgba(0,0,0,.55), rgba(0,0,0,.89)
+  //background url("../../public/images/noise.png")
   position fixed
   z-index 10
   transition opacity 500ms
@@ -724,9 +725,10 @@
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.21), 0 1px 8px rgba(0, 0, 0, 0.55), 0 1px white inset
     position absolute
     .close
+      top 0
+      right 0
       height 24px
       width 55px
-      margin -21px -21px 8px 0
       line-height 24px
       text-align center
       color rgba(0, 0, 0, 0.34)
@@ -734,7 +736,7 @@
       border-left 1px solid white
       border-radius 0 5px 0 5px
       box-shadow 0 0 2px rgba(0,0,0,.13) inset
-      float right
+      position absolute
       cursor pointer
       &:hover
         color rgba(0,0,0,.55)
@@ -742,3 +744,15 @@
         background rgba(0,0,0,.13)
       + form
         clear right
+    &.twoWindowed
+      padding 13px
+      margin-left -274px
+      > .left,
+      > .right
+        padding 13px
+        width 235px
+        float left
+      > .right
+        border-left 1px solid rgba(0,0,0,.13)
+        box-shadow -1px 0 white
+        float right
