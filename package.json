@@ -10,7 +10,7 @@
 ,   "update":  "./node_modules/.bin/brunch build"
   }
 , "dependencies": {
-    "brunch": "0.7.3"
+    "brunch": "0.7.4"
 ,   "eco": "1.1.0-rc-1"
 ,   "express": "2.3.11"
 ,   "less": "1.1.2"
