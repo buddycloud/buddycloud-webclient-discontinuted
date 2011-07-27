@@ -1,8 +1,12 @@
 form
+  label
+    padding 2px
+    color rgba(0,0,0,.89)
+    display inline-block
   input
     width 215px
     padding 7px 8px
-    margin 8px 0
+    margin-bottom 8px
     font-size 18px
     vertical-align bottom
     background white
@@ -10,19 +14,22 @@ form
     border 1px solid rgba(0, 0, 0, 0.21)
     box-shadow 0 1px 3px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255, 255, 255, 0.34)
     display block
+    transition border-color 500ms
     &:focus
-      border-color rgba(0, 0, 0, 0.34)
+      border-color rgba(0,0,0,0.55)
+      transition none
   .left
     padding-left 2px
     line-height 26px
     float left
   p
     padding 0 2px
+    color rgba(0,0,0,.89)
+  a, a:visited
     color rgba(0,0,0,.55)
-  a
-    color rgba(0,0,0,.34)
+    text-decoration underline
     &:hover
-      text-decoration underline
+      color rgba(0,0,0,.89)
   button
     height auto
     padding-top 3px

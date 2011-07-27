@@ -28,16 +28,9 @@ border-bottom-left-radius()
   
 border-bottom-right-radius()
   vendor('border-bottom-right-radius', arguments)
-
-linear-bg-gradient()
-  //background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
-  background-image -webkit-linear-gradient(top, arguments)
-  background-image -moz-linear-gradient(top, arguments)
-  background-image -o-linear-gradient(top, arguments)
-  background-image -ms-linear-gradient(top, arguments)
-  background-image linear-gradient(top, arguments)
   
 radial-bg-gradient(shape, from, to)
+  background-color from
   background-image -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
   background-image -webkit-radial-gradient(center center, shape, from, to)
   background-image -moz-radial-gradient(center center, circle shape, from, to)
