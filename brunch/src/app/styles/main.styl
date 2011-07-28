@@ -7,6 +7,7 @@
 @import "authentication"
 @import "channels"
 @import "stream"
+@import "mobile"
 
 html
   height 100%
@@ -19,10 +20,13 @@ html
   //-webkit-font-smoothing antialiased
 
 body
+  width 100%
   min-height 100%
   overflow-x hidden
   radial-bg-gradient cover, rgba(255,255,255,.34), rgba(255,255,255,0)
   background-attachment fixed
+  box horizontal center justify
+  -webkit-text-size-adjust none
 
 .headbar
   top 0
