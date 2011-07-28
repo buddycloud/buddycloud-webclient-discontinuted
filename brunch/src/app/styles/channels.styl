@@ -1,11 +1,15 @@
-#sidebar 
-  width 76px
+#sidebar
   height 100%
+  width 233px
   color white
   border-right 0 1px black
-  position fixed
-#channels
-  overflow hidden
+  position relative
+  #channels
+    width 233px
+    position fixed
+    overflow hidden
+
+#sidebar
   .personal.channel
     height 76px
     background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21))
@@ -45,27 +49,27 @@
   .search + .channel.selected
     box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
   .channel
-    width 76px
+    width 233px
     height 64px
     position relative
     overflow hidden
     transition 500ms
     transform-origin top
-    float left
     &.selected
       background linear-gradient(top, rgba(0, 0, 0, .13) 50%, rgba(255, 255, 255, 0.21))
       box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21), 0 1px black inset, 0 -1px rgba(255, 255, 255, 0.21)
     &.bubbleUp
       z-index 2
-    .info
+    .info      
+      width 148px
       top 50%
       margin-top -39px
-      padding 22px 17px 22px 50px
+      padding 22px 17px 22px 77px
       font-size 12px
       line-height 17px
       text-shadow 0 0 1px rgba(0, 0, 0, 0.13)
       position absolute
-      opacity 0
+      opacity 1
       border-radius 5px
       cursor pointer
       .owner, .status
@@ -86,8 +90,8 @@
       height 50px
       width 50px
       top 50%
-      left 50%
-      margin -25px 0 0 -25px
+      left 13px
+      margin-top -25px
       border-radius 3px
       position absolute
       transition 500ms
@@ -96,24 +100,6 @@
       box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
   .selected .avatar
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px default_highlight, 0 0 0 4px lighten(default_highlight, 8%), 0 0 2px 4px rgba(0, 0, 0, 0.34)
-
-.wideChannelView
-  #content
-    margin-left 233px
-  #sidebar
-    width 233px
-  #channels
-    .channel
-      width 233px
-    .avatar
-      left 13px
-      margin-left 0
-    .info
-      width 148px
-      padding-left 77px
-      opacity 1
-  #more_channels
-    width 231px
     
 .counter
   top -6px
@@ -178,7 +164,7 @@
     transition 500ms height
 
 #more_channels, .channelOverview #more_channels
-  width 74px
+  width 231px
   bottom 0
   margin-left 1px
   color white
@@ -195,7 +181,7 @@
   width 231px
   border-top-right-radius 5px
   
-#active_channel_indicator
+.active_channel_indicator
   top 25px
   right 0
   width 10px
@@ -212,7 +198,7 @@
     transform rotate(45deg)
     transform-origin center center
     position absolute
-.channelOverview #active_channel_indicator, .inTransition #active_channel_indicator
+.channelOverview .active_channel_indicator, .inTransition .active_channel_indicator
   right -10px
-.personal.channel #active_channel_indicator
+.personal.channel .active_channel_indicator
   top 32px
