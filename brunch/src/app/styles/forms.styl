@@ -3,7 +3,9 @@ form
     padding 2px
     color rgba(0,0,0,.89)
     display inline-block
-  input
+  input[type=text],
+  input[type=password],
+  input[type=email]
     width 215px
     padding 7px 8px
     margin-bottom 8px
@@ -18,7 +20,7 @@ form
     &:focus
       border-color rgba(0,0,0,0.55)
       transition none
-  .left
+  .leftBox
     padding-left 2px
     line-height 26px
     float left
@@ -34,6 +36,156 @@ form
     height auto
     padding-top 3px
     padding-bottom 4px
+    line-height 17px
     float right
     &[disabled]
       opacity 0.55
+      
+form.stream
+  > div
+    position relative
+    &:first-child
+      border-radius 5px 5px 0 0
+      label
+        border-top none
+        border-top-left-radius 5px
+      input, div
+        border-top none
+        border-top-right-radius 5px
+    input[type=text],
+    textarea,
+    > div
+      top 0
+      right 0
+      width 343px
+      background white
+      border none
+      border-top 1px solid #eee
+      border-radius 0
+      position absolute
+    input[type=text],
+    textarea
+      margin 0
+      padding 13px 8px
+      font 13px/17px "Helvetica Neue", Helvetica, Arial, sans-serif
+      box-shadow none
+      appearance none
+    > div
+      height 26px
+      padding 8px
+      line-height 26px
+    &.dual
+      input
+        width 164px
+        right 179px
+        &:last-child
+          right 0
+          border-left 1px solid #eee
+  label
+    width 114px
+    padding 0 13px
+    color black
+    font-weight bold
+    line-height 42px
+    border-top 1px solid #eee
+    border-right 1px solid #eee
+    background white
+  .area
+    label
+      height 100px
+    textarea
+      height 74px
+      resize none
+  .gravatar
+    label
+      height 65px
+    > div
+      height 50px
+    p
+      left 64px
+      line-height 50px
+      position absolute
+    .avatar
+      left 8px
+      width 50px
+      height 50px
+    &.inactive
+      opacity .34
+      label
+        height 42px
+      p
+        line-height inherit
+        position static
+  .hint    
+    margin 0 8px
+    color rgba(0,0,0,.55)
+    position relative
+    > span
+      width 247px
+      left 0
+      opacity 0
+      position absolute
+      transition 500ms
+    &.followerSelected
+      .follower
+        opacity 1
+    &.followerPlusSelected
+      .followerPlus
+        opacity 1
+
+form.stream
+  border-radius 5px 5px 0 0
+  float none
+  + nav
+    width 484px
+    margin-top -1px
+    padding 10px 8px 8px
+    background white
+    border-radius 0 0 5px 5px
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
+    > div
+      margin-left 8px
+      float right
+  
+.toggle
+  width 78px
+  height 26px
+  border 1px solid rgba(0, 0, 0, 0.21)
+  border-radius 3px
+  overflow hidden
+  cursor pointer
+  position relative 
+  display none
+  + input[type=checkbox]
+    visibility visible
+  .slidePanel 
+    width 150%
+    height 100%
+    left -50%
+    margin 1px
+    position absolute
+    transition 320ms
+  &.moving .slidePanel 
+    transition none
+  .switch 
+    top 0
+    left 33.33%
+    width 33.33%
+    height 24px
+    position absolute
+    background #eee
+    border 1px solid rgba(0, 0, 0, 0.21)
+    border-bottom-color rgba(0,0,0,.34)
+    border-radius 3px
+    box-shadow 0 1px rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
+    box-sizing border-box
+  .left, .right
+    right 0
+    width 33.33%
+    height 100%
+    line-height 24px
+    text-align center
+    position absolute
+  .left
+    left 0
+    right auto
