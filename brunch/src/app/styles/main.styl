@@ -27,6 +27,9 @@ body
   background-attachment fixed
   box horizontal center justify
   -webkit-text-size-adjust none
+  &.start
+    box none none none
+    display block
 
 .headbar
   top 0
@@ -76,3 +79,7 @@ a, a:visited
   text-decoration none
   &:hover
     color light_highligh
+    text-decoration underline
+  &.internal
+    padding-left 12px
+    background url(../../public/icons/beagle.png) no-repeat left 4px
