@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="channel">
-          <div class="avatar" style="background-image: url(public/avatars/channel4.jpg)">
+          <div class="avatar" style="background-image: url(public/avatars/topic.png)">
             <span class="channelpost counter">2</span>
           </div>
           <div class="info">
@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="channel">
-          <div class="avatar" style="background-image: url(public/avatars/channel6.jpg)">
+          <div class="avatar" style="background-image: url(public/avatars/topic.png)">
           </div>
           <div class="info">
             <span class="owner">music<span class="domain">@buddycloud.com</span></span>
@@ -107,12 +107,12 @@
           </div>
         </div>
         <div class="channel">
-          <div class="avatar" style="background-image: url(public/avatars/user2.jpg)">
+          <div class="avatar" style="background-image: url(public/avatars/anon.png)">
             <span class="channelpost counter">2</span>
           </div>
           <div class="info">
-            <span class="owner">vera<span class="domain">@buddycloud.com</span></span>
-            <span class="status">What a wonderful day</span>
+            <span class="owner">steve<span class="domain">@buddycloud.com</span></span>
+            <span class="status">all your base belongs to us</span>
           </div>
         </div>
         <div class="channel">
@@ -190,8 +190,8 @@
   </div>
   <div id="content" class="clearfix">
     <div class="channelView">
-      <a href="http://www.buddycloud.com" id="powerdby">powered by Buddycloud</a>
       <header class="clearfix">
+        <a href="http://www.buddycloud.com" id="powerdby">powered by Buddycloud</a>
         <h2 class="title">Veras World</h2>
         <span class="mood">Hanging out with the world at my feet</span>
         <nav class="inChannel">
@@ -215,7 +215,7 @@
             </div>
             <div class="button small prominent" id="createNewTopic">Post</div>
         </section>
-        <article class="notification">
+        <!--<article class="notification">
           <section>
             <img class="avatar" src="public/avatars/user4.jpg" />
             <span class="name">Martin</span>
@@ -226,6 +226,23 @@
               <div class="button small negative light">Deny</div>
               <div class="button small prominent positive light">Grant Martin to join</div>
             </div>
+          </section>
+        </article>-->
+        <article class="topic">
+          <section class="opener">
+            <img class="avatar" src="public/avatars/user2.jpg" />
+            <div class="postmeta">
+              <span class="time" title="5:06pm 06.06.2011">1 minute</span>
+            </div>
+            <span class="name">Vera</span><span class="location">from Home</span>
+            <p>So it looks like Andi finally joined: <a class="internal" href="buddycloud.com/andi@buddycloud.com">andi@buddycloud.com</a></p>
+          </section>
+          <section class="comments">
+            <section class="answer">
+              <img class="avatar" src="public/avatars/user1.jpg" />
+              <textarea placeholder="post a comment..."></textarea>
+              <span class="button small prominent">Post</span>
+            </section>
           </section>
         </article>
         <article class="topic">
@@ -384,7 +401,7 @@
         </article>
       </section><!-- /stream -->
       <div class="channelDetails">
-        <div class="toggle">
+        <div class="infoToggle">
           <h4 class="title">Channel Info</h4>
           <span class="icon"></span>
         </div>
@@ -642,7 +659,7 @@
     
     ### */
   var channelInfo = $('.channelDetails');  
-  var channelInfoToggle = channelInfo.find('> .toggle');
+  var channelInfoToggle = channelInfo.find('> .infoToggle');
   
   channelInfoToggle.click(function(){ channelInfo.toggleClass('hidden'); });
   
