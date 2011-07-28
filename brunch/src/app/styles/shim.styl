@@ -3,6 +3,7 @@
 vendor(prop, args)
   -webkit-{prop} args
   -moz-{prop} args
+  -ms-{prop} args
   -o-{prop} args
   {prop} args
 
@@ -30,13 +31,13 @@ border-bottom-right-radius()
   vendor('border-bottom-right-radius', arguments)
   
 radial-bg-gradient(shape, from, to)
-  background-color from
-  background-image -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
-  background-image -webkit-radial-gradient(center center, shape, from, to)
-  background-image -moz-radial-gradient(center center, circle shape, from, to)
-  background-image -o-radial-gradient(center center, shape, from, to)
-  background-image -ms-radial-gradient(center center, shape, from, to)
-  background-image radial-gradient(center center, shape, from, to)
+  background from
+  background -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
+  background -webkit-radial-gradient(center center, shape, from, to)
+  background -moz-radial-gradient(center center, circle shape, from, to)
+  background -o-radial-gradient(center center, shape, from, to)
+  background -ms-radial-gradient(center center, shape, from, to)
+  background radial-gradient(center center, shape, from, to)
   
 background-clip()
   vendor('background-clip', arguments)
