@@ -18,15 +18,17 @@
       border-radius 3px
       display none
       
-#powerdby
-  left 534px
-  top 29px
+#poweredby
+  left 521px
+  top 8px
   margin-top 2px
   width 76px
   height 26px
   text-indent -9999px
-  background url(../../public/images/powerdby.png)
+  background url(../../public/images/poweredby.png)
   position absolute
+  header.small #poweredby
+    top 0
 
 #content
   min-height 100%
@@ -66,6 +68,10 @@
     height 58px
     margin-top 8px
     position relative
+    &.small
+      height 40px
+      nav
+        top 0
     h2, .mood, .location
       margin-left 8px
       width 305px
@@ -165,6 +171,7 @@
       transform rotateX(0deg)
     &.private
       height 34px
+      box-shadow none
       p img
         margin-right 8px
         vertical-align bottom
@@ -227,11 +234,6 @@
   .opener
     min-height 50px
     padding-left 63px
-  .location
-    margin-left 5px
-    font-size 11px
-    line-height 19.5px
-    color rgba(0,0,0,.34)
   .postmeta
     float right
     margin 0 0 0 13px
@@ -249,7 +251,12 @@
     font-weight bold
     overflow hidden
     white-space nowrap
-    text-overflow ellipsis
+    text-overflow ellipsis    
+    + .location
+      margin-left 5px
+      font-size 11px
+      line-height 19.5px
+      color rgba(0,0,0,.34)
   .opener:hover nav, .comment:hover nav
     visibility visible
   .avatar
@@ -305,8 +312,10 @@
       &.answer:first-child
         padding-left 50px
         &.write .avatar
+          top 13px
           left -2px
         textarea
+          margin-top 8px
           width 399px
     .avatar
       top 6px
@@ -467,7 +476,7 @@
   color rgba(0,0,0,.55)
   float left
   position relative
-  .toggle
+  .infoToggle
     width 220px
     height 26px
     margin-left -1px
@@ -481,6 +490,9 @@
     box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
     transition 500ms
     cursor pointer
+    &:hover
+      .icon
+        opacity 1
     h4
       color rgba(0,0,0,.67)
       display inline
@@ -492,9 +504,9 @@
       opacity 0.67
       display block
       float right
-  &.hidden .toggle .icon
+  &.hidden .infoToggle .icon
     opacity 0.55
-  &.hidden .toggle
+  &.hidden .infoToggle
     margin-left -224px
   > .holder
     width 222px
@@ -741,6 +753,11 @@
         background rgba(0,0,0,.13)
       + form
         clear right
+    nav
+      margin-top 21px
+      > div
+        margin-left 8px
+        float right
     &.twoWindowed
       padding 13px
       margin-left -274px
