@@ -32,6 +32,8 @@ input[type=submit].button
   &:active
     background linear-gradient(top, #eee, #eee)
     box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset
+    position relative
+    top 1px
   
   &.tall
     padding 5px 21px
@@ -56,7 +58,14 @@ input[type=submit].button
       background lighter(default_highlight, 13%)
   
   &.prominent
-    font-weight bold
+    color white
+    text-shadow 0 1px rgba(0,0,0,.13)
+    border-color rgba(0,0,0,.34)
+    border-bottom-color rgba(0,0,0,.55)
+    background rgba(0,0,0,.89)
+    box-shadow 0 1px rgba(255, 255, 255, 0.21) inset, 0 1px rgba(0,0,0,.05)
+    &:hover
+      background rgba(0,0,0,1)
     
   &.checkbox
     padding-left 1px
