@@ -13,9 +13,8 @@ class exports.LoginView extends AuthenticationView
             if jid.length > 0 and password.length > 0
                 @start_connection(jid, password)
                 # disable the form and give feedback
-                $('#home_login_submit')
-                    .prop("disabled", yes)
-                    .text "Logging in..."
+                $('#home_login_submit').prop "disabled", yes
+                @el.find('.leftBox').addClass "working"
             return false
         super
 
@@ -31,4 +30,4 @@ class exports.LoginView extends AuthenticationView
 
     success: =>
         $('#home_login_submit').prop "disabled", false
-        $('#login_waiting').text "Logging in..."
+        @el.find('.leftBox').removeClass "working"

@@ -24,6 +24,16 @@ form
     padding-left 2px
     line-height 26px
     float left
+    .spinner
+      padding-left 23px
+      color rgba(0,0,0,.55)
+      background url(../../public/images/spinner_white.gif) no-repeat 0 5px
+      display none
+    &.working
+      .resetPassword
+        display none
+      .spinner
+        display block
   p
     padding 0 2px
     color rgba(0,0,0,.89)
