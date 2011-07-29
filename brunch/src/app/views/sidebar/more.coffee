@@ -25,13 +25,14 @@ class exports.ChannelOverView extends Backbone.View
         app.router.navigate "/home"
         body = $('body')
         body.removeClass 'stateArrived'
-        # document.redraw() # FIXME doenst work?
+        do document.redraw
         body.addClass 'inTransition'
         body.removeClass 'channelOverview'
         @el.one('click', @expand).text "more …"
         @render()
 
     render: ->
-        app.views.home.sidebar.el.one transitionendEvent, ->
+        body = $('body')
+        $('#channels').one transitionendEvent, ->
             body.removeClass 'inTransition'
             body.addClass('stateArrived') if body.hasClass 'channelOverview'

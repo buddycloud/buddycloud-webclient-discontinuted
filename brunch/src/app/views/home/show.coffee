@@ -2,10 +2,11 @@
 { Sidebar } = require 'views/sidebar/show'
 
 class exports.HomeView extends Backbone.View
+    template: require 'templates/home/show'
 
     initialize: ->
         @sidebar = new Sidebar parent:this
-        $('body').append @el = $("<div>").attr id:"content"
+        $('body').append @el = $(@template())
         $('.centerBox').remove() # FIXME ugly
         @bind 'show', @show
         @bind 'hide', @hide

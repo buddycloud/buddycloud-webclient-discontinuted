@@ -6,8 +6,8 @@ class exports.Sidebar extends Backbone.View
 
     initialize: ({@parent}) ->
         # default's not visible due to nice animation
-        $('body').append $('<div id="sidebar">').html @template()
-        @el = $('#channels')
+        $('body').append @template()
+        @el = $('#channels > .scrollArea')
         @hidden = yes
         # sidebar entries
         @current = undefined
