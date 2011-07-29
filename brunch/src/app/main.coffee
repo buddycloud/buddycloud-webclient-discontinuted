@@ -27,8 +27,8 @@ $(document).ready ->
         console.error "DEBUG:", arguments if app.debug_mode
     Strophe.log = (level, msg) ->
         console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
-    Strophe.fatal = (handler) ->
-        console.error "STROPHE:", handler if app.debug_mode
+    Strophe.fatal = (msg) ->
+        console.error "STROPHE:", msg if app.debug_mode
 
 
     app.initialize = ->

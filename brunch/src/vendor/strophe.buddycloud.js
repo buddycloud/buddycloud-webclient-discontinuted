@@ -53,46 +53,70 @@ Strophe.addConnectionPlugin('buddycloud', {
         var self = this, that = this._connection;
         that.pubsub.items(node,
             function  /*success*/ (stanza) {
-                if (!succ) return;
-                var i, item, attr, post, posts = [],
-                    items = stanza.getElementsByTagName("item");
-                for (i = 0; i < items.length; i++) {
-                    item = items[i];
-                    // Takes an <item /> stanza and returns a hash of it's attributes
-                    post = self._parseitem(item, "id", "published", "updated");
-                    post.id = parseInt(post.id.replace(/.+:/,''));
-
-                    // content
-                    attr = item.getElementsByTagName("content");
-                    if (attr.length > 0) {
-                        attr = attr.item(0);
-                        post.content = {
-                            type: attr.getAttribute("type"),
-                            value:attr.textContent,
-                        };
-                    }
-
-                    // author
-                    attr = item.getElementsByTagName("author");
-                    if (attr.length > 0)
-                        post.author = self._parseitem(attr.item(0),
-                            "name", "jid", "affiliation");
-
-                    // geoloc
-                    attr = item.getElementsByTagName("geoloc");
-                    if (attr.length > 0)
-                        post.geoloc = self._parseitem(attr.item(0),
-                            "country", "locality", "text");
-
-                    // in reply to
-                    attr = item.getElementsByTagName("thr:in-reply-to");
-                    if (attr.length > 0)
-                        post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
-
-                    posts.push(post);
-                }
-                succ(posts);
+                if (succ) self._parsePost(stanza, succ);
             }, self._errorcode(err));
+    },
+
+    getChannelPostStream: function (node, succ, err) {
+        this._connection.addHandler(
+            this._onChannelPost(succ, err),
+            Strophe.NS.PUBSUB, 'iq', 'result', null, null);
+        this.getChannelPosts(node, null, null);
+    },
+
+    _onChannelPost: function (succ, err) {
+        var self = this;
+        return this._iqcbsoup(function (stanza) {
+            self._parsePost(stanza, succ);
+        },  self._errorcode(err));
+    },
+
+    _parsePost: function (stanza, callback) {
+        console.error("_parsePost", stanza)
+        var i, j, item, attr, post, posts = [], entry, entries,
+            items = stanza.getElementsByTagName("item");
+        for (i = 0; i < items.length; i++) {
+            item = items[i];
+            entries = item.getElementsByTagName("entry");
+            for(j = 0; j < entries.length; j++) {
+                entry = entries[j];
+                // Takes an <item /> stanza and returns a hash of it's attributes
+                post = this._parsetag(entry, "id", "published", "updated");
+                post.id = parseInt(post.id.replace(/.+:/,''));
+
+                // content
+                attr = entry.getElementsByTagName("content");
+                if (attr.length > 0) {
+                    attr = attr.item(0);
+                    post.content = {
+                        type: attr.getAttribute("type"),
+                        value:attr.textContent,
+                    };
+                }
+
+                // author
+                attr = entry.getElementsByTagName("author");
+                if (attr.length > 0)
+                    post.author = this._parsetag(attr.item(0),
+                        "name", "jid", "affiliation");
+
+                // geoloc
+                attr = entry.getElementsByTagName("geoloc");
+                if (attr.length > 0)
+                    post.geoloc = this._parsetag(attr.item(0),
+                        "country", "locality", "text");
+
+                // in reply to
+                attr = entry.getElementsByTagName("thr:in-reply-to");
+                if (attr.length > 0)
+                    post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
+
+                posts.push(post);
+            }
+        }
+        console.error("posts", posts)
+        callback(posts);
+
     },
 
     // Get the subscriptions for a user, calls succ with an array of hashes of channels
@@ -170,15 +194,14 @@ Strophe.addConnectionPlugin('buddycloud', {
         };
     },
 
-    _parseitem: function (item) {
+    _parsetag: function (tag) {
         var attr, res = {};
-        Array.prototype.slice(arguments,1).forEach(function (name) {
-            attr = item.getElementsByTagName(name);
+        Array.prototype.slice.call(arguments,1).forEach(function (name) {
+            attr = tag.getElementsByTagName(name);
             if (attr.length > 0)
                 res[name] = attr.item(0).textContent;
         });
         return res;
-
     },
 
 });

@@ -1,8 +1,9 @@
-{ Topics } = require 'collections/topic'
+{ TopicPosts } = require 'collections/topicpost'
 { Node } = require 'models/node/skeleton'
 
 class exports.ChannelNode extends Node
 
     initialize: ->
-        @topics = new Topics
-        super
+        result = super
+        @posts = new TopicPosts # overwriting default Posts
+        result

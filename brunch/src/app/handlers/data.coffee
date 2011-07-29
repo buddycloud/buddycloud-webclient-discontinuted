@@ -5,7 +5,9 @@ class exports.DataHandler extends Backbone.EventHandler
 
     constructor: (@connector) ->
         @get_node_subscriptions = @connector.get_node_subscriptions
+        @get_user_subscriptions = @connector.get_user_subscriptions
 
+        @connector.bind 'post', @on_node_post
         @connector.bind 'subscription:user', @on_user_subscription
         @connector.bind 'subscription:node', @on_node_subscription
         @connector.bind 'connection:start', @on_prefill_from_cache
@@ -16,7 +18,17 @@ class exports.DataHandler extends Backbone.EventHandler
 
     # event callbacks
 
+    on_node_post: (post, nodeid) =>
+        app.error "GOT post", nodeid, post
+        channel = app.channels.get nodeid
+        node = channel.nodes.get nodeid, true
+        node.posts.add post
+
     on_connection_established: =>
+        @get_user_subscriptions()
+        nodeid = "/user/#{app.users.current.get 'jid'}/channel"
+        @connector.start_fetch_node_posts nodeid
+        @connector.get_node_posts nodeid
         # query for metadata updates for all nodes of each channel where the current user is involved
         user = app.users.current
         app.channels.forEach (channel) ->

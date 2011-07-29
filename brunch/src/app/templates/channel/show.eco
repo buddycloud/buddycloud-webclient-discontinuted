@@ -40,7 +40,12 @@
 
     -->
     <section class="topics">
+    <!--
 
+      this contains the list of channel posts
+      template: posts.eco
+
+    -->
     </section>
   </section><!-- /stream -->
   <div class="channelDetails">

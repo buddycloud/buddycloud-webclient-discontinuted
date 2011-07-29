@@ -1,17 +1,34 @@
+{ PostsView } = require 'views/channel/posts'
 
 # The channel shows channel content
 class exports.ChannelView extends Backbone.View
     template: require 'templates/channel/show'
 
     initialize: ({@parent}) ->
-        @el = $("<div>").attr id:@cid
+        @el = $(@template this).attr id:@cid
+        @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
+        # create posts node view when it arrives from xmpp or instant when its already cached
+        init_posts = =>
+            if postsnode = @model.nodes.get 'channel'
+                @postsview = new PostsView
+                    model:postsnode
+                    parent:this
+                    el:@el.find('.topics')
+                do @postsview.render
+            else
+                @model.nodes.once "add", init_posts
+        do init_posts
 
     render: =>
         @update_attributes()
         old = @el; old.replaceWith @el = $(@template this).attr id:@cid
         @info = @el.find('.channelDetails')
+        if @postsview
+            @el.find('.topics').replaceWith @postsview.el
+            do @postsview.render
         #@el.find('.info.button').click => @info.toggleClass('hidden')
+
 
     update_attributes: ->
         if (channel = @model.nodes.get 'channel')

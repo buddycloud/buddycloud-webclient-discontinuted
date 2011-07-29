@@ -1,11 +1,13 @@
 { NodeMetadata } = require 'models/metadata/node'
 { Users } = require('collections/user')
+{ Posts } = require('collections/post')
 
 class exports.Node extends Backbone.Model
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata this, nodeid
         @users    = new Users app.users.filter_by_node nodeid
+        @posts    = new Posts
 
     toJSON: (full) ->
         result = super

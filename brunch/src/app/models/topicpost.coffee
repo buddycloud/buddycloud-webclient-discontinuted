@@ -1,8 +1,8 @@
 { Posts } = require 'collections/post'
 { Post } = require 'models/post'
 
-class exports.Topic extends Backbone.Model
+class exports.TopicPost extends Post
 
     initialize: ->
-        @opener = new Post # FIXME no new
         @comments = new Posts
+        super

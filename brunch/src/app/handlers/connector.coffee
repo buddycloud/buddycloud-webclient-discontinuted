@@ -2,11 +2,25 @@
 class exports.Connector extends Backbone.EventHandler
 
     constructor: (@handler, @connection) ->
-        @handler.bind 'connected', =>
-            @trigger 'connection:established'
-            @get_user_subscriptions()
-        @handler.bind 'connecting', =>
-            @trigger 'connection:start'
+        @handler.bind 'connecting', => @trigger 'connection:start'
+        @handler.bind 'connected',  => @trigger 'connection:established'
+
+    start_fetch_node_posts: (nodeid) =>
+        success = (posts) =>
+            for post in posts
+                @trigger "post", post, nodeid
+        error = =>
+            app.error "fetch_node_posts", nodeid, arguments
+        @connection.buddycloud.getChannelPostStream nodeid, success, error
+
+    get_node_posts: (nodeid, callback) =>
+        success = (posts) =>
+            for post in posts
+                @trigger "post", post, nodeid
+            callback? posts
+        error = =>
+            app.error "get_node_posts", nodeid, arguments
+        @connection.buddycloud.getChannelPosts nodeid, success, error
 
     get_node_metadata: (nodeid, callback) =>
         success = (metadata) =>

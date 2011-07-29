@@ -3,6 +3,3 @@
 
 class exports.MoodNode extends Node
 
-    initialize: ->
-        @posts = new Posts
-        super

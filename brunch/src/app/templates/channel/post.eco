@@ -1,7 +1,7 @@
 <section class="opener">
-  <img class="avatar" src="<%= topic.autor.avatar %>" />
+  <img class="avatar" src="<%= @author?.avatar %>" />
   <div class="postmeta">
-    <span class="time" title="<%= topic.creationDate %>"><%= topic.passedTime %></span>
+    <span class="time" title="<%= @post?.updated %>"><%= @post?.published %></span>
     <!--
       creationDate: hh:mm dd/mm/yyyy
       -> we'll probably need to have an option to choose ones date-format
@@ -9,6 +9,6 @@
       -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
     -->
   </div>
-  <span class="name"><%= topic.autor.name %></span><span class="location"><%= topic.location %></span>
-  <p><%= topic.body %></p>
+  <span class="name"><%= @post?.author?.name %></span><span class="location"><%= "TODO @post.location" %></span>
+  <p><%= @post?.content?.value %></p>
 </section>
