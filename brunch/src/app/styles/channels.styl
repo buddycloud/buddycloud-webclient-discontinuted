@@ -127,9 +127,11 @@
     background-color admin_highlight
 
 .channelOverview #sidebar
-  width 100%
-.channelOverview #channels
-  padding 21px 55px
+  box-flex 1
+  #channels
+    padding 21px 55px
+    position relative
+    width auto
   .personal.channel
     background linear-gradient(top, transparent, transparent)
     box-shadow none
@@ -138,22 +140,28 @@
     + .channel
       padding-top 0
   .channel
-    height 160px
-    width 20%
+    margin 24px 0.5%
+    height 76px
+    width 19%
+    float left
+    border-radius 5px
     transition none
     &.selected
       background none
       box-shadow none
     .avatar
       left 0
-      margin-left 21px
+      margin-left 9px
       transition margin-left 500ms, left 500ms
     .info
+      width 153px
       opacity 1
-      margin-left 6px
-      padding-left 76px
+      padding-left 79px
       transition opacity 500ms, margin-left 500ms, padding-left 500ms
-    &:hover .info
+  .personal.channel,
+  .channel.selected,
+  .channel
+    &:hover
       background linear-gradient(top, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.21))
       box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
   #active_channel_indicator

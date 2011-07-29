@@ -53,10 +53,15 @@
       position absolute
       z-index 4
 .channelOverview #content
-  margin-left 100%
+  box-flex 0
+  width 0
+  .channelView
+    position absolute
+    height 0
+    overflow hidden
 .channelOverview.stateArrived #content
-  height 400px // variable height to disable the vertical scrollbar
-  overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
+  //height 300px // variable height (smaller than screen height) to disable the vertical scrollbar
+  //overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
   padding 13px
