@@ -26,7 +26,10 @@
           <h2>buddycloud login</h2>
           <input type="email" id="home_login_jid" placeholder="Jabber ID" required />
           <input type="password" id="home_login_pwd" placeholder="Password" required />
-          <p class="leftBox"><a href="#">Forgot password?</a></p>
+          <div class="leftBox">
+            <a href="#" class="resetPassword">Forgot password?</a>
+            <span class="spinner">Logging in</span>
+          </div>
           <button type="submit" id="home_login_submit" class="callToAction">Login</button>
         </form>
       </section>
@@ -36,12 +39,41 @@
     </div>
     <div id="register">
       <section class="content">
-        <form>
-          <h2>Register for Free</h2>
-          <input type="text" id="home_register_jid" placeholder="Jabber ID" />
-          <input type="password" id="home_register_pwd" placeholder="Password" />
-          <button type="submit" id="home_login_submit">Register</button>
-        </form>
+        <section class="check">
+          <form>
+            <h2>Register for Free</h2>
+            <p>We will check if you have an existing account that works with buddycloud</p>
+            <input type="text" id="home_check_jid" placeholder="Jabber ID" />
+            <button type="submit" id="home_check_account">Check account</button>
+          </form>
+        </section>
+        <section class="positive">
+          <form>
+            <h2>Register for Free</h2>
+            <p>Yes, you can use your account</p>
+            <input type="text" id="home_register_jid" placeholder="Jabber ID" />
+            <input type="text" id="home_register_password" placeholder="Password" />
+            <div class="leftBox">
+              <a href="#" class="resetPassword">Forgot password?</a>
+              <span class="spinner">checking account</span>
+            </div>
+            <button type="submit" id="home_register_login">Login</button>
+          </form>
+        </section>
+        <section class="negative">
+          <form>
+            <h2>Register for Free</h2>
+            <p>Your account is not buddycloud-enabled. But we can create an account for you.</p>
+            <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
+            <input type="text" id="home_register_new_password" placeholder="Password" />
+            <input type="text" id="home_register_new_email" placeholder="Email" />
+            <div class="leftBox">
+              <a href="#" class="resetPassword">Forgot password?</a>
+              <span class="spinner">checking account</span>
+            </div>
+            <button type="submit" id="home_check_account">Login</button>
+          </form>
+        </section>
       </section>
       <section class="navigation clearfix">
         <div class="back button">Back</div>
