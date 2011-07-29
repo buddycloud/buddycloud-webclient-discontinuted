@@ -17,7 +17,7 @@
     border-radius 3px
     box-shadow 0 0 0 1px rgba(0,0,0,.55), 0 1px 13px rgba(0,0,0,.55), 0 1px white inset
     position absolute
-    transition 1000ms
+    transition 750ms
     -webkit-backface-visibility hidden
   .hero
     height 319px
@@ -54,15 +54,32 @@
     > section
       transform rotate3d(0,1,0,-360deg)
     h2
-      color #ddd
+      color rgba(0,0,0,.21)
     .content
       width 233px
-      padding 13px
-      margin 116px auto 0
-  #register > section > section
-    display none
-    &.check
-      display block
+      padding 0
+      margin 0 auto
+  #login
+    form
+      margin-top 109px
+  #register
+    #register_check
+      margin-top 111px
+      margin-left -267px // width + 34 gap
+    #register_login
+      margin-top 93px      
+    #register_account
+      margin-top 38px
+    form
+      width 233px
+      margin-left 267px
+      position absolute
+      opacity 0
+      transition 500ms
+      &.visible,
+      &#register_check.visible
+        margin-left 0
+        opacity 1
   &.loginPicked,
   &.registerPicked
     #index

@@ -24,7 +24,9 @@
       <section class="content">
         <form class="clearfix">
           <h2>buddycloud login</h2>
+          <label for="home_login_jid">Jabber ID</label>
           <input type="email" id="home_login_jid" placeholder="Jabber ID" required />
+          <label for="home_login_pwd">Password</label>
           <input type="password" id="home_login_pwd" placeholder="Password" required />
           <div class="leftBox">
             <a href="#" class="resetPassword">Forgot password?</a>
@@ -39,41 +41,45 @@
     </div>
     <div id="register">
       <section class="content">
-        <section class="check">
-          <form>
-            <h2>Register for Free</h2>
-            <p>We will check if you have an existing account that works with buddycloud</p>
-            <input type="text" id="home_check_jid" placeholder="Jabber ID" />
-            <button type="submit" id="home_check_account">Check account</button>
-          </form>
-        </section>
-        <section class="positive">
-          <form>
-            <h2>Register for Free</h2>
-            <p>Yes, you can use your account</p>
-            <input type="text" id="home_register_jid" placeholder="Jabber ID" />
-            <input type="text" id="home_register_password" placeholder="Password" />
-            <div class="leftBox">
-              <a href="#" class="resetPassword">Forgot password?</a>
-              <span class="spinner">checking account</span>
-            </div>
-            <button type="submit" id="home_register_login">Login</button>
-          </form>
-        </section>
-        <section class="negative">
-          <form>
-            <h2>Register for Free</h2>
-            <p>Your account is not buddycloud-enabled. But we can create an account for you.</p>
-            <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
-            <input type="text" id="home_register_new_password" placeholder="Password" />
-            <input type="text" id="home_register_new_email" placeholder="Email" />
-            <div class="leftBox">
-              <a href="#" class="resetPassword">Forgot password?</a>
-              <span class="spinner">checking account</span>
-            </div>
-            <button type="submit" id="home_check_account">Login</button>
-          </form>
-        </section>
+        <form id="register_check" class="clearfix visible">
+          <h2>Step 1:</h2>
+          <p>Check if your email/jabber-id works with buddycloud.</p>
+          <label for="register_check_jid">Email or Jabber ID</label>
+          <input type="text" id="home_check_jid" placeholder="Email or Jabber ID" />
+          <div class="leftBox">
+            <input type="checkbox" id="home_check_outcome" title="checked = positive outcome"/>
+            <span class="spinner">checking account</span>
+          </div>
+          <button type="submit" id="home_check_account">Check</button>
+        </form>
+        <form id="register_login" class="clearfix">
+          <h2>Step 2:</h2>
+          <p class="positive">Yes, you can use your account.</p>
+          <label for="home_register_jid">Jabber ID</label>
+          <input type="text" id="home_register_jid" placeholder="Jabber ID" />
+          <label for="home_register_password">Password</label>
+          <input type="password" id="home_register_password" placeholder="Password" />
+          <div class="leftBox">
+            <a href="#" class="resetPassword">Forgot password?</a>
+            <span class="spinner">checking account</span>
+          </div>
+          <button type="submit" id="home_register_login">Login</button>
+        </form>
+        <form id="register_account" class="clearfix">
+          <h2>Step 2:</h2>
+          <p class="negative">Your account doesn't work with buddycloud. Let's create an account for you:</p>
+          <label for="home_register_new_jid">Username</label>
+          <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
+          <label for="home_register_new_password">Password</label>
+          <input type="password" id="home_register_new_password" placeholder="Password" />
+          <label for="home_register_new_email">Email (for password recovery)</label>
+          <input type="text" id="home_register_new_email" placeholder="Email" />
+          <div class="leftBox">
+            <a href="#" class="resetPassword">Forgot password?</a>
+            <span class="spinner">registering account</span>
+          </div>
+          <button type="submit" id="home_register_account">Register</button>
+        </form>
       </section>
       <section class="navigation clearfix">
         <div class="back button">Back</div>
@@ -81,3 +87,34 @@
     </div>
   </div>
 </body>
+<script type="text/javascript">
+  /* ###
+  
+  debug registration check test
+  
+  ### */
+  
+  $('#home_check_account').click(function(event){
+    event.preventDefault();
+    $('#register_check .leftBox').addClass('working');
+    setTimeout(callback, 2500);
+  });
+  
+  function callback(){
+    $('#register_check .leftBox').removeClass('working');
+    $('#register_check').removeClass('visible');
+    if($('#home_check_outcome').prop('checked')){
+      $('#register_login').addClass('visible');
+    } else {
+      $('#register_account').addClass('visible');
+    }
+  }
+  
+  $('#home_check_jid').blur(function(){
+    var jid = $(this).val();
+    var pos = jid.indexOf("@");
+    var username = jid.slice(0, pos);
+    $('#home_register_jid').val(jid);
+    $('#home_register_new_jid').val(username);
+  });
+</script>
