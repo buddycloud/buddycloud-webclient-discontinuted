@@ -18,7 +18,6 @@
     box-shadow 0 0 0 1px rgba(0,0,0,.55), 0 1px 13px rgba(0,0,0,.55), 0 1px white inset
     position absolute
     transition 750ms
-    -webkit-backface-visibility hidden
   .hero
     height 319px
     background url(../../public/images/hero.jpg)
@@ -49,10 +48,7 @@
   #login, #register
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 13px rgba(0, 0, 0, 0.55), 0 1px rgba(255, 255, 255, 0.21) inset
     overflow hidden
-    display block
-    transform rotate3d(0,1,0,-180deg)
-    > section
-      transform rotate3d(0,1,0,-360deg)
+    display none
     h2
       color rgba(0,0,0,.21)
     .content
@@ -80,21 +76,6 @@
       &#register_check.visible
         margin-left 0
         opacity 1
-  &.loginPicked,
-  &.registerPicked
-    #index
-      transform rotate3d(0,1,0,-180deg)
-  &.loginPicked
-    #login
-      transform rotate3d(0,1,0,-360deg)
-  &.registerPicked
-    #register
-      transform rotate3d(0,1,0,-360deg)
-  
-      
-.no-csstransforms3d .centerBox
-  #login, #register
-    display none
   &.loginPicked,
   &.registerPicked
     #index
