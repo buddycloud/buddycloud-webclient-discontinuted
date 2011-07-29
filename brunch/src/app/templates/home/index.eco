@@ -1,7 +1,7 @@
 <section class="hero"></section>
 <section class="content">
   <h1>Buddycloud</h1>
-  <p class="subtitle">Social Networking done right</p>
+  <p class="subtitle">Federated Social Networking</p>
 </section>
 <section class="navigation clearfix">
   <div id="goLogin" class="button">Login</div>
