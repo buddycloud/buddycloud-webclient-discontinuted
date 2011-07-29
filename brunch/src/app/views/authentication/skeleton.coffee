@@ -10,7 +10,7 @@ class exports.AuthenticationView extends Backbone.View
 
     show: =>
         @box.addClass @cssclass
-        @el.find('input').first().focus()
+        @el.find('input').first().focus() # bug on ipad: the focus has to be delayed to happen after the transition (on 3d animation enabled devices the slides flip in 3d)
 
     hide: =>
         @box.removeClass @cssclass
