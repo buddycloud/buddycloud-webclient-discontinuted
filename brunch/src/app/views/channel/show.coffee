@@ -10,6 +10,7 @@ class exports.ChannelView extends Backbone.View
         @model.bind 'change:node:metadata', @render
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
+            @model.nodes.unbind "add", init_posts
             if postsnode = @model.nodes.get 'channel'
                 @postsview = new PostsView
                     model:postsnode
@@ -17,7 +18,7 @@ class exports.ChannelView extends Backbone.View
                     el:@el.find('.topics')
                 do @postsview.render
             else
-                @model.nodes.once "add", init_posts
+                @model.nodes.bind "add", init_posts
         do init_posts
 
     render: =>
@@ -27,7 +28,7 @@ class exports.ChannelView extends Backbone.View
         if @postsview
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
-        #@el.find('.info.button').click => @info.toggleClass('hidden')
+        @el.find('.infoToggle').click => @info.toggleClass('hidden')
 
 
     update_attributes: ->
