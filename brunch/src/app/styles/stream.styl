@@ -277,29 +277,23 @@
       position relative
       resize none
     .avatar
-      width 26px
-      left 63px
+      width 40px
+      left 11px
       top 18px
-      opacity 0
-      transition none
-    .button
-      margin-top -24px
-      margin-bottom 1px
-      float right
-      transition none
-      opacity 0
+      display none
+    .controls
+      bottom 0
+      right 0
+      display none
     &.write
       .avatar
-        width 40px
-        left 11px
-        opacity 1
+        display block
       textarea
-        margin-bottom 3px
+        margin-bottom 27px
         height 37px
         resize vertical
-      .button
-        margin-top 0
-        opacity 1
+      .controls
+        display block
   .comments
     padding-left 13px
     .comment
@@ -353,13 +347,13 @@
     &.write textarea
       height 89px
       margin-bottom 29px
-    .controls
-      bottom 13px
-      right 13px
-      font-size 11px
-      position absolute
-      .button
-        display inline-block  
+  .controls
+    bottom 13px
+    right 13px
+    font-size 11px
+    position absolute 
+    .button
+      margin-left 3px
   .message
     min-height 14px
     padding-left 66px

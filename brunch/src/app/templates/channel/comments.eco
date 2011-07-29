@@ -13,7 +13,13 @@
   <section class="answer">
     <img class="avatar" src="<%= answer.user.avatar %>" />
     <textarea placeholder="post a comment..."></textarea>
-    <span class="button small prominent">Post</span>
+    <div class="controls">
+      <div class="button small checkbox">
+        <input type="checkbox" id="shouldShareLocation<%= random.number %>" />
+        <label for="shouldShareLocation<%= random.number %>">Share Location: Home</label>
+      </div>
+      <div class="button small prominent">Post</div>
+    </div>
   </section>
   <% end %>
 </section>
