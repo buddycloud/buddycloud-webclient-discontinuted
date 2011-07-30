@@ -37,11 +37,11 @@ Strophe.addConnectionPlugin('buddycloud', {
         that.pubsub.connect(channelserver);
     },
 
-    createChannel: function (success, error) {
+    createChannel: function (success, error, timeout) {
         var register, that = this._connection;
         register = $iq({from:that.jid, to:this.channels.jid, type:'set'})
             .c('query', {xmlns: Strophe.NS.REGISTER});
-        that.sendIQ(register, success, error);
+        that.sendIQ(register, success, error, timeout);
     },
 
     subscribeChannel: function (node, succ, err) {
@@ -49,19 +49,19 @@ Strophe.addConnectionPlugin('buddycloud', {
         that.pubsub.subscribe(node, null, null, this._iqcbsoup(succ, err));
     },
 
-    getChannelPosts: function (node, succ, err) {
+    getChannelPosts: function (node, succ, err, timeout) {
         var self = this, that = this._connection;
         that.pubsub.items(node,
             function  /*success*/ (stanza) {
                 if (succ) self._parsePost(stanza, succ);
-            }, self._errorcode(err));
+            }, self._errorcode(err), timeout);
     },
 
-    getChannelPostStream: function (node, succ, err) {
+    getChannelPostStream: function (node, succ, err, timeout) {
         this._connection.addHandler(
             this._onChannelPost(succ, err),
             Strophe.NS.PUBSUB, 'iq', 'result', null, null);
-        this.getChannelPosts(node, null, null);
+        this.getChannelPosts(node, null, null, timeout);
     },
 
     _onChannelPost: function (succ, err) {
@@ -72,7 +72,6 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     _parsePost: function (stanza, callback) {
-        console.error("_parsePost", stanza)
         var i, j, item, attr, post, posts = [], entry, entries,
             items = stanza.getElementsByTagName("item");
         for (i = 0; i < items.length; i++) {
@@ -114,7 +113,6 @@ Strophe.addConnectionPlugin('buddycloud', {
                 posts.push(post);
             }
         }
-        console.error("posts", posts)
         callback(posts);
 
     },
@@ -140,7 +138,7 @@ Strophe.addConnectionPlugin('buddycloud', {
         );
     },
 
-    getMetadata: function (jid, node, succ, err) {
+    getMetadata: function (jid, node, succ, err, timeout) {
         var self = this, that = this._connection;
         if (err === undefined) {
             err = succ;
@@ -164,7 +162,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                     };
                 }
                 succ(fields);
-            }, self._errorcode(err));
+            }, self._errorcode(err), timeout);
     },
 
     // helper

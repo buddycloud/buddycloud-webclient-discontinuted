@@ -3,7 +3,6 @@
 class exports.PostsView extends Backbone.View
     initialize: ({@parent, @el}) ->
         # INFO @el will be set by parent
-        console.log "========================", @el, arguments
         @el.attr id:@cid
         @posts = {}
         @model.bind "change", @render
@@ -17,7 +16,6 @@ class exports.PostsView extends Backbone.View
         entry = @posts[post.cid] ?= new TopicPostView model:topicpost, parent:this
         do entry.render
         @el.append entry.el
-        console.log @el, entry, entry.el
 
     render: =>
         for cid, entry of @posts
