@@ -55,13 +55,13 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             else if status is Strophe.Status.SBMTFAIL
                 @trigger 'sbmtfail'
                 if @isRegistered()
-                    @connection.register.authenticate()
+                    @connection.authenticate()
                     @connection.buddycloud.connect @PUBSUBJID
 
             else if status is Strophe.Status.REGISTERED
                 @trigger 'registered'
                 @_new_register = yes
-                @connection.register.authenticate()
+                @connection.authenticate()
                 @connection.buddycloud.connect @PUBSUBJID
 
             else @connection_event.apply(this, arguments)
