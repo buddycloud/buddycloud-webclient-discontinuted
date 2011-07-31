@@ -25,12 +25,14 @@ class exports.DataHandler extends Backbone.EventHandler
         node.posts.add post
 
     on_connection_established: =>
+        user = app.users.current
+        return if user.get('jid') is "anony@mous"
+
         @get_user_subscriptions()
         #nodeid = "/user/#{app.users.current.get 'jid'}/channel"
         #@connector.start_fetch_node_posts nodeid
         #@connector.get_node_posts nodeid
         # query for metadata updates for all nodes of each channel where the current user is involved
-        user = app.users.current
         app.channels.forEach (channel) =>
             channel.nodes.forEach (node) =>
                 node.fetch()
@@ -40,6 +42,7 @@ class exports.DataHandler extends Backbone.EventHandler
                     node.metadata.query()
 
     on_prefill_from_cache: =>
+        app.users.current = app.handler.connection.user
         app.users.fetch()
         app.channels.fetch()
 
@@ -65,7 +68,6 @@ class exports.DataHandler extends Backbone.EventHandler
         # sideeffect: update sidebar by updating current user channels
         channel = user.channels.update channel
 
-        # FIXME typeof channel is Channels
         if user.get('id') is app.users.current.get('id')
             node.metadata.query()
             app.users.current.channels.update channel

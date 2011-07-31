@@ -1,3 +1,4 @@
+{ ChannelOverView } = require 'views/sidebar/more'
 { ChannelEntry } = require 'views/sidebar/entry'
 
 # The sidebar shows all channels the user subscribed to
@@ -31,14 +32,18 @@ class exports.Sidebar extends Backbone.View
         app.users.current.channels.bind 'all', =>
             app.debug "sidebar CHEV-ALL", arguments
 
+        unless app.views.overview?
+            app.views.overview = new ChannelOverView
+        @overview = app.views.overview
+
     # sliding in animation
     moveIn: (t = 200) ->
         @el.animate(left:"0px", t)
-        app.views.overview.show(t)
+        @overview.show(t)
         @hidden = no
 
     # sliding out animation
     moveOut: (t = 200) ->
         @el.animate(left:"-#{@el.width()}px", t)
-        app.views.overview.hide(t)
+        @overview.hide(t)
         @hidden = yes

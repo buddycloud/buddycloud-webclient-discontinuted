@@ -28,13 +28,17 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
     # connect the current user with his jid and pw
     connect: (jid, password) ->
-        @user = app.users.current = app.users.get jid, yes
+        unless jid
+            jid = @DOMAIN
+            @user = app.users.get "anony@mous", yes
+        else
+            @user = app.users.get jid, yes
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
         @connection.buddycloud.connect @PUBSUBJID
 
     register: (username, password) ->
-        @user = app.users.current = app.users.get "#{username}@#{@DOMAIN}"
+        @user = app.users.get "#{username}@#{@DOMAIN}"
         @connection.register.connect @DOMAIN, (status, moar...) =>
 
             if status is Strophe.Status.REGISTERING

@@ -45,12 +45,12 @@ class exports.HomeView extends Backbone.View
         @sidebar.render()
         @current?.render()
 
-    show: ->
+    show: =>
         @render()
         @sidebar.moveIn()
         @current?.trigger 'show'
 
-    hide: ->
+    hide: =>
         @sidebar.moveOut()
         @current?.trigger 'hide'
 

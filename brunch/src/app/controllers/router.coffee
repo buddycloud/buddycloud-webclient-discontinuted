@@ -1,5 +1,5 @@
 # views
-{ ChannelOverView } = require 'views/sidebar/more'
+{ DirectChannelView } = require 'views/home/direct'
 { RegisterView } = require 'views/authentication/register'
 { LoginView } = require 'views/authentication/login'
 { IndexView } = require 'views/home/index'
@@ -14,6 +14,8 @@ class exports.Router extends Backbone.Router
         "/login"     :"login"
         "/register"  :"register"
         "/more"      :"overview"
+        "/channel/:id@:domain.:tld":"directchannel"
+        "/c/:id@:domain.:tld"      :"directchannel"
 
     initialize: ->
         # start views
@@ -21,7 +23,7 @@ class exports.Router extends Backbone.Router
         app.views.login = new LoginView
         app.views.register = new RegisterView
 
-        # bootstrapping after login
+        # bootstrapping after login or registration
         app.handler.connection.bind "connected", @authorize
 
         Backbone.history.start()
@@ -33,11 +35,28 @@ class exports.Router extends Backbone.Router
         @current_view = view
         @current_view.trigger 'show'
 
+    disable_index: =>
+        # disable all views available at page load
+        delete app.views.index
+        delete app.views.login
+        delete app.views.register
 
     authorize: =>
-        app.views.home     = new HomeView
-        app.views.overview = new ChannelOverView
+        do @disable_index
+        app.views.home = new HomeView
         @navigate '/home', true
+
+    build_direct_channel: (jid) =>
+        do @disable_index
+        # start view
+        app.views.direct = new DirectChannelView {jid}
+
+        # connect as anony@mous when no
+        do app.handler.connection.connect unless app.users.current
+
+        # bootstrapping after connection process
+        app.handler.connection.unbind "connected", @authorize
+        app.handler.connection.bind   "connected", app.views.direct.build
 
     # routes
 
@@ -46,4 +65,10 @@ class exports.Router extends Backbone.Router
     login:    -> @setView app.views.login
     register: -> @setView app.views.register
     overview: -> @setView app.views.overview
+
+    directchannel: (id, domain, tld) ->
+        unless app.views.direct
+            @build_direct_channel "#{id}@#{domain}.#{tld}"
+        @setView app.views.direct
+
 
