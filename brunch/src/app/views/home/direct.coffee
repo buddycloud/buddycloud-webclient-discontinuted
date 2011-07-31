@@ -25,6 +25,7 @@ class exports.DirectChannelView extends Backbone.View
         node.fetch()
         node.metadata.query()
         app.users.current.channels.update channel
+        app.handler.connection.connector.get_node_posts nodeid
 
         app.views.home = new HomeView
         app.views.home.trigger 'show'

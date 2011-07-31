@@ -67,8 +67,10 @@ class exports.DataHandler extends Backbone.EventHandler
 
         # sideeffect: update sidebar by updating current user channels
         channel = user.channels.update channel
+        @connector.get_node_posts subscription.node
 
         if user.get('id') is app.users.current.get('id')
+            node.fetch()
             node.metadata.query()
             app.users.current.channels.update channel
 
