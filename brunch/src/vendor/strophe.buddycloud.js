@@ -31,6 +31,13 @@ Strophe.addConnectionPlugin('buddycloud', {
         });
     },
 
+    // Called by Strophe on connection event
+    statusChanged: function (status, condition) {
+        var that = this._connection;
+        if (status === Strophe.Status.CONNECTED)
+            that.pubsub.jid = that.jid;
+    },
+
     connect: function (channelserver) {
         var that = this._connection;
         this.channels = {jid:channelserver};
