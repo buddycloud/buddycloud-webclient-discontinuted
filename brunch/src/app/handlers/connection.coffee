@@ -6,6 +6,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     # CONFIG
     BOSH_SERVICE: 'http://bosh.metajack.im:5280/xmpp-httpbind'
     DOMAIN: "buddycloud.com"
+    ANON_DOMAIN: "anon.buddycloud.com"
     PUBSUBSERVICE: "broadcaster.buddycloud.com"
     PUBSUBJID: "pubsub-bridge@broadcaster.buddycloud.com"
 
@@ -29,7 +30,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     # connect the current user with his jid and pw
     connect: (jid, password) ->
         unless jid
-            jid = @DOMAIN
+            jid = @ANON_DOMAIN
             @user = app.users.get "anony@mous", yes
         else
             @user = app.users.get jid, yes
