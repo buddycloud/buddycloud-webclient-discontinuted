@@ -1,7 +1,7 @@
 { TopicPosts } = require 'collections/topicpost'
 { Node } = require 'models/node/skeleton'
 
-class exports.ChannelNode extends Node
+class exports.PostsNode extends Node
 
     initialize: ->
         result = super

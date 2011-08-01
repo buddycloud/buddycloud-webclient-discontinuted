@@ -5,7 +5,7 @@ User (in global app.users) [jid==id]
 
 Channel (in global app.channels) [jid==id]
     nodes (Nodes)
-        channel (ChannelNode) /user/:jid/channel
+        posts (ChannelNode) /user/:jid/posts
         mood (MoodNode)       /user/:jid/mood
         geo (GeoNode)         /user/:jid/geo/:more
     jid

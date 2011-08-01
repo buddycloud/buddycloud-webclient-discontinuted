@@ -1,7 +1,7 @@
 { Channel } = require 'models/channel'
 
 getid = (nodeid) ->
-    # /user/u@catz.net/channel → ["/user/u@catz.net/", "u@catz.net"]
+    # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
     nodeid.match(/\/user\/([^\/]+@[^\/]+)\//)[1] # jid # TODO compile
 
 

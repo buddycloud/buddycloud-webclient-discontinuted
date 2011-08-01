@@ -16,7 +16,7 @@ class exports.DirectChannelView extends Backbone.View
         do @el.remove
 
         user = app.users.current
-        nodeid = "/user/#{@jid}/channel"
+        nodeid = "/user/#{@jid}/posts"
         channel = app.channels.get nodeid
         node = channel.nodes.create nodeid
         channel = user.channels.update channel

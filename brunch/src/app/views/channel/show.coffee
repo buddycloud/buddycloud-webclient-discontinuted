@@ -11,7 +11,7 @@ class exports.ChannelView extends Backbone.View
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
-            if postsnode = @model.nodes.get 'channel'
+            if postsnode = @model.nodes.get 'posts'
                 @postsview = new PostsView
                     model:postsnode
                     parent:this
@@ -32,14 +32,14 @@ class exports.ChannelView extends Backbone.View
 
 
     update_attributes: ->
-        if (channel = @model.nodes.get 'channel')
+        if (channel = @model.nodes.get 'posts')
             @channel = channel.toJSON yes
         if (mood = @model.nodes.get 'mood')
             @mood = mood.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
         #permissions
-        affiliation = app.users.current.affiliations.get(@model.nodes.get('channel')?.get 'nodeid')
+        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid')
         @user =
             followingThisChannel: affiliation in ["owner", "publisher", "moderator", "member", "outcast"]
             hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]

@@ -1,13 +1,13 @@
 lookup = _loaded:no
 lazyRequire = -> # to prevent require circles
-    { ChannelNode:lookup.channel } = require 'models/node/channel'
-    { MoodNode   :lookup.mood    } = require 'models/node/mood'
-    { GeoNode    :lookup.geo     } = require 'models/node/geo'
-    { Node       :lookup.node    } = require 'models/node/skeleton'
+    { PostsNode:lookup.posts } = require 'models/node/posts'
+    { MoodNode :lookup.mood  } = require 'models/node/mood'
+    { GeoNode  :lookup.geo   } = require 'models/node/geo'
+    { Node     :lookup.node  } = require 'models/node/skeleton'
     lookup._loaded = yes
 
 getid = (nodeid) ->
-    # "/user/:jid/channel/stuff" → ["/user/:jid/channel", ":jid", "channel"]
+    # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
     match = nodeid.match(/\/user\/([^\/]+)\/([^\/]+)/)[2]
 
 
