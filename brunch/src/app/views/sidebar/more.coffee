@@ -14,7 +14,7 @@ class exports.ChannelOverView extends Backbone.View
         @el.delay(t * 0.1).fadeOut()
 
     expand: =>
-        app.router.navigate "/more"
+        app.router.navigate "more"
         body = $('body')
         body.addClass 'inTransition'
         body.addClass 'channelOverview'
@@ -22,7 +22,7 @@ class exports.ChannelOverView extends Backbone.View
         @render()
 
     collapse: =>
-        app.router.navigate "/home"
+        app.router.navigate "home"
         body = $('body')
         body.removeClass 'stateArrived'
         do document.redraw

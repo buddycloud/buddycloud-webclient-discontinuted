@@ -38,7 +38,7 @@ class exports.HomeView extends Backbone.View
 
     setCurrentChannel: (cid) ->
         @current = @channels[cid]
-        app.router.navigate "/channel/#{@current.model.get 'jid'}"
+        app.router.navigate @current.model.get 'jid'
         @render()
         @el.html @current?.el
 

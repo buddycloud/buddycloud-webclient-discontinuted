@@ -12,9 +12,21 @@ app.configure(function(){
     app.use(express.static(buildPath));
 });
 
-app.get('/', function(req, res){
-  res.render('index');
-});
+var index_html = require('fs').readFileSync(path.join(buildPath, "index.html"));
+
+var index = function(req, res){
+  res.header('Content-Type', 'text/html');
+  res.end(index_html);
+};
+
+app.get('/',            index);
+app.get('/index',       index);
+app.get('/home',        index);
+app.get('/more',        index);
+app.get('/login',       index);
+app.get('/register',    index);
+app.get('/:id@:domain', index);
+
 
 util.log("starting server on port " + port);
 app.listen(parseInt(port, 10));

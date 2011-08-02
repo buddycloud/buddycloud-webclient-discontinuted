@@ -6,7 +6,7 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'hide', @hide
         @box = $('.centerBox')
         @el.find('.back.button').live 'click', =>
-            app.router.navigate "/index", true
+            app.router.navigate "index", true
 
     show: =>
         @box.addClass @cssclass

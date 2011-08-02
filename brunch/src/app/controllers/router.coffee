@@ -8,14 +8,12 @@
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:8080/#/index
         ""           :"index"
-        "/"          :"index"
-        "/index"     :"index"
-        "/home"      :"home"
-        "/login"     :"login"
-        "/register"  :"register"
-        "/more"      :"overview"
-        "/channel/:id@:domain.:tld":"directchannel"
-        "/c/:id@:domain.:tld"      :"directchannel"
+        "index"     :"index"
+        "home"      :"home"
+        "login"     :"login"
+        "register"  :"register"
+        "more"      :"overview"
+        ":id@:domain.:tld":"directchannel"
 
     initialize: ->
         # start views
@@ -26,7 +24,7 @@ class exports.Router extends Backbone.Router
         # bootstrapping after login or registration
         app.handler.connection.bind "connected", @authorize
 
-        Backbone.history.start()
+        Backbone.history.start pushState:on
 
 
     setView: (view) ->
@@ -44,7 +42,7 @@ class exports.Router extends Backbone.Router
     authorize: =>
         do @disable_index
         app.views.home = new HomeView
-        @navigate '/home', true
+        @navigate 'home', true
 
     build_direct_channel: (jid) =>
         do @disable_index
