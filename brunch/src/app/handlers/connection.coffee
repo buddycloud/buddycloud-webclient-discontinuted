@@ -5,9 +5,8 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
     # CONFIG
     BOSH_SERVICE: 'http://bosh.metajack.im:5280/xmpp-httpbind'
-    DOMAIN: "buddycloud.com"
+    DOMAIN: "buddycloud.org"
     ANON_DOMAIN: "anon.buddycloud.com"
-    PUBSUBSERVICE: "broadcaster.buddycloud.com"
     PUBSUBJID: "pubsub-bridge@broadcaster.buddycloud.com"
 
     constructor: ->
@@ -36,7 +35,16 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @user = app.users.get jid, yes
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
-        @connection.buddycloud.connect @PUBSUBJID
+        #@connection.buddycloud.connect @PUBSUBJID ###
+
+    discover_channel_server: (done) =>
+        success = (pubsubjid) =>
+            app.error "discover_channel_server success", arguments
+            @connection.buddycloud.connect pubsubjid
+            done()
+        error = =>
+            app.error "discover_channel_server error", arguments
+        @connection.buddycloud.discover @DOMAIN, success, error
 
     register: (username, password) ->
         @user = app.users.get "#{username}@#{@DOMAIN}"
@@ -61,13 +69,13 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 @trigger 'sbmtfail'
                 if @isRegistered()
                     @connection.authenticate()
-                    @connection.buddycloud.connect @PUBSUBJID
+                    #@connection.buddycloud.connect @PUBSUBJID ###
 
             else if status is Strophe.Status.REGISTERED
                 @trigger 'registered'
                 @_new_register = yes
                 @connection.authenticate()
-                @connection.buddycloud.connect @PUBSUBJID
+                #@connection.buddycloud.connect @PUBSUBJID ###
 
             else @connection_event.apply(this, arguments)
 
@@ -96,8 +104,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         else if status is Strophe.Status.CONNECTED
             @connected = true
             # @announce_presence() FIXME @connector.announcePresence @user
-            @trigger 'connected'
-            @connection.buddycloud.createChannel() if @_new_register
+            #@connection.buddycloud.createChannel() if @_new_register ###
+            @discover_channel_server =>
+                @trigger 'connected'
 
         else if status is Strophe.Status.DISCONNECTED
             @connected = false

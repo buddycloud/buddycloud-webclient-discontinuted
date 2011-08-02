@@ -44,6 +44,60 @@ Strophe.addConnectionPlugin('buddycloud', {
         that.pubsub.connect(channelserver);
     },
 
+    // discovers the channel server jid from the given domain
+    discover: function (domain, success, error, timeout) {
+        if (typeof domain === 'function') {
+            timeout = error;
+            error = success;
+            success = domain;
+            domain = undefined;
+        }
+        var that = this._connection, self = this;
+        domain = domain || Strophe.getDomainFromJid(that.jid);
+        that.disco.items(domain, null, function /*success*/ () {
+            var args = Array.prototype.slice.call(arguments);
+            self._onDiscoItems.apply(self,[success,error,timeout].concat(args));
+        }, error, timeout);
+    },
+
+    _onDiscoItems: function (success, error, timeout, stanza) {
+        var that = this._connection, self = this;
+        var queries, i, item, jid, items;
+        queries = stanza.getElementsByTagName('query');
+        if (queries && queries.length > 0) {
+            items = queries[0].getElementsByTagName('item');
+            for (i = 0; i < items.length; i++) {
+                item = items[i];
+                jid = item.getAttribute('jid');
+                if (jid) {
+                    that.disco.info(jid, null,
+                        function /*success*/ () {
+                            var args = Array.prototype.slice.call(arguments);
+                            self._onDiscoInfo.apply(self,
+                                [success, error, timeout, jid].concat(args));
+                        },
+                    error, timeout);
+                }
+            }
+        }
+    },
+
+    _onDiscoInfo: function (success, error, timeout, jid, stanza) {
+        var that = this._connection;
+        var queries, i, identity, identities;
+        queries = stanza.getElementsByTagName('query');
+        if (queries && queries.length > 0) {
+            identities = queries[0].getElementsByTagName('identity');
+            for (i = 0; i < identities.length; i++) {
+                identity = identities[i];
+                if (identity.getAttribute('category') == "pubsub"
+                  &&identity.getAttribute('type') == "inbox") {
+                    return success(jid);
+                }
+            }
+        }
+    },
+
     createChannel: function (success, error, timeout) {
         var register, that = this._connection;
         register = $iq({from:that.jid, to:this.channels.jid, type:'set'})
@@ -147,7 +201,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     getMetadata: function (jid, node, succ, err, timeout) {
         var self = this, that = this._connection;
-        if (err === undefined) {
+        if (typeof node === 'function') {
             err = succ;
             succ = node;
             node = jid;
