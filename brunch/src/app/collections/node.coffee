@@ -2,7 +2,7 @@ lookup = _loaded:no
 lazyRequire = -> # to prevent require circles
     { StatusNode:lookup.status } = require 'models/node/status'
     { PostsNode :lookup.posts  } = require 'models/node/posts'
-    { GeoNode   :lookup.geo    } = require 'models/node/geo'
+    { GeoNode   :lookup.geoloc } = require 'models/node/geo'
     { Node      :lookup.node   } = require 'models/node/skeleton'
     lookup._loaded = yes
 
