@@ -49,8 +49,8 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             app.error "discover_channel_server error", arguments
         @connection.buddycloud.discover @DOMAIN, success, error
 
-    register: (username, password) ->
-        @user = app.users.get "#{username}@#{@DOMAIN}"
+    register: (username, password, email) ->
+        @user = app.users.get "#{username}@#{@DOMAIN}", yes
         @connection.register.connect @DOMAIN, (status, moar...) =>
 
             if status is Strophe.Status.REGISTERING
@@ -63,6 +63,8 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 @trigger 'register'
                 @connection.register.fields.username = username
                 @connection.register.fields.password = password
+                if email
+                    @connection.register.fields.email = email
                 @connection.register.submit()
 
             else if status is Strophe.Status.SUBMITTING

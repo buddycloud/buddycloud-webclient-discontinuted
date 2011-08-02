@@ -41,41 +41,16 @@
     </div>
     <div id="register">
       <section class="content">
-        <form id="register_check" class="clearfix visible">
-          <h2>Step 1:</h2>
-          <p>Check if your email/jabber-id works with buddycloud.</p>
-          <label for="register_check_jid">Email or Jabber ID</label>
-          <input type="text" id="home_check_jid" placeholder="Email or Jabber ID" />
-          <div class="leftBox">
-            <input type="checkbox" id="home_check_outcome" title="checked = positive outcome"/>
-            <span class="spinner">checking account</span>
-          </div>
-          <button type="submit" id="home_check_account">Check</button>
-        </form>
-        <form id="register_login" class="clearfix">
-          <h2>Step 2:</h2>
-          <p class="positive">Yes, you can use your account.</p>
-          <label for="home_register_jid">Jabber ID</label>
-          <input type="text" id="home_register_jid" placeholder="Jabber ID" />
-          <label for="home_register_password">Password</label>
-          <input type="password" id="home_register_password" placeholder="Password" />
-          <div class="leftBox">
-            <a href="#" class="resetPassword">Forgot password?</a>
-            <span class="spinner">checking account</span>
-          </div>
-          <button type="submit" id="home_register_login">Login</button>
-        </form>
-        <form id="register_account" class="clearfix">
-          <h2>Step 2:</h2>
-          <p class="negative">Your account doesn't work with buddycloud. Let's create an account for you:</p>
+        <form id="register_account" class="clearfix visible">
+          <p class="negative">Let's create a new Jabber ID:</p>
           <label for="home_register_new_jid">Username</label>
           <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
           <label for="home_register_new_password">Password</label>
           <input type="password" id="home_register_new_password" placeholder="Password" />
-          <label for="home_register_new_email">Email (for password recovery)</label>
+          <input type="password" id="home_register_new_confirm" placeholder="Repeat Password" />
+          <label for="home_register_new_email">Email (for password recovery (if server supports it))</label>
           <input type="text" id="home_register_new_email" placeholder="Email" />
           <div class="leftBox">
-            <a href="#" class="resetPassword">Forgot password?</a>
             <span class="spinner">registering account</span>
           </div>
           <button type="submit" id="home_register_account">Register</button>
@@ -87,34 +62,4 @@
     </div>
   </div>
 </body>
-<script type="text/javascript">
-  /* ###
-  
-  debug registration check test
-  
-  ### */
-  
-  $('#home_check_account').click(function(event){
-    event.preventDefault();
-    $('#register_check .leftBox').addClass('working');
-    setTimeout(callback, 2500);
-  });
-  
-  function callback(){
-    $('#register_check .leftBox').removeClass('working');
-    $('#register_check').removeClass('visible');
-    if($('#home_check_outcome').prop('checked')){
-      $('#register_login').addClass('visible');
-    } else {
-      $('#register_account').addClass('visible');
-    }
-  }
-  
-  $('#home_check_jid').blur(function(){
-    var jid = $(this).val();
-    var pos = jid.indexOf("@");
-    var username = jid.slice(0, pos);
-    $('#home_register_jid').val(jid);
-    $('#home_register_new_jid').val(username);
-  });
-</script>
+</html>
