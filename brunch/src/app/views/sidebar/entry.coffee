@@ -27,5 +27,5 @@ class exports.ChannelEntry extends Backbone.View
             @channel = channel.toJSON yes
         if (status = @model.nodes.get 'status')
             @status = status.toJSON yes
-        if (geo = @model.nodes.get 'geo')
+        if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes

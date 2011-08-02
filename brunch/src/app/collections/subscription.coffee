@@ -1,0 +1,13 @@
+
+class exports.SubscriptionStore extends Backbone.Collection
+    initialize: (@user) ->
+        super
+        @localStorage = new Store("#{@user.get 'jid'}-subscriptions")
+        app.debug "nr of #{@user.get 'jid'} subscriptions in cache: #{@localStorage.records.length}"
+
+    get: (id, everything) ->
+        return super(id) if everything
+        super(id)?.get('value')
+
+    update: (id, value) ->
+        @get(id,yes)?.set({value}) or @create({id, value})

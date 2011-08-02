@@ -17,6 +17,11 @@ This library is free software; you can redistribute it and/or modify it
 * File: strophe.buddycloud.js
 * A Strophe plugin for buddycloud (http://buddycloud.org/wiki/XMPP_XEP).
 */
+Strophe.getJidFromNode = function (node) {
+    var match = node.match(/\/([^\/]+)\/([^\/]+)\/([^\/]+)/);
+    return match.length > 3 ? match[2] : null;
+}
+
 Strophe.addConnectionPlugin('buddycloud', {
     _connection: null,
 
@@ -62,38 +67,31 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     _onDiscoItems: function (success, error, timeout, stanza) {
         var that = this._connection, self = this;
-        var queries, i, item, jid, items;
-        queries = stanza.getElementsByTagName('query');
-        if (queries && queries.length > 0) {
-            items = queries[0].getElementsByTagName('item');
-            for (i = 0; i < items.length; i++) {
-                item = items[i];
-                jid = item.getAttribute('jid');
-                if (jid) {
-                    that.disco.info(jid, null,
-                        function /*success*/ () {
-                            var args = Array.prototype.slice.call(arguments);
-                            self._onDiscoInfo.apply(self,
-                                [success, error, timeout, jid].concat(args));
-                        },
-                    error, timeout);
-                }
+        var i, item, jid, items = stanza.getElementsByTagName('item');
+        for (i = 0; i < items.length; i++) {
+            item = items[i];
+            jid = item.getAttribute('jid');
+            if (jid) {
+                that.disco.info(jid, null,
+                    function /*success*/ () {
+                        var args = Array.prototype.slice.call(arguments);
+                        self._onDiscoInfo.apply(self,
+                            [success, error, timeout, jid].concat(args));
+                    },
+                error, timeout);
             }
         }
     },
 
     _onDiscoInfo: function (success, error, timeout, jid, stanza) {
         var that = this._connection;
-        var queries, i, identity, identities;
-        queries = stanza.getElementsByTagName('query');
-        if (queries && queries.length > 0) {
-            identities = queries[0].getElementsByTagName('identity');
-            for (i = 0; i < identities.length; i++) {
-                identity = identities[i];
-                if (identity.getAttribute('category') == "pubsub"
-                  &&identity.getAttribute('type') == "inbox") {
-                    return success(jid);
-                }
+        var queries, i, identity,
+            identities = stanza.getElementsByTagName('identity');
+        for (i = 0; i < identities.length; i++) {
+            identity = identities[i];
+            if (identity.getAttribute('category') == "pubsub"
+              &&identity.getAttribute('type') == "inbox") {
+                return success(jid);
             }
         }
     },
@@ -178,23 +176,44 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     },
 
-    // Get the subscriptions for a user, calls succ with an array of hashes of channels
     getUserSubscriptions: function (succ, err) {
         var self = this, that = this._connection;
         that.pubsub.getSubscriptions(self._iqcbsoup(
             function  /*success*/ (stanza) {
                 if (!succ) return;
-                var i, sub, channels = [],
+                var i, sub, node, result = [],
                     subscriptions = stanza.getElementsByTagName("subscription");
                 for (i = 0; i < subscriptions.length; i++) {
                     sub = subscriptions[i];
-                    channels.push({
-                        jid : sub.getAttribute('jid'),
-                        node: sub.getAttribute('node'),
-                        affiliation: sub.getAttribute('affiliation'),
+                    node = sub.getAttribute('node');
+                    result.push({
+                        node: node,
+                        jid: Strophe.getJidFromNode(node),
+                        subscription: sub.getAttribute('subscription'),
                     });
                 }
-                succ(channels);
+                succ(result);
+            }, self._errorcode(err))
+        );
+    },
+
+    getUserAffiliations: function (succ, err) {
+        var self = this, that = this._connection;
+        that.pubsub.getAffiliations(self._iqcbsoup(
+            function /*success*/ (stanza) {
+                if (!succ) return;
+                var i, aff, node, result = [],
+                    affiliations = stanza.getElementsByTagName("affiliation");
+                for (i = 0; i < affiliations.length; i++) {
+                    aff = affiliations[i];
+                    node = aff.getAttribute('node');
+                    result.push({
+                        node: node,
+                        jid: Strophe.getJidFromNode(node),
+                        affiliation: aff.getAttribute('affiliation'),
+                    });
+                }
+                succ(result);
             }, self._errorcode(err))
         );
     },

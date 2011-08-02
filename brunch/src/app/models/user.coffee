@@ -1,3 +1,4 @@
+{ SubscriptionStore } = require 'collections/subscription'
 { AffiliationStore } = require 'collections/affiliation'
 { UserMetadata } = require 'models/metadata/user'
 { Channels } = require 'collections/channel'
@@ -10,5 +11,6 @@ class exports.User extends Backbone.Model
         @channels = new Channels
         @metadata = new UserMetadata this, @id
         @avatar = gravatar @id, s:50, d:'retro'
-        @affiliations = new AffiliationStore this
+        @affiliations  = new AffiliationStore  this
+        @subscriptions = new SubscriptionStore this
 

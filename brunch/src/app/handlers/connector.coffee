@@ -41,6 +41,20 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
 
+    # this fetches all user affiliations
+    get_affiliations: =>
+        @request (done) =>
+            success = (affiliations) =>
+                for affiliation in affiliations
+                    @trigger 'affiliation', affiliation
+                done()
+            error = =>
+                clearTimeout timeout
+                app.error "get_affiliations", arguments
+                done()
+            timeout = setTimeout error, @connection.timeout
+            @connection.buddycloud.getUserAffiliations success, error
+
     # this fetches all user channels
     get_user_subscriptions: =>
         @request (done) =>
