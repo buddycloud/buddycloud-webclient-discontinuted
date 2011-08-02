@@ -34,8 +34,8 @@ class exports.ChannelView extends Backbone.View
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')
             @channel = channel.toJSON yes
-        if (mood = @model.nodes.get 'mood')
-            @mood = mood.toJSON yes
+        if (status = @model.nodes.get 'status')
+            @status = status.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
         #permissions

@@ -1,5 +1,5 @@
 { Posts } = require 'collections/post'
 { Node } = require 'models/node/skeleton'
 
-class exports.MoodNode extends Node
+class exports.StatusNode extends Node
 

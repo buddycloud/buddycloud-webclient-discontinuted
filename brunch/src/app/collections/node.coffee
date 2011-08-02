@@ -1,9 +1,9 @@
 lookup = _loaded:no
 lazyRequire = -> # to prevent require circles
-    { PostsNode:lookup.posts } = require 'models/node/posts'
-    { MoodNode :lookup.mood  } = require 'models/node/mood'
-    { GeoNode  :lookup.geo   } = require 'models/node/geo'
-    { Node     :lookup.node  } = require 'models/node/skeleton'
+    { StatusNode:lookup.status } = require 'models/node/status'
+    { PostsNode :lookup.posts  } = require 'models/node/posts'
+    { GeoNode   :lookup.geo    } = require 'models/node/geo'
+    { Node      :lookup.node   } = require 'models/node/skeleton'
     lookup._loaded = yes
 
 getid = (nodeid) ->

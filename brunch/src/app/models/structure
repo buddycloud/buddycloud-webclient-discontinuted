@@ -6,15 +6,15 @@ User (in global app.users) [jid==id]
 Channel (in global app.channels) [jid==id]
     nodes (Nodes)
         posts (ChannelNode) /user/:jid/posts
-        mood (MoodNode)       /user/:jid/mood
+        status (StatusNode)       /user/:jid/status
         geo (GeoNode)         /user/:jid/geo/:more
     jid
 
 ChannelNode extends Node
     topics (TopicPosts)
 
-MoodNode extends Node
-    moods (Single entry Posts)
+StatusNode extends Node
+    status (Single entry Posts)
 
 Node
     users (Users)
