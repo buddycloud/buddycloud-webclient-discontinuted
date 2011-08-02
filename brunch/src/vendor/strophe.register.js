@@ -240,7 +240,7 @@ Strophe.addConnectionPlugin('register', {
             Strophe.info("Registered successful.");
             that._changeConnectStatus(Strophe.Status.REGISTERED, null);
         } else {
-            Strophe.info("Registration failed.");
+            Strophe.info("Registration failed. (" + error + ")");
             that._changeConnectStatus(Strophe.Status.SBMTFAIL, error);
         }
         return false;
