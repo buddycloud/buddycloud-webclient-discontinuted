@@ -50,9 +50,11 @@ class exports.DataHandler extends Backbone.EventHandler
         app.users.fetch()
         app.channels.fetch()
 
+        app.users.forEach (user) ->
+            user.affiliations.fetch()
+
         # filter all channels to get only current user specific ones
         user = app.users.current
-        user.affiliations.fetch()
         user.affiliations.forEach (affiliation) ->
             return if affiliation.get('value') in ['none', 'outcast']
             channel = app.channels.get affiliation.id

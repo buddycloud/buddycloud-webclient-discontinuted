@@ -7,14 +7,17 @@ class exports.Users extends Backbone.Collection
     constructor: ->
         for affiliation in app.affiliations
             do (affiliation) =>
-                this["filter_by_#{affiliation}"] = () ->
-                    @filter (user) ->
-                        user.affiliations.include affiliation
+                this["filter_by_#{affiliation}"] = (nodeid) ->
+                    @filter_by affiliation, nodeid
         super
 
     get: (jid, create) ->
         return super(jid) unless create
         super(jid) or @create({jid})
+
+    filter_by: (affiliation, nodeid) ->
+        @filter (user) ->
+            user.affiliations.get(nodeid) is affiliation
 
     filter_by_node: (nodeid) ->
         @filter (user) ->

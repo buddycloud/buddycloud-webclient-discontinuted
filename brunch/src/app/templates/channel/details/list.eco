@@ -1,0 +1,18 @@
+<section class="channelList">
+  <h3><%= @name %> <span class="count"><%= @users?.length %></count></h3>
+  <div class="list">
+    <% if @users?.length: %>
+      <% for user in @users: %>
+        <img src="<%= user.avatar %>" class="user" data-user="user.get('jid')" />
+      <% end %>
+    <% else: %>
+        <!-- empty text -->
+    <% end %>
+
+    <!--
+      - technical solution missing -
+      limit the amount of shown users and the whole list by clicking on "show all"
+      <div class="showAll">show all</div>
+    -->
+  </div>
+</section>
