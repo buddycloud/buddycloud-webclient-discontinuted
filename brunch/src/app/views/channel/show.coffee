@@ -29,7 +29,18 @@ class exports.ChannelView extends Backbone.View
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
         @el.find('.infoToggle').click => @info.toggleClass('hidden')
+        @el.find('.newTopic, .answer').click @openNewTopicEdit
 
+    openNewTopicEdit: (ev) ->
+        self = $(this) # @el.find('.newTopic, .answer')
+        # prevent bubbling!
+        ev.stopPropagation()
+        unless self.hasClass 'write'
+            self.addClass 'write'
+            $(document).one 'click', ->
+                # minimize the textarea only if the textarea is empty
+                if self.find('textarea').val() is ""
+                    self.removeClass 'write'
 
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')
