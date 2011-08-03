@@ -7,7 +7,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     BOSH_SERVICE: 'http://bosh.metajack.im:5280/xmpp-httpbind'
     DOMAIN: "buddycloud.org"
     ANON_DOMAIN: "anon.buddycloud.com"
-    PUBSUBJID: "pubsub-bridge@broadcaster.buddycloud.com"
+    PUBSUBJID: "channels.buddycloud.org"
 
     constructor: ->
         @connected = false
@@ -41,6 +41,10 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         @connection.buddycloud.createChannel done, done
 
     discover_channel_server: (done) =>
+        if @user.get('jid') is "anony@mous"
+            @connection.buddycloud.connect @PUBSUBJID
+            return done()
+
         success = (pubsubjid) =>
             app.error "discover_channel_server success", arguments
             @connection.buddycloud.connect pubsubjid
