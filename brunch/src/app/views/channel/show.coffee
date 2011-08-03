@@ -1,3 +1,4 @@
+{ ChannelDetails } = require 'views/channel/details'
 { PostsView } = require 'views/channel/posts'
 
 # The channel shows channel content
@@ -6,6 +7,9 @@ class exports.ChannelView extends Backbone.View
 
     initialize: ({@parent}) ->
         @el = $(@template this).attr id:@cid
+        @details = new ChannelDetails model:@model, parent:this
+        @el.append @details.el
+
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
         # create posts node view when it arrives from xmpp or instant when its already cached
@@ -24,11 +28,12 @@ class exports.ChannelView extends Backbone.View
     render: =>
         @update_attributes()
         old = @el; old.replaceWith @el = $(@template this).attr id:@cid
-        @info = @el.find('.channelDetails')
+        do @details.render
+        @el.append @details.el
+
         if @postsview
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
-        @el.find('.infoToggle').click => @info.toggleClass('hidden')
         @el.find('.newTopic, .answer').click @openNewTopicEdit
 
     openNewTopicEdit: (ev) ->
@@ -45,8 +50,6 @@ class exports.ChannelView extends Backbone.View
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')
             @channel = channel.toJSON yes
-        if (status = @model.nodes.get 'status')
-            @status = status.toJSON yes
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
         #permissions

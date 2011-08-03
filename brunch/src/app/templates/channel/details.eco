@@ -1,0 +1,36 @@
+<div class="channelDetails hidden">
+  <div class="infoToggle">
+    <h4 class="title">Channel Info</h4>
+    <span class="icon"></span>
+  </div>
+  <div class="holder">
+    <section class="meta">
+      <p><span class="title"><%= @channel?.metadata?.owner?.label %>:</span><%= @channel?.metadata?.owner?.value %></p>
+      <p><span class="title"><%= @channel?.metadata?.description?.label %>:</span></p><%= @channel?.metadata?.description?.value %>
+      <p class="<%= @channel?.metadata?.access_model?.value %>"><span class="title"><%= @channel?.metadata?.access_model?.label %>:</span></p><%= @channel?.metadata?.access_model?.value %>
+      <!--
+        the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
+      -->
+      <!-- Broadcasting since: 182 days (beautiful time)-->
+      <p class="broadcast" title="<%= @channel?.metadata?.channelCreationTime?.label %>">
+        <span class="title"><%= @channel?.metadata?.channelCreationTime?.label %>:</span>
+        <%= @channel?.metadata?.beautifulChannelCreationTime?.value %>
+      </p>
+      <p class="location">
+        <span class="title"><%= @channel?.metadata?['geoloc-text']?.label %>:</span>
+        <span class="previous"><%= @channel?.metadata?['geoloc-text-previous']?.value %></span> →
+        <span class="current"><%= @channel?.metadata?['geoloc-text']?.value %></span> →
+        <span class="future"><%= @channel?.metadata?['geoloc-future']?.value %></span>
+      </p>
+    </section>
+    <!--
+      echo here a list of
+        - moderators
+        - followers
+        - channels nearby
+        - similar channels
+
+      template: list.eco
+    -->
+  </div>
+</div>
