@@ -16,11 +16,14 @@ class exports.UserList extends Backbone.View
 
         @el.find('.list').find('.user').each (i, user) =>
             user = $(user)
+            userid = user.attr "data-user"
+            user.dblclick ->
+                app.router.navigate userid, true
             user.click =>
                 @admin?.remove()
-                unless user.attr("data-user") is @admin?.model.get 'id' # does hide
+                unless userid is @admin?.model.get 'id' # does hide
                     @admin = new UserAdmin
-                        model:app.users.get user.attr "data-user"
+                        model:app.users.get userid
                         parent:this
                         number: i
                     do @admin.render

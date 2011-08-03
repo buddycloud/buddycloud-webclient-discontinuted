@@ -6,8 +6,9 @@ class exports.DirectChannelView extends Backbone.View
     initialize: ({@jid}) ->
         @bind 'show', @show
         @initialized = no
-        $('body').removeClass('start').append @el = $(@template())
-        $('.centerBox').remove() # FIXME ugly
+        unless app.views.home
+            $('body').removeClass('start').append @el = $(@template())
+            $('.centerBox').remove() # FIXME ugly
 
     show: =>
         app.views.home?.trigger 'show'
