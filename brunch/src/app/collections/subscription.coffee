@@ -1,9 +1,9 @@
 
 class exports.SubscriptionStore extends Backbone.Collection
-    initialize: (@user) ->
-        super
+    constructor: (@user) ->
         @localStorage = new Store("#{@user.get 'jid'}-subscriptions")
         app.debug "nr of #{@user.get 'jid'} subscriptions in cache: #{@localStorage.records.length}"
+        super()
 
     get: (id, everything) ->
         return super(id) if everything

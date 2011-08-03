@@ -52,7 +52,7 @@ class exports.ChannelView extends Backbone.View
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
         #permissions
-        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid')
+        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or ""
         @user =
             followingThisChannel: affiliation in ["owner", "publisher", "moderator", "member", "outcast"]
             hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]

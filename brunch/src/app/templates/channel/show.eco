@@ -21,7 +21,7 @@
     </nav>
   </header>
   <section class="stream">
-    <% if @user?.hasRightToPost?: %>
+    <% if @user?.hasRightToPost: %>
     <section class="newTopic">
       <img class="avatar" src="<%= app.users.current.avatar %>" />
       <textarea placeholder="New Topic..."></textarea>
