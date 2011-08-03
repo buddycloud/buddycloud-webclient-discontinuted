@@ -3,7 +3,7 @@
   <div class="list">
     <% if @users?.length: %>
       <% for user in @users: %>
-        <img src="<%= user.avatar %>" class="user" data-user="user.get('jid')" />
+        <img src="<%= user.avatar %>" class="user" data-user="<%= user.get('jid') %>" />
       <% end %>
     <% else: %>
         <!-- empty text -->
