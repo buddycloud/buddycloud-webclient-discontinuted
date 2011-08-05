@@ -18,6 +18,12 @@ class exports.DataHandler extends Backbone.EventHandler
     get_node_metadata: (node, callback) ->
         @connector.get_node_metadata node.get('nodeid'), callback
 
+    publish: (node, item, callback) ->
+        @connector.publish node.get('nodeid'), item, callback
+
+    add_post: (node, post) ->
+        @on_node_post post, node.get 'nodeid'
+
     # event callbacks
 
     on_node_post: (post, nodeid) =>
@@ -55,6 +61,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
         # filter all channels to get only current user specific ones
         user = app.users.current
+        user.affiliations.fetch()
         user.affiliations.forEach (affiliation) ->
             return if affiliation.get('value') in ['none', 'outcast']
             channel = app.channels.get affiliation.id

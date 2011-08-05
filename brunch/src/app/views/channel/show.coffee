@@ -35,6 +35,20 @@ class exports.ChannelView extends Backbone.View
             do @postsview.render
         @el.find('.newTopic, .answer').click @openNewTopicEdit
 
+        $('#createNewTopic').click =>
+            text = @el.find('.newTopic, .answer').find('textarea')
+            unless text.val() is ""
+                post =
+                    content: text.val()
+                    author:
+                        name: app.users.current.get 'jid'
+                node = @model.nodes.get('posts')
+                app.handler.data.publish node, post, =>
+                        post.content = value:post.content
+                        app.handler.data.add_post node, post
+                        @el.find('.newTopic, .answer').removeClass 'write'
+                        text.val ""
+
     openNewTopicEdit: (ev) ->
         self = $(this) # @el.find('.newTopic, .answer')
         # prevent bubbling!

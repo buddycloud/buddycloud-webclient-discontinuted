@@ -19,17 +19,19 @@ class exports.RequestHandler extends Backbone.EventHandler
         @queue.push task
         @trigger 'next'
 
-    start: (task) =>
-        app.debug "start task", {task}
-        task @_on_task_done
+    start: (task, id) =>
+        triggered = no
+        app.debug "[#{id}] start task", {task}
+        task =>
+            @running-- unless triggered
+            app.debug "[#{id}] task done. (#{@running} left)"
+            triggered = yes
+            @trigger 'next'
 
     next: =>
         while @running < @limit
             return if @queue.length is 0
             task = @queue.shift()
-            @trigger 'task:start', task
+            @trigger 'task:start', task, S4()
             @running++
 
-    _on_task_done: =>
-        @trigger 'next'
-        @running--

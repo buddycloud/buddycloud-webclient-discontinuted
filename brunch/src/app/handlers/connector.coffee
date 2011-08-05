@@ -8,6 +8,13 @@ class exports.Connector extends Backbone.EventHandler
         @request = new RequestHandler
         app.handler.request = @request.handler
 
+    publish: (nodeid, item, callback) =>
+        @request (done) =>
+            @connection.pubsub.publishAtom nodeid, item, (stanza) =>
+                app.debug "publish", stanza
+                callback? stanza
+                done()
+
 #     start_fetch_node_posts: (nodeid) =>
 #         success = (posts) =>
 #             for post in posts

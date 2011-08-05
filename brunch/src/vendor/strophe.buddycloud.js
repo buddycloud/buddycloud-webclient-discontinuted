@@ -140,7 +140,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                 entry = entries[j];
                 // Takes an <item /> stanza and returns a hash of it's attributes
                 post = this._parsetag(entry, "id", "published", "updated");
-                post.id = parseInt(post.id.replace(/.+:/,''));
+                if (!post.id)
+                    post.id = item.getAttribute("id");
 
                 // content
                 attr = entry.getElementsByTagName("content");
