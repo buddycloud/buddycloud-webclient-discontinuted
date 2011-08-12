@@ -2,7 +2,7 @@
   <header class="clearfix">
     <a href="http://www.buddycloud.com" id="poweredby">powered by Buddycloud</a>
     <h2 class="title"><%= @channel?.metadata?.title?.value %></h2>
-    <span class="status"><%= @channel?.metadata?.status?.value? %></span>
+    <span class="status"><%= @channel?.metadata?.status?.value %></span>
     <nav class="<%= @viewname %>"> <!-- viewname = either 'inMessages' or 'inChannel' to show/hide the messages or channel button -->
       <% if @user?.followingThisChannel: %>
       <div class="messages button <%= @channel?.gotNewMessage and 'newMessage' %>">

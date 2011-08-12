@@ -35,6 +35,7 @@ $(document).ready ->
         # caches
         app.users = new UserStore
         app.channels = new ChannelStore
+        do app.users.fetch
 
         # strophe handler
         app.handler.connection = new ConnectionHandler

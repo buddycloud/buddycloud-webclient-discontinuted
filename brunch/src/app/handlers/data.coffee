@@ -53,7 +53,6 @@ class exports.DataHandler extends Backbone.EventHandler
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user
-        app.users.fetch()
         app.channels.fetch()
 
         app.users.forEach (user) ->
