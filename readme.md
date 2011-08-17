@@ -18,3 +18,9 @@ This The XMPP extensions that buddycloud describes have been implemented in two 
 # License and copyright
 
 This code is Apache 2 licensed and copyright buddycloud.
+
+# Attribution
+
+* lock/unlock icons: By Yusuke Kamiyamane, licensed under Creative Commons Attribution 3.0 license.  "unlock-small.png" is a version of "lock-small.png" modified by mrflix.
+* other iconography from "Free Wireframe Toolbar Icons" by Gentleface, licensed under a The Creative Commons Attribution-NonCommercial use license. *http://gentleface.com/free_icon_set.html)
+
