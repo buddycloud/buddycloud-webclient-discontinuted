@@ -30,10 +30,12 @@ input[type=submit].button
     background linear-gradient(top, #fff, #eee)
   
   &:active
-    background linear-gradient(top, #eee, #eee)
-    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset
-    position relative
     top 1px
+    color rgba(0,0,0,.55)
+    border-color rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.21) rgba(0, 0, 0, 0.21)
+    background linear-gradient(top, rgba(0, 0, 0, 0.21), rgba(0, 0, 0, 0))
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89), 0 1px rgba(0, 0, 0, 0.05) inset
+    position relative
   
   &.tall
     padding 5px 21px
