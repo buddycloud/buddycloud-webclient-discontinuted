@@ -1,11 +1,12 @@
 var util = require('util');
 var path = require('path');
-var port = process.argv[2];
+var port = 3000;
 
 var express = require("express");
 var app = express.createServer();
 
-var buildPath = path.join(process.argv[3], 'build');
+var buildPath = path.join(__dirname, '..', 'build');
+
 
 app.configure(function(){
     app.set('views', buildPath);
