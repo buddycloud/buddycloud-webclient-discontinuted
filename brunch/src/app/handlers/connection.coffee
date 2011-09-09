@@ -2,16 +2,9 @@
 { Connector } = require 'handlers/connector'
 
 class exports.ConnectionHandler extends Backbone.EventHandler
-
-    # CONFIG
-    BOSH_SERVICE: 'http://bosh.metajack.im:5280/xmpp-httpbind'
-    DOMAIN: "buddycloud.org"
-    ANON_DOMAIN: "anon.buddycloud.com"
-    PUBSUBJID: "channels.buddycloud.org"
-
     constructor: ->
         @connected = false
-        @connection = new Strophe.Connection(@BOSH_SERVICE)
+        @connection = new Strophe.Connection(config.bosh_service)
         @connector = new Connector(this, @connection) # before datahandler
         app.handler.data = new DataHandler(@connector)
 
@@ -29,7 +22,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     # connect the current user with his jid and pw
     connect: (jid, password) ->
         unless jid
-            jid = @ANON_DOMAIN
+            jid = config.anon_domain
             @user = app.users.get "anony@mous", yes
         else
             @user = app.users.get jid, yes
@@ -42,7 +35,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
     discover_channel_server: (done) =>
         if @user.get('jid') is "anony@mous"
-            @connection.buddycloud.connect @PUBSUBJID
+            @connection.buddycloud.connect config.pubsubjid
             return done()
 
         success = (pubsubjid) =>
@@ -51,11 +44,11 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @createChannel done
         error = =>
             app.error "discover_channel_server error", arguments
-        @connection.buddycloud.discover @DOMAIN, success, error
+        @connection.buddycloud.discover config.domain, success, error
 
     register: (username, password, email) ->
-        @user = app.users.get "#{username}@#{@DOMAIN}", yes
-        @connection.register.connect @DOMAIN, (status, moar...) =>
+        @user = app.users.get "#{username}@#{config.domain}", yes
+        @connection.register.connect config.domain, (status, moar...) =>
 
             if status is Strophe.Status.REGISTERING
                 @trigger 'registering'
