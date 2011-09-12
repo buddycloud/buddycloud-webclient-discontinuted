@@ -5,6 +5,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->
         @connected = false
         @connection = new Strophe.Connection(config.bosh_service)
+        @connection.addHandler (stanza) ->
+            app.debug "IN", Strophe.serialize stanza
+            true
         @connector = new Connector(this, @connection) # before datahandler
         app.handler.data = new DataHandler(@connector)
 
@@ -104,7 +107,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.CONNECTED
             @connected = true
-            # @announce_presence() FIXME @connector.announcePresence @user
+            @announce_presence()
             @discover_channel_server =>
                 @trigger 'connected'
 
@@ -117,3 +120,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.ATTACHED
             @trigger 'attached'
+
+    announce_presence: =>
+        @connection.send $pres().
+            c('status').t("buddycloud").up().
+            c('show').t("na").up().
+            c('priority').t("-1")
