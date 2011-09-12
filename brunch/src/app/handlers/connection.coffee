@@ -122,7 +122,5 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @trigger 'attached'
 
     announce_presence: =>
-        @connection.send $pres().
-            c('status').t("buddycloud").up().
-            c('show').t("na").up().
-            c('priority').t("-1")
+        @connection.presence.set
+            status: "buddycloud"
