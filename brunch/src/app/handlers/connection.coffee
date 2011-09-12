@@ -5,6 +5,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->
         @connected = false
         @connection = new Strophe.Connection(config.bosh_service)
+        @connection.addHandler (stanza) ->
+            app.debug "IN", Strophe.serialize stanza
+            true
         @connector = new Connector(this, @connection) # before datahandler
         app.handler.data = new DataHandler(@connector)
 
