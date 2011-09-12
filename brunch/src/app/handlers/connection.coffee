@@ -106,7 +106,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.CONNECTED
             @connected = true
-            # @announce_presence() FIXME @connector.announcePresence @user
+            @announce_presence()
             @discover_channel_server =>
                 @trigger 'connected'
 
@@ -119,3 +119,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.ATTACHED
             @trigger 'attached'
+
+    announce_presence: =>
+        @connection.send $pres().
+            c('status').t("buddycloud").up().
+            c('show').t("na").up().
+            c('priority').t("-1")
