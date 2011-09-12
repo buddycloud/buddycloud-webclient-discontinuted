@@ -6,14 +6,14 @@
 { HomeView } = require 'views/home/show'
 
 class exports.Router extends Backbone.Router
-    routes : # eg http://localhost:8080/#/index
+    routes : # eg http://localhost:8080/index
         ""           :"index"
         "index"     :"index"
         "home"      :"home"
         "login"     :"login"
         "register"  :"register"
         "more"      :"overview"
-        ":id@:domain.:tld":"directchannel"
+        ":id@:domain":"directchannel"
 
     initialize: ->
         # start views
@@ -22,7 +22,7 @@ class exports.Router extends Backbone.Router
         app.views.register = new RegisterView
 
         # bootstrapping after login or registration
-        app.handler.connection.bind "connected", @authorize
+        app.handler.connection.bind "connected", @on_authorize
 
         Backbone.history.start pushState:on
 
@@ -39,7 +39,7 @@ class exports.Router extends Backbone.Router
         delete app.views.login
         delete app.views.register
 
-    authorize: =>
+    on_authorize: =>
         do @disable_index
         app.views.home = new HomeView
         @navigate 'home', true
@@ -53,7 +53,7 @@ class exports.Router extends Backbone.Router
         do app.handler.connection.connect unless app.users.current
 
         # bootstrapping after connection process
-        app.handler.connection.unbind "connected", @authorize
+        app.handler.connection.unbind "connected", @on_authorize
         app.handler.connection.bind   "connected", app.views.direct.build
 
     # routes
@@ -64,9 +64,9 @@ class exports.Router extends Backbone.Router
     register: -> @setView app.views.register
     overview: -> @setView app.views.overview
 
-    directchannel: (id, domain, tld) ->
+    directchannel: (id, domain) ->
         unless app.views.direct
-            @build_direct_channel "#{id}@#{domain}.#{tld}"
+            @build_direct_channel "#{id}@#{domain}"
         @setView app.views.direct
 
 
