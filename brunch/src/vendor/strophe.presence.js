@@ -9,6 +9,34 @@ Strophe.addConnectionPlugin('presence', {
     //The plugin must have the init function.
     init: function(conn) {
         this._connection = conn;
+
+	var subscribeHandlers = this.subscribeHandlers = [];
+	conn.addHandler(function(stanza) {
+	    var handlerResult, from = stanza.getAttribute('from');
+	    if (subscribeHandlers.some(function(handler) {
+		handlerResult = handler(stanza);
+		if (handlerResult === true) {
+		    return true;
+		} else if (handlerResult === false) {
+		    return true;
+		} else
+		    return false;
+	    })) {
+		conn.send(
+		    $pres({ to: from, type: (handlerResult ? 'subscribed' : 'unsubscribed') })
+		);
+	    }
+	}, null, 'presence', 'subscribe');
+    },
+
+    addSubscribeHandler: function(handler) {
+	this.subscribeHandlers.push(handler);
+    },
+
+    authorize: function(jid) {
+	this._connection.send(
+	    $pres({ to: jid, type: 'subscribed' })
+	);
     },
 
     set: function (opts) {
