@@ -5,6 +5,7 @@
     <span class="status"><%= @channel?.metadata?.status?.value %></span>
     <nav class="<%= @viewname %>"> <!-- viewname = either 'inMessages' or 'inChannel' to show/hide the messages or channel button -->
       <% if @user?.followingThisChannel: %>
+      <!-- No IM functionality implemented yet:
       <div class="messages button <%= @channel?.gotNewMessage and 'newMessage' %>">
         <span class="holder">Messages</span>
         <% if @channel?.gotNewMessage: %>
@@ -13,7 +14,7 @@
       </div>
       <div class="channel button">
         <span class="holder">Channel</span>
-      </div>
+      </div-->
       <div class="button unfollow">Unfollow</div>
       <% else: %>
       <div class="button follow">Follow</div>
