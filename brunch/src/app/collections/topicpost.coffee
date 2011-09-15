@@ -13,3 +13,6 @@ class exports.TopicPosts extends Backbone.Collection
             opener
         else
             super
+
+    comparator: (post) ->
+        - new Date(post.get 'published').getTime()
