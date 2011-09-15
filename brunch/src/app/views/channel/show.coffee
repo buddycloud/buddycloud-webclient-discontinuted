@@ -31,6 +31,7 @@ class exports.ChannelView extends Backbone.View
         @el.append @details.el
 
         if @postsview
+            # TODO: save form content?
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
         @el.find('.newTopic, .answer').click @openNewTopicEdit
