@@ -14,7 +14,7 @@ class exports.ChannelView extends Backbone.View
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
-            if postsnode = @model.nodes.get 'posts'
+            if (postsnode = @model.nodes.get 'posts')
                 @postsview = new PostsView
                     model:postsnode
                     parent:this

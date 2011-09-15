@@ -4,7 +4,7 @@ class exports.TopicPosts extends Backbone.Collection
     model: TopicPost
 
     add: (post) ->
-        if current = @get post.id
+        if (current = @get post.id)
             current.set post
         else if post.in_reply_to
             opener  = @get post.in_reply_to
