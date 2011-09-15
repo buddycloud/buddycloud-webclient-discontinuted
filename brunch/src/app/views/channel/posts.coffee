@@ -13,11 +13,9 @@ class exports.PostsView extends Backbone.View
     # TODO add different post type switch here
     # currently only TopicPosts are supported
     add_post: (post) =>
-        console.log 'add_post'
         entry = @posts[post.cid] ?= new TopicPostView model:post, parent:this
 
         i = @model.posts.indexOf(post)
-        console.log "i=#{i}"
         if i >= @model.posts.length - 1
             @el.append entry.el
         else
