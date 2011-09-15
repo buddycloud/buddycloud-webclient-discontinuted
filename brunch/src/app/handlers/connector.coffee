@@ -15,6 +15,21 @@ class exports.Connector extends Backbone.EventHandler
                 callback? stanza
                 done()
 
+    subscribe: (nodeid, callback) =>
+        @request (done) =>
+            # TODO: subscribe channel
+            @connection.buddycloud.subscribeNode nodeid, (stanza) =>
+                app.debug "subscribe", stanza
+                callback? stanza
+                done()
+
+    unsubscribe: (nodeid, callback) =>
+        @request (done) =>
+            @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
+                app.debug "subscribe", stanza
+                callback? stanza
+                done()
+
 #     start_fetch_node_posts: (nodeid) =>
 #         success = (posts) =>
 #             for post in posts

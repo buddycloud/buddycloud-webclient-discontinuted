@@ -103,9 +103,14 @@ Strophe.addConnectionPlugin('buddycloud', {
         that.sendIQ(register, success, error, timeout);
     },
 
-    subscribeChannel: function (node, succ, err) {
+    subscribeNode: function (node, succ, err) {
         var that = this._connection;
-        that.pubsub.subscribe(node, null, null, this._iqcbsoup(succ, err));
+        that.pubsub.subscribe(node, null, null, succ, err);
+    },
+
+    unsubscribeNode: function (node, succ, err) {
+        var that = this._connection;
+        that.pubsub.unsubscribe(node, null, null, succ, err);
     },
 
     getChannelPosts: function (node, succ, err, timeout) {

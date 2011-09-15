@@ -24,6 +24,13 @@ class exports.DataHandler extends Backbone.EventHandler
     add_post: (node, post) ->
         @on_node_post post, node.get 'nodeid'
 
+    subscribe: (node, callback) ->
+        @connector.subscribe node.get('nodeid'), callback
+
+    unsubscribe: (node, callback) ->
+        @connector.unsubscribe node.get('nodeid'), callback
+
+
     # event callbacks
 
     on_node_post: (post, nodeid) =>

@@ -49,6 +49,16 @@ class exports.ChannelView extends Backbone.View
                         app.handler.data.add_post node, post
                         @el.find('.newTopic, .answer').removeClass 'write'
                         text.val ""
+        @$('.follow').click (ev) =>
+            ev.preventDefault()
+            node = @model.nodes.get('posts')
+            app.handler.data.subscribe node
+            false
+        @$('.unfollow').click (ev) =>
+            ev.preventDefault()
+            node = @model.nodes.get('posts')
+            app.handler.data.unsubscribe node
+            false
 
     openNewTopicEdit: (ev) ->
         self = $(this) # @el.find('.newTopic, .answer')
