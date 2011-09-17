@@ -17,5 +17,6 @@
 ,   "underscore": "1.1.7"
 ,   "backbone": "0.5.3"
 ,   "jqueryify": "0.0.1"
+,   "formatdate": "0.0.1"
   }
 }

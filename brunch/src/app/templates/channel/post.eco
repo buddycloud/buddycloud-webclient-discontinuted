@@ -1,7 +1,7 @@
 <section class="opener">
   <img class="avatar" src="<%= @author?.avatar %>" />
   <div class="postmeta">
-    <span class="time" title="<%= @post?.updated %>"><%= @post?.published %></span>
+    <span class="format-date time ago" strftime="%d.%m.%Y %H:%M" strftitle="%A %d %B %Y %H:%M"><%= @post?.published %></span>
     <!--
       creationDate: hh:mm dd/mm/yyyy
       -> we'll probably need to have an option to choose ones date-format

@@ -9,3 +9,4 @@ class exports.PostView extends Backbone.View
         @post = @model.toJSON()
         @author = @model.author
         old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        formatdate.hook @el, update:off
