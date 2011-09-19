@@ -1,7 +1,7 @@
 { TopicPostView } = require 'views/channel/topicpost'
 
 class exports.PostsView extends Backbone.View
-    initialize: ({@parent, @el}) ->
+    initialize: ({@el}) ->
         # INFO @el will be set by parent
         @el.attr id:@cid
         @posts = {}

@@ -1,16 +1,16 @@
+{ BaseView } = require('views/base')
 
-class exports.UserAdmin extends Backbone.View
+class exports.UserAdmin extends BaseView
     template: require 'templates/channel/details/admin/user'
 
-    initialize: ({@parent, @number}) ->
-        @el = $(@template this).attr id:@cid
+    initialize: ({@number}) ->
+        super
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
-        super
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
 
     update_attributes: ->
         @user = @model.toJSON()

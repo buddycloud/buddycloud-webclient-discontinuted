@@ -1,11 +1,12 @@
 { GeoDetail } = require 'views/channel/details/geo'
 { UserList } = require 'views/channel/details/list'
+{ BaseView } = require('views/base')
 
-class exports.ChannelDetails extends Backbone.View
+class exports.ChannelDetails extends BaseView
     template: require 'templates/channel/details/show'
 
     initialize: ({@parent}) ->
-        @el = $(@template this).attr id:@cid
+        super
         @geo = new GeoDetail model:@model, parent:this
 
         @list = {}
@@ -22,11 +23,10 @@ class exports.ChannelDetails extends Backbone.View
 
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
-        super
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
         meta = @el.find('.meta')
 
         do @geo.render

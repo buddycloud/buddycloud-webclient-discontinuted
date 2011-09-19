@@ -1,16 +1,13 @@
+{ BaseView } = require('views/base')
 
-class exports.PostView extends Backbone.View
+class exports.PostView extends BaseView
     template: require 'templates/channel/post'
-
-    initialize: ({@parent}) ->
-        @el = $("<div>").attr id:@cid
 
     render: =>
         @post = @model.toJSON()
         @author = @model.author
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
-        formatdate.hook @el, update:off
-        @delegateEvents()
+        super
+        formatdate.hook @el, update: off
 
     events:
         'click .name': 'clickAuthor'

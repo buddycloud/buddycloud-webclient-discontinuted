@@ -1,12 +1,13 @@
 { ChannelDetails } = require 'views/channel/details/show'
 { PostsView } = require 'views/channel/posts'
+{ BaseView } = require('views/base')
 
 # The channel shows channel content
-class exports.ChannelView extends Backbone.View
+class exports.ChannelView extends BaseView
     template: require 'templates/channel/show'
 
-    initialize: ({@parent}) ->
-        @el = $(@template this).attr id:@cid
+    initialize: ->
+        super
         @details = new ChannelDetails model:@model, parent:this
 
         @model.bind 'change', @render
@@ -26,7 +27,7 @@ class exports.ChannelView extends Backbone.View
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
         do @details.render
         @el.append @details.el
 

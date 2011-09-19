@@ -1,18 +1,18 @@
 { UserAdmin } = require 'views/channel/details/admin/user'
+{ BaseView } = require('views/base')
 
 # this shows a list of user avatars
 
-class exports.UserList extends Backbone.View
+class exports.UserList extends BaseView
     template: require 'templates/channel/details/list'
 
     initialize: ({@parent, @usertypes, @name}) ->
-        @el = $(@template this).attr id:@cid
-        app.users.bind 'add', @render
         super
+        app.users.bind 'add', @render
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
 
         @el.find('.list').find('.user').each (i, user) =>
             user = $(user)

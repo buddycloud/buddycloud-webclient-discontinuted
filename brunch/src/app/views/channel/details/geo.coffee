@@ -1,18 +1,18 @@
+{ BaseView } = require('views/base')
 
 # this is the specific view for the geoloc node
 
-class exports.GeoDetail extends Backbone.View
+class exports.GeoDetail extends BaseView
     template: require 'templates/channel/details/geo'
 
-    initialize: ({@parent}) ->
-        @el = $(@template this).attr id:@cid
+    initialize: ->
+        super
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
-        super
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
 
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')

@@ -1,14 +1,15 @@
+{ BaseView } = require('views/base')
 
-class exports.ChannelEntry extends Backbone.View
+class exports.ChannelEntry extends BaseView
     template: require 'templates/sidebar/entry'
 
-    initialize: ({@parent}) ->
-        @el = $("<div>").attr id:@cid
+    initialize: ->
+        super
         @model.bind 'change:node:metadata', @render
 
     render: =>
         @update_attributes()
-        old = @el; old.replaceWith @el = $(@template this).attr id:@cid
+        super
         @el.click =>
             @parent.parent.setCurrentChannel @model.cid
             old = @parent.current
