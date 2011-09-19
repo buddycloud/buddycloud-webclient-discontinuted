@@ -6,6 +6,8 @@ class exports.BaseView extends Backbone.View
         @el = $(@template this)
         @el.attr id: @cid
 
+        @delegateEvents()
+
     render: ->
         oldEl = @el
         @el = $(@template this)
