@@ -10,6 +10,6 @@ class exports.BaseView extends Backbone.View
         oldEl = @el
         @el = $(@template this)
         @el.attr id: @cid
-        oldEl.replaceWith @el
+        oldEl?.replaceWith @el
 
         @delegateEvents()
