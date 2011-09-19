@@ -144,6 +144,12 @@ Extend connection object to have plugin name 'pubsub'.
         if (conn.disco)
             conn.disco.addFeature(Strophe.NS.PUBSUB);
 
+	/* Setup notification handling */
+	this.notificationListeners = [];
+	var that = this;
+	conn.addHandler(function(stanza) {
+	    return that.onEventNotification(stanza);
+	}, Strophe.NS.PUBSUB_EVENT, 'message');
     },
 
     // Called by Strophe on connection event
@@ -549,5 +555,64 @@ Extend connection object to have plugin name 'pubsub'.
         }
         return this.publish(node, entries, call_back);
     },
+
+    /**
+     * TODO: filter for sender
+     */
+    onEventNotification: function(stanza) {
+	var that = this;
+	Strophe.forEachChild(stanza, 'event', function(eventEl) {
+	    Strophe.forEachChild(eventEl, null, function(child) {
+		if (child.nodeName === 'subscription') {
+		    that._callNotificationListeners({
+			type: 'subscription',
+			node: child.getAttribute('node'),
+			jid: child.getAttribute('jid'),
+			subscription: child.getAttribute('subscription')
+		    });
+		} else if (child.nodeName === 'affiliation') {
+		    that._callNotificationListeners({
+			type: 'affiliation',
+			node: child.getAttribute('node'),
+			jid: child.getAttribute('jid'),
+			affiliation: child.getAttribute('affiliation')
+		    });
+		} else if (child.nodeName === 'items') {
+		    var items = [];
+		    Strophe.forEachChild(child, 'item', function(itemEl) {
+			/* To get the first element child: */
+			var child;
+			Strophe.forEachChild(itemEl, null, function(itemChild) {
+			    if (!child)
+				child = itemChild;
+			});
+			items.push({
+			    id: itemEl.getAttribute('id'),
+			    child: child
+			});
+		    });
+		    that._callNotificationListeners({
+			type: 'items',
+			node: child.getAttribute('node'),
+			items: items
+		    });
+		} else if (child.nodeName === 'configuration') {
+		    /* TODO */
+		}
+	    });
+	});
+	return true;
+    },
+
+    _callNotificationListeners: function(notification) {
+	Strophe.log("Call "+this.notificationListeners.length+" listeners for "+notification.type+" notification");
+	this.notificationListeners.forEach(function(listener) {
+	    listener(notification);
+	});
+    },
+
+    addNotificationListener: function(listener) {
+	this.notificationListeners.push(listener);
+    }
 
 });

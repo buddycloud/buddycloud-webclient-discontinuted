@@ -1,4 +1,4 @@
-{ Metadata } = require 'models/metadata/skeleton'
+{ Metadata } = require 'models/metadata/base'
 
 class exports.PostMetadata extends Metadata
     type: 'post'
