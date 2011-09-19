@@ -7,11 +7,14 @@ class exports.PostView extends BaseView
         @post = @model.toJSON() # data
         @author = @model.author # model
         super
+        @$('.name').attr href: @author.get('jid') or "?"
         formatdate.hook @el, update: off
 
     events:
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'
 
-    clickAuthor: =>
+    clickAuthor: (ev) =>
+        ev?.preventDefault()
         app.router.navigate @author.get('jid'), true
+        no # normal http anchor behavior

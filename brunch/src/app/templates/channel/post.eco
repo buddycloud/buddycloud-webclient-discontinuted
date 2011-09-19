@@ -10,7 +10,7 @@
       -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
     -->
   </div>
-  <span class="name"><%= @post?.author?.name %></span>
+  <a class="name" href="#"><%= @post?.author?.name or @post?.author?.jid %></a>
   <span class="location"><%= @post?.location %></span>
   <p><%= @post?.content?.value %></p>
 </section>

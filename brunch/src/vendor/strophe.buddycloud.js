@@ -160,9 +160,12 @@ Strophe.addConnectionPlugin('buddycloud', {
 
                 // author
                 attr = entry.getElementsByTagName("author");
-                if (attr.length > 0)
+                if (attr.length > 0) {
                     post.author = this._parsetag(attr.item(0),
-                        "name", "jid", "affiliation");
+                        "name", "uri");
+                    if (post.author.uri)
+                        post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
+                }
 
                 // geoloc
                 attr = entry.getElementsByTagName("geoloc");
