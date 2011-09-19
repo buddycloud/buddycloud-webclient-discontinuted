@@ -1,4 +1,5 @@
 <section class="opener">
+  <!-- TODO: attribute escaping! -->
   <img class="avatar" src="<%= @author?.avatar %>" />
   <div class="postmeta">
     <span class="format-date time ago" strftime="%d.%m.%Y %H:%M" strftitle="%A %d %B %Y %H:%M"><%= @post?.published %></span>
@@ -9,6 +10,7 @@
       -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
     -->
   </div>
-  <span class="name"><%= @post?.author?.name %></span><span class="location"><%= "TODO @post.location" %></span>
+  <span class="name"><%= @post.author?.name %></span>
+  <span class="location"><%= @post.location %></span>
   <p><%= @post?.content?.value %></p>
 </section>
