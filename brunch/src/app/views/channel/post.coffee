@@ -4,8 +4,8 @@ class exports.PostView extends BaseView
     template: require 'templates/channel/post'
 
     render: =>
-        @post = @model.toJSON()
-        @author = @model.author
+        @post = @model.toJSON() # data
+        @author = @model.author # model
         super
         formatdate.hook @el, update: off
 
