@@ -3,7 +3,7 @@ lazyRequire = -> # to prevent require circles
     { StatusNode:lookup.status } = require 'models/node/status'
     { PostsNode :lookup.posts  } = require 'models/node/posts'
     { GeoNode   :lookup.geoloc } = require 'models/node/geo'
-    { Node      :lookup.node   } = require 'models/node/skeleton'
+    { Node      :lookup.node   } = require 'models/node/base'
     lookup._loaded = yes
 
 getid = (nodeid) ->

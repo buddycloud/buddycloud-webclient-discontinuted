@@ -1,4 +1,4 @@
-{ AuthenticationView } = require 'views/authentication/skeleton'
+{ AuthenticationView } = require 'views/authentication/base'
 
 class exports.RegisterView extends AuthenticationView
     cssclass: 'registerPicked'
