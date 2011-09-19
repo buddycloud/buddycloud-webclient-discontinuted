@@ -1177,7 +1177,7 @@ Strophe.Handler.prototype = {
                               e.fileName + ":" + e.lineNumber + " - " +
                               e.name + ": " + e.message);
             } else {
-                Strophe.fatal("error: " + this.handler);
+                Strophe.fatal("error: " + (e.stack || this.handler));
             }
 
             throw e;
