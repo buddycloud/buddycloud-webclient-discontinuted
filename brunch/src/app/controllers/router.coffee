@@ -9,7 +9,6 @@ class exports.Router extends Backbone.Router
     routes : # eg http://localhost:8080/index
         ""           :"index"
         "index"     :"index"
-        "home"      :"home"
         "login"     :"login"
         "register"  :"register"
         "more"      :"overview"
@@ -42,7 +41,7 @@ class exports.Router extends Backbone.Router
     on_authorize: =>
         do @disable_index
         app.views.home = new HomeView
-        @navigate 'home', true
+        @navigate app.users.current.get('jid'), true
 
     build_direct_channel: (jid) =>
         do @disable_index
@@ -58,7 +57,6 @@ class exports.Router extends Backbone.Router
 
     # routes
 
-    home:     -> @setView app.views.home
     index:    -> @setView app.views.index
     login:    -> @setView app.views.login
     register: -> @setView app.views.register
