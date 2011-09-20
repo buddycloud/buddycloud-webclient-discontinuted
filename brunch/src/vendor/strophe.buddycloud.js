@@ -16,6 +16,7 @@ This library is free software; you can redistribute it and/or modify it
 /**
 * File: strophe.buddycloud.js
 * A Strophe plugin for buddycloud (http://buddycloud.org/wiki/XMPP_XEP).
+* TODO: fix that = conn
 */
 Strophe.getJidFromNode = function (node) {
     var match = node.match(/\/([^\/]+)\/([^\/]+)\/([^\/]+)/);
@@ -135,15 +136,20 @@ Strophe.addConnectionPlugin('buddycloud', {
         },  self._errorcode(err));
     },
 
-    _parsePost: function (stanza, callback) {
+    /**
+     * Parse *multiple* posts
+     *
+     * @param el Contains <item/> children
+     */
+    _parsePost: function (el, callback) {
         var i, j, item, attr, post, posts = [], entry, entries,
-            items = stanza.getElementsByTagName("item");
+            items = el.getElementsByTagName("item");
         for (i = 0; i < items.length; i++) {
             item = items[i];
             entries = item.getElementsByTagName("entry");
             for(j = 0; j < entries.length; j++) {
                 entry = entries[j];
-                // Takes an <item /> stanza and returns a hash of it's attributes
+                // Takes an <item /> element and returns a hash of it's attributes
                 post = this._parsetag(entry, "id", "published", "updated");
                 if (!post.id)
                     post.id = item.getAttribute("id");
@@ -252,6 +258,44 @@ Strophe.addConnectionPlugin('buddycloud', {
                 }
                 succ(fields);
             }, self._errorcode(err), timeout);
+    },
+
+    /**
+     * TODO: filter for sender
+     */
+    addNotificationListener: function(listener) {
+	var that = this;
+	this._connection.pubsub.addNotificationListener(function(stanza) {
+            Strophe.forEachChild(stanza, 'event', function(eventEl) {
+                Strophe.forEachChild(eventEl, null, function(child) {
+                    if (child.nodeName === 'subscription') {
+                        listener({
+                            type: 'subscription',
+                            node: child.getAttribute('node'),
+                            jid: child.getAttribute('jid'),
+                            subscription: child.getAttribute('subscription')
+                        });
+                    } else if (child.nodeName === 'affiliation') {
+                        listener({
+                            type: 'affiliation',
+                            node: child.getAttribute('node'),
+                            jid: child.getAttribute('jid'),
+                            affiliation: child.getAttribute('affiliation')
+                        });
+                    } else if (child.nodeName === 'items') {
+			that._parsePost(child, function(posts) {
+			    listener({
+				type: 'posts',
+				node: child.getAttribute('node'),
+				posts: posts
+			    });
+			});
+                    } else if (child.nodeName === 'configuration') {
+                        /* TODO */
+                    }
+                });
+            });
+    	});
     },
 
     // helper

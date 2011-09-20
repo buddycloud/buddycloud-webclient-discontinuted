@@ -145,7 +145,7 @@ Extend connection object to have plugin name 'pubsub'.
             conn.disco.addFeature(Strophe.NS.PUBSUB);
 
 	/* Setup notification handling */
-	this.notificationListeners = [];
+	this._notificationListeners = [];
 	var that = this;
 	conn.addHandler(function(stanza) {
 	    return that.onEventNotification(stanza);
@@ -558,61 +558,27 @@ Extend connection object to have plugin name 'pubsub'.
 
     /**
      * TODO: filter for sender
+     * TODO: should payload parsing go into strophe.buddycloud.js?
      */
     onEventNotification: function(stanza) {
-	var that = this;
+	var hasEvent = false;
 	Strophe.forEachChild(stanza, 'event', function(eventEl) {
-	    Strophe.forEachChild(eventEl, null, function(child) {
-		if (child.nodeName === 'subscription') {
-		    that._callNotificationListeners({
-			type: 'subscription',
-			node: child.getAttribute('node'),
-			jid: child.getAttribute('jid'),
-			subscription: child.getAttribute('subscription')
-		    });
-		} else if (child.nodeName === 'affiliation') {
-		    that._callNotificationListeners({
-			type: 'affiliation',
-			node: child.getAttribute('node'),
-			jid: child.getAttribute('jid'),
-			affiliation: child.getAttribute('affiliation')
-		    });
-		} else if (child.nodeName === 'items') {
-		    var items = [];
-		    Strophe.forEachChild(child, 'item', function(itemEl) {
-			/* To get the first element child: */
-			var child;
-			Strophe.forEachChild(itemEl, null, function(itemChild) {
-			    if (!child)
-				child = itemChild;
-			});
-			items.push({
-			    id: itemEl.getAttribute('id'),
-			    child: child
-			});
-		    });
-		    that._callNotificationListeners({
-			type: 'items',
-			node: child.getAttribute('node'),
-			items: items
-		    });
-		} else if (child.nodeName === 'configuration') {
-		    /* TODO */
-		}
-	    });
+	    hasEvent = true;
 	});
+	if (hasEvent)
+	    this._callNotificationListeners(stanza);
+
 	return true;
     },
 
-    _callNotificationListeners: function(notification) {
-	Strophe.log("Call "+this.notificationListeners.length+" listeners for "+notification.type+" notification");
-	this.notificationListeners.forEach(function(listener) {
-	    listener(notification);
+    _callNotificationListeners: function(stanza) {
+	this._notificationListeners.forEach(function(listener) {
+	    listener(stanza);
 	});
     },
 
     addNotificationListener: function(listener) {
-	this.notificationListeners.push(listener);
+	this._notificationListeners.push(listener);
     }
 
 });

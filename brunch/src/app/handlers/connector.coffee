@@ -7,6 +7,7 @@ class exports.Connector extends Backbone.EventHandler
         @handler.bind 'connected',  => @trigger 'connection:established'
         @request = new RequestHandler
         app.handler.request = @request.handler
+        @connection.buddycloud.addNotificationListener @on_notification
 
     publish: (nodeid, item, callback) =>
         @request (done) =>
@@ -96,3 +97,17 @@ class exports.Connector extends Backbone.EventHandler
         # TODO
         # @trigger 'subscription:node', subscription
 
+    on_notification: (notification) =>
+        app.debug "on_notification", notification
+
+        switch notification.type
+            when 'subscription'
+                @trigger 'subscription:user', subscription
+                @trigger 'subscription:node', subscription
+            when 'affiliation'
+                @trigger 'affiliation', subscription
+            when 'posts'
+                for post in notification.posts
+                    @trigger 'post', post, notification.node
+            else
+                app.debug "Cannot handle notification for #{notification.type}"

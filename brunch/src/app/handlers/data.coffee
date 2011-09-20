@@ -84,6 +84,8 @@ class exports.DataHandler extends Backbone.EventHandler
         node = channel.nodes.create affiliation.node
         channel = user.channels.update channel
 
+    # TODO: y distinguish between user & node subscription? A
+    # subscription always pertains both!
     on_user_subscription: (subscription) =>
         # FIXME delete all unsubscripted subscriptions from local cache
         return unless /\/user\/([^\/]+@[^\/]+)\//.test subscription.node
