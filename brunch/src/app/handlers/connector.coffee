@@ -11,9 +11,13 @@ class exports.Connector extends Backbone.EventHandler
 
     publish: (nodeid, item, callback) =>
         @request (done) =>
-            @connection.pubsub.publishAtom nodeid, item, (stanza) =>
+            @connection.pubsub.publishAtom nodeid, item
+            , (stanza) =>
                 app.debug "publish", stanza
                 callback? stanza
+                done()
+            , =>
+                app.error "publish", nodeid
                 done()
 
     subscribe: (nodeid, callback) =>
@@ -23,12 +27,18 @@ class exports.Connector extends Backbone.EventHandler
                 app.debug "subscribe", stanza
                 callback? stanza
                 done()
+            , =>
+                app.error "subscribe", nodeid
+                done()
 
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
             @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
                 app.debug "subscribe", stanza
                 callback? stanza
+                done()
+            , =>
+                app.error "unsubscribe", nodeid
                 done()
 
 #     start_fetch_node_posts: (nodeid) =>
