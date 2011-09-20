@@ -29,8 +29,7 @@ class exports.RequestHandler extends Backbone.EventHandler
             @trigger 'next'
 
     next: =>
-        while @running < @limit
-            return if @queue.length is 0
+        while @queue.length > 0 and @running < @limit
             task = @queue.shift()
             @trigger 'task:start', task, S4()
             @running++
