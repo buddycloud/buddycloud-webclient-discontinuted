@@ -192,7 +192,7 @@ Extend connection object to have plugin name 'pubsub'.
     Returns:
     Iq id used to send subscription.
     */
-    createNode: function(node,options, call_back) {
+    createNode: function(node,options, success, error) {
         var conn = this._connection;
 
         var iqid = conn.getUniqueId("pubsubcreatenode");
@@ -204,8 +204,7 @@ Extend connection object to have plugin name 'pubsub'.
             iq.up().c('configure').form(Strophe.NS.PUBSUB_NODE_CONFIG, options);
         }
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
         return iqid;
     },
 
@@ -219,7 +218,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    deleteNode: function(node, call_back) {
+    deleteNode: function(node, success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubdeletenode");
 
@@ -227,8 +226,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
           .c('delete', {node:node});
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -248,7 +246,7 @@ Extend connection object to have plugin name 'pubsub'.
         var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('query', { xmlns:Strophe.NS.DISCO_ITEMS });
 
-        return this._connection.sendIQ(iq.tree(),success, error, timeout);
+        return this._connection.sendIQ(iq.tree(), success, error, timeout);
     },
 
     /** Function: getConfig
@@ -261,7 +259,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getConfig: function (node, call_back) {
+    getConfig: function (node, success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubconfigurenode");
 
@@ -269,8 +267,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
           .c('configure', {node:node});
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -285,7 +282,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getDefaultNodeConfig: function(call_back) {
+    getDefaultNodeConfig: function(success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubdefaultnodeconfig");
 
@@ -293,8 +290,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
           .c('default');
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -305,7 +301,6 @@ Extend connection object to have plugin name 'pubsub'.
         Parameters:
         (String) node         - The name of the pubsub node.
         (Array) options       - The configuration options for the  node.
-        (Function) event_cb   - Used to recieve subscription events.
         (Function) success    - callback function for successful node creation.
         (Function) error      - error callback function.
         (Boolean) barejid     - use barejid creation was sucessful.
@@ -313,7 +308,7 @@ Extend connection object to have plugin name 'pubsub'.
         Returns:
         Iq id used to send subscription.
     */
-    subscribe: function(node, options, event_cb, success, error, barejid) {
+    subscribe: function(node, options, success, error, barejid) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("subscribenode");
 
@@ -328,8 +323,6 @@ Extend connection object to have plugin name 'pubsub'.
             iq.up().c('options').form(Strophe.NS.PUBSUB_SUBSCRIBE_OPTIONS, options);
         }
 
-        //add the event handler to receive items
-        conn.addHandler(event_cb, null, 'message', null, null, null);
         conn.sendIQ(iq.tree(), success, error);
         return iqid;
     },
@@ -366,7 +359,7 @@ Extend connection object to have plugin name 'pubsub'.
     (Function) call_back - Used to determine if node
     creation was sucessful.
     */
-    publish: function(node, items, call_back) {
+    publish: function(node, items, success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubpublishnode");
 
@@ -375,8 +368,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('publish', { node:node, jid:this.jid })
           .list('item', items);
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -406,7 +398,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getSubscriptions: function(call_back, timeout) {
+    getSubscriptions: function(success, error, timeout) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubsubscriptions");
 
@@ -414,8 +406,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB})
           .c('subscriptions');
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error, timeout);
 
         return iqid;
     },
@@ -432,7 +423,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getNodeSubscriptions: function(node, call_back) {
+    getNodeSubscriptions: function(node, success, error) {
        var conn = this._connection;
        var iqid = conn.getUniqueId("pubsubsubscriptions");
 
@@ -440,8 +431,7 @@ Extend connection object to have plugin name 'pubsub'.
          .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
          .c('subscriptions', {'node':node});
 
-       conn.addHandler(call_back, null, 'iq', null, iqid, null);
-       conn.send(iq.tree());
+       conn.sendIQ(iq.tree(), success, error);
 
        return iqid;
     },
@@ -457,7 +447,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getSubOptions: function(node, subid, call_back) {
+    getSubOptions: function(node, subid, success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubsuboptions");
 
@@ -466,8 +456,7 @@ Extend connection object to have plugin name 'pubsub'.
           .c('options', {node:node, jid:this.jid});
         if (subid) iq.attrs({subid:subid});
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -483,7 +472,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getAffiliations: function(node, call_back) {
+    getAffiliations: function(node, success, error) {
         var conn = this._connection;
         var iqid = conn.getUniqueId("pubsubaffiliations");
 
@@ -501,8 +490,7 @@ Extend connection object to have plugin name 'pubsub'.
         var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', xmlns).c('affiliations', attrs);
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -518,7 +506,7 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    setAffiliation: function(node, jid, affiliation, call_back) {
+    setAffiliation: function(node, jid, affiliation, success, error) {
         var conn = this._connection;
         var iqid = thiat.getUniqueId("pubsubaffiliations");
 
@@ -527,15 +515,14 @@ Extend connection object to have plugin name 'pubsub'.
           .c('affiliations', {'node':node})
           .c('affiliation', {'jid':jid, 'affiliation':affiliation});
 
-        conn.addHandler(call_back, null, 'iq', null, iqid, null);
-        conn.send(iq.tree());
+        conn.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
 
     /** Function: publishAtom
      */
-    publishAtom: function(node, atoms, call_back) {
+    publishAtom: function(node, atoms, success, error) {
         if (!Array.isArray(atoms))
             atoms = [atoms];
 
@@ -553,7 +540,7 @@ Extend connection object to have plugin name 'pubsub'.
                 attrs:(atom.id ? { id:atom.id } : {}),
             });
         }
-        return this.publish(node, entries, call_back);
+        return this.publish(node, entries, success, error);
     },
 
     /**

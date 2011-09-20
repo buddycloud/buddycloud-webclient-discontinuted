@@ -105,7 +105,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     subscribeNode: function (node, succ, err) {
         var conn = this._connection;
-        conn.pubsub.subscribe(node, null, null, succ, err);
+        conn.pubsub.subscribe(node, null, succ, err);
     },
 
     unsubscribeNode: function (node, succ, err) {
@@ -121,6 +121,9 @@ Strophe.addConnectionPlugin('buddycloud', {
             }, self._errorcode(err), timeout);
     },
 
+    /* TODO: what is this for?
+     * using code in connector.coffee is commented out
+     */
     getChannelPostStream: function (node, succ, err, timeout) {
         this._connection.addHandler(
             this._onChannelPost(succ, err),
@@ -213,6 +216,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     getUserAffiliations: function (succ, err) {
         var self = this, conn = this._connection;
+	/* TODO: expects node parameter, not for user */
         conn.pubsub.getAffiliations(self._iqcbsoup(
             function /*success*/ (stanza) {
                 if (!succ) return;
