@@ -16,7 +16,6 @@ This library is free software; you can redistribute it and/or modify it
 /**
 * File: strophe.buddycloud.js
 * A Strophe plugin for buddycloud (http://buddycloud.org/wiki/XMPP_XEP).
-* TODO: fix that = conn
 */
 Strophe.getJidFromNode = function (node) {
     var match = node.match(/\/([^\/]+)\/([^\/]+)\/([^\/]+)/);
@@ -39,15 +38,15 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     // Called by Strophe on connection event
     statusChanged: function (status, condition) {
-        var that = this._connection;
+        var conn = this._connection;
         if (status === Strophe.Status.CONNECTED)
-            that.pubsub.jid = that.jid;
+            conn.pubsub.jid = conn.jid;
     },
 
     connect: function (channelserver) {
-        var that = this._connection;
+        var conn = this._connection;
         this.channels = {jid:channelserver};
-        that.pubsub.connect(channelserver);
+        conn.pubsub.connect(channelserver);
     },
 
     // discovers the channel server jid from the given domain
@@ -58,22 +57,22 @@ Strophe.addConnectionPlugin('buddycloud', {
             success = domain;
             domain = undefined;
         }
-        var that = this._connection, self = this;
-        domain = domain || Strophe.getDomainFromJid(that.jid);
-        that.disco.items(domain, null, function /*success*/ () {
+        var conn = this._connection, self = this;
+        domain = domain || Strophe.getDomainFromJid(conn.jid);
+        conn.disco.items(domain, null, function /*success*/ () {
             var args = Array.prototype.slice.call(arguments);
             self._onDiscoItems.apply(self,[success,error,timeout].concat(args));
         }, error, timeout);
     },
 
     _onDiscoItems: function (success, error, timeout, stanza) {
-        var that = this._connection, self = this;
+        var conn = this._connection, self = this;
         var i, item, jid, items = stanza.getElementsByTagName('item');
         for (i = 0; i < items.length; i++) {
             item = items[i];
             jid = item.getAttribute('jid');
             if (jid) {
-                that.disco.info(jid, null,
+                conn.disco.info(jid, null,
                     function /*success*/ () {
                         var args = Array.prototype.slice.call(arguments);
                         self._onDiscoInfo.apply(self,
@@ -85,7 +84,7 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     _onDiscoInfo: function (success, error, timeout, jid, stanza) {
-        var that = this._connection;
+        var conn = this._connection;
         var queries, i, identity,
             identities = stanza.getElementsByTagName('identity');
         for (i = 0; i < identities.length; i++) {
@@ -98,25 +97,25 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     createChannel: function (success, error, timeout) {
-        var register, that = this._connection;
-        register = $iq({from:that.jid, to:this.channels.jid, type:'set'})
+        var register, conn = this._connection;
+        register = $iq({from:conn.jid, to:this.channels.jid, type:'set'})
             .c('query', {xmlns: Strophe.NS.REGISTER});
-        that.sendIQ(register, success, error, timeout);
+        conn.sendIQ(register, success, error, timeout);
     },
 
     subscribeNode: function (node, succ, err) {
-        var that = this._connection;
-        that.pubsub.subscribe(node, null, null, succ, err);
+        var conn = this._connection;
+        conn.pubsub.subscribe(node, null, null, succ, err);
     },
 
     unsubscribeNode: function (node, succ, err) {
-        var that = this._connection;
-        that.pubsub.unsubscribe(node, null, null, succ, err);
+        var conn = this._connection;
+        conn.pubsub.unsubscribe(node, null, null, succ, err);
     },
 
     getChannelPosts: function (node, succ, err, timeout) {
-        var self = this, that = this._connection;
-        that.pubsub.items(node,
+        var self = this, conn = this._connection;
+        conn.pubsub.items(node,
             function  /*success*/ (stanza) {
                 if (succ) self._parsePost(stanza, succ);
             }, self._errorcode(err), timeout);
@@ -192,8 +191,8 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getUserSubscriptions: function (succ, err) {
-        var self = this, that = this._connection;
-        that.pubsub.getSubscriptions(self._iqcbsoup(
+        var self = this, conn = this._connection;
+        conn.pubsub.getSubscriptions(self._iqcbsoup(
             function  /*success*/ (stanza) {
                 if (!succ) return;
                 var i, sub, node, result = [],
@@ -213,8 +212,8 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getUserAffiliations: function (succ, err) {
-        var self = this, that = this._connection;
-        that.pubsub.getAffiliations(self._iqcbsoup(
+        var self = this, conn = this._connection;
+        conn.pubsub.getAffiliations(self._iqcbsoup(
             function /*success*/ (stanza) {
                 if (!succ) return;
                 var i, aff, node, result = [],
@@ -234,7 +233,7 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getMetadata: function (jid, node, succ, err, timeout) {
-        var self = this, that = this._connection;
+        var self = this, conn = this._connection;
         if (typeof node === 'function') {
             err = succ;
             succ = node;
@@ -242,11 +241,11 @@ Strophe.addConnectionPlugin('buddycloud', {
             jid = undefined;
         }
         jid = jid || this.channels.jid;
-        that.disco.info(jid, node,
+        conn.disco.info(jid, node,
             function /*success*/ (stanza) {
                 if (!succ) return;
                 // Flatten the namespaced fields into a hash
-                var i,key,field,fields = {}, form = that.dataforms.parse(stanza);
+                var i,key,field,fields = {}, form = conn.dataforms.parse(stanza);
                 for (i = 0; i < form.fields.length; i++) {
                     field = form.fields[i];
                     key = field.variable.replace(/.+#/,'');
@@ -264,7 +263,7 @@ Strophe.addConnectionPlugin('buddycloud', {
      * TODO: filter for sender
      */
     addNotificationListener: function(listener) {
-	var that = this;
+	var self = this;
 	this._connection.pubsub.addNotificationListener(function(stanza) {
             Strophe.forEachChild(stanza, 'event', function(eventEl) {
                 Strophe.forEachChild(eventEl, null, function(child) {
@@ -283,7 +282,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                             affiliation: child.getAttribute('affiliation')
                         });
                     } else if (child.nodeName === 'items') {
-			that._parsePost(child, function(posts) {
+			self._parsePost(child, function(posts) {
 			    listener({
 				type: 'posts',
 				node: child.getAttribute('node'),
