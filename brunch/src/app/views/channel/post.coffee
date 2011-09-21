@@ -16,5 +16,5 @@ class exports.PostView extends BaseView
 
     clickAuthor: (ev) =>
         ev?.preventDefault()
-        app.router.navigate @author.get('jid'), true
+        app.router.setCurrentChannel @author.get('jid')
         no # normal http anchor behavior

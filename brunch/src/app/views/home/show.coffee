@@ -18,7 +18,11 @@ class exports.HomeView extends Backbone.View
             if not view
                 view = new ChannelView model:channel, parent:this
                 @views[channel.cid] = view
-                @current ?= view
+                @el.append view.el
+                unless @current?
+                    @current = view
+                else
+                    view.el.hide()
 
         app.users.current.channels.bind 'add', (channel) =>
             @channels.add channel
@@ -30,25 +34,31 @@ class exports.HomeView extends Backbone.View
         @channels.bind 'add', (channel) =>
             view = new ChannelView model:channel, parent:this
             @views[channel.cid] = view
-            unless @current?
-                @current = view
-                @el.html @current.el
-            @render()
+            @el.append view.el
+            view.el.hide()
+            @current ?= view
+            do view.render
         @channels.bind 'all', =>
             app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
-        if @current
-            @el.html @current.el
+        @current?.el.show()
+
         @sidebar = new Sidebar parent:this
+
         $('body').removeClass('start').append @el
         $('.centerBox').remove() # FIXME ugly
+
+        @render()
         @el.show()
 
     setCurrentChannel: (channel) =>
+        console.warn channel.cid, channel
+        @current?.el.hide()
         @current = @views[channel.cid]
         app.router.navigate @current.model.get 'jid'
-        @el.html @current?.el
+
         @sidebar.setCurrentEntry channel
+        @current?.el.show()
 
     render: ->
         @current?.render()
