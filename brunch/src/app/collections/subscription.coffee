@@ -10,4 +10,7 @@ class exports.SubscriptionStore extends Backbone.Collection
         super(id)?.get('value')
 
     update: (id, value) ->
-        @get(id,yes)?.set({value}) or @create({id, value})
+        if (subscription = @get(id, yes))
+            subscription.set {value}
+        else
+            @create {id, value}
