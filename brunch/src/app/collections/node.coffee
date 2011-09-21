@@ -28,6 +28,8 @@ class exports.Nodes extends Backbone.Collection
         else
             super nodeid
 
+    ##
+    # @param opts Optional flags, such as silent: true
     create: (nodeid, opts) ->
         return super(nodeid, opts) unless typeof nodeid is 'string'
         id = getid nodeid
