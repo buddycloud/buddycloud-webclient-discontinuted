@@ -54,8 +54,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             return done()
 
         domain = if @user.get('jid') is "anony@mous"
-            then config.home_domain
-            else Strophe.getDomainFromJid(@user.get('jid'))
+                config.home_domain
+            else
+                Strophe.getDomainFromJid(@user.get('jid'))
         @connection.buddycloud.discover domain, success
         , (errorArgs...) =>
             # error, fall back:
