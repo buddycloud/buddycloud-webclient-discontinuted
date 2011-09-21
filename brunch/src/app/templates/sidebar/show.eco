@@ -1,0 +1,13 @@
+<header id="globalHeader">
+  <div class="search"><input type="text" placeholder="Search..." /></div>
+</header>
+<div id="sidebar">
+  <div id="channels" class="clearfix">
+    <div class="scrollArea">
+
+    </div>
+  </div>
+  <div id="more_channels">
+    more …
+  </div>
+</div>

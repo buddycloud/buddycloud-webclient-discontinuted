@@ -1,0 +1,92 @@
+.start
+  transform-style preserve-3d
+  perspective 1000
+
+.centerBox
+  width 566px
+  height 462px
+  top 50%
+  left 50%
+  margin -224px 0 0 -283px
+  position absolute
+  > div
+    top 0
+    width 566px
+    height 462px
+    background #f7f7f7
+    border-radius 3px
+    box-shadow 0 0 0 1px rgba(0,0,0,.55), 0 1px 13px rgba(0,0,0,.55), 0 1px white inset
+    position absolute
+    transition 750ms
+  .hero
+    height 319px
+    background url(../../public/images/hero.jpg)
+    border-radius 3px 3px 0 0
+    box-shadow 0 1px rgba(255,255,255,.34) inset, 0 0 1px rgba(255,255,255,.34) inset
+  .content
+    padding 13px
+    .subtitle
+      color default_highlight
+  #index
+    .content
+      box-shadow 0 -1px rgba(0, 0, 0, 0.13), 0 -2px rgba(0, 0, 0, 0.08), 0 -3px rgba(0, 0, 0, 0.05)
+  .navigation
+    bottom 0
+    width 550px
+    border-top 1px solid rgba(0,0,0,.21)
+    padding 5px 8px
+    background linear-gradient(top, #eee, #ccc)
+    border-radius 0 0 3px 3px
+    box-shadow 0 1px white inset
+    position absolute
+    .button
+      margin-left 8px
+      float right
+      &.back
+        margin-left 0
+        float left
+  #login, #register
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 13px rgba(0, 0, 0, 0.55), 0 1px rgba(255, 255, 255, 0.21) inset
+    overflow hidden
+    display none
+    h2
+      color rgba(0,0,0,.21)
+    .content
+      width 233px
+      padding 0
+      margin 0 auto
+  #login
+    form
+      margin-top 109px
+  #register
+    #register_check
+      margin-top 111px
+      margin-left -267px // width + 34 gap
+    #register_login
+      margin-top 93px      
+    #register_account
+      margin-top 38px
+    .match
+      background-color: rgba(0, 255, 0, 0.21)
+    .missmatch
+      background-color: rgba(255, 0, 0, 0.21)
+    form
+      width 233px
+      margin-left 267px
+      position absolute
+      opacity 0
+      transition 500ms
+      &.visible,
+      &#register_check.visible
+        margin-left 0
+        opacity 1
+  &.loginPicked,
+  &.registerPicked
+    #index
+      display none
+  &.loginPicked
+    #login
+      display block
+  &.registerPicked
+    #register
+      display block

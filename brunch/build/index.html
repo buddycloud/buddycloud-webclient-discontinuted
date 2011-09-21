@@ -3,27 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/web/css/main.css" type="text/css" media="screen">
-  <script src="/web/js/app.js"></script>
+  <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
+  <script src="config.js"></script>
+  <script src="web/js/app.js"></script>
   <script>require('main');</script>
 </head>
-<body>
-  <div id="login">
-    <div id="user_menu"></div>
-    <h1>buddycloud beta</h1>
-    <form id="login_form">
-      <input type="text" id="home_login_jid" placeholder="Jabber ID" />
-      <input type="password" id="home_login_pwd" placeholder="Password" />
-      <input type="submit" id="home_login_submit" class="basic_button" value="Log in" />
-      <div id="login_waiting" class="clearfix"><img src="/public/spinner2.gif" /><div id="login_waiting_text">Logging you in...</div></div>
-    </form>
-  </div>
-  <div id="register"></div>
-  <div id="sidebar">
-    <div id="channels">
+<body class="start">
 
+  <div class="centerBox">
+    <div class="welcome" id="index">
+    <!--
+
+      welcome message
+      template: home/index.eco
+
+    -->
+    </div>
+    <div id="login">
+      <section class="content">
+        <form class="clearfix">
+          <h2>buddycloud login</h2>
+          <label for="home_login_jid">Jabber ID</label>
+          <input type="email" id="home_login_jid" placeholder="Jabber ID" required />
+          <label for="home_login_pwd">Password</label>
+          <input type="password" id="home_login_pwd" placeholder="Password" required />
+          <div class="leftBox">
+            <a href="#" class="resetPassword">Forgot password?</a>
+            <span class="spinner">Logging in</span>
+          </div>
+          <button type="submit" id="home_login_submit" class="callToAction">Login</button>
+        </form>
+      </section>
+      <section class="navigation clearfix">
+        <div class="back button">Back</div>
+      </section>
+    </div>
+    <div id="register">
+      <section class="content">
+        <form id="register_account" class="clearfix visible">
+          <p class="negative">Let's create a new Jabber ID:</p>
+          <label for="home_register_new_jid">Username</label>
+          <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
+          <label for="home_register_new_password">Password</label>
+          <input type="password" id="home_register_new_password" placeholder="Password" />
+          <input type="password" id="home_register_new_confirm" placeholder="Repeat Password" />
+          <label for="home_register_new_email">Email (for password recovery (if server supports it))</label>
+          <input type="text" id="home_register_new_email" placeholder="Email" />
+          <div class="leftBox">
+            <span class="spinner">registering account</span>
+          </div>
+          <button type="submit" id="home_register_account">Register</button>
+        </form>
+      </section>
+      <section class="navigation clearfix">
+        <div class="back button">Back</div>
+      </section>
     </div>
   </div>
-  <div id="main_content"></div>
 </body>
+</html>

@@ -1,3 +1,4 @@
 #!/bin/sh
-./node_modules/.bin/brunch build $@
-
+echo 'packing bits of awesomeness ...'
+./node_modules/.bin/brunch build --minify $@
+echo 'done.'

@@ -1,0 +1,43 @@
+User (in global app.users) [jid==id]
+    affiliation (Affiliations)
+    jid
+    metadata (UserMetadata)
+
+Channel (in global app.channels) [jid==id]
+    nodes (Nodes)
+        posts (ChannelNode) /user/:jid/posts
+        status (StatusNode)       /user/:jid/status
+        geo (GeoNode)         /user/:jid/geo/:more
+    jid
+
+ChannelNode extends Node
+    topics (TopicPosts)
+
+StatusNode extends Node
+    status (Single entry Posts)
+
+Node
+    users (Users)
+        owner (User)
+        moderators (Users)
+        followers+post (Users)
+        followers (Users)
+        outcasts (Users)
+    metadata (NodeMetadata)
+    posts (Posts)
+    nodeid
+
+TopicPost extends Post
+    comments (Posts)
+
+Post
+    author (User)
+    published
+    updated
+    content
+    id
+
+#### legend
+
+* class names are in braces
+* plural class names are collections

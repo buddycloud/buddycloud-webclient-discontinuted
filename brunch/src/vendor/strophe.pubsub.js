@@ -60,95 +60,150 @@ Strophe.Builder.prototype.form = function (ns, options)
 Strophe.Builder.prototype.list = function (tag, array)
 {
     for (var i=0; i < array.length; ++i) {
-        this.node.appendChild(this._makeNode(tag, array[i].attrs))
-          .appendChild(array[i].data.cloneNode
-                     ? array[i].data.cloneNode(true)
-                     : Strophe.xmlTextNode(array[i].data));
+        this.c(tag, array[i].attrs)
+        this.node.appendChild(array[i].data.cloneNode
+                            ? array[i].data.cloneNode(true)
+                            : Strophe.xmlTextNode(array[i].data));
+        this.up();
     }
     return this;
 };
 
-/* extend name space
- *  NS.PUBSUB - XMPP Publish Subscribe namespace from XEP 0060.
- */
-Strophe.addNamespace('PUBSUB',                         "http://jabber.org/protocol/pubsub");
-Strophe.addNamespace('PUBSUB_SUBSCRIBE_OPTIONS',       Strophe.NS.PUBSUB+"#subscribe_options");
-Strophe.addNamespace('PUBSUB_ERRORS',                  Strophe.NS.PUBSUB+"#errors");
-Strophe.addNamespace('PUBSUB_EVENT',                   Strophe.NS.PUBSUB+"#event");
-Strophe.addNamespace('PUBSUB_OWNER',                   Strophe.NS.PUBSUB+"#owner");
-Strophe.addNamespace('PUBSUB_AUTO_CREATE',             Strophe.NS.PUBSUB+"#auto-create");
-Strophe.addNamespace('PUBSUB_PUBLISH_OPTIONS',         Strophe.NS.PUBSUB+"#publish-options");
-Strophe.addNamespace('PUBSUB_NODE_CONFIG',             Strophe.NS.PUBSUB+"#node_config");
-Strophe.addNamespace('PUBSUB_CREATE_AND_CONFIGURE',    Strophe.NS.PUBSUB+"#create-and-configure");
-Strophe.addNamespace('PUBSUB_SUBSCRIBE_AUTHORIZATION', Strophe.NS.PUBSUB+"#subscribe_authorization");
-Strophe.addNamespace('PUBSUB_GET_PENDING',             Strophe.NS.PUBSUB+"#get-pending");
-Strophe.addNamespace('PUBSUB_MANAGE_SUBSCRIPTIONS',    Strophe.NS.PUBSUB+"#manage-subscriptions");
-Strophe.addNamespace('PUBSUB_META_DATA',               Strophe.NS.PUBSUB+"#meta-data");
+Strophe.Builder.prototype.children = function (object) {
+    var key, value;
+    for (key in object) {
+        if (!object.hasOwnProperty(key)) continue;
+        value = object[key];
+        if (Array.isArray(value)) {
+            this.list(key, value);
+        } else if (typeof value === 'string') {
+            this.c(key, {}, value);
+        } else if (typeof value === 'number') {
+            this.c(key, {}, ""+value);
+        } else if (typeof value === 'object') {
+            this.c(key).children(value).up();
+        } else {
+            this.c(key).up();
+        }
+    }
+    return this;
+};
 
-// Ideas Adding possible conf values?
-// Added function getSubscriptions
-// Added function getDefaultNodeConfig
-// Added function getAffiliationsOfNode
-// added jid to unsubscribe
-
+// TODO Ideas Adding possible conf values?
 /* Extend Strophe.Connection to have member 'pubsub'.
  */
-Strophe.addConnectionPlugin('pubsub',
-{
+Strophe.addConnectionPlugin('pubsub', {
+/*
+Extend connection object to have plugin name 'pubsub'.
+*/
     _connection: null,
-    _service: null,
     _autoService: true,
+    service: null,
+    jid: null,
 
-    // Called by Strophe.Connection constructor
-    init: function(conn)
-    {
+    //The plugin must have the init function.
+    init: function(conn) {
+
         this._connection = conn;
+
+        /*
+        Function used to setup plugin.
+        */
+
+        /* extend name space
+        *  NS.PUBSUB - XMPP Publish Subscribe namespace
+        *              from XEP 60.
+        *
+        *  NS.PUBSUB_SUBSCRIBE_OPTIONS - XMPP pubsub
+        *                                options namespace from XEP 60.
+        */
+        Strophe.addNamespace('PUBSUB',"http://jabber.org/protocol/pubsub");
+        Strophe.addNamespace('PUBSUB_SUBSCRIBE_OPTIONS',
+                             Strophe.NS.PUBSUB+"#subscribe_options");
+        Strophe.addNamespace('PUBSUB_ERRORS',Strophe.NS.PUBSUB+"#errors");
+        Strophe.addNamespace('PUBSUB_EVENT',Strophe.NS.PUBSUB+"#event");
+        Strophe.addNamespace('PUBSUB_OWNER',Strophe.NS.PUBSUB+"#owner");
+        Strophe.addNamespace('PUBSUB_AUTO_CREATE',
+                             Strophe.NS.PUBSUB+"#auto-create");
+        Strophe.addNamespace('PUBSUB_PUBLISH_OPTIONS',
+                             Strophe.NS.PUBSUB+"#publish-options");
+        Strophe.addNamespace('PUBSUB_NODE_CONFIG',
+                             Strophe.NS.PUBSUB+"#node_config");
+        Strophe.addNamespace('PUBSUB_CREATE_AND_CONFIGURE',
+                             Strophe.NS.PUBSUB+"#create-and-configure");
+        Strophe.addNamespace('PUBSUB_SUBSCRIBE_AUTHORIZATION',
+                             Strophe.NS.PUBSUB+"#subscribe_authorization");
+        Strophe.addNamespace('PUBSUB_GET_PENDING',
+                             Strophe.NS.PUBSUB+"#get-pending");
+        Strophe.addNamespace('PUBSUB_MANAGE_SUBSCRIPTIONS',
+                             Strophe.NS.PUBSUB+"#manage-subscriptions");
+        Strophe.addNamespace('PUBSUB_META_DATA',
+                             Strophe.NS.PUBSUB+"#meta-data");
+        Strophe.addNamespace('ATOM', "http://www.w3.org/2005/Atom");
+
+        if (conn.disco)
+            conn.disco.addFeature(Strophe.NS.PUBSUB);
+
+	/* Setup notification handling */
+	this._notificationListeners = [];
+	var that = this;
+	conn.addHandler(function(stanza) {
+	    return that.onEventNotification(stanza);
+	}, Strophe.NS.PUBSUB_EVENT, 'message');
     },
 
     // Called by Strophe on connection event
-    statusChanged: function(status, condition)
-    {
-        if (this._autoService)
-            this._service = status === Strophe.Status.CONNECTED ? 'pubsub.'+Strophe.getDomainFromJid(this._connection.jid) : null;
+    statusChanged: function (status, condition) {
+        var that = this._connection;
+        if (this._autoService && status === Strophe.Status.CONNECTED) {
+            this.service =  'pubsub.'+Strophe.getDomainFromJid(that.jid);
+            this.jid = that.jid;
+        }
     },
 
-    /** Function: setService
-     *  Set pubsub service address. Use if 'pubsub.domain' isn't it.
-     *
-     *  Parameters:
-     *    (String) service - service name
-     */
-    setService: function(service)
-    {
+    /***Function
+
+    Parameters:
+    (String) jid - The node owner's jid.
+    (String) service - The name of the pubsub service.
+    */
+    connect: function (jid, service) {
+        var that = this._connection;
+        if (service === undefined) {
+            service = jid;
+            jid = undefined;
+        }
+        this.jid = jid || that.jid;
+        this.service = service || null;
         this._autoService = false;
-        this._service = service;
     },
 
-    /** Function: createNode
-     *  Create a pubsub node on the service with the given node name.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (Object) options -  The configuration options for the  node.
-     *    (Function) call_back - Called on server response.
-     *
-     *  Returns:
-     *    Iq id
-     */
-    createNode: function(node, options, call_back)
-    {
-        var iqid = this._connection.getUniqueId("createnode");
+    /***Function
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+    Create a pubsub node on the given service with the given node
+    name.
+
+    Parameters:
+    (String) node -  The name of the pubsub node.
+    (Dictionary) options -  The configuration options for the  node.
+    (Function) call_back - Used to determine if node
+    creation was sucessful.
+
+    Returns:
+    Iq id used to send subscription.
+    */
+    createNode: function(node,options, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubcreatenode");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB})
           .c('create',{node:node});
         if(options) {
             iq.up().c('configure').form(Strophe.NS.PUBSUB_NODE_CONFIG, options);
         }
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
-
+        that.sendIQ(iq.tree(), success, error);
         return iqid;
     },
 
@@ -162,18 +217,35 @@ Strophe.addConnectionPlugin('pubsub',
      *  Returns:
      *    Iq id
      */
-    deleteNode: function(node, call_back)
-    {
-        var iqid = this._connection.getUniqueId("deletenode");
+    deleteNode: function(node, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubdeletenode");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
           .c('delete', {node:node});
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
+    },
+
+    /** Function
+     *
+     * Get all nodes that currently exist.
+     *
+     * Parameters:
+     *   (Function) success - Used to determine if node creation was sucessful.
+     *   (Function) error - Used to determine if node
+     * creation had errors.
+     */
+    discoverNodes: function(success, error, timeout) {
+
+        //ask for all nodes
+        var iq = $iq({from:this.jid, to:this.service, type:'get'})
+          .c('query', { xmlns:Strophe.NS.DISCO_ITEMS });
+
+        return this._connection.sendIQ(iq.tree(), success, error, timeout);
     },
 
     /** Function: getConfig
@@ -186,186 +258,132 @@ Strophe.addConnectionPlugin('pubsub',
      *  Returns:
      *    Iq id
      */
-    getConfig: function(node, call_back)
-    {
-        var iqid = this._connection.getUniqueId("configurenode");
+    getConfig: function (node, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubconfigurenode");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
           .c('configure', {node:node});
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
 
-    /** Function: subscribe
-     *  Subscribe to a node in order to receive event items.
-     *
+    /**
      *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (Object) options -  The configuration options for the  node.
-     *    (Function) event_cb - Used to recieve subscription events (optional).
-     *    (Function) call_back - Called on server response.
+     *    (Function) call_back - Receives subscriptions.
+     *
+     *  http://xmpp.org/extensions/tmp/xep-0060-1.13.html
+     *  8.3 Request Default Node Configuration Options
      *
      *  Returns:
      *    Iq id
-     *
-     *    TUOMAS added possibility to subscribe on bare or full JID
      */
-    subscribe: function(node, options, event_cb, call_back, barejid)
-    {
-        var iqid = this._connection.getUniqueId("subscribenode");
+    getDefaultNodeConfig: function(success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubdefaultnodeconfig");
 
-        var jid = this._connection.jid;
-        if(barejid) {
-            jid = Strophe.getBareJidFromJid(this._connection.jid);
-        }
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
+          .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
+          .c('default');
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+        that.sendIQ(iq.tree(), success, error);
+
+        return iqid;
+    },
+
+    /***Function
+        Subscribe to a node in order to receive event items.
+
+        Parameters:
+        (String) node         - The name of the pubsub node.
+        (Array) options       - The configuration options for the  node.
+        (Function) success    - callback function for successful node creation.
+        (Function) error      - error callback function.
+        (Boolean) barejid     - use barejid creation was sucessful.
+
+        Returns:
+        Iq id used to send subscription.
+    */
+    subscribe: function(node, options, success, error, barejid) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("subscribenode");
+
+        var jid = this.jid;
+        if(barejid)
+            jid = Strophe.getBareJidFromJid(jid);
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
           .c('subscribe', {'node':node, 'jid':jid});
         if(options) {
             iq.up().c('options').form(Strophe.NS.PUBSUB_SUBSCRIBE_OPTIONS, options);
         }
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        if (event_cb) this._connection.addHandler(event_cb, null, 'message', null, null, null);
-        this._connection.send(iq.tree());
-
+        that.sendIQ(iq.tree(), success, error);
         return iqid;
     },
 
-    /** Function: unsubscribe
-     *  Unsubscribe from a node.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (String) jid  -
-     *    (String) subid - The subscription id (optional).
-     *    (Function) call_back - Called on server response.
-     *
-     *  Returns:
-     *    Iq id
-     *
-     *    TUOMAS added jid here
-     */
-    unsubscribe: function(node, jid, subid, call_back)
-    {
-        var iqid = this._connection.getUniqueId("unsubscribenode");
+    /***Function
+        Unsubscribe from a node.
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+        Parameters:
+        (String) node       - The name of the pubsub node.
+        (Function) success  - callback function for successful node creation.
+        (Function) error    - error callback function.
+
+    */
+    unsubscribe: function(node, jid, subid, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubunsubscribenode");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
           .c('unsubscribe', {'node':node, 'jid':jid});
         if (subid) iq.attrs({subid:subid});
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
-
+        that.sendIQ(iq.tree(), success, error);
         return iqid;
     },
 
-    /** Function: getSubOptions
-     *  Get subscription options form.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (String) subid - The subscription id (optional).
-     *    (Function) call_back - Receives options form.
-     *
-     *  Returns:
-     *    Iq id
-     */
-    getSubOptions: function(node, subid, call_back)
-    {
-        var iqid = this._connection.getUniqueId("suboptions");
+    /***Function
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
-          .c('pubsub', {xmlns:Strophe.NS.PUBSUB})
-          .c('options', {node:node, jid:this._connection.jid});
-        if (subid) iq.attrs({subid:subid});
+    Publish and item to the given pubsub node.
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+    Parameters:
+    (String) node -  The name of the pubsub node.
+    (Array) items -  The list of items to be published.
+    (Function) call_back - Used to determine if node
+    creation was sucessful.
+    */
+    publish: function(node, items, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubpublishnode");
 
-        return iqid;
-    },
-
-    /** Function: publish
-     *  Publish a list of items to the given pubsub node.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (Array) items -  See Strophe.Builder.list() array parameter.
-     *    (Function) call_back - Called on server response.
-     *
-     *  Returns:
-     *    Iq id
-     */
-    publish: function(node, items, call_back)
-    {
-        var iqid = this._connection.getUniqueId("publishnode");
-
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('publish', { node:node, jid:this._connection.jid })
+          .c('publish', { node:node, jid:this.jid })
           .list('item', items);
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
 
-    /** Function: publishItem
-     *  Publish a single item to the given pubsub node.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (String | XML_element) data -  Item contents.
-     *    (Object) attrs -  Item attributes (optional).
-     *    (Function) call_back - Called on server response.
-     *
-     *  Returns:
-     *    Iq id
-     */
-    publishItem: function(node, data, attrs, call_back) {
-        return this.publish(node, [ {data: data, attrs: attrs ? attrs : {}} ], call_back);
-    },
+    /*Function: items
+    Used to retrieve the persistent items from the pubsub node.
 
-    /** Function: publishAtomEntry
-     *  publishItem variant for ejabberd, which allows only one <item/> and it has to be an Atom entry :-\
-     */
-    publishAtomEntry: function(node, text, attrs, call_back)
-    {
-        var en = Strophe.xmlElement('entry', [['xmlns', 'http://www.w3.org/2005/Atom']]);
-        en.appendChild(Strophe.xmlTextNode(text));
-        return this.publishItem(node, en, attrs, call_back);
-    },
-
-    /** Function: items
-     *  Retrieve the persistent items from the pubsub node.
-     *
-     *  Parameters:
-     *    (String) node -  The name of the pubsub node.
-     *    (Function) call_back - Called on server response.
-     *
-     *  Returns:
-     *    Iq id
-     */
-    items: function(node, call_back)
-    {
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get'})
+    */
+    items: function(node, success, error, timeout) {
+        //ask for all items
+        var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
           .c('items', {node:node});
 
-        return this._connection.sendIQ(iq.tree(), call_back, call_back);
+        return this._connection.sendIQ(iq.tree(), success, error, timeout);
     },
-
-
-    /** Tuomas added stuff */
-
 
     /** Function: getSubscriptions
      *  Get subscriptions of a JID.
@@ -379,53 +397,65 @@ Strophe.addConnectionPlugin('pubsub',
      *  Returns:
      *    Iq id
      */
-    getSubscriptions: function(call_back)
-    {
-        var iqid = this._connection.getUniqueId("subscriptions");
+    getSubscriptions: function(success, error, timeout) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsubscriptions");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB})
           .c('subscriptions');
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        that.sendIQ(iq.tree(), success, error, timeout);
 
         return iqid;
     },
 
-    getNodeSubscriptions: function(node, call_back) {
-       var iqid = this._connection.getUniqueId("subscriptions");
-
-       var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
-         .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
-         .c('subscriptions', {'node':node});
-
-       this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-       this._connection.send(iq.tree());
-
-       return iqid;
-    },
-
-    /**
+    /** Function: getNodeSubscriptions
+     *  Get node subscriptions of a JID.
+     *
      *  Parameters:
      *    (Function) call_back - Receives subscriptions.
      *
      *  http://xmpp.org/extensions/tmp/xep-0060-1.13.html
-     *  8.3 Request Default Node Configuration Options
+     *  5.6 Retrieve Subscriptions
      *
      *  Returns:
      *    Iq id
      */
-    getDefaultNodeConfig: function(call_back)
-    {
-        var iqid = this._connection.getUniqueId("defaultnodeconfig");
+    getNodeSubscriptions: function(node, success, error) {
+	var that = this._connection;
+	var iqid = that.getUniqueId("pubsubsubscriptions");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
-          .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
-          .c('default');
+	var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
+            .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
+            .c('subscriptions', {'node':node});
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+       that.sendIQ(iq.tree(), success, error);
+
+       return iqid;
+    },
+
+    /** Function: getSubOptions
+     *  Get subscription options form.
+     *
+     *  Parameters:
+     *    (String) node -  The name of the pubsub node.
+     *    (String) subid - The subscription id (optional).
+     *    (Function) call_back - Receives options form.
+     *
+     *  Returns:
+     *    Iq id
+     */
+    getSubOptions: function(node, subid, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsuboptions");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
+          .c('pubsub', {xmlns:Strophe.NS.PUBSUB})
+          .c('options', {node:node, jid:this.jid});
+        if (subid) iq.attrs({subid:subid});
+
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -441,17 +471,25 @@ Strophe.addConnectionPlugin('pubsub',
      *  Returns:
      *    Iq id
      */
-    getAffiliations: function(node, call_back)
-    {
-        var iqid = this._connection.getUniqueId("affiliations");
+    getAffiliations: function(node, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubaffiliations");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'get', id:iqid})
-          .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
-          .c('affiliations', {'node':node});
-        if (node) iq.attrs({'node':node});
+        if (typeof node === 'function') {
+            call_back = node;
+            node = undefined;
+        }
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        var attrs = {}, xmlns = {'xmlns':Strophe.NS.PUBSUB};
+        if (node) {
+            attrs.node = node;
+            xmlns = {'xmlns':Strophe.NS.PUBSUB_OWNER};
+        }
+
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
+          .c('pubsub', xmlns).c('affiliations', attrs);
+
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
     },
@@ -467,18 +505,66 @@ Strophe.addConnectionPlugin('pubsub',
      *  Returns:
      *    Iq id
      */
-    setAffiliation: function(node, jid, affiliation, call_back)
-    {
-        var iqid = this._connection.getUniqueId("affiliations");
+    setAffiliation: function(node, jid, affiliation, success, error) {
+        var that = this._connection;
+        var iqid = thiat.getUniqueId("pubsubaffiliations");
 
-        var iq = $iq({from:this._connection.jid, to:this._service, type:'set', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
           .c('affiliations', {'node':node})
-          .c('affiliation', {'jid':jid, 'affiliation':affiliation})
+          .c('affiliation', {'jid':jid, 'affiliation':affiliation});
 
-        this._connection.addHandler(call_back, null, 'iq', null, iqid, null);
-        this._connection.send(iq.tree());
+        that.sendIQ(iq.tree(), success, error);
 
         return iqid;
+    },
+
+    /** Function: publishAtom
+     */
+    publishAtom: function(node, atoms, success, error) {
+        if (!Array.isArray(atoms))
+            atoms = [atoms];
+
+        var i, atom, entries = [];
+        for (i = 0; i < atoms.length; i++) {
+            atom = atoms[i];
+
+            atom.updated = atom.updated || (new Date()).toISOString();
+            if (atom.published && atom.published.toISOString)
+                atom.published = atom.published.toISOString();
+
+            entries.push({
+                data: $build("entry", { xmlns:Strophe.NS.ATOM })
+                        .children(atom).tree(),
+                attrs:(atom.id ? { id:atom.id } : {}),
+            });
+        }
+        return this.publish(node, entries, success, error);
+    },
+
+    /**
+     * TODO: filter for sender
+     * TODO: should payload parsing go into strophe.buddycloud.js?
+     */
+    onEventNotification: function(stanza) {
+	var hasEvent = false;
+	Strophe.forEachChild(stanza, 'event', function(eventEl) {
+	    hasEvent = true;
+	});
+	if (hasEvent)
+	    this._callNotificationListeners(stanza);
+
+	return true;
+    },
+
+    _callNotificationListeners: function(stanza) {
+	this._notificationListeners.forEach(function(listener) {
+	    listener(stanza);
+	});
+    },
+
+    addNotificationListener: function(listener) {
+	this._notificationListeners.push(listener);
     }
+
 });

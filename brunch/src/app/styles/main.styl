@@ -1,17 +1,51 @@
+@import "../../../../node_modules/nib/lib/nib/gradients"
 @import "reset"
 @import "shim"
 @import "colors"
 @import "buttons"
-@import "boxes"
-@import "login"
-@import "register"
+@import "forms"
+@import "authentication"
+@import "channels"
 @import "stream"
+@import "mobile"
 
 html
-  font 13px/17px sans-serif
+  height 100%
+  font 13px/17px "Helvetica Neue", Helvetica, Arial, sans-serif
+  //background black url(../../public/images/smooth-aura.jpg) fixed
+  //linear-bg-gradient #024, #909, #035
+  //linear-bg-gradient #035, #065 //blau
+  background linear-gradient(top, #035, #3c88ab)
+  background-attachment fixed
+  //-webkit-font-smoothing antialiased
 
 body
-  height 100%
+  width 100%
+  min-height 100%
+  overflow-x hidden
+  radial-bg-gradient cover, rgba(255,255,255,.34), rgba(255,255,255,0)
+  background-attachment fixed
+  box horizontal center justify
+  -webkit-text-size-adjust none
+  &.start
+    box none none none
+    display block
+
+.headbar
+  top 0
+  width 100%
+  height 8px
+  background url(../../public/images/headbar.png)
+  position absolute
+  display none
+  &:after
+    top 8px
+    height 8px
+    width 100%
+    content ""
+    position absolute
+    background #f2f2f2
+    box-shadow 0 -1px rgba(0,0,0,.03), 0 -2px rgba(0,0,0,.03), 0 -3px rgba(0,0,0,.03), 0 -1px white inset
 
 h1
   font-size 34px
@@ -20,17 +54,32 @@ h2
   font-size 26px
   font-family "Nunito", sans-serif
 h3
-  font-size 20px
+  font-size 18px
   font-family "Nunito", sans-serif
+
+h4
+  width 100%
+  font-size 14px
+  font-weight bold
+  color rgba(0,0,0,.89)
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+
+h5
+  margin-bottom 5px
+  font-size 12px
+  font-weight bold
 
 ul
   list-style-type none
 
 a, a:visited
-  color #F95A5A
+  color default_highlight
   text-decoration none
-
-a:hover
-  color #665248
-
-@import "home"
+  &:hover
+    color light_highligh
+    text-decoration underline
+  &.internal
+    padding-left 12px
+    background url(../../public/icons/beagle.png) no-repeat left 4px

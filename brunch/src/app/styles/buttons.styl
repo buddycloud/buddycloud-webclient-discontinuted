@@ -1,27 +1,41 @@
-.button
-  padding 0 13px
-  font-size 11px
-  line-height 23px
-  font-weight bold
-  color black
-  text-shadow 0 1px rgba(255,255,255,.75)
-  border 1px solid rgba(0,0,0,.21)
+input[type=submit].button
+  height 27px
+  
+.button, button
+  height 26px
+  padding 0 15px
+  font-size 12px
+  line-height 26px
+  color rgba(0,0,0,.67)
+  text-shadow 0 1px rgba(255,255,255,.55)
+  background #eee
+  border 1px solid rgba(0, 0, 0, 0.21)
   border-bottom-color rgba(0,0,0,.34)
-  background-color rgba(255,255,255,.89)
-  linear-bg-gradient transparent, rgba(0,0,0,.13)
   border-radius 3px
-  cursor pointer
-  box-shadow inset 0 1px rgba(255,255,255,.89), 0 1px rgba(0,0,0,.08)
+  box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
   display inline-block
-  transition 250ms
+  position relative
+  cursor pointer
+    
+  &.active, &.active:hover
+    color white
+    text-shadow 0 1px rgba(0, 0, 0, 0.21)
+    background linear-gradient(top, #999, #aaa)
+    border-color rgba(0,0,0,.21)
+    border-top-color rgba(0,0,0,.34)
+    box-shadow 0 1px 3px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255, 255, 255, 0.89)
+    cursor default
 
   &:hover
-    linear-bg-gradient transparent, rgba(0,0,0,.03)
+    background linear-gradient(top, #fff, #eee)
   
   &:active
-    linear-bg-gradient rgba(0,0,0,.13), transparent
-    position relative
     top 1px
+    color rgba(0,0,0,.55)
+    border-color rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.21) rgba(0, 0, 0, 0.21)
+    background linear-gradient(top, rgba(0, 0, 0, 0.21), rgba(0, 0, 0, 0))
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89), 0 1px rgba(0, 0, 0, 0.05) inset
+    position relative
   
   &.tall
     padding 5px 21px
@@ -29,28 +43,64 @@
   
   &.small
     height 20px
+    line-height 20px
     padding 0 10px
     font-size 11px
-    line-height 22px
+    line-height 20px
     border-radius 3px
   
   &.callToAction
     color white
+    text-shadow 0 1px rgba(0,0,0,.13)
     border-color rgba(0,0,0,.34)
-    background-color #83AC35
-    box-shadow inset 0 0 1px rgba(255,255,255,.55)
+    border-bottom-color rgba(0,0,0,.55)
+    background default_highlight
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 1px rgba(0,0,0,.05)
+    &:hover
+      background lighter(default_highlight, 13%)
   
   &.prominent
-    font-weight bold
+    color white
+    text-shadow 0 1px rgba(0,0,0,.13)
+    border-color rgba(0,0,0,.34)
+    border-bottom-color rgba(0,0,0,.55)
+    background rgba(0,0,0,.89)
+    box-shadow 0 1px rgba(255, 255, 255, 0.21) inset, 0 1px rgba(0,0,0,.05)
+    &:hover
+      background rgba(0,0,0,1)
     
   &.checkbox
     padding-left 1px
     
   &.dark
     background-color rgba(0,0,0,.13)
-    box-shadow inset 0 1px rgba(255,255,255,.89), 0 1px rgba(0,0,0,.05)
+    box-shadow inset 0 1px rgba(255,255,255,.89), 0 1px rgba(0,0,0,.05), 0 0 0 1px rgba(0, 0, 0, 0.08)
     
   &.light
-    background-color white
-    border-color rgba(255,255,255,.21)
-    box-shadow inset 0 1px rgba(255,255,255,.89), 0 1px rgba(0,0,0,.89)
+    border none
+    box-shadow 0 1px rgba(255, 255, 255, 0.89) inset, 0 1px 0 rgba(0, 0, 0, 0.21), 0 0 0 3px rgba(0, 0, 0, 0.13)
+    
+  &.onDark
+    color white
+    text-shadow 0 1px rgba(0,0,0,.55)
+    background transparent
+    border-color rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.55)
+    box-shadow 0 1px 0 rgba(255, 255, 255, 0.34) inset, 0 1px rgba(0, 0, 0, 0.08)
+  
+  &.double
+    span
+      margin-right 12px
+      padding-right 12px
+      border-right 1px solid rgba(0, 0, 0, 0.34)
+  
+  &.unfollow123
+    padding-left 21px
+    position relative
+    &:before
+      content ""
+      left 7px
+      top 8px
+      width 9px
+      height 9px
+      background url(../../public/icons/minus.png) no-repeat
+      position absolute

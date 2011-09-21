@@ -1,13 +1,20 @@
 dependencies:
   - ConsoleDummy.js
-  - jquery-1.5.2.js
-  - underscore-1.1.6.js
+  - document-redraw.js
+  - underscore.js
+  - jquery.npm-hack.js
+  - jquery.js
   - backbone-master.js
   - backbone-localstorage.js
+  - backbone-extensions.js
   - base64.js
   - strophe.js
   - strophe.disco.js
   - strophe.roster.js
   - strophe.pubsub.js
+  - strophe.presence.js
   - strophe.register.js
+  - strophe.dataforms.js
   - strophe.buddycloud.js
+  - formatdate.js
+  - modernizr.js

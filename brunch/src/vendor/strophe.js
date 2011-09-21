@@ -158,7 +158,7 @@ Strophe = {
      *  The version of the Strophe library. Unreleased builds will have
      *  a version of head-HASH where HASH is a partial revision.
      */
-    VERSION: "5e6ee02",
+    VERSION: "d020aeb",
 
     /** Constants: XMPP Namespace Constants
      *  Common namespace constants from the XMPP RFCs and XEPs.
@@ -263,7 +263,8 @@ Strophe = {
      */
     ElementType: {
         NORMAL: 1,
-        TEXT: 3
+        TEXT: 3,
+        CDATA: 4
     },
 
     /** PrivateConstants: Timeout Values
@@ -341,7 +342,7 @@ Strophe = {
     _makeGenerator: function () {
         var doc;
 
-        if (window.ActiveXObject) {
+        if (document.implementation.createDocument === undefined) {
             doc = this._getIEXmlDom();
             doc.appendChild(doc.createElement('strophe'));
         } else {
@@ -464,9 +465,11 @@ Strophe = {
      */
     xmlescape: function(text)
     {
-	text = text.replace(/\&/g, "&amp;");
+        text = text.replace(/\&/g, "&amp;");
         text = text.replace(/</g,  "&lt;");
         text = text.replace(/>/g,  "&gt;");
+        text = text.replace(/'/g,  "&apos;");
+        text = text.replace(/"/g,  "&quot;");
         return text;
     },
 
@@ -544,7 +547,7 @@ Strophe = {
                 el.appendChild(Strophe.copyElement(elem.childNodes[i]));
             }
         } else if (elem.nodeType == Strophe.ElementType.TEXT) {
-            el = Strophe.xmlTextNode(elem.nodeValue);
+            el = Strophe.xmlGenerator().createTextNode(elem.nodeValue);
         }
 
         return el;
@@ -794,12 +797,18 @@ Strophe = {
             result += ">";
             for (i = 0; i < elem.childNodes.length; i++) {
                 child = elem.childNodes[i];
-                if (child.nodeType == Strophe.ElementType.NORMAL) {
+                switch( child.nodeType ){
+                  case Strophe.ElementType.NORMAL:
                     // normal element, so recurse
                     result += Strophe.serialize(child);
-                } else if (child.nodeType == Strophe.ElementType.TEXT) {
-                    // text element
-                    result += child.nodeValue;
+                    break;
+                  case Strophe.ElementType.TEXT:
+                    // text element to escape values
+                    result += Strophe.xmlescape(child.nodeValue);
+                    break;
+                  case Strophe.ElementType.CDATA:
+                    // cdata section so don't escape values
+                    result += "<![CDATA["+child.nodeValue+"]]>";
                 }
             }
             result += "</" + nodeName + ">";
@@ -825,7 +834,7 @@ Strophe = {
     /** Function: addConnectionPlugin
      *  Extends the Strophe.Connection object with the given plugin.
      *
-     *  Paramaters:
+     *  Parameters:
      *    (String) name - The name of the extension.
      *    (Object) ptype - The plugin's prototype.
      */
@@ -966,22 +975,25 @@ Strophe.Builder.prototype = {
      *  Add a child to the current element and make it the new current
      *  element.
      *
-     *  This function moves the current element pointer to the child.  If you
-     *  need to add another child, it is necessary to use up() to go back
-     *  to the parent in the tree.
+     *  This function moves the current element pointer to the child,
+     *  unless text is provided.  If you need to add another child, it
+     *  is necessary to use up() to go back to the parent in the tree.
      *
      *  Parameters:
      *    (String) name - The name of the child.
      *    (Object) attrs - The attributes of the child in object notation.
+     *    (String) text - The text to add to the child.
      *
      *  Returns:
      *    The Strophe.Builder object.
      */
-    c: function (name, attrs)
+    c: function (name, attrs, text)
     {
-        var child = Strophe.xmlElement(name, attrs);
+        var child = Strophe.xmlElement(name, attrs, text);
         this.node.appendChild(child);
-        this.node = child;
+        if (!text) {
+            this.node = child;
+        }
         return this;
     },
 
@@ -1002,7 +1014,15 @@ Strophe.Builder.prototype = {
     cnode: function (elem)
     {
         var xmlGen = Strophe.xmlGenerator();
-        var newElem = xmlGen.importNode ? xmlGen.importNode(elem, true) : Strophe.copyElement(elem);
+        try {
+            var impNode = (xmlGen.importNode !== undefined);
+        }
+        catch (e) {
+            var impNode = false;
+        }
+        var newElem = impNode ?
+                      xmlGen.importNode(elem, true) :
+                      Strophe.copyElement(elem);
         this.node.appendChild(newElem);
         this.node = newElem;
         return this;
@@ -1157,7 +1177,7 @@ Strophe.Handler.prototype = {
                               e.fileName + ":" + e.lineNumber + " - " +
                               e.name + ": " + e.message);
             } else {
-                Strophe.fatal("error: " + this.handler);
+                Strophe.fatal("error: " + (e.stack || this.handler));
             }
 
             throw e;
@@ -1392,6 +1412,8 @@ Strophe.Connection = function (service)
     this.service = service;
     /* The connected JID. */
     this.jid = "";
+    /* the JIDs domain */
+    this.domain = null;
     /* request id for body tags */
     this.rid = Math.floor(Math.random() * 4294967295);
     /* The current session ID. */
@@ -1412,9 +1434,11 @@ Strophe.Connection = function (service)
     this.addTimeds = [];
     this.addHandlers = [];
 
+    this._authentication = {};
     this._idleTimeout = null;
     this._disconnectTimeout = null;
 
+    this.do_authentication = true;
     this.authenticated = false;
     this.disconnecting = false;
     this.connected = false;
@@ -1477,6 +1501,7 @@ Strophe.Connection.prototype = {
         this.removeHandlers = [];
         this.addTimeds = [];
         this.addHandlers = [];
+        this._authentication = {};
 
         this.authenticated = false;
         this.disconnecting = false;
@@ -1561,7 +1586,7 @@ Strophe.Connection.prototype = {
      *      or a full JID.  If a node is not supplied, SASL ANONYMOUS
      *      authentication will be attempted.
      *    (String) pass - The user's password.
-     *    (Function) callback The connect callback function.
+     *    (Function) callback - The connect callback function.
      *    (Integer) wait - The optional HTTPBIND wait value.  This is the
      *      time the server will wait before returning an empty result for
      *      a request.  The default setting of 60 seconds is recommended.
@@ -1569,8 +1594,16 @@ Strophe.Connection.prototype = {
      *    (Integer) hold - The optional HTTPBIND hold value.  This is the
      *      number of connections the server will hold at one time.  This
      *      should almost always be set to 1 (the default).
+     *    (Boolean) authentication - The optional trigger for authentication
+     *      process. When set to false a successful connection request will
+     *      skip the authention process. The authentication process can
+     *      triggered manually by the 'authenticate' method.
+     *    (Function) _connect_cb - low level (xmpp) connect callback function.
+     *      Useful for plugins with their own xmpp connect callback (when their)
+     *      want to do something special).
      */
-    connect: function (jid, pass, callback, wait, hold)
+    connect: function (jid, pass, callback, wait, hold,
+                       authentication, _connect_cb)
     {
         this.jid = jid;
         this.pass = pass;
@@ -1582,9 +1615,10 @@ Strophe.Connection.prototype = {
 
         this.wait = wait || this.wait;
         this.hold = hold || this.hold;
+        this.do_authentication = authentication;
 
         // parse jid for domain and resource
-        this.domain = Strophe.getDomainFromJid(this.jid);
+        this.domain = this.domain || Strophe.getDomainFromJid(this.jid);
 
         // build the body tag
         var body = this._buildBody().attrs({
@@ -1600,10 +1634,11 @@ Strophe.Connection.prototype = {
 
         this._changeConnectStatus(Strophe.Status.CONNECTING, null);
 
+        _connect_cb = _connect_cb || this._connect_cb;
         this._requests.push(
             new Strophe.Request(body.tree(),
                                 this._onRequestStateChange.bind(
-                                    this, this._connect_cb.bind(this)),
+                                    this, _connect_cb.bind(this)),
                                 body.tree().getAttribute("rid")));
         this._throttledRequestHandler();
     },
@@ -1733,7 +1768,6 @@ Strophe.Connection.prototype = {
      */
     send: function (elem)
     {
-
         if (elem === null) { return ; }
         if (typeof(elem.sort) === "function") {
             for (var i = 0; i < elem.length; i++) {
@@ -2160,7 +2194,6 @@ Strophe.Connection.prototype = {
             Strophe.debug("request id " + req.id +
                           "." + req.sends + " posting");
 
-            req.date = new Date();
             try {
                 req.xhr.open("POST", this.service, true);
             } catch (e2) {
@@ -2176,15 +2209,17 @@ Strophe.Connection.prototype = {
             // Fires the XHR request -- may be invoked immediately
             // or on a gradually expanding retry window for reconnects
             var sendFunc = function () {
+                req.date = new Date();
                 req.xhr.send(req.data);
             };
 
             // Implement progressive backoff for reconnects --
             // First retry (send == 1) should also be instantaneous
             if (req.sends > 1) {
-                // Using a cube of the retry number creats a nicely
+                // Using a cube of the retry number creates a nicely
                 // expanding retry window
-                var backoff = Math.pow(req.sends, 3) * 1000;
+                var backoff = Math.min(Math.floor(Strophe.TIMEOUT * this.wait),
+                                       Math.pow(req.sends, 3)) * 1000;
                 setTimeout(sendFunc, backoff);
             } else {
                 sendFunc();
@@ -2192,8 +2227,12 @@ Strophe.Connection.prototype = {
 
             req.sends++;
 
-            this.xmlOutput(req.xmlData);
-            this.rawOutput(req.data);
+            if (this.xmlOutput !== Strophe.Connection.prototype.xmlOutput) {
+                this.xmlOutput(req.xmlData);
+            }
+            if (this.rawOutput !== Strophe.Connection.prototype.rawOutput) {
+                this.rawOutput(req.data);
+            }
         } else {
             Strophe.debug("_processRequest: " +
                           (i === 0 ? "first" : "second") +
@@ -2402,8 +2441,12 @@ Strophe.Connection.prototype = {
         }
         if (elem === null) { return; }
 
-        this.xmlInput(elem);
-        this.rawInput(Strophe.serialize(elem));
+        if (this.xmlInput !== Strophe.Connection.prototype.xmlInput) {
+            this.xmlInput(elem);
+        }
+        if (this.rawInput !== Strophe.Connection.prototype.rawInput) {
+            this.rawInput(Strophe.serialize(elem));
+        }
 
         // remove handlers scheduled for deletion
         var i, hand;
@@ -2460,13 +2503,19 @@ Strophe.Connection.prototype = {
             that.handlers = [];
             for (i = 0; i < newList.length; i++) {
                 var hand = newList[i];
-                if (hand.isMatch(child) &&
-                    (that.authenticated || !hand.user)) {
-                    if (hand.run(child)) {
+                // encapsulate 'handler.run' not to lose the whole handler list if
+                // one of the handlers throws an exception
+                try {
+                    if (hand.isMatch(child) &&
+                        (that.authenticated || !hand.user)) {
+                        if (hand.run(child)) {
+                            that.handlers.push(hand);
+                        }
+                    } else {
                         that.handlers.push(hand);
                     }
-                } else {
-                    that.handlers.push(hand);
+                } catch(e) {
+                    //if the handler throws an exception, we consider it as false
                 }
             }
         });
@@ -2514,8 +2563,11 @@ Strophe.Connection.prototype = {
      *
      *  Parameters:
      *    (Strophe.Request) req - The current request.
+     *    (Function) _callback - low level (xmpp) connect callback function.
+     *      Useful for plugins with their own xmpp connect callback (when their)
+     *      want to do something special).
      */
-    _connect_cb: function (req)
+    _connect_cb: function (req, _callback)
     {
         Strophe.info("_connect_cb was called");
 
@@ -2523,8 +2575,12 @@ Strophe.Connection.prototype = {
         var bodyWrap = req.getResponse();
         if (!bodyWrap) { return; }
 
-        this.xmlInput(bodyWrap);
-        this.rawInput(Strophe.serialize(bodyWrap));
+        if (this.xmlInput !== Strophe.Connection.prototype.xmlInput) {
+            this.xmlInput(bodyWrap);
+        }
+        if (this.rawInput !== Strophe.Connection.prototype.rawInput) {
+            this.rawInput(Strophe.serialize(bodyWrap));
+        }
 
         var typ = bodyWrap.getAttribute("type");
         var cond, conflict;
@@ -2558,10 +2614,10 @@ Strophe.Connection.prototype = {
         var wait = bodyWrap.getAttribute('wait');
         if (wait) { this.wait = parseInt(wait, 10); }
 
-
-        var do_sasl_plain = false;
-        var do_sasl_digest_md5 = false;
-        var do_sasl_anonymous = false;
+//
+        this._authentication.sasl_plain = false;
+        this._authentication.sasl_digest_md5 = false;
+        this._authentication.sasl_anonymous = false;
 
         var mechanisms = bodyWrap.getElementsByTagName("mechanism");
         var i, mech, auth_str, hashed_auth_str;
@@ -2569,28 +2625,44 @@ Strophe.Connection.prototype = {
             for (i = 0; i < mechanisms.length; i++) {
                 mech = Strophe.getText(mechanisms[i]);
                 if (mech == 'DIGEST-MD5') {
-                    do_sasl_digest_md5 = true;
+                    this._authentication.sasl_digest_md5 = true;
                 } else if (mech == 'PLAIN') {
-                    do_sasl_plain = true;
+                    this._authentication.sasl_plain = true;
                 } else if (mech == 'ANONYMOUS') {
-                    do_sasl_anonymous = true;
+                    this._authentication.sasl_anonymous = true;
                 }
             }
         } else {
+            _callback = _callback || this._connect_cb;
             // we didn't get stream:features yet, so we need wait for it
             // by sending a blank poll request
             var body = this._buildBody();
             this._requests.push(
                 new Strophe.Request(body.tree(),
                                     this._onRequestStateChange.bind(
-                                        this, this._connect_cb.bind(this)),
+                                        this, _callback.bind(this)),
                                     body.tree().getAttribute("rid")));
             this._throttledRequestHandler();
             return;
         }
+        if (this.do_authentication !== false)
+            this.authenticate();
+    },
 
+    /** Function: authenticate
+     * Set up authentication
+     *
+     *  Contiunues the initial connection request by setting up authentication
+     *  handlers and start the authentication process.
+     *
+     *  SASL authentication will be attempted if available, otherwise
+     *  the code will fall back to legacy authentication.
+     *
+     */
+    authenticate: function ()
+    {
         if (Strophe.getNodeFromJid(this.jid) === null &&
-            do_sasl_anonymous) {
+            this._authentication.sasl_anonymous) {
             this._changeConnectStatus(Strophe.Status.AUTHENTICATING, null);
             this._sasl_success_handler = this._addSysHandler(
                 this._sasl_success_cb.bind(this), null,
@@ -2609,7 +2681,7 @@ Strophe.Connection.prototype = {
             this._changeConnectStatus(Strophe.Status.CONNFAIL,
                                       'x-strophe-bad-non-anon-jid');
             this.disconnect();
-        } else if (do_sasl_digest_md5) {
+        } else if (this._authentication.sasl_digest_md5) {
             this._changeConnectStatus(Strophe.Status.AUTHENTICATING, null);
             this._sasl_challenge_handler = this._addSysHandler(
                 this._sasl_challenge1_cb.bind(this), null,
@@ -2622,7 +2694,7 @@ Strophe.Connection.prototype = {
                 xmlns: Strophe.NS.SASL,
                 mechanism: "DIGEST-MD5"
             }).tree());
-        } else if (do_sasl_plain) {
+        } else if (this._authentication.sasl_plain) {
             // Build the plain auth string (barejid null
             // username null password) and base 64 encoded.
             auth_str = Strophe.getBareJidFromJid(this.jid);
@@ -2673,7 +2745,7 @@ Strophe.Connection.prototype = {
         var attribMatch = /([a-z]+)=("[^"]+"|[^,"]+)(?:,|$)/;
 
         var challenge = Base64.decode(Strophe.getText(elem));
-        var cnonce = MD5.hexdigest(Math.random() * 1234567890);
+        var cnonce = MD5.hexdigest("" + (Math.random() * 1234567890));
         var realm = "";
         var host = null;
         var nonce = "";
@@ -2868,7 +2940,7 @@ Strophe.Connection.prototype = {
     _sasl_auth1_cb: function (elem)
     {
         // save stream:features for future usage
-        this.features = elem
+        this.features = elem;
 
         var i, child;
 
@@ -3196,9 +3268,12 @@ Strophe.Connection.prototype = {
             }
         }
 
-        // reactivate the timer
         clearTimeout(this._idleTimeout);
-        this._idleTimeout = setTimeout(this._onIdle.bind(this), 100);
+
+        // reactivate the timer only if connected
+        if (this.connected) {
+            this._idleTimeout = setTimeout(this._onIdle.bind(this), 100);
+        }
     }
 };
 

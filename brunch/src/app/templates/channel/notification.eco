@@ -1,0 +1,13 @@
+<article class="notification">
+  <section>
+    <img src="<%= notification.channelAvatar %>" />
+    <span class="name"><%= notification.channelName %></span>
+    <p><%= notification.text %></p> <!-- eg.: "wants to follow this channel." -->
+    <span class="granted"><%= notification.positiveAnswer %></span> <!-- not sure if we directly put it here, e.g. started following this channel. -->
+    <span class="denied"><%= notification.negativeAnswer %></span> <!-- was denied to follow this channel. -->
+    <div class="controls">
+      <div class="button small negative light">Deny</div>
+      <div class="button small prominent positive light">Grant <%= notification.channelName %> to join</div>
+    </div>
+  </section>
+</article>

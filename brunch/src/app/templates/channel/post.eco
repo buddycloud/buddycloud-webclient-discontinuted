@@ -1,0 +1,16 @@
+<section class="opener">
+  <!-- TODO: attribute escaping! -->
+  <img class="avatar" src="<%= @author?.avatar %>" />
+  <div class="postmeta">
+    <span class="format-date time ago" strftime="%d.%m.%Y %H:%M" strftitle="%A %d %B %Y %H:%M"><%= @post?.published %></span>
+    <!--
+      creationDate: hh:mm dd/mm/yyyy
+      -> we'll probably need to have an option to choose ones date-format
+      passedTime: 5 Minutes ago
+      -> natural time, rounded to be either in Seconds, Minutes, Hours, Days, Months or Years
+    -->
+  </div>
+  <a class="name" href="#"><%= @post?.author?.name or @post?.author?.jid %></a>
+  <span class="location"><%= @post?.location %></span>
+  <p><%= @post?.content?.value %></p>
+</section>

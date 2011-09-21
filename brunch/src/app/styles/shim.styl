@@ -3,6 +3,7 @@
 vendor(prop, args)
   -webkit-{prop} args
   -moz-{prop} args
+  -ms-{prop} args
   -o-{prop} args
   {prop} args
 
@@ -28,14 +29,15 @@ border-bottom-left-radius()
   
 border-bottom-right-radius()
   vendor('border-bottom-right-radius', arguments)
-
-linear-bg-gradient(from, to)
-  background-image -webkit-gradient(linear, left top, left bottom, from(from), to(to))
-  background-image -webkit-linear-gradient(top, from, to)
-  background-image -moz-linear-gradient(top, from, to)
-  background-image -o-linear-gradient(top, from, to)
-  background-image -ms-linear-gradient(top, from, to)
-  background-image linear-gradient(top, from, to)
+  
+radial-bg-gradient(shape, from, to)
+  background from
+  background -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
+  background -webkit-radial-gradient(center center, shape, from, to)
+  background -moz-radial-gradient(center center, circle shape, from, to)
+  background -o-radial-gradient(center center, shape, from, to)
+  background -ms-radial-gradient(center center, shape, from, to)
+  background radial-gradient(center center, shape, from, to)
   
 background-clip()
   vendor('background-clip', arguments)
@@ -74,3 +76,21 @@ transition()
   
 transition-delay()
   vendor('transition-delay', arguments)
+  
+transform-style()
+  vendor('transform-style', arguments)
+  
+perspective()
+  vendor('perspective', arguments)
+  
+user-select()
+  vendor('user-select', arguments)
+  
+appearance()
+  vendor('appearance', arguments)
+  
+.clearfix:after
+  content ""
+  clear both
+  display block
+  height 0

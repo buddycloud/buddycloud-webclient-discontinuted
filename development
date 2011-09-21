@@ -1,3 +1,15 @@
 #!/bin/sh
-./node_modules/.bin/brunch watch $@
+for arg in $@; do
+    case $arg in
+        '-v' | '--version') brunchversion=1 ;;
+        '-h' | '--help') help=1 ;;
+    esac
+done
+if [ ! $brunchversion ] && [ ! $help ]; then
+    # start simple http server
+    node ./brunch/server/main.js &
+fi
 
+
+# start brunch in watch mode (rebuilt everything when file changes)
+./node_modules/.bin/brunch watch $@

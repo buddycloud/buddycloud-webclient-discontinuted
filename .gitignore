@@ -6,3 +6,6 @@ public/.DS_Store
 brunch/build/web/css/main.css
 brunch/build/web/js/app.js
 node_modules/*
+buddycloud.tmproj
+
+brunch/src/app/styles/main.styl

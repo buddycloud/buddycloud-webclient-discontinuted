@@ -1,16 +1,14 @@
-class exports.HomeView extends Backbone.View
-  template : require('templates/home/index')
 
-  initialize : ->
-    app.current_user.bind "logged_in", @finish_view
+class exports.IndexView extends Backbone.View
+    template: require 'templates/home/index'
 
-  render : ->
-    $('#main_content').html @template()
-    
-    @after_render()
-    
-  after_render : ->
-    $('#home_content').delay(10).fadeIn()
+    initialize: ->
+        @el = $('#index')
+        do @render
+        @box = $('.centerBox')
+        $('#goLogin'   ).live 'click', => app.router.navigate "login"   , true
+        $('#goRegister').live 'click', => app.router.navigate "register", true
 
-  finish_view : ->
-    #$('#home_content').slideUp("slow")
+    render: ->
+        @el.html $(@template())
+
