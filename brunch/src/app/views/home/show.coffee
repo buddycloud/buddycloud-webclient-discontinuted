@@ -1,50 +1,58 @@
 { ChannelView } = require 'views/channel/show'
+{ Channels } = require 'collections/channel'
 { Sidebar } = require 'views/sidebar/show'
 
 class exports.HomeView extends Backbone.View
     template: require 'templates/home/show'
 
     initialize: ->
-        @sidebar = new Sidebar parent:this
-        $('body').removeClass('start').append @el = $(@template())
-        $('.centerBox').remove() # FIXME ugly
+        @el = $(@template())
         @bind 'show', @show
         @bind 'hide', @hide
         @current = undefined
         # sidebar entries
-        @channels = {} # this contains the channelnode views
+        @views = {} # this contains the channelnode views
+        @channels = new Channels
         new_channel_view = (channel) =>
-            view = @channels[channel.cid]
+            view = @views[channel.cid]
             if not view
                 view = new ChannelView model:channel, parent:this
-                @channels[channel.cid] = view
+                @views[channel.cid] = view
                 @current ?= view
 
-        app.users.current.channels.forEach        new_channel_view
-        app.users.current.channels.bind 'change', new_channel_view
         app.users.current.channels.bind 'add', (channel) =>
+            @channels.add channel
+        app.users.current.channels.forEach (channel) =>
+            @channels.add channel
+            new_channel_view channel
+
+        @channels.bind 'change', new_channel_view
+        @channels.bind 'add', (channel) =>
             view = new ChannelView model:channel, parent:this
-            @channels[channel.cid] = view
+            @views[channel.cid] = view
             unless @current?
                 @current = view
                 @el.html @current.el
             @render()
-        app.users.current.channels.bind 'all', =>
+        @channels.bind 'all', =>
             app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
         if @current
             @el.html @current.el
+        @sidebar = new Sidebar parent:this
+        $('body').removeClass('start').append @el
+        $('.centerBox').remove() # FIXME ugly
         @el.show()
 
-    setCurrentChannel: (cid) ->
-        @current = @channels[cid]
+    setCurrentChannel: (channel) =>
+        @current = @views[channel.cid]
         app.router.navigate @current.model.get 'jid'
-        @render()
         @el.html @current?.el
+        @sidebar.setCurrentEntry channel
 
     render: ->
-        @sidebar.render()
         @current?.render()
+        @sidebar.render()
 
     show: =>
         @render()

@@ -11,11 +11,7 @@ class exports.ChannelEntry extends BaseView
         @update_attributes()
         super
         @el.click =>
-            @parent.parent.setCurrentChannel @model.cid
-            old = @parent.current
-            @parent.current = this
-            old?.render()
-            @render()
+            @parent.setCurrentEntry @model
 
     isPersonal : (a, b) =>
         (@channel?.metadata?.owner?.value is app.users.current.get('jid')) and (a ? true) or (b ? false)

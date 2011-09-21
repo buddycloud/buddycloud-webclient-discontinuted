@@ -12,29 +12,37 @@ class exports.Sidebar extends Backbone.View
         @hidden = yes
         # sidebar entries
         @current = undefined
-        @channels = {} # this contains the channel entry views
+        @views = {} # this contains the channel entry views
         new_channel_entry = (channel) =>
-            entry = @channels[channel.cid]
+            entry = @views[channel.cid]
             unless entry
                 entry = new ChannelEntry model:channel, parent:this
-                @channels[channel.cid] = entry
+                @views[channel.cid] = entry
                 @current ?= entry
                 @el.append entry.el
             entry.render()
-        app.users.current.channels.forEach        new_channel_entry
-        app.users.current.channels.bind 'change', new_channel_entry
-        app.users.current.channels.bind 'add', (channel) =>
+        @parent.channels.forEach        new_channel_entry
+        @parent.channels.bind 'change', new_channel_entry
+        @parent.channels.bind 'add', (channel) =>
             entry = new ChannelEntry model:channel, parent:this
-            @channels[channel.cid] = entry
+            @views[channel.cid] = entry
             @current ?= entry
             @el.append entry.el
             entry.render()
-        app.users.current.channels.bind 'all', =>
+        @parent.channels.bind 'all', =>
             app.debug "sidebar CHEV-ALL", arguments
 
         unless app.views.overview?
             app.views.overview = new ChannelOverView
         @overview = app.views.overview
+
+    setCurrentEntry: (channel) =>
+        unless @parent.current?.model.cid is channel.cid
+            @parent.setCurrentChannel channel
+        old = @current
+        @current = @views[channel.cid]
+        @current?.render()
+        old?.render()
 
     # sliding in animation
     moveIn: (t = 200) ->

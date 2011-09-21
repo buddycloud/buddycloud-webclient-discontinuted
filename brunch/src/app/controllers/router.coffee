@@ -55,6 +55,26 @@ class exports.Router extends Backbone.Router
         app.handler.connection.unbind "connected", @on_authorize
         app.handler.connection.bind   "connected", app.views.direct.build
 
+    setCurrentChannel: (jid) =>
+        nodeid = "/user/#{jid}/posts"
+        channel = app.channels.get nodeid
+
+        user = app.users.get jid
+        node = channel.nodes.create nodeid
+        channel = user.channels.update channel
+
+        # sideeffect: update sidebar by updating current user channels
+        node.fetch()
+        node.metadata.query()
+        app.handler.connection.connector.get_node_posts nodeid
+
+        unless app.views.home
+            app.users.current.channels.update channel
+            app.views.home ?= new HomeView
+        else
+            app.views.home.channels.update channel
+            app.views.home.setCurrentChannel channel
+
     # routes
 
     index:    -> @setView app.views.index
@@ -63,8 +83,12 @@ class exports.Router extends Backbone.Router
     overview: -> @setView app.views.overview
 
     directchannel: (id, domain) ->
+        jid = "#{id}@#{domain}"
         unless app.views.direct
-            @build_direct_channel "#{id}@#{domain}"
+            @build_direct_channel jid
+        else if app.views.direct.jid isnt "#{id}@#{domain}"
+            app.views.direct = new DirectChannelView {jid}
+            app.views.direct.build()
         @setView app.views.direct
 
 
