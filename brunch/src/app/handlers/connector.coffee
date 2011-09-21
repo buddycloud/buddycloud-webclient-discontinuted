@@ -25,6 +25,15 @@ class exports.Connector extends Backbone.EventHandler
             # TODO: subscribe channel
             @connection.buddycloud.subscribeNode nodeid, (stanza) =>
                 app.debug "subscribe", stanza
+                userJid = Strophe.getBareJidFromJid(@connection.jid)
+                @trigger 'subscription:user',
+                    jid: userJid
+                    node: nodeid
+                    subscription: 'subscribed'
+                @trigger 'subscription:node',
+                    jid: userJid
+                    node: nodeid
+                    subscription: 'subscribed'
                 callback? stanza
                 done()
             , =>
@@ -34,7 +43,16 @@ class exports.Connector extends Backbone.EventHandler
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
             @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
-                app.debug "subscribe", stanza
+                app.debug "unsubscribe", stanza
+                userJid = Strophe.getBareJidFromJid(@connection.jid)
+                @trigger 'subscription:user',
+                    jid: userJid
+                    node: nodeid
+                    subscription: 'none'
+                @trigger 'subscription:node',
+                    jid: userJid
+                    node: nodeid
+                    subscription: 'none'
                 callback? stanza
                 done()
             , =>
