@@ -125,15 +125,18 @@ class exports.Connector extends Backbone.EventHandler
         # TODO
         # @trigger 'subscription:node', subscription
 
+    ##
+    # notification with type subscription/affiliation already is
+    # proper obj
     on_notification: (notification) =>
         app.debug "on_notification", notification
 
         switch notification.type
             when 'subscription'
-                @trigger 'subscription:user', subscription
-                @trigger 'subscription:node', subscription
+                @trigger 'subscription:user', notification
+                @trigger 'subscription:node', notification
             when 'affiliation'
-                @trigger 'affiliation', subscription
+                @trigger 'affiliation', notification
             when 'posts'
                 for post in notification.posts
                     @trigger 'post', post, notification.node
