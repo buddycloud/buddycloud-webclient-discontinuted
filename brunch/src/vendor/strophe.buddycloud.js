@@ -49,38 +49,52 @@ Strophe.addConnectionPlugin('buddycloud', {
         conn.pubsub.connect(channelserver);
     },
 
-    // discovers the channel server jid from the given domain
+    // discovers the inbox service jid from the given domain
     discover: function (domain, success, error, timeout) {
-        if (typeof domain === 'function') {
-            timeout = error;
-            error = success;
-            success = domain;
-            domain = undefined;
-        }
+	console.log("discover", domain);
         var conn = this._connection, self = this;
         domain = domain || Strophe.getDomainFromJid(conn.jid);
-        conn.disco.items(domain, null, function /*success*/ () {
-            var args = Array.prototype.slice.call(arguments);
-            self._onDiscoItems.apply(self,[success,error,timeout].concat(args));
+        conn.disco.items(domain, null, function /*success*/ (stanza) {
+            self._onDiscoItems(success, error, timeout, stanza);
         }, error, timeout);
     },
 
     _onDiscoItems: function (success, error, timeout, stanza) {
         var conn = this._connection, self = this;
-        var i, item, jid, items = stanza.getElementsByTagName('item');
-        for (i = 0; i < items.length; i++) {
-            item = items[i];
-            jid = item.getAttribute('jid');
-            if (jid) {
-                conn.disco.info(jid, null,
-                    function /*success*/ () {
-                        var args = Array.prototype.slice.call(arguments);
-                        self._onDiscoInfo.apply(self,
-                            [success, error, timeout, jid].concat(args));
-                    },
-                error, timeout);
-            }
-        }
+	/* Per-item callbacks */
+	var itemsPending = 1, done = false;
+	var itemSuccess = function(jid) {
+	    itemsPending--;
+	    console.log("itemSuccess pending="+itemsPending+" done="+done);
+	    if (!done) {
+		done = true;
+		success(jid);
+	    }
+	};
+	var itemError = function() {
+	    itemsPending--;
+	    console.log("itemError pending="+itemsPending+" done="+done);
+	    if (!done && itemsPending < 1) {
+		done = true;
+		error();
+	    }
+	};
+
+	Strophe.forEachChild(stanza, 'query', function(queryEl) {
+	    Strophe.forEachChild(queryEl, 'item', function(itemEl) {
+		var jid = itemEl.getAttribute('jid');
+		if (jid) {
+		    conn.disco.info(jid, null,
+			function /*success*/ (stanza) {
+			    self._onDiscoInfo(itemSuccess, itemError, timeout, jid, stanza);
+			},
+		    itemError, timeout);
+		    itemsPending++;
+		}
+	    });
+        });
+	/* itemsPending initialized with 1 to catch 0 items case */
+	itemError();
     },
 
     _onDiscoInfo: function (success, error, timeout, jid, stanza) {
@@ -89,11 +103,12 @@ Strophe.addConnectionPlugin('buddycloud', {
             identities = stanza.getElementsByTagName('identity');
         for (i = 0; i < identities.length; i++) {
             identity = identities[i];
-            if (identity.getAttribute('category') == "pubsub"
-              &&identity.getAttribute('type') == "inbox") {
+            if (identity.getAttribute('category') == "pubsub" &&
+                identity.getAttribute('type') == "inbox") {
                 return success(jid);
             }
         }
+	return error();
     },
 
     createChannel: function (success, error, timeout) {

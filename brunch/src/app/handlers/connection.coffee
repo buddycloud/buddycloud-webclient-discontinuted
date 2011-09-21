@@ -48,22 +48,18 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @createChannel done
         error = =>
             app.error "discover_channel_server error", arguments
-
-        if @user.get('jid') is "anony@mous"
-            @connection.buddycloud.connect config.home_domain
-            return done()
+            #done()
 
         domain = if @user.get('jid') is "anony@mous"
                 config.home_domain
             else
                 Strophe.getDomainFromJid(@user.get('jid'))
-        @connection.buddycloud.discover domain, success
-        , (errorArgs...) =>
+        @connection.buddycloud.discover domain, success, =>
             # error, fall back:
             if domain isnt config.home_domain
                 @connection.buddycloud.discover config.home_domain, success, error
             else
-                error(errorArgs...)
+                error()
 
     register: (username, password, email) ->
         @user = app.users.get "#{username}@#{config.domain}", yes
