@@ -65,7 +65,6 @@ Strophe.addConnectionPlugin('buddycloud', {
 	var itemsPending = 1, done = false;
 	var itemSuccess = function(jid) {
 	    itemsPending--;
-	    console.log("itemSuccess pending="+itemsPending+" done="+done);
 	    if (!done) {
 		done = true;
 		success(jid);
@@ -73,7 +72,6 @@ Strophe.addConnectionPlugin('buddycloud', {
 	};
 	var itemError = function() {
 	    itemsPending--;
-	    console.log("itemError pending="+itemsPending+" done="+done);
 	    if (!done && itemsPending < 1) {
 		done = true;
 		error();
