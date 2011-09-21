@@ -99,6 +99,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
         # sideeffect: update sidebar by updating current user channels
         channel = user.channels.update channel
+        # TODO: only if node is new/not yet subscribed?
         @connector.get_node_posts subscription.node
 
         if user.get('id') is app.users.current.get('id')
