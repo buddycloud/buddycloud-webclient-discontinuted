@@ -2,7 +2,9 @@
 // export config
 window.config = {
     bosh_service: 'http://crater.buddycloud.org:5280/http-bind/',
-    domain: "buddycloud.org",
+    //bosh_service: 'http://bosh.metajack.im:5280/xmpp-httpbind',
+    home_domain: "buddycloud.org",
     anon_domain: "anon.buddycloud.com",
-    pubsubjid: "channels.buddycloud.org",
+    /* For registration: */
+    domain: "buddycloud.org"
 };

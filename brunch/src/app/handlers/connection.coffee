@@ -37,10 +37,6 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         @connection.buddycloud.createChannel done, done
 
     discover_channel_server: (done) =>
-        if @user.get('jid') is "anony@mous"
-            @connection.buddycloud.connect config.pubsubjid
-            return done()
-
         success = (pubsubjid) =>
             app.error "discover_channel_server success", arguments
             @connection.buddycloud.connect pubsubjid
@@ -52,7 +48,21 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @createChannel done
         error = =>
             app.error "discover_channel_server error", arguments
-        @connection.buddycloud.discover config.domain, success, error
+
+        if @user.get('jid') is "anony@mous"
+            @connection.buddycloud.connect config.home_domain
+            return done()
+
+        domain = if @user.get('jid') is "anony@mous"
+            then config.home_domain
+            else Strophe.getDomainFromJid(@user.get('jid'))
+        @connection.buddycloud.discover domain, success
+        , (errorArgs...) =>
+            # error, fall back:
+            if domain isnt config.home_domain
+                @connection.buddycloud.discover config.home_domain, success, error
+            else
+                error(errorArgs...)
 
     register: (username, password, email) ->
         @user = app.users.get "#{username}@#{config.domain}", yes
