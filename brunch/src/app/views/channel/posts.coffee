@@ -16,11 +16,11 @@ class exports.PostsView extends Backbone.View
         entry = @posts[post.cid] ?= new TopicPostView model:post, parent:this
 
         i = @model.posts.indexOf(post)
-        if i >= @model.posts.length - 1
-            @el.append entry.el
-        else
-            olderPost = @posts[@model.posts.at(i + 1).cid]
+        olderPost = @posts[@model.posts.at(i + 1)?.cid]
+        if olderPost
             olderPost.el.before entry.el
+        else
+            @el.append entry.el
         do entry.render
 
     render: =>
