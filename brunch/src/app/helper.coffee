@@ -1,15 +1,18 @@
 
 
-exports.getBrowserPrefix  = getBrowserPrefix = () ->
+exports.getBrowserPrefix = getBrowserPrefix = ->
     regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/
-    tester = document.getElementsByTagName('script')[0]
+    tester = document.getElementsByTagName("script")[0]
     prefix = ""
-    for prop in tester.style
-        if regex.test prop
+    for prop of tester.style
+        if regex.test(prop)
             prefix = prop.match(regex)[0]
             break
-    prefix = 'Webkit' if 'WebkitOpacity' in tester.style
-    prefix ? "-#{prefix.charAt(0).toLowerCase() + prefix.slice(1)}-"
+    prefix = "Webkit"  if "WebkitOpacity" of tester.style
+    unless prefix is ""
+        "-" + prefix.charAt(0).toLowerCase() + prefix.slice(1) + "-"
+    else
+        ""
 
 exports.transEndEventNames = transEndEventNames =
     '-webkit-transition' : 'webkitTransitionEnd'
