@@ -29,6 +29,51 @@ class exports.ChannelView extends BaseView
                 @model.nodes.bind "add", init_posts
         do init_posts
 
+    events:
+        'click .follow': 'clickFollow'
+        'click .unfollow': 'clickUnfollow'
+        'click .newTopic': 'openNewTopicEdit'
+        'focus .newTopic textarea': 'openNewTopicEdit'
+        #'click .newTopic, .answer': 'openNewTopicEdit'
+        'click #createNewTopic': 'clickPost'
+
+    clickPost: (ev) ->
+        text = @el.find('.newTopic, .answer').find('textarea')
+        unless text.val() is ""
+            post =
+                content: text.val()
+                author:
+                    name: app.users.current.get 'jid'
+            node = @model.nodes.get('posts')
+            app.handler.data.publish node, post, =>
+                    post.content = value:post.content
+                    app.handler.data.add_post node, post
+                    @el.find('.newTopic, .answer').removeClass 'write'
+                    text.val ""
+
+    openNewTopicEdit: (ev) ->
+        self = @$('.newTopic, .answer').has(ev.target)
+        # prevent bubbling!
+        ev.stopPropagation()
+        unless self.hasClass 'write'
+            self.addClass 'write'
+            $(document).one 'click', ->
+                # minimize the textarea only if the textarea is empty
+                if self.find('textarea').val() is ""
+                    self.removeClass 'write'
+
+    clickFollow: (ev) ->
+        ev.preventDefault()
+        node = @model.nodes.get('posts')
+        app.handler.data.subscribe node
+        false
+
+    clickUnfollow: (ev) ->
+        ev.preventDefault()
+        node = @model.nodes.get('posts')
+        app.handler.data.unsubscribe node
+        false
+
     render: =>
         @update_attributes()
         super
@@ -39,42 +84,6 @@ class exports.ChannelView extends BaseView
             # TODO: save form content?
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
-        @el.find('.newTopic, .answer').click @openNewTopicEdit
-
-        $('#createNewTopic').click =>
-            text = @el.find('.newTopic, .answer').find('textarea')
-            unless text.val() is ""
-                post =
-                    content: text.val()
-                    author:
-                        name: app.users.current.get 'jid'
-                node = @model.nodes.get('posts')
-                app.handler.data.publish node, post, =>
-                        post.content = value:post.content
-                        app.handler.data.add_post node, post
-                        @el.find('.newTopic, .answer').removeClass 'write'
-                        text.val ""
-        @$('.follow').click (ev) =>
-            ev.preventDefault()
-            node = @model.nodes.get('posts')
-            app.handler.data.subscribe node
-            false
-        @$('.unfollow').click (ev) =>
-            ev.preventDefault()
-            node = @model.nodes.get('posts')
-            app.handler.data.unsubscribe node
-            false
-
-    openNewTopicEdit: (ev) ->
-        self = $(this) # @el.find('.newTopic, .answer')
-        # prevent bubbling!
-        ev.stopPropagation()
-        unless self.hasClass 'write'
-            self.addClass 'write'
-            $(document).one 'click', ->
-                # minimize the textarea only if the textarea is empty
-                if self.find('textarea').val() is ""
-                    self.removeClass 'write'
 
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')
