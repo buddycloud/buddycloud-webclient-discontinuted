@@ -170,7 +170,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
 	    if (postEl)
 		try {
-		    var parser = this._postParsers[postEl.namespaceURI];
+		    var parser = this._postParsers['{' + postEl.namespaceURI + '}' + postEl.nodeName];
 		    var post = parser.call(this, postEl);
 		    if (post) {
 			if (!post.id)
@@ -185,10 +185,7 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     _postParsers: {
-	'http://www.w3.org/2005/Atom': function(entry) {
-	    if (entry.nodeName !== 'entry')
-		return;
-
+	'{http://www.w3.org/2005/Atom}entry': function(entry) {
 	    var attr, post;
 
             // Takes an <item /> element and returns a hash of it's attributes
@@ -225,50 +222,29 @@ Strophe.addConnectionPlugin('buddycloud', {
 		post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
 
 	    return post;
+	},
+	'{http://jabber.org/protocol/disco#items}query': function(query) {
+	    var post = { subscriptions: {} };
+	    Strophe.forEachChild(query, 'item', function(item) {
+		var jid = item.getAttribute('jid'),
+		    node = item.getAttribute('node'),
+		    subscription = item.getAttributeNS(Strophe.NS.PUBSUB, 'subscription'),
+		    affiliation = item.getAttributeNS(Strophe.NS.PUBSUB, 'affiliation'),
+		    updated;
+		Strophe.forEachChild(item, 'updated', function(updated) {
+		    updated = updated.textContent;
+		});
+		if (jid && node)
+		    post.subscriptions[node] = {
+			jid: jid,
+			node: node,
+			subscription: subscription,
+			affiliation: affiliation,
+			updated: updated,
+		    };
+	    });
+	    return post;
 	}
-    },
-
-    getUserSubscriptions: function (succ, err) {
-        var self = this, conn = this._connection;
-        conn.pubsub.getSubscriptions(self._iqcbsoup(
-            function  /*success*/ (stanza) {
-                if (!succ) return;
-                var i, sub, node, result = [],
-                    subscriptions = stanza.getElementsByTagName("subscription");
-                for (i = 0; i < subscriptions.length; i++) {
-                    sub = subscriptions[i];
-                    node = sub.getAttribute('node');
-                    result.push({
-                        node: node,
-                        jid: Strophe.getJidFromNode(node),
-                        subscription: sub.getAttribute('subscription'),
-                    });
-                }
-                succ(result);
-            }, self._errorcode(err))
-        );
-    },
-
-    getUserAffiliations: function (succ, err) {
-        var self = this, conn = this._connection;
-	/* TODO: expects node parameter, not for user */
-        conn.pubsub.getAffiliations(self._iqcbsoup(
-            function /*success*/ (stanza) {
-                if (!succ) return;
-                var i, aff, node, result = [],
-                    affiliations = stanza.getElementsByTagName("affiliation");
-                for (i = 0; i < affiliations.length; i++) {
-                    aff = affiliations[i];
-                    node = aff.getAttribute('node');
-                    result.push({
-                        node: node,
-                        jid: Strophe.getJidFromNode(node),
-                        affiliation: aff.getAttribute('affiliation'),
-                    });
-                }
-                succ(result);
-            }, self._errorcode(err))
-        );
     },
 
     getMetadata: function (jid, node, succ, err, timeout) {
