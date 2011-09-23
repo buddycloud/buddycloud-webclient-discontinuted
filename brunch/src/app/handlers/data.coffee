@@ -5,8 +5,6 @@ class exports.DataHandler extends Backbone.EventHandler
 
     constructor: (@connector) ->
         @get_node_subscriptions = @connector.get_node_subscriptions
-        @get_user_subscriptions = @connector.get_user_subscriptions
-        @get_affiliations       = @connector.get_affiliations
 
         @connector.bind 'post', @on_node_post
         @connector.bind 'affiliation', @on_affiliation
@@ -30,6 +28,13 @@ class exports.DataHandler extends Backbone.EventHandler
     unsubscribe: (node, callback) ->
         @connector.unsubscribe node.get('nodeid'), callback
 
+    get_user_subscriptions: (jid) =>
+        unless jid?
+            # Default: own JID
+            jid = app.users.current.get('jid')
+
+        if jid isnt "anony@mous"
+            @connector.get_node_posts "/user/#{jid}/subscriptions"
 
     # event callbacks
 
@@ -43,9 +48,6 @@ class exports.DataHandler extends Backbone.EventHandler
         user = app.users.current
         return if user.get('jid') is "anony@mous"
 
-        @get_affiliations()
-        @get_user_subscriptions()
-
         #nodeid = "/user/#{app.users.current.get 'jid'}/channel"
         #@connector.start_fetch_node_posts nodeid
         #@connector.get_node_posts nodeid
@@ -57,6 +59,8 @@ class exports.DataHandler extends Backbone.EventHandler
                 @connector.get_node_posts nodeid
                 if user.affiliations.get nodeid
                     node.metadata.query()
+
+        @get_user_subscriptions()
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user

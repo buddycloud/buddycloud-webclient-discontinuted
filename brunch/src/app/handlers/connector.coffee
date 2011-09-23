@@ -71,7 +71,11 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             success = (posts) =>
                 for post in posts
-                    @trigger "post", post, nodeid
+                    if post.content?
+                        @trigger "post", post, nodeid
+                    else if post.subscriptions?
+                        for own nodeid_, subscription in post.subscriptions
+                            @trigger 'subscription:user', subscription
                 callback? posts
                 done()
             error = =>
@@ -91,34 +95,6 @@ class exports.Connector extends Backbone.EventHandler
                 done()
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
-
-    # this fetches all user affiliations
-    get_affiliations: =>
-        @request (done) =>
-            success = (affiliations) =>
-                for affiliation in affiliations
-                    @trigger 'affiliation', affiliation
-                done()
-            error = =>
-                clearTimeout timeout
-                app.error "get_affiliations", arguments
-                done()
-            timeout = setTimeout error, @connection.timeout
-            @connection.buddycloud.getUserAffiliations success, error
-
-    # this fetches all user channels
-    get_user_subscriptions: =>
-        @request (done) =>
-            success = (subscriptions) =>
-                for subscription in subscriptions
-                    @trigger 'subscription:user', subscription
-                done()
-            error = =>
-                clearTimeout timeout
-                app.error "get_user_subscriptions", arguments
-                done()
-            timeout = setTimeout error, @connection.timeout
-            @connection.buddycloud.getUserSubscriptions success, error
 
     # this fetches all subscriptions to a specific node
     get_node_subscriptions: (nodeid) ->

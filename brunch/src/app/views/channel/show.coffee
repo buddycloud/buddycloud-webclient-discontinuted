@@ -84,6 +84,8 @@ class exports.ChannelView extends BaseView
         #permissions
         subscription = app.users.current.subscriptions.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        # TODO: pending may require special handling
         @user =
-            followingThisChannel: affiliation in ["owner", "publisher", "moderator", "member", "outcast"]
+            followingThisChannel: subscription in ["subscribed", "pending"]
             hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]
+        app.debug "ChannelView.update_attributes", @user
