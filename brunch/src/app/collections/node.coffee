@@ -1,5 +1,6 @@
 lookup = _loaded:no
 lazyRequire = -> # to prevent require circles
+    { SubscriptionsNode:lookup.subscriptions } = require 'models/node/subscriptions'
     { StatusNode:lookup.status } = require 'models/node/status'
     { PostsNode :lookup.posts  } = require 'models/node/posts'
     { GeoNode   :lookup.geoloc } = require 'models/node/geo'
