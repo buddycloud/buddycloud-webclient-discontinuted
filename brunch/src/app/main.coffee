@@ -60,6 +60,9 @@ $(document).ready ->
         #  $('#login_form').trigger "submit"
         formatdate.options.max.unit = 9 # centrury
         formatdate.options.max.amount = 20 # 2000 years
+        format_ago = formatdate.locale.ago
+        formatdate.locale.ago = (args...) ->
+            format_ago(args...).replace " ago", ""
         formatdate.hook 'html'
 
 
