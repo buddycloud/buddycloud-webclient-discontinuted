@@ -12,6 +12,10 @@ class exports.ChannelView extends BaseView
 
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
+        nodeid = @model.nodes.get('posts')?.get 'nodeid'
+        app.users.current.subscriptions.bind 'all', (args...) ->
+            console.error 'subscriptions event', args...
+        app.users.current.subscriptions.bind "change:#{nodeid}", @render
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
@@ -78,7 +82,8 @@ class exports.ChannelView extends BaseView
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
         #permissions
-        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or ""
+        subscription = app.users.current.subscriptions.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         @user =
             followingThisChannel: affiliation in ["owner", "publisher", "moderator", "member", "outcast"]
             hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]
