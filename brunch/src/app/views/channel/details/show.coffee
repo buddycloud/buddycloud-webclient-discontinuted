@@ -36,8 +36,9 @@ class exports.ChannelDetails extends BaseView
             do list.render
             meta.append list.el
 
+        formatdate.hook @el, update: off
         @el.find('.infoToggle').click => @el.toggleClass('hidden')
 
     update_attributes: ->
-        if (channel = @model.nodes.get 'posts')
-            @channel = channel.toJSON yes
+        if (posts = @model.nodes.get 'posts')
+            @posts = posts.toJSON yes

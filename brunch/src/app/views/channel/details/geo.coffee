@@ -15,7 +15,7 @@ class exports.GeoDetail extends BaseView
         super
 
     update_attributes: ->
-        if (channel = @model.nodes.get 'posts')
-            @channel = channel.toJSON yes
+        if (posts = @model.nodes.get 'posts')
+            @posts = posts.toJSON yes
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
