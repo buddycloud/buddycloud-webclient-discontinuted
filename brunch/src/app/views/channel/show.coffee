@@ -1,6 +1,6 @@
 { ChannelDetails } = require 'views/channel/details/show'
 { PostsView } = require 'views/channel/posts'
-{ BaseView } = require('views/base')
+{ BaseView } = require 'views/base'
 
 # The channel shows channel content
 class exports.ChannelView extends BaseView

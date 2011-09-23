@@ -1,7 +1,10 @@
-{ BaseView } = require('views/base')
+{ BaseView } = require 'views/base'
 
 class exports.PostView extends BaseView
     template: require 'templates/channel/post'
+
+    initialize: ({@parent, @type}) =>
+        super
 
     render: =>
         @post = @model.toJSON() # data

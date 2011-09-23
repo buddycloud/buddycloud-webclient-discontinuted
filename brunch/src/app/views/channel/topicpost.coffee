@@ -1,13 +1,13 @@
 { CommentsView } = require 'views/channel/comments'
 { PostView } = require 'views/channel/post'
-{ BaseView } = require('views/base')
+{ BaseView } = require 'views/base'
 
 class exports.TopicPostView extends BaseView
     template: require 'templates/channel/topicpost'
 
-    initialize: ->
+    initialize: ({@parent}) ->
         super
-        @opener   = new PostView model:@model, parent:this
+        @opener   = new PostView type:'opener', model:@model, parent:this
         @comments = new CommentsView model:@model.comments, parent:this
         @el.append @opener.el
         @el.append @comments.el

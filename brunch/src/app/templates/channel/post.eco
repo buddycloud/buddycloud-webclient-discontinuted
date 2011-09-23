@@ -1,4 +1,4 @@
-<section class="opener">
+<section class="<%= @type or 'post' %>">
   <!-- TODO: attribute escaping! -->
   <img class="avatar" src="<%= @author?.avatar %>" />
   <div class="postmeta">

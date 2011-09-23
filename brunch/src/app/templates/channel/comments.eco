@@ -1,22 +1,18 @@
 <section class="comments">
-  <% for comment in @comments: %>
-  <section class="comment">
-    <img class="avatar" src="<%= comment.user.avatar %>" />
-    <div class="postmeta">
-      <span class="time" title="<%= comment.creationDate %>"><%= comment.passedTime %></span>
-    </div>
-    <span class="name"><%= comment.user.name %></span><span class="location"><%= comment.location %></span>
-    <p><%= comment.body %></p>
-  </section>
-  <% end %>
-  <% if user.allowedToPost: %>
+    <!--
+
+      this contains the list of post comments
+      template: post.eco
+
+    -->
+  <% if @user?.hasRightToPost: %>
   <section class="answer">
-    <img class="avatar" src="<%= answer.user.avatar %>" />
+    <img class="avatar" src="<%= @answer?.user?.avatar %>" />
     <textarea placeholder="post a comment..."></textarea>
     <div class="controls">
       <div class="button small checkbox">
-        <input type="checkbox" id="shouldShareLocation<%= random.number %>" />
-        <label for="shouldShareLocation<%= random.number %>">Share Location: Home</label>
+        <input type="checkbox" id="shouldShareLocation<%= @random?.number %>" />
+        <label for="shouldShareLocation<%= @random?.number %>">Share Location: Home</label>
       </div>
       <div class="button small prominent">Post</div>
     </div>
