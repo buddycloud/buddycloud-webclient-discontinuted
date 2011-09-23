@@ -32,9 +32,7 @@ class exports.ChannelView extends BaseView
     events:
         'click .follow': 'clickFollow'
         'click .unfollow': 'clickUnfollow'
-        'click .newTopic': 'openNewTopicEdit'
-        'focus .newTopic textarea': 'openNewTopicEdit'
-        #'click .newTopic, .answer': 'openNewTopicEdit'
+        'click .newTopic, .answer': 'openNewTopicEdit'
         'click #createNewTopic': 'clickPost'
 
     clickPost: (ev) ->
