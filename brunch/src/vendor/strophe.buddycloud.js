@@ -154,56 +154,78 @@ Strophe.addConnectionPlugin('buddycloud', {
     /**
      * Parse *multiple* posts
      *
-     * @param el Contains <item/> children
+     * @param el <items/> element that contains <item/> children
      */
     _parsePost: function (el, callback) {
-        var i, j, item, attr, post, posts = [], entry, entries,
-            items = el.getElementsByTagName("item");
-        for (i = 0; i < items.length; i++) {
-            item = items[i];
-            entries = item.getElementsByTagName("entry");
-            for(j = 0; j < entries.length; j++) {
-                entry = entries[j];
-                // Takes an <item /> element and returns a hash of it's attributes
-                post = this._parsetag(entry, "id", "published", "updated");
-                if (!post.id)
-                    post.id = item.getAttribute("id");
+	var posts = [];
+	var items = el.getElementsByTagName('item');
+	for(var i = 0; i < items.length; i++) {
+	    var item = items[i];
+	    /* Get first item child */
+	    var postEl = null;
+	    Strophe.forEachChild(item, null, function(child) {
+		if (!postEl)
+		    postEl = child;
+	    });
 
-                // content
-                attr = entry.getElementsByTagName("content");
-                if (attr.length > 0) {
-                    attr = attr.item(0);
-                    post.content = {
-                        type: attr.getAttribute("type"),
-                        value:attr.textContent,
-                    };
-                }
-
-                // author
-                attr = entry.getElementsByTagName("author");
-                if (attr.length > 0) {
-                    post.author = this._parsetag(attr.item(0),
-                        "name", "uri");
-                    if (post.author.uri)
-                        post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
-                }
-
-                // geoloc
-                attr = entry.getElementsByTagName("geoloc");
-                if (attr.length > 0)
-                    post.geoloc = this._parsetag(attr.item(0),
-                        "country", "locality", "text");
-
-                // in reply to
-                attr = entry.getElementsByTagName("thr:in-reply-to");
-                if (attr.length > 0)
-                    post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
-
-                posts.push(post);
-            }
-        }
+	    if (postEl)
+		try {
+		    var parser = this._postParsers[postEl.namespaceURI];
+		    var post = parser.call(this, postEl);
+		    if (post) {
+			if (!post.id)
+			    post.id = item.getAttribute('id');
+			posts.push(post);
+		    }
+		} catch(e) {
+		    console.error("Cannot parse post", postEl, e.stack || e);
+		}
+	}
         callback(posts);
+    },
 
+    _postParsers: {
+	'http://www.w3.org/2005/Atom': function(entry) {
+	    if (entry.nodeName !== 'entry')
+		return;
+
+	    var attr, post;
+
+            // Takes an <item /> element and returns a hash of it's attributes
+            post = this._parsetag(entry, "id", "published", "updated");
+
+	    // content
+	    attr = entry.getElementsByTagName("content");
+	    if (attr.length > 0) {
+		attr = attr.item(0);
+		post.content = {
+		    type: attr.getAttribute("type"),
+                    value:attr.textContent,
+                };
+            }
+
+	    // author
+	    attr = entry.getElementsByTagName("author");
+	    if (attr.length > 0) {
+		post.author = this._parsetag(attr.item(0),
+					     "name", "uri");
+                if (post.author.uri)
+		    post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
+            }
+
+	    // geoloc
+	    attr = entry.getElementsByTagName("geoloc");
+	    if (attr.length > 0)
+		post.geoloc = this._parsetag(attr.item(0),
+					     "country", "locality", "text");
+
+	    // in reply to
+            attr = entry.getElementsByTagName("thr:in-reply-to");
+            if (attr.length > 0)
+		post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
+
+	    return post;
+	}
     },
 
     getUserSubscriptions: function (succ, err) {
