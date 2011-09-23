@@ -7,7 +7,7 @@
     -->
   <% if @user?.hasRightToPost: %>
   <section class="answer">
-    <img class="avatar" src="<%= @answer?.user?.avatar %>" />
+    <img class="avatar" src="<%= app.users.current.avatar %>" />
     <textarea placeholder="post a comment..."></textarea>
     <div class="controls">
       <div class="button small checkbox">
