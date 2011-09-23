@@ -52,7 +52,6 @@ class exports.HomeView extends Backbone.View
         @el.show()
 
     setCurrentChannel: (channel) =>
-        console.warn channel.cid, channel
         @current?.el.hide()
         @current = @views[channel.cid]
         app.router.navigate @current.model.get 'jid' if @current?

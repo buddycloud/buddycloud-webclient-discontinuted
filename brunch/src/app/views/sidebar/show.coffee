@@ -42,6 +42,7 @@ class exports.Sidebar extends Backbone.View
         old = @current
         @current = @views[channel.cid]
         @current?.render()
+        @current?.bubble()
         old?.render()
 
     # sliding in animation
