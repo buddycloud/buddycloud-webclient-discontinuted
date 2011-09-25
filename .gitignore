@@ -7,8 +7,5 @@ brunch/build/web/css/main.css
 brunch/build/web/js/app.js
 node_modules/*
 buddycloud.tmproj
-<<<<<<< HEAD
 build.tar.gz
-=======
->>>>>>> removed blank line in git exclude list
 brunch/src/app/styles/main.styl
