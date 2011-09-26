@@ -62,14 +62,12 @@ class exports.ChannelView extends BaseView
 
     clickFollow: (ev) ->
         ev.preventDefault()
-        node = @model.nodes.get('posts')
-        app.handler.data.subscribe node
+        app.handler.data.subscribeUser @model.get('id')
         false
 
     clickUnfollow: (ev) ->
         ev.preventDefault()
-        node = @model.nodes.get('posts')
-        app.handler.data.unsubscribe node
+        app.handler.data.unsubscribeUser @model.get('id')
         false
 
     render: =>

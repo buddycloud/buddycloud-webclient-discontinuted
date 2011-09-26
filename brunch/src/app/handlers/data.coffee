@@ -22,11 +22,21 @@ class exports.DataHandler extends Backbone.EventHandler
     add_post: (node, post) ->
         @on_node_post post, node.get 'nodeid'
 
-    subscribe: (node, callback) ->
-        @connector.subscribe node.get('nodeid'), callback
+    ##
+    # TODO: we can get very mixed responses according to the
+    # individual access_model of nodes:
+    # * Success
+    # * Error
+    # * Pending
+    subscribeUser: (user, callback) ->
+        forEachUserNode user, (node, callback2) =>
+            @connector.subscribe node, callback2
+        , callback
 
-    unsubscribe: (node, callback) ->
-        @connector.unsubscribe node.get('nodeid'), callback
+    unsubscribeUser: (user, callback) ->
+        forEachUserNode user, (node, callback2) =>
+            @connector.unsubscribe node, callback2
+        , callback
 
     get_user_subscriptions: (jid) =>
         unless jid?
@@ -115,3 +125,17 @@ class exports.DataHandler extends Backbone.EventHandler
         app.debug "GOT node subscription", subscription
         # TODO
 
+
+
+##
+# @param iter {Function} callback(node, callback)
+forEachUserNode = (user, iter, callback) ->
+    pending = 0
+    ["posts", "status", "subscriptions",
+     "geoloc/previous", "geoloc/current", "geoloc/next"].forEach (type) ->
+        node = "/user/#{user}/#{type}"
+        pending++
+        iter node, ->
+            pending--
+            if pending < 1
+                callback?()
