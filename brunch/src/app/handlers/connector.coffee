@@ -74,7 +74,7 @@ class exports.Connector extends Backbone.EventHandler
                     if post.content?
                         @trigger "post", post, nodeid
                     else if post.subscriptions?
-                        for own nodeid_, subscription in post.subscriptions
+                        for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription:user', subscription
                 callback? posts
                 done()
