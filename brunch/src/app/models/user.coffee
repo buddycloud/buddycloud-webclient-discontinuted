@@ -4,9 +4,9 @@
 
 class exports.User extends Backbone.Model
 
-    initialize : ->
+    initialize: ->
         # id and jid are the same
-        @set id:get 'jid'
+        @set id: @get('jid')
         @avatar = gravatar @id, s:50, d:'retro'
         # subscribed channels
         @channels = new UserChannels parent:this

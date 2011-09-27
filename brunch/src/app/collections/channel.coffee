@@ -5,24 +5,30 @@ getid = (nodeid) ->
     nodeid.match(/\/user\/([^\/]+@[^\/]+)\//)?[1] # jid # TODO compile
 
 
+##
+# collects model/channel by Jabber-Id
 class exports.Channels extends Backbone.Collection
     sync: -> # do nothing
 
     model: Channel
 
+    ##
+    # @return {Bool} Whether channel is new
     update: (channel) ->
         existing_channel = @get channel.id
         if existing_channel
             existing_channel.set channel
-            existing_channel
+            no
         else
             @add channel
-            @get channel.id
-
+            yes
 
 # used in models/user
 class exports.UserChannels extends exports.Channels
-    initialize: ({@parent}) ->
+    constructor: ({@parent}) ->
+        super()
+
+    initialize: ->
         super
         @fetch()
 
@@ -30,10 +36,17 @@ class exports.UserChannels extends exports.Channels
         for channelid in @parent.get('channel_ids') or []
             app.channels.get channelid
 
+    get: (id) ->
+        if (channel = super)
+            channel
+        else
+            @add id: id
+            @get id
+
     # overriding backbone internels
     _add: ->
         channel = super
-        @parent.set 'channel_ids', @map((channel) -> channel.get 'id')
+        @parent.set channel_ids: @map((channel) -> channel.get 'id')
         channel
 
 

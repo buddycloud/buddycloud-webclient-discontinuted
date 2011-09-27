@@ -9,7 +9,7 @@ lazyRequire = -> # to prevent require circles
 
 getid = (nodeid) ->
     # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
-    nodeid.match(/\/user\/([^\/]+)\/([^\/]+)/)?[2]
+    nodeid?.match(/\/user\/([^\/]+)\/([^\/]+)/)?[2]
 
 
 class exports.Nodes extends Backbone.Collection
@@ -26,8 +26,8 @@ class exports.Nodes extends Backbone.Collection
         super
 
     get: (nodeid) ->
-        type = getid(nodeid) or nodeid
-        super type
+        id = getid(nodeid) or nodeid
+        super id
 
     ##
     # @param opts Optional flags, such as silent: true
