@@ -25,3 +25,9 @@ exports.transitionendEvent = transEndEventNames[getBrowserPrefix()+'transition']
 exports.gravatar = (mail, opts) ->
     hash = MD5.hexdigest mail?.toLowerCase() or ""
     "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
+
+exports.EventHandler = (handler) ->
+    return (ev) ->
+        ev.preventDefault()
+        handler.apply(this, arguments)
+        no

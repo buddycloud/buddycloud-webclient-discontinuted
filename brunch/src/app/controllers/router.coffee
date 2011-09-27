@@ -1,22 +1,22 @@
 # views
 { DirectChannelView } = require 'views/home/direct'
 { RegisterView } = require 'views/authentication/register'
+{ WelcomeView } = require 'views/welcome/show'
 { LoginView } = require 'views/authentication/login'
-{ IndexView } = require 'views/home/index'
 { HomeView } = require 'views/home/show'
 
 class exports.Router extends Backbone.Router
-    routes : # eg http://localhost:8080/index
-        ""           :"index"
-        "index"     :"index"
-        "login"     :"login"
-        "register"  :"register"
-        "more"      :"overview"
+    routes : # eg http://localhost:3000/welcome
+        ""           :"welcome"
+        "welcome"    :"welcome"
+        "login"      :"login"
+        "register"   :"register"
+        "more"       :"overview"
         ":id@:domain":"directchannel"
 
     initialize: ->
         # start views
-        app.views.index = new IndexView
+        app.views.welcome = new WelcomeView
         app.views.login = new LoginView
         app.views.register = new RegisterView
 
@@ -32,19 +32,19 @@ class exports.Router extends Backbone.Router
         @current_view = view
         @current_view.trigger 'show'
 
-    disable_index: =>
+    disable_welcome: =>
         # disable all views available at page load
-        delete app.views.index
+        delete app.views.welcome
         delete app.views.login
         delete app.views.register
 
     on_authorize: =>
-        do @disable_index
+        do @disable_welcome
         app.views.home = new HomeView
         @navigate app.users.current.get('jid'), true
 
     build_direct_channel: (jid) =>
-        do @disable_index
+        do @disable_welcome
         # start view
         app.views.direct = new DirectChannelView {jid}
 
@@ -77,7 +77,7 @@ class exports.Router extends Backbone.Router
 
     # routes
 
-    index:    -> @setView app.views.index
+    welcome:  -> @setView app.views.welcome
     login:    -> @setView app.views.login
     register: -> @setView app.views.register
     overview: -> @setView app.views.overview
