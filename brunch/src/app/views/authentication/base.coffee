@@ -7,6 +7,7 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'show', @show
         @bind 'hide', @hide
         @box = $('.centerBox')
+        @delegateEvents()
 
     events:
         "click .back.button": "click_back"
