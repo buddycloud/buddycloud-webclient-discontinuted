@@ -1,3 +1,5 @@
+{ EventHandler } = require 'util'
+
 
 class exports.AuthenticationView extends Backbone.View
     initialize: ->
@@ -5,8 +7,12 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'show', @show
         @bind 'hide', @hide
         @box = $('.centerBox')
-        @el.find('.back.button').live 'click', =>
-            app.router.navigate "index", true
+
+    events:
+        "click .back.button": "click_back"
+
+    click_back: EventHandler ->
+        app.router.navigate "welcome", true
 
     show: =>
         @box.addClass @cssclass
