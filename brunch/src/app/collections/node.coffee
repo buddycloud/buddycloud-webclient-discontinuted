@@ -9,7 +9,7 @@ lazyRequire = -> # to prevent require circles
 
 getid = (nodeid) ->
     # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
-    match = nodeid.match(/\/user\/([^\/]+)\/([^\/]+)/)[2]
+    nodeid.match(/\/user\/([^\/]+)\/([^\/]+)/)?[2]
 
 
 class exports.Nodes extends Backbone.Collection
@@ -18,21 +18,23 @@ class exports.Nodes extends Backbone.Collection
         do lazyRequire unless lookup._loaded
         super
 
+    ##
+    # Backbone-internal
     _prepareModel: (model) ->
         #little hack to change the model class to a specific one (defined by id)
         @model = lookup[model.id] or lookup.node
         super
 
-    get: (nodeid, full) ->
-        if full
-            super getid nodeid
-        else
-            super nodeid
+    get: (nodeid) ->
+        type = getid(nodeid) or nodeid
+        super type
 
     ##
     # @param opts Optional flags, such as silent: true
     create: (nodeid, opts) ->
-        return super(nodeid, opts) unless typeof nodeid is 'string'
+        unless typeof nodeid is 'string'
+            return super(nodeid, opts)
+
         id = getid nodeid
         if (node = @get id)
             node.update nodeid
