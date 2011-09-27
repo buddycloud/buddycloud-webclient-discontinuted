@@ -6,7 +6,8 @@ getid = (nodeid) ->
 
 
 class exports.Channels extends Backbone.Collection
-    sync: -> Backbone.sync.apply(this, arguments) if @localStorage
+    sync: ->
+
     model: Channel
 
     update: (channel) ->
@@ -27,6 +28,9 @@ class exports.ChannelStore extends exports.Channels
         super
         @localStorage = new Store("channels")
         app.debug "nr of channels in cache: #{@localStorage.records.length}"
+
+    sync: ->
+        Backbone.sync.apply(this, arguments)
 
     # returns cached channel or creates new cache entry
     get: (nodeid) ->
