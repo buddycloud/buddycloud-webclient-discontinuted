@@ -2,7 +2,7 @@
 
 getid = (nodeid) ->
     # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
-    nodeid.match(/\/user\/([^\/]+@[^\/]+)\//)[1] # jid # TODO compile
+    nodeid.match(/\/user\/([^\/]+@[^\/]+)\//)?[1] # jid # TODO compile
 
 
 class exports.Channels extends Backbone.Collection
@@ -50,7 +50,6 @@ class exports.ChannelStore extends exports.Channels
 
     # returns cached channel or creates new cache entry
     get: (nodeid) ->
-        return super(nodeid) unless typeof nodeid is 'string'
-        id = getid nodeid
+        id = getid nodeid or nodeid
         super(id) or @create({id, jid:id})
 
