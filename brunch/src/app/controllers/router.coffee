@@ -59,7 +59,7 @@ class exports.Router extends Backbone.Router
         nodeid = "/user/#{jid}/posts"
         channel = app.channels.get nodeid
 
-        user = app.users.get jid
+        user = app.users.get jid, yes
         node = channel.nodes.create nodeid
         channel = user.channels.update channel
 
