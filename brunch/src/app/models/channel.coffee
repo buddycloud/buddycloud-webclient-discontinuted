@@ -1,5 +1,5 @@
 { NodeStore } = require 'collections/node'
-{ gravatar } = require 'helper'
+{ gravatar } = require 'util'
 
 class exports.Channel extends Backbone.Model
     initialize: ->

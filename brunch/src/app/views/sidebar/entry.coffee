@@ -1,5 +1,5 @@
 { BaseView } = require('views/base')
-{ transitionendEvent, getBrowserPrefix } = require 'helper'
+{ transitionendEvent, getBrowserPrefix } = require 'util'
 prefix = getBrowserPrefix()
 
 

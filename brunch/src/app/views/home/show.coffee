@@ -31,13 +31,7 @@ class exports.HomeView extends Backbone.View
             new_channel_view channel
 
         @channels.bind 'change', new_channel_view
-        @channels.bind 'add', (channel) =>
-            view = new ChannelView model:channel, parent:this
-            @views[channel.cid] = view
-            @el.append view.el
-            view.el.hide()
-            @current ?= view
-            do view.render
+        @channels.bind 'add',    new_channel_view
         @channels.bind 'all', =>
             app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
@@ -54,7 +48,7 @@ class exports.HomeView extends Backbone.View
     setCurrentChannel: (channel) =>
         @current?.el.hide()
         @current = @views[channel.cid]
-        app.router.navigate @current.model.get 'jid' if @current?
+        app.router.navigate @current.model.get('jid'), true if @current?
 
         @sidebar.setCurrentEntry channel
         @current?.el.show()

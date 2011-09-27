@@ -1,6 +1,6 @@
 { UserMetadata } = require 'models/metadata/user'
 { UserChannels } = require 'collections/channel'
-{ gravatar } = require 'helper'
+{ gravatar } = require 'util'
 
 class exports.User extends Backbone.Model
 

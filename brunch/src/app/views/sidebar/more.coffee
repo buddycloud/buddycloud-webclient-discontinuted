@@ -1,4 +1,4 @@
-{ transitionendEvent } = require 'helper'
+{ transitionendEvent } = require 'util'
 
 class exports.ChannelOverView extends Backbone.View
 
