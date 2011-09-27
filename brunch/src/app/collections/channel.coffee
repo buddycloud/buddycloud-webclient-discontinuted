@@ -21,7 +21,7 @@ class exports.Channels extends Backbone.Collection
 
 
 # used in models/user
-class exports.UserChannels extends Channels
+class exports.UserChannels extends exports.Channels
     initialize: ({@parent}) ->
         super
         @fetch()
