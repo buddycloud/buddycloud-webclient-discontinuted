@@ -2,8 +2,9 @@
 class exports.Metadata extends Backbone.Model
     type:'unspecified' # should be overriden by extending classes
 
-    initialize: (@parent, @id) ->
+    initialize: ({@parent, @id}) ->
         @localStorage = new Store "metadata-#{@type}-#{@id}"
+        @fetch()
         @bind 'change',(args...) =>
             app.debug "EV metadata change", @id, arguments
             args.unshift "change:#{@type}:metadata"

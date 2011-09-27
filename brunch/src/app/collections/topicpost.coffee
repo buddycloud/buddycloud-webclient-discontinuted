@@ -7,10 +7,12 @@ class exports.TopicPosts extends Backbone.Collection
         if (current = @get post.id)
             current.set post
         else if post.in_reply_to
-            opener  = @get post.in_reply_to
-            opener ?= @add id:post.in_reply_to
+            opener = @get post.in_reply_to
+            unless opener
+                super id:post.in_reply_to
+                opener = @get post.in_reply_to
             opener.comments.add post
-            opener
+            this
         else
             super
 

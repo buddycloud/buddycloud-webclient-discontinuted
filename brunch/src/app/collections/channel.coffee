@@ -6,7 +6,7 @@ getid = (nodeid) ->
 
 
 class exports.Channels extends Backbone.Collection
-    sync: ->
+    sync: -> # do nothing
 
     model: Channel
 
@@ -20,6 +20,22 @@ class exports.Channels extends Backbone.Collection
             @get channel.id
 
 
+# used in models/user
+class exports.UserChannels extends Channels
+    initialize: ({@parent}) ->
+        super
+        @fetch()
+
+    fetch: ->
+        for channelid in @parent.get('channel_ids') or []
+            app.channels.get channelid
+
+    # overriding backbone internels
+    _add: ->
+        channel = super
+        @parent.set 'channel_ids', @map((channel) -> channel.get 'id')
+        channel
+
 
 # global channel collection store
 # only one instance as app.channels
@@ -28,9 +44,9 @@ class exports.ChannelStore extends exports.Channels
         super
         @localStorage = new Store("channels")
         app.debug "nr of channels in cache: #{@localStorage.records.length}"
+        @fetch()
 
-    sync: ->
-        Backbone.sync.apply(this, arguments)
+    sync: Backbone.sync
 
     # returns cached channel or creates new cache entry
     get: (nodeid) ->

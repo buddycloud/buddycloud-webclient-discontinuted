@@ -37,3 +37,4 @@ class exports.UserStore extends exports.Users
         super
         @localStorage = new Store("users")
         app.debug "nr of users in cache: #{@localStorage.records.length}"
+        @fetch()

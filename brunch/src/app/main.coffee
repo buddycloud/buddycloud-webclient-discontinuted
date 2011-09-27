@@ -33,9 +33,8 @@ $(document).ready ->
 
     app.initialize = ->
         # caches
-        app.users = new UserStore
         app.channels = new ChannelStore
-        do app.users.fetch
+        app.users = new UserStore # userstore depends on channelstore
 
         # strophe handler
         app.handler.connection = new ConnectionHandler
