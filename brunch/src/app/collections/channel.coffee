@@ -30,11 +30,21 @@ class exports.UserChannels extends exports.Channels
 
     initialize: ->
         super
+        @parent.bind "subscription", (subscription) =>
+            switch supscribtion.supscribtion
+                when 'subscribed'
+                    @create id:subscription.node
+            # FIXME get this working when we need it
+                when 'unsubscribed'
+                    throw new Error 'FIXME unsubscribed' #@remove id
+                when 'pending'
+                    throw new Error 'FIXME pending' #@get(subscription.node).save
         @fetch()
 
     fetch: ->
-        for channelid in @parent.get('channel_ids') or []
-            app.channels.get channelid
+        channel_ids = _.clone(@parent.get('channel_ids') or [])
+        for channelid in channel_ids
+            @add app.channels.get channelid
 
     get: (id) ->
         if (channel = super)
@@ -42,6 +52,12 @@ class exports.UserChannels extends exports.Channels
         else
             @add id: id
             @get id
+
+    create: (channel, opts) ->
+        id = getid(channel.id) or channel.id
+        unless @has(id)
+            @add app.channels.get(id)
+        @get id
 
     # overriding backbone internels
     _add: ->
@@ -63,6 +79,6 @@ class exports.ChannelStore extends exports.Channels
 
     # returns cached channel or creates new cache entry
     get: (nodeid) ->
-        id = getid nodeid or nodeid
+        id = getid(nodeid) or nodeid
         super(id) or @create({id, jid:id})
 

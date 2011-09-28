@@ -11,3 +11,6 @@ class exports.User extends Backbone.Model
         # subscribed channels
         @channels = new UserChannels parent:this
         @metadata = new UserMetadata parent:this
+
+    push_subscription: (subscription) ->
+        @trigger "subscription", subscription
