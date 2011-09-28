@@ -8,8 +8,8 @@ class exports.DataHandler extends Backbone.EventHandler
 
         @connector.bind 'post', @on_node_post
         @connector.bind 'affiliation', @on_affiliation
-        @connector.bind 'subscription:user', @on_user_subscription
-        @connector.bind 'subscription:node', @on_node_subscription
+        @connector.bind 'subscription:user', @on_subscription
+        @connector.bind 'subscription:node', @on_subscription
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
 
@@ -50,9 +50,9 @@ class exports.DataHandler extends Backbone.EventHandler
 
     on_node_post: (post, nodeid) =>
         #app.error "GOT post", nodeid, post
-        channel = app.channels.get nodeid
-        node = channel.nodes.get nodeid, true
-        node.posts.add post
+        if (channel = app.channels.get nodeid)
+            node = channel.nodes.get nodeid, true
+            node.posts.push_post post
 
     on_connection_established: =>
         user = app.users.current
@@ -89,43 +89,30 @@ class exports.DataHandler extends Backbone.EventHandler
 
     on_affiliation: (affiliation) =>
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node
-        app.debug "GOT affiliation", affiliation
 
         user = app.users.get affiliation.jid, yes
-        user.affiliations.update affiliation.node, affiliation.affiliation
+        user.push_affiliation affiliation
 
         channel = app.channels.get affiliation.node
-        node = channel.nodes.create affiliation.node
-        channel = user.channels.update channel
+        channel.push_affiliation affiliation
 
-    # TODO: y distinguish between user & node subscription? A
-    # subscription always pertains both!
-    on_user_subscription: (subscription) =>
+        return
+
+    ##
+    # Got an entry from /user/.../subscriptions
+    # Got a real pubsub subscription for any node
+    on_subscription: (subscription) =>
         # FIXME delete all unsubscripted subscriptions from local cache
         return unless /\/user\/([^\/]+@[^\/]+)\//.test subscription.node
         app.debug "GOT user subscription", subscription
 
         user = app.users.get subscription.jid, yes
-        user.subscriptions.update subscription.node, subscription.subscription
+        user.push_subscription subscription
 
-        channel = app.channels.get subscription.node
-        node = channel.nodes.create subscription.node
+        channel = app.channels.get subscription.node, yes
+        channel.push_subscription subscription
 
-        # sideeffect: update sidebar by updating current user channels
-        channel = user.channels.update channel
-        # TODO: only if node is new/not yet subscribed?
-        @connector.get_node_posts subscription.node
-
-        if user.get('id') is app.users.current.get('id')
-            node.fetch()
-            node.metadata.query()
-            app.users.current.channels.update channel
-
-    on_node_subscription: (subscription) =>
-        app.debug "GOT node subscription", subscription
-        # TODO
-
-
+        return
 
 ##
 # @param iter {Function} callback(node, callback)
