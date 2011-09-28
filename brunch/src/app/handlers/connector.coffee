@@ -9,6 +9,9 @@ class exports.Connector extends Backbone.EventHandler
         app.handler.request = @request.handler
         @connection.buddycloud.addNotificationListener @on_notification
 
+    replayNotifications: =>
+        @connection.buddycloud.replayNotifications()
+
     publish: (nodeid, item, callback) =>
         @request (done) =>
             @connection.pubsub.publishAtom nodeid, item

@@ -6,8 +6,8 @@ class exports.Node extends Backbone.Model
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata this, nodeid
-        @users    = new Users app.users.filter_by_node nodeid
-        @posts    = new Posts
+        #@users    = new Users app.users.filter_by_node nodeid
+        @posts    = new Posts this
 
     toJSON: (full) ->
         result = super
@@ -19,4 +19,13 @@ class exports.Node extends Backbone.Model
         app.handler.data.get_node_subscriptions @get 'nodeid'
         @metadata.fetch()
 
+    # I am very afraid of the dead. They walk.
     update: -> # api function - every node should be updateable
+
+    push_subscription: (subscription) ->
+        @trigger 'subscription', subscription
+
+    push_post: (post) ->
+        @trigger 'post', post
+
+

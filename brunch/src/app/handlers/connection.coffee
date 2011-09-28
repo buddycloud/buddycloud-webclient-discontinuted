@@ -121,7 +121,6 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @connected = true
             @discover_channel_server =>
                 @trigger 'connected'
-                @connection.buddycloud.replayNotifications()
 
         else if status is Strophe.Status.DISCONNECTED
             @connected = false

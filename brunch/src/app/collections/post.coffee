@@ -3,8 +3,10 @@
 class exports.Posts extends Backbone.Collection
     model: Post
 
-    push_post: (post) ->
-        @create post
+    initialize: (@parent) ->
+        super()
+        @parent.bind 'post', (post) =>
+            @create post
 
     create: (attributes, options) ->
         if (post = @get(attributes.id))
