@@ -8,8 +8,9 @@ class exports.Posts extends Backbone.Collection
         @parent.bind 'post', (post) =>
             @create post
 
-    create: (attributes, options) ->
+    create: (attributes, opts) ->
         if (post = @get(attributes.id))
-            post.set(attributes, options)
+            post.set(attributes, opts)
         else
-            super
+            @add attributes, opts
+            @get attributes.id

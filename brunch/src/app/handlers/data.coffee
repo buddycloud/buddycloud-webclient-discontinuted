@@ -49,9 +49,9 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
-        #app.error "GOT post", nodeid, post
+        app.error "GOT post", nodeid, post
         if (channel = app.channels.get nodeid)
-            channel.push_post post
+            channel.push_post nodeid, post
 
     on_connection_established: =>
         console.log "on_connection_established"

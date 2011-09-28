@@ -40,7 +40,7 @@ class exports.Nodes extends Backbone.Collection
             node.update nodeid
             node
         else
-            super {id, nodeid}, opts
+            @add {id, nodeid}, opts
             @get id
 
 
