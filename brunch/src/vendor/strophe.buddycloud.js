@@ -34,6 +34,9 @@ Strophe.addConnectionPlugin('buddycloud', {
             if (conn[plugin] === undefined)
                 throw new Error(plugin + " plugin required!");
         });
+
+	Strophe.addNamespace('FORWARD', "urn:xmpp:forward:tmp");
+	Strophe.addNamespace('MAM', "urn:xmpp:archive#management");
     },
 
     // Called by Strophe on connection event
@@ -275,41 +278,70 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     /**
+     * @param start {Date} Optional
+     * @param end {Date} Optional
+     */
+    replayNotifications: function(start, end, success, error) {
+	var queryAttrs = { xmlns: Strophe.NS.MAM };
+	if (start)
+	    queryAttrs.start = start.toISOString();
+	if (end)
+	    queryAttrs.end = end.toISOString();
+        var iq = $iq({ from: this._connection.jid,
+		       to: this.channels.jid,
+		       type: 'get' }).
+            c('query', queryAttrs);
+        conn.sendIQ(iq, success, error);
+    },
+
+    /**
      * TODO: filter for sender
      */
     addNotificationListener: function(listener) {
-	var self = this;
+	var that = this;
 	this._connection.pubsub.addNotificationListener(function(stanza) {
-            Strophe.forEachChild(stanza, 'event', function(eventEl) {
-                Strophe.forEachChild(eventEl, null, function(child) {
-                    if (child.nodeName === 'subscription') {
-                        listener({
-                            type: 'subscription',
-                            node: child.getAttribute('node'),
-                            jid: child.getAttribute('jid'),
-                            subscription: child.getAttribute('subscription')
-                        });
-                    } else if (child.nodeName === 'affiliation') {
-                        listener({
-                            type: 'affiliation',
-                            node: child.getAttribute('node'),
-                            jid: child.getAttribute('jid'),
-                            affiliation: child.getAttribute('affiliation')
-                        });
-                    } else if (child.nodeName === 'items') {
-			self._parsePost(child, function(posts) {
-			    listener({
-				type: 'posts',
-				node: child.getAttribute('node'),
-				posts: posts
-			    });
+	    that._handleNotification(stanza);
+	});
+	this._connection.addHandler(function(stanza) {
+	    Strophe.forEachChild(stanza, 'forwarded', function(forwarded) {
+		Strophe.forEachChild(forwarded, 'message', function(innerStanza) {
+		    that._handleNotification(innerStanza);
+		});
+	    });
+	}, Strophe.NS.FORWARD, 'message');
+    },
+
+    _handleNotification: function(stanza) {
+	var that = this;
+	Strophe.forEachChild(stanza, 'event', function(eventEl) {
+	    Strophe.forEachChild(eventEl, null, function(child) {
+                if (child.nodeName === 'subscription') {
+		    listener({
+			type: 'subscription',
+			node: child.getAttribute('node'),
+			jid: child.getAttribute('jid'),
+			subscription: child.getAttribute('subscription')
+                    });
+                } else if (child.nodeName === 'affiliation') {
+		    listener({
+			type: 'affiliation',
+			node: child.getAttribute('node'),
+			jid: child.getAttribute('jid'),
+			affiliation: child.getAttribute('affiliation')
+                    });
+                } else if (child.nodeName === 'items') {
+		    that._parsePost(child, function(posts) {
+			listener({
+			    type: 'posts',
+			    node: child.getAttribute('node'),
+			    posts: posts
 			});
-                    } else if (child.nodeName === 'configuration') {
-                        /* TODO */
-                    }
-                });
+		    });
+                } else if (child.nodeName === 'configuration') {
+		    /* TODO */
+		}
             });
-    	});
+        });
     },
 
     // helper
