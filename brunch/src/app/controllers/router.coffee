@@ -53,7 +53,7 @@ class exports.Router extends Backbone.Router
     overview: ->
         @setView app.views.overview
 
-    loadingchannel: ->
+    loadingchannel: (id, domain) ->
         jid = "#{id}@#{domain}"
         if app.handler.connection.connected
             channel = app.channels.get jid
