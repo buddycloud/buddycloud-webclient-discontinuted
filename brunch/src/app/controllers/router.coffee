@@ -31,7 +31,7 @@ class exports.Router extends Backbone.Router
 
     on_connected: =>
         app.views.index = new HomeView
-        @navigate app.users.current.get('jid'), true
+        @navigate app.users.target.get('jid'), true
 
     # routes
 
@@ -55,6 +55,8 @@ class exports.Router extends Backbone.Router
 
     loadingchannel: (id, domain) ->
         jid = "#{id}@#{domain}"
+        app.users.target = app.users.get jid, yes
+
         if app.handler.connection.connected
             channel = app.channels.get jid
             #app.handler.connection.connector.get_node_posts nodeid FIXME astro!
