@@ -8,6 +8,6 @@ class exports.Posts extends Backbone.Collection
 
     create: (attributes, options) ->
         if (post = @get(attributes.id))
-            post.save(attributes, options)
+            post.set(attributes, options)
         else
             super
