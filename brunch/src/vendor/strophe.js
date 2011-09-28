@@ -2067,7 +2067,7 @@ Strophe.Connection.prototype = {
                 this.connect_callback(status, condition);
             } catch (e) {
                 Strophe.error("User connection callback caused an " +
-                              "exception: " + e);
+                              "exception: " + (e.stack || e));
             }
         }
     },
