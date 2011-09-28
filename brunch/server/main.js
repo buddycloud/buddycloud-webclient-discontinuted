@@ -21,8 +21,7 @@ var index = function(req, res){
 };
 
 app.get('/',            index);
-app.get('/index',       index);
-app.get('/home',        index);
+app.get('/welcome',     index);
 app.get('/more',        index);
 app.get('/login',       index);
 app.get('/register',    index);
