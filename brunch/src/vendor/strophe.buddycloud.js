@@ -282,12 +282,13 @@ Strophe.addConnectionPlugin('buddycloud', {
      * @param end {Date} Optional
      */
     replayNotifications: function(start, end, success, error) {
+	var conn = this._connection;
 	var queryAttrs = { xmlns: Strophe.NS.MAM };
 	if (start)
 	    queryAttrs.start = start.toISOString();
 	if (end)
 	    queryAttrs.end = end.toISOString();
-        var iq = $iq({ from: this._connection.jid,
+        var iq = $iq({ from: conn.jid,
 		       to: this.channels.jid,
 		       type: 'get' }).
             c('query', queryAttrs);
@@ -300,18 +301,18 @@ Strophe.addConnectionPlugin('buddycloud', {
     addNotificationListener: function(listener) {
 	var that = this;
 	this._connection.pubsub.addNotificationListener(function(stanza) {
-	    that._handleNotification(stanza);
+	    that._handleNotification(stanza, listener);
 	});
 	this._connection.addHandler(function(stanza) {
 	    Strophe.forEachChild(stanza, 'forwarded', function(forwarded) {
 		Strophe.forEachChild(forwarded, 'message', function(innerStanza) {
-		    that._handleNotification(innerStanza);
+		    that._handleNotification(innerStanza, listener);
 		});
 	    });
 	}, Strophe.NS.FORWARD, 'message');
     },
 
-    _handleNotification: function(stanza) {
+    _handleNotification: function(stanza, listener) {
 	var that = this;
 	Strophe.forEachChild(stanza, 'event', function(eventEl) {
 	    Strophe.forEachChild(eventEl, null, function(child) {
