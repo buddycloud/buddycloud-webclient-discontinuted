@@ -51,41 +51,23 @@ class exports.DataHandler extends Backbone.EventHandler
     on_node_post: (post, nodeid) =>
         #app.error "GOT post", nodeid, post
         if (channel = app.channels.get nodeid)
-            node = channel.nodes.get nodeid, true
-            node.posts.push_post post
+            channel.push_post post
 
     on_connection_established: =>
+        console.log "on_connection_established"
         user = app.users.current
-        return if user.get('jid') is "anony@mous"
-
-        #nodeid = "/user/#{app.users.current.get 'jid'}/channel"
-        #@connector.start_fetch_node_posts nodeid
-        #@connector.get_node_posts nodeid
-        # query for metadata updates for all nodes of each channel where the current user is involved
-        app.channels.forEach (channel) =>
-            channel.nodes.forEach (node) =>
-                node.fetch()
-                nodeid = node.get 'nodeid'
-                @connector.get_node_posts nodeid
-                if user.affiliations.get nodeid
-                    node.metadata.query()
-
-        @get_user_subscriptions()
+        if user.get('jid') is "anony@mous"
+            forEachUserNode app.users.target.get('id'), (nodeid, cb) =>
+                @connector.get_node_posts nodeid, cb
+        else
+            @connector.replayNotifications()
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user
         app.channels.fetch()
 
         app.users.forEach (user) ->
-            user.affiliations.fetch()
-
-        # filter all channels to get only current user specific ones
-        user = app.users.current
-        user.affiliations.fetch()
-        user.affiliations.forEach (affiliation) ->
-            return if affiliation.get('value') in ['none', 'outcast']
-            channel = app.channels.get affiliation.id
-            user.channels.update channel
+            #user.affiliations.fetch()
 
     on_affiliation: (affiliation) =>
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node
