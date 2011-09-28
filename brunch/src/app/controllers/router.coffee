@@ -31,6 +31,7 @@ class exports.Router extends Backbone.Router
 
     on_connected: =>
         app.views.index = new HomeView
+        app.users.target ?= app.users.current
         @navigate app.users.target.get('jid'), true
 
     # routes
