@@ -1,6 +1,9 @@
 { NodeStore } = require 'collections/node'
 { gravatar } = require 'util'
 
+##
+# Attribute id: Jabber-Id
+# Attribute jid: Jabber-Id
 class exports.Channel extends Backbone.Model
     initialize: ->
         @nodes = new NodeStore this
