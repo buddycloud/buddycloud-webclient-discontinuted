@@ -8,7 +8,11 @@ class exports.Channel extends Backbone.Model
         @nodes.bind 'all', => @trigger.apply this, arguments
         @nodes.fetch()
 
+    push_post: (nodeid, post) ->
+        @trigger "post", nodeid, post
+
+    # subscription.jid is already filtered for this channel id (user)
     push_subscription: (subscription) ->
-        # subscription.subscription is either subscribed, unscribed or pending
-        @trigger "subscription:#{subscription.subscription}:#{subscription.node}"
+        # subscription.subscription is either subscribed, unsubscribed or pending
+        @trigger "subscription", subscription
 

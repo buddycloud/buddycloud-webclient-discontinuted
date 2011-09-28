@@ -51,3 +51,10 @@ class exports.NodeStore extends exports.Nodes
         @localStorage = new Store "#{@channel.get 'jid'}-nodes"
         app.debug "nr of channel #{@channel.get 'jid'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
+
+        @channel.bind 'subscription', (subscription) =>
+            node = @create(subscription.node)
+            node.push_subscription subscription
+        @channel.bind 'post', (nodeid, post) =>
+            node = @create(nodeid)
+            node.push_post post
