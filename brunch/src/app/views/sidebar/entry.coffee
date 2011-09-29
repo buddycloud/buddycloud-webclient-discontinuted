@@ -8,6 +8,7 @@ class exports.ChannelEntry extends BaseView
 
     initialize: ->
         super
+        @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
 
     render: =>
@@ -23,8 +24,7 @@ class exports.ChannelEntry extends BaseView
         (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
 
     update_attributes: ->
-        if (channel = @model.nodes.get 'channel')
-            @channel = channel.toJSON yes
+        @channel = @model.toJSON yes
         if (status = @model.nodes.get 'status')
             @status = status.toJSON yes
 

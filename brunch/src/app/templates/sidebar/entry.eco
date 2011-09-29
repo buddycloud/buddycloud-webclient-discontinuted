@@ -1,6 +1,6 @@
 <div class="<%= @isPersonal("personal","") %> channel <%= @isSelected("selected","") %>">
   <div class="holder">
-    <div class="avatar" title="<%= @channel?.metadata?.title?.value or @model.get('jid') %>" style="background-image: url(<%= @model.avatar %>)">
+    <div class="avatar" title="<%= @channel?.metadata?.title?.value or @channel?.id %>" style="background-image: url(<%= @model.avatar %>)">
       <% if @channelmessage?: %>
         <span class="channelpost counter"><%= @channel.channelmessage.count %></span>
       <% end %>
@@ -9,8 +9,8 @@
       <% end %>
     </div>
     <div class="info">
-      <span class="owner"><%= @model.get('jid').split('@')[0] %><span class="domain"><%= @model.get('jid').replace(/.+@/,'@') %></span></span>
-      <span class="status"><%= @channel?.metadata?.status?.value? or "NM" %></span>
+      <span class="owner"><%= @channel?.id.split('@')?[0] %><span class="domain"><%= @channel?.id?.replace(/.+@/,'@') %></span></span>
+      <span class="status"><%= @channel?.metadata?.status?.value or "NM" %></span>
     </div>
     <% if @isSelected(): %>
       <div class="active_channel_indicator"><div>
