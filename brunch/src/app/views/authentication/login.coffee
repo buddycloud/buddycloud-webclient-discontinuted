@@ -1,11 +1,12 @@
 { AuthenticationView } = require 'views/authentication/base'
+{ EventHandler } = require 'util'
+
 
 class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        @el.find('form').live 'submit', (ev) =>
-            ev.preventDefault()
+        @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection
             jid = $('#home_login_jid').val()
@@ -15,7 +16,6 @@ class exports.LoginView extends AuthenticationView
                 # disable the form and give feedback
                 $('#home_login_submit').prop "disabled", yes
                 @el.find('.leftBox').addClass "working"
-            return false
         super
 
     start_connection: (jid, password) ->

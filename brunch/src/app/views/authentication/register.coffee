@@ -1,4 +1,6 @@
 { AuthenticationView } = require 'views/authentication/base'
+{ EventHandler } = require 'util'
+
 
 class exports.RegisterView extends AuthenticationView
     cssclass: 'registerPicked'
@@ -17,8 +19,7 @@ class exports.RegisterView extends AuthenticationView
                     confirm.removeClass 'match'
                     confirm.addClass 'missmatch'
 
-        @el.find('#home_register_account').live 'click', (ev) =>
-            ev.preventDefault()
+        @el.find('#home_register_account').live 'click', EventHandler (ev) =>
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection
             name = $('#home_register_new_jid').val()
@@ -36,7 +37,6 @@ class exports.RegisterView extends AuthenticationView
             else
                 alert "no name!" unless name.length # FIXME
                 alert "no password!" unless password.length # FIXME
-            return false
         super
 
     start_registration: (name, password, email) ->

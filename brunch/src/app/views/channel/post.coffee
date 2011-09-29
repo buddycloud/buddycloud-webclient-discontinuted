@@ -1,4 +1,6 @@
 { BaseView } = require 'views/base'
+{ EventHandler } = require 'util'
+
 
 class exports.PostView extends BaseView
     template: require 'templates/channel/post'
@@ -17,7 +19,5 @@ class exports.PostView extends BaseView
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'
 
-    clickAuthor: (ev) =>
-        ev?.preventDefault()
+    clickAuthor: EventHandler ->
         app.router.setCurrentChannel @author.get('jid')
-        no # normal http anchor behavior
