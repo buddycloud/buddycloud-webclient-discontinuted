@@ -82,11 +82,11 @@ class exports.ChannelView extends BaseView
             @channel = channel.toJSON yes
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
-        #permissions
-        subscription = app.users.current.subscriptions.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
-        affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        # Permissions:
+        subscription = app.users.current.channels.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         # TODO: pending may require special handling
         @user =
             followingThisChannel: subscription in ["subscribed", "pending"]
-            hasRightToPost: affiliation in ["owner", "publisher", "moderator", "member"]
+            hasRightToPost: yes #affiliation in ["owner", "publisher", "moderator", "member"]
         app.debug "ChannelView.update_attributes", @user
