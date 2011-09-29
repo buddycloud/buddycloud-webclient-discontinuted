@@ -23,12 +23,7 @@ class exports.Sidebar extends Backbone.View
             entry.render()
         @parent.channels.forEach        new_channel_entry
         @parent.channels.bind 'change', new_channel_entry
-        @parent.channels.bind 'add', (channel) =>
-            entry = new ChannelEntry model:channel, parent:this
-            @views[channel.cid] = entry
-            @current ?= entry
-            @el.append entry.el
-            entry.render()
+        @parent.channels.bind 'add',    new_channel_entry
         @parent.channels.bind 'all', =>
             app.debug "sidebar CHEV-ALL", arguments
 
