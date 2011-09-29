@@ -49,9 +49,11 @@ class exports.UserChannels extends exports.Channels
     get: (id) ->
         if (channel = super)
             channel
-        else
-            @add id: id
+        else if (channel = app.channels.get(id))
+            @add channel
             @get id
+        else
+            null
 
     create: (channel, opts) ->
         id = getid(channel.id) or channel.id
@@ -68,6 +70,10 @@ class exports.UserChannels extends exports.Channels
 
 # global channel collection store
 # only one instance as app.channels
+#
+# The idea is that only this collection creates models, while the
+# other (filtered) collections retrieve the same singleton model
+# through the *Store collections.
 class exports.ChannelStore extends exports.Channels
     initialize: ->
         super
@@ -80,5 +86,4 @@ class exports.ChannelStore extends exports.Channels
     # returns cached channel or creates new cache entry
     get: (nodeid) ->
         id = getid(nodeid) or nodeid
-        super(id) or @create({id, jid:id})
-
+        Backbone.Collection::get.call(this, id) or @create({id, jid:id})
