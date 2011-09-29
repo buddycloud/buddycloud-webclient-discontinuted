@@ -40,16 +40,16 @@ class exports.Nodes extends Backbone.Collection
             node.update nodeid
             node
         else
+            app.debug "Create Node", id
             @add {id, nodeid}, opts
             @get id
 
 
 
-
 class exports.NodeStore extends exports.Nodes
     constructor: (@channel) ->
-        @localStorage = new Store "#{@channel.get 'jid'}-nodes"
-        app.debug "nr of channel #{@channel.get 'jid'} nodes in cache: #{@localStorage.records.length}", arguments
+        @localStorage = new Store "#{@channel.get 'id'}-nodes"
+        app.debug "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
 
         @channel.bind 'subscription', (subscription) =>
