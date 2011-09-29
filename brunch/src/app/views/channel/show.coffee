@@ -14,9 +14,7 @@ class exports.ChannelView extends BaseView
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
         nodeid = @model.nodes.get('posts')?.get 'nodeid'
-        app.users.current.subscriptions.bind 'all', (args...) ->
-            console.error 'subscriptions event', args...
-        app.users.current.subscriptions.bind "change:#{nodeid}", @render
+        app.users.current.channels.bind "change:#{@model.get 'id'}", @render
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
