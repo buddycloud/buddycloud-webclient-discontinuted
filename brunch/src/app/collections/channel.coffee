@@ -55,7 +55,7 @@ class exports.UserChannels extends exports.Channels
 
     create: (channel, opts) ->
         id = getid(channel.id) or channel.id
-        unless @has(id)
+        unless @get(id)?
             @add app.channels.get(id)
         @get id
 

@@ -49,7 +49,6 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
-        app.error "GOT post", nodeid, post
         if (channel = app.channels.get nodeid)
             channel.push_post nodeid, post
 
@@ -73,10 +72,10 @@ class exports.DataHandler extends Backbone.EventHandler
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node
 
         user = app.users.get affiliation.jid, yes
-        user.push_affiliation affiliation
+        #user.push_affiliation affiliation
 
         channel = app.channels.get affiliation.node
-        channel.push_affiliation affiliation
+        #channel.push_affiliation affiliation
 
         return
 

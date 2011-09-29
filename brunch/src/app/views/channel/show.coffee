@@ -36,7 +36,7 @@ class exports.ChannelView extends BaseView
         'click .newTopic, .answer': 'openNewTopicEdit'
         'click #createNewTopic': 'clickPost'
 
-    clickPost: EventHandler (ev) =>
+    clickPost: EventHandler (ev) ->
         self = @$('.newTopic').has(ev.target)
         text = self.find('textarea')
         unless text.val() is ""
@@ -51,7 +51,7 @@ class exports.ChannelView extends BaseView
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
 
-    openNewTopicEdit: EventHandler (ev) =>
+    openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
 
         self = @$('.newTopic, .answer').has(ev.target)
