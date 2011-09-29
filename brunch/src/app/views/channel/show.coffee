@@ -60,10 +60,10 @@ class exports.ChannelView extends BaseView
                 if self.find('textarea').val() is ""
                     self.removeClass 'write'
 
-    clickFollow: EventHandler (ev) =>
+    clickFollow: EventHandler (ev) ->
         app.handler.data.subscribeUser @model.get('id')
 
-    clickUnfollow: EventHandler (ev) =>
+    clickUnfollow: EventHandler (ev) ->
         app.handler.data.unsubscribeUser @model.get('id')
 
     render: =>
