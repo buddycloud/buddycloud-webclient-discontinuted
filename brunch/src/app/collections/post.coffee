@@ -3,8 +3,10 @@
 class exports.Posts extends Backbone.Collection
     model: Post
 
-    initialize: (@parent) ->
+    constructor: ({@parent}) ->
         super()
+
+    initialize: ->
         @parent.bind 'post', (post) =>
             @create post
 
