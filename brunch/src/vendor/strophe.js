@@ -1845,10 +1845,7 @@ Strophe.Connection.prototype = {
                     errback(stanza);
                 }
 	    } else {
-                throw {
-                    name: "StropheError",
-                    message: "Got bad IQ type of " + iqtype
-                };
+                Strophe.fatal("Got bad IQ type of " + iqtype, stanza);
             }
 	}, null, 'iq', null, id);
 

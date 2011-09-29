@@ -300,15 +300,23 @@ Strophe.addConnectionPlugin('buddycloud', {
      */
     addNotificationListener: function(listener) {
 	var that = this;
+	var safeListener = function() {
+	    try {
+		listener.apply(that, arguments);
+	    } catch(e) {
+		Strophe.fatal(e.stack || e);
+	    }
+	};
 	this._connection.pubsub.addNotificationListener(function(stanza) {
-	    that._handleNotification(stanza, listener);
+	    that._handleNotification(stanza, safeListener);
 	});
 	this._connection.addHandler(function(stanza) {
 	    Strophe.forEachChild(stanza, 'forwarded', function(forwarded) {
 		Strophe.forEachChild(forwarded, 'message', function(innerStanza) {
-		    that._handleNotification(innerStanza, listener);
+		    that._handleNotification(innerStanza, safeListener);
 		});
 	    });
+	    return true;
 	}, Strophe.NS.FORWARD, 'message');
     },
 
@@ -340,7 +348,8 @@ Strophe.addConnectionPlugin('buddycloud', {
 		    });
                 } else if (child.nodeName === 'configuration') {
 		    /* TODO */
-		}
+		} else
+		    console.warn("Unhandled buddycloud event type", child.nodeName);
             });
         });
     },
