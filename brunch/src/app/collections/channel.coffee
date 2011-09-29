@@ -2,7 +2,7 @@
 
 getid = (nodeid) ->
     # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
-    nodeid.match(/\/user\/([^\/]+@[^\/]+)\//)?[1] # jid # TODO compile
+    nodeid?.match(/\/user\/([^\/]+@[^\/]+)\//)?[1] # jid # TODO compile
 
 
 ##
