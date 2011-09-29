@@ -1,11 +1,12 @@
 { ChannelOverView } = require 'views/sidebar/more'
 { ChannelEntry } = require 'views/sidebar/entry'
+{ BaseView } = require 'views/base'
 
 # The sidebar shows all channels the user subscribed to
-class exports.Sidebar extends Backbone.View
+class exports.Sidebar extends BaseView
     template: require 'templates/sidebar/show'
 
-    initialize: ({@parent}) ->
+    initialize: ->
         # default's not visible due to nice animation
         $('body').append @template()
         @el = $('#channels > .scrollArea')
