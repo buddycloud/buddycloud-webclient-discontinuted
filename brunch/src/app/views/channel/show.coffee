@@ -20,9 +20,9 @@ class exports.ChannelView extends BaseView
             @model.nodes.unbind "add", init_posts
             if (postsnode = @model.nodes.get 'posts')
                 @postsview = new PostsView
-                    model:postsnode
-                    parent:this
-                    el:@el.find('.topics')
+                    model: postsnode
+                    parent: this
+                    el: @el.find('.topics')
                 do @postsview.render
             else
                 @model.nodes.bind "add", init_posts

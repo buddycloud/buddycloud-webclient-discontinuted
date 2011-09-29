@@ -37,7 +37,7 @@ class exports.HomeView extends Backbone.View
         # if we already found a view in the cache
         @current?.el.show()
 
-        @sidebar = new Sidebar parent:this
+        @sidebar = new Sidebar(parent: this)
 
         $('body').removeClass('start').append @el
         $('.centerBox').remove() # FIXME ugly
