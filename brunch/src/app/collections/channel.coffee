@@ -31,7 +31,7 @@ class exports.UserChannels extends exports.Channels
     initialize: ->
         super
         @parent.bind "subscription", (subscription) =>
-            switch supscribtion.supscribtion
+            switch subscription.subscription
                 when 'subscribed'
                     @create id:subscription.node
             # FIXME get this working when we need it
