@@ -47,8 +47,8 @@ class exports.UserStore extends exports.Users
         @fetch()
 
     create: (jid) ->
-        if (user = Backbone.Collection::get.call(this, jid))
+        if (user = @get(jid))
             user
         else
             @add({ jid })
-            Backbone.Collection::get.call(this, jid)
+            @get jid

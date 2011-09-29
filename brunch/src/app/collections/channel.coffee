@@ -46,10 +46,10 @@ class exports.UserChannels extends exports.Channels
         for channelid in channel_ids
             @add app.channels.get channelid
 
-    get: (id) ->
+    get: (id, create) ->
         if (channel = super)
             channel
-        else if (channel = app.channels.get(id))
+        else if create and (channel = app.channels.create(id))
             @add channel
             @get id
         else
@@ -84,6 +84,10 @@ class exports.ChannelStore extends exports.Channels
     sync: Backbone.sync
 
     # returns cached channel or creates new cache entry
-    get: (nodeid) ->
+    create: (nodeid) ->
         id = getid(nodeid) or nodeid
-        Backbone.Collection::get.call(this, id) or @create({id, jid:id})
+        if (channel = @get(id))
+            channel
+        else
+            @add(id: id)
+            @get id
