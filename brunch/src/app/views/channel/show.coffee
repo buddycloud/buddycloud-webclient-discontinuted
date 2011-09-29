@@ -1,6 +1,7 @@
 { ChannelDetails } = require 'views/channel/details/show'
 { PostsView } = require 'views/channel/posts'
 { BaseView } = require 'views/base'
+{ EventHandler } = require 'util'
 
 # The channel shows channel content
 class exports.ChannelView extends BaseView
@@ -35,8 +36,9 @@ class exports.ChannelView extends BaseView
         'click .newTopic, .answer': 'openNewTopicEdit'
         'click #createNewTopic': 'clickPost'
 
-    clickPost: (ev) ->
-        text = @el.find('.newTopic, .answer').find('textarea')
+    clickPost: EventHandler (ev) =>
+        self = @$('.newTopic').has(ev.target)
+        text = self.find('textarea')
         unless text.val() is ""
             post =
                 content: text.val()
@@ -49,10 +51,10 @@ class exports.ChannelView extends BaseView
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
 
-    openNewTopicEdit: (ev) ->
-        self = @$('.newTopic, .answer').has(ev.target)
-        # prevent bubbling!
+    openNewTopicEdit: EventHandler (ev) =>
         ev.stopPropagation()
+
+        self = @$('.newTopic, .answer').has(ev.target)
         unless self.hasClass 'write'
             self.addClass 'write'
             $(document).one 'click', ->
@@ -60,15 +62,11 @@ class exports.ChannelView extends BaseView
                 if self.find('textarea').val() is ""
                     self.removeClass 'write'
 
-    clickFollow: (ev) ->
-        ev.preventDefault()
+    clickFollow: EventHandler (ev) =>
         app.handler.data.subscribeUser @model.get('id')
-        false
 
-    clickUnfollow: (ev) ->
-        ev.preventDefault()
+    clickUnfollow: EventHandler (ev) =>
         app.handler.data.unsubscribeUser @model.get('id')
-        false
 
     render: =>
         @update_attributes()
