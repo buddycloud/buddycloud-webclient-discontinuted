@@ -46,7 +46,8 @@ class exports.ChannelView extends BaseView
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, =>
                     post.content = value:post.content
-                    app.handler.data.add_post node, post
+                    # TODO: make sure prematurely added post correlates to incoming notification
+                    #app.handler.data.add_post node, post
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
 
