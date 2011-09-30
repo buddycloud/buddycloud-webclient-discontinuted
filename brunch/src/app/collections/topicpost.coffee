@@ -8,7 +8,6 @@ class exports.TopicPosts extends Backbone.Collection
 
     initialize: ->
         @parent.bind 'post', (post) =>
-            console.warn 'TopicPosts got post', post, @
             @add post
 
     add: (post) ->

@@ -28,7 +28,6 @@ class exports.UserChannels extends exports.Channels
     initialize: ->
         super
         @parent.bind "subscription:user:#{@parent.get 'id'}", (subscription) =>
-            console.error "UserChannels (#{@parent.get 'id'}) subscription", @, subscription
             switch subscription.subscription
                 # FIXME get 'pending' working when we need it
                 when 'subscribed', 'pending'
@@ -36,7 +35,6 @@ class exports.UserChannels extends exports.Channels
                 when 'unsubscribed', 'none'
                     if (channel = @get subscription.node)
                         @remove channel
-                        console.warn "UserChannels #{@parent.get 'id'} removed", @, channel
         @fetch()
 
     fetch: ->
