@@ -69,5 +69,5 @@ class exports.NodeStore extends exports.Nodes
             id = nodeid_to_type(nodeid)
             unless id and nodeid
                 throw "NodeID missing"
-            @add { nodeid }
+            @add { id, nodeid }
             super(id)
