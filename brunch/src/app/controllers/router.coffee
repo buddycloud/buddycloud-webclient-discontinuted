@@ -59,7 +59,7 @@ class exports.Router extends Backbone.Router
         app.users.target = app.users.get jid, yes
 
         if app.handler.connection.connected
-            channel = app.channels.get jid
+            channel = app.channels.get jid, yes
             app.views.index.setCurrentChannel channel
             @setView app.views.index
         else

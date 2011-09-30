@@ -31,3 +31,9 @@ exports.EventHandler = (handler) ->
         ev.preventDefault()
         handler.apply(this, arguments)
         no
+
+# /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
+NODEID_TO_USER_REGEX = /\/user\/([^\/]+@[^\/]+)\//
+exports.nodeid_to_user = (nodeid) ->
+    nodeid?.match(NODEID_TO_USER_REGEX)?[1] # jid
+

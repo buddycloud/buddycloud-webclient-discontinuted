@@ -1,8 +1,5 @@
 { Channel } = require 'models/channel'
-
-getid = (nodeid) ->
-    # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
-    nodeid?.match(/\/user\/([^\/]+@[^\/]+)\//)?[1] # jid # TODO compile
+{ nodeid_to_user } = require 'util'
 
 
 ##
@@ -33,7 +30,7 @@ class exports.UserChannels extends exports.Channels
         @parent.bind "subscription", (subscription) =>
             switch subscription.subscription
                 when 'subscribed'
-                    @create id:subscription.node
+                    @get subscription.node, yes
             # FIXME get this working when we need it
                 when 'unsubscribed'
                     throw new Error 'FIXME unsubscribed' #@remove id
@@ -47,19 +44,14 @@ class exports.UserChannels extends exports.Channels
             @add app.channels.get channelid
 
     get: (id, create) ->
-        if (channel = super)
+        id = nodeid_to_user(id) or id
+        if (channel = super(id))
             channel
-        else if create and (channel = app.channels.create(id))
+        else if (channel = app.channels.get(id, create))
             @add channel
-            @get id
+            @get channel.id
         else
             null
-
-    create: (channel, opts) ->
-        id = getid(channel.id) or channel.id
-        unless @get(id)?
-            @add app.channels.get(id)
-        @get id
 
     # overriding backbone internels
     _add: ->
@@ -84,10 +76,10 @@ class exports.ChannelStore extends exports.Channels
     sync: Backbone.sync
 
     # returns cached channel or creates new cache entry
-    create: (nodeid) ->
-        id = getid(nodeid) or nodeid
-        if (channel = @get(id))
+    get: (id, create) ->
+        id = nodeid_to_user(id) or id
+        if (channel = super(id))
             channel
-        else
+        else if create
             @add(id: id)
-            @get id
+            super(id)
