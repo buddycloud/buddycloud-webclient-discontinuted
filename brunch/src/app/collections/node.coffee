@@ -11,7 +11,8 @@ lazyRequire = -> # to prevent require circles
 
 
 class exports.Nodes extends Backbone.Collection
-    sync: -> Backbone.sync.apply(this, arguments) if @localStorage
+    sync: -> # do nothing
+
     constructor: ->
         do lazyRequire unless lookup._loaded
         super
@@ -47,11 +48,14 @@ class exports.Nodes extends Backbone.Collection
 
 
 class exports.NodeStore extends exports.Nodes
+    sync: Backbone.sync
+
     constructor: ({@channel}) ->
         @localStorage = new Store "#{@channel.get 'id'}-nodes"
         app.debug "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
 
+    initialize: ->
         @channel.bind 'subscription', (subscription) =>
             node = @get(subscription.node, yes)
             node.push_subscription subscription

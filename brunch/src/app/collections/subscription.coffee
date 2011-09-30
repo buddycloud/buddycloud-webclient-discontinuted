@@ -1,5 +1,7 @@
 
 class exports.SubscriptionStore extends Backbone.Collection
+    sync: Backbone.sync
+
     constructor: (@user) ->
         @localStorage = new Store("#{@user.get 'jid'}-subscriptions")
         app.debug "nr of #{@user.get 'jid'} subscriptions in cache: #{@localStorage.records.length}"

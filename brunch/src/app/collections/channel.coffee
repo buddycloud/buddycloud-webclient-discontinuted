@@ -53,7 +53,7 @@ class exports.UserChannels extends exports.Channels
         else
             null
 
-    # overriding backbone internels
+    # overriding backbone internals
     _add: ->
         channel = super
         @parent.set channel_ids: @map((channel) -> channel.get 'id')
@@ -67,13 +67,13 @@ class exports.UserChannels extends exports.Channels
 # other (filtered) collections retrieve the same singleton model
 # through the *Store collections.
 class exports.ChannelStore extends exports.Channels
+    sync: Backbone.sync
+
     initialize: ->
         super
         @localStorage = new Store("channels")
         app.debug "nr of channels in cache: #{@localStorage.records.length}"
         @fetch()
-
-    sync: Backbone.sync
 
     # returns cached channel or creates new cache entry
     get: (id, create) ->

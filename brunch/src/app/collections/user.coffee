@@ -1,7 +1,8 @@
 { User } = require 'models/user'
 
 class exports.Users extends Backbone.Collection
-    sync: -> Backbone.sync.apply(this, arguments) if @localStorage
+    sync: -> # do nothing
+
     model: User
 
     get: (jid, create) ->
@@ -17,6 +18,8 @@ class exports.Users extends Backbone.Collection
 # other (filtered) collections retrieve the same singleton model
 # through the *Store collections.
 class exports.UserStore extends exports.Users
+    sync: Backbone.sync
+
     initialize: ->
         super
         @localStorage = new Store("users")
