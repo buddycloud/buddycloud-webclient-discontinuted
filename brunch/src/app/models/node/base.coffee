@@ -1,8 +1,12 @@
 { NodeMetadata } = require 'models/metadata/node'
 { Users } = require('collections/user')
 { Posts } = require('collections/post')
+{ nodeid_to_type } = require 'util'
 
 class exports.Node extends Backbone.Model
+    defaults: ->
+        id: nodeid_to_type(@get 'nodeid')
+
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata this, nodeid

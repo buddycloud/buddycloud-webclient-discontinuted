@@ -69,6 +69,5 @@ class exports.NodeStore extends exports.Nodes
             id = nodeid_to_type(nodeid)
             unless id and nodeid
                 throw "NodeID missing"
-            console.warn "New node", "id=#{id}", "nodeid=#{nodeid}"
-            @add { id, nodeid }
+            @add { nodeid }
             super(id)
