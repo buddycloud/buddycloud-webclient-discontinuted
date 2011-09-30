@@ -13,14 +13,5 @@ class exports.User extends Backbone.Model
         @metadata = new UserMetadata parent:this
 
     push_subscription: (subscription) ->
-        if subscription.jid isnt @get('jid')
-            return
-
-        switch subscription.subscription
-            when 'subscribed'
-                @channels.get subscription.node, yes
-            when 'unsubscribed', 'none'
-                if (channel = @channels.get subscription.node)
-                    @channels.remove user
-
-        @trigger "subscription", subscription
+        if subscription.jid is @get('jid')
+            @trigger "subscription:user:#{@get 'jid'}", subscription

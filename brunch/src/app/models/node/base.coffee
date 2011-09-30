@@ -34,7 +34,7 @@ class exports.Node extends Backbone.Model
                 if (user = @users.get subscription.jid)
                     @users.remove user
 
-        @trigger 'subscription', subscription
+        @trigger "subscription:node:#{subscription.node}", subscription
 
     push_post: (post) ->
         @trigger 'post', post

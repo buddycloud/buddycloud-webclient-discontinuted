@@ -8,8 +8,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
         @connector.bind 'post', @on_node_post
         @connector.bind 'affiliation', @on_affiliation
-        @connector.bind 'subscription:user', @on_subscription
-        @connector.bind 'subscription:node', @on_subscription
+        @connector.bind 'subscription', @on_subscription
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
 

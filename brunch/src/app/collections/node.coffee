@@ -52,11 +52,11 @@ class exports.NodeStore extends exports.Nodes
         app.debug "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
 
-        @channel.bind 'subscription', (subscription) =>
+        @channel.bind "subscription:user:#{@channel.get 'id'}", (subscription) =>
+            console.warn "NodeStore got subscription", subscription
             node = @get(subscription.node, yes)
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
-            console.warn "NodeStore got post", nodeid, post
             node = @get(nodeid, yes)
             node.push_post post
 
