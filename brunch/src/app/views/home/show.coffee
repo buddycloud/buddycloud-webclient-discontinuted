@@ -18,6 +18,7 @@ class exports.HomeView extends Backbone.View
             if not view
                 view = new ChannelView model:channel, parent:this
                 @views[channel.cid] = view
+                do view.render
                 @el.append view.el
                 unless @current?
                     @current = view
