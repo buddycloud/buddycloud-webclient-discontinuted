@@ -7,12 +7,10 @@ class exports.Posts extends Backbone.Collection
         super()
 
     initialize: ->
+        console.warn 'Posts binding', @
         @parent.bind 'post', (post) =>
-            @create post
+            console.warn 'Posts got post', post, @
+            @add post
 
-    create: (attributes, opts) ->
-        if (post = @get(attributes.id))
-            post.set(attributes, opts)
-        else
-            @add attributes, opts
-            @get attributes.id
+    create: ->
+        throw 'up'

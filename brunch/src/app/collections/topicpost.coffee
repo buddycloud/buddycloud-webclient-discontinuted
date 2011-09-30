@@ -3,6 +3,14 @@
 class exports.TopicPosts extends Backbone.Collection
     model: TopicPost
 
+    constructor: ({@parent}) ->
+        super()
+
+    initialize: ->
+        @parent.bind 'post', (post) =>
+            console.warn 'TopicPosts got post', post, @
+            @add post
+
     add: (post) ->
         if (current = @get post.id)
             current.set post
