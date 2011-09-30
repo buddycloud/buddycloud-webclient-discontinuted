@@ -29,11 +29,7 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.subscribeNode nodeid, (stanza) =>
                 app.debug "subscribe", stanza
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
-                @trigger 'subscription:user',
-                    jid: userJid
-                    node: nodeid
-                    subscription: 'subscribed'
-                @trigger 'subscription:node',
+                @trigger 'subscription',
                     jid: userJid
                     node: nodeid
                     subscription: 'subscribed'
@@ -48,14 +44,10 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
                 app.debug "unsubscribe", stanza
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
-                @trigger 'subscription:user',
+                @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'none'
-                @trigger 'subscription:node',
-                    jid: userJid
-                    node: nodeid
-                    subscription: 'none'
+                    subscription: 'unsubscribed'
                 callback? stanza
                 done()
             , =>
@@ -78,7 +70,7 @@ class exports.Connector extends Backbone.EventHandler
                         @trigger "post", post, nodeid
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
-                            @trigger 'subscription:user', subscription
+                            @trigger 'subscription', subscription
                 callback? posts
                 done()
             error = =>
@@ -112,8 +104,7 @@ class exports.Connector extends Backbone.EventHandler
 
         switch notification.type
             when 'subscription'
-                @trigger 'subscription:user', notification
-                @trigger 'subscription:node', notification
+                @trigger 'subscription', notification
             when 'affiliation'
                 @trigger 'affiliation', notification
             when 'posts'

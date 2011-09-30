@@ -16,5 +16,5 @@ class exports.Channel extends Backbone.Model
     # subscription.jid is already filtered for this channel id (user)
     push_subscription: (subscription) ->
         # subscription.subscription is either subscribed, unsubscribed or pending
-        @trigger "subscription", subscription
+        @trigger "subscription:user:#{subscription.jid}", subscription
 

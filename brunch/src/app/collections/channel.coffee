@@ -27,15 +27,14 @@ class exports.UserChannels extends exports.Channels
 
     initialize: ->
         super
-        @parent.bind "subscription", (subscription) =>
+        @parent.bind "subscription:user:#{@parent.get 'id'}", (subscription) =>
             switch subscription.subscription
-                when 'subscribed'
+                # FIXME get 'pending' working when we need it
+                when 'subscribed', 'pending'
                     @get subscription.node, yes
-            # FIXME get this working when we need it
-                when 'unsubscribed'
-                    throw new Error 'FIXME unsubscribed' #@remove id
-                when 'pending'
-                    throw new Error 'FIXME pending' #@get(subscription.node).save
+                when 'unsubscribed', 'none'
+                    if (channel = @get subscription.node)
+                        @remove channel
         @fetch()
 
     fetch: ->
@@ -47,7 +46,7 @@ class exports.UserChannels extends exports.Channels
         id = nodeid_to_user(id) or id
         if (channel = super(id))
             channel
-        else if (channel = app.channels.get(id, create))
+        else if create and (channel = app.channels.get(id, create))
             @add channel
             @get channel.id
         else

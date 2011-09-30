@@ -8,9 +8,7 @@ class exports.Posts extends Backbone.Collection
         super()
 
     initialize: ->
-        console.warn 'Posts binding', @
         @parent.bind 'post', (post) =>
-            console.warn 'Posts got post', post, @
             @add post
 
     create: ->

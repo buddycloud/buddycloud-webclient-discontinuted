@@ -56,11 +56,11 @@ class exports.NodeStore extends exports.Nodes
         super()
 
     initialize: ->
-        @channel.bind 'subscription', (subscription) =>
+        @channel.bind "subscription:user:#{@channel.get 'id'}", (subscription) =>
+            console.warn "NodeStore got subscription", subscription
             node = @get(subscription.node, yes)
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
-            console.warn "NodeStore got post", nodeid, post
             node = @get(nodeid, yes)
             node.push_post post
 
@@ -73,6 +73,5 @@ class exports.NodeStore extends exports.Nodes
             id = nodeid_to_type(nodeid)
             unless id and nodeid
                 throw "NodeID missing"
-            console.warn "New node", "id=#{id}", "nodeid=#{nodeid}"
-            @add { id, nodeid }
+            @add { nodeid }
             super(id)
