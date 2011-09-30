@@ -1,5 +1,5 @@
-{ BaseView } = require('views/base')
-{ transitionendEvent, getBrowserPrefix } = require 'util'
+{ BaseView } = require 'views/base'
+{ transitionendEvent, getBrowserPrefix, EventHandler } = require 'util'
 prefix = getBrowserPrefix()
 
 
@@ -11,11 +11,15 @@ class exports.ChannelEntry extends BaseView
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
 
+    events:
+        "click": "click_entry"
+
     render: =>
         @update_attributes()
         super
-        @el.click =>
-            @parent.setCurrentEntry @model
+
+    click_entry: EventHandler ->
+            @parent.parent.setCurrentChannel @model
 
     isPersonal : (a, b) =>
         (@channel?.metadata?.owner?.value is app.users.current.get('jid')) and (a ? true) or (b ? false)

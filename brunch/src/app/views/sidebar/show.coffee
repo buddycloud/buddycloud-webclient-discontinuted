@@ -32,8 +32,6 @@ class exports.Sidebar extends Backbone.View
         @overview = app.views.overview
 
     setCurrentEntry: (channel) =>
-        unless @parent.current?.model.cid is channel.cid
-            @parent.setCurrentChannel channel
         old = @current
         @current = @views[channel.cid]
         @current?.render()

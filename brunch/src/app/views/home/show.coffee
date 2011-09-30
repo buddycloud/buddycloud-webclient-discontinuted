@@ -48,7 +48,7 @@ class exports.HomeView extends Backbone.View
     setCurrentChannel: (channel) =>
         @current?.el.hide()
         @current = @views[channel.cid]
-        app.router.navigate @current.model.get('jid'), true if @current?
+        app.router.navigate @current.model.get('id'), true if @current?
 
         @sidebar.setCurrentEntry channel
         @current?.el.show()

@@ -1,4 +1,4 @@
-{ BaseView } = require('views/base')
+{ BaseView } = require 'views/base'
 
 class exports.UserAdmin extends BaseView
     template: require 'templates/channel/details/admin/user'
