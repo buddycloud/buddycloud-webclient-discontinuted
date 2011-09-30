@@ -6,7 +6,8 @@ class exports.Node extends Backbone.Model
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata this, nodeid
-        #@users    = new Users app.users.filter_by_node nodeid
+        # Subscribers:
+        @users    = new Users(parent: this)
         @posts    ?= new Posts(parent: this)
         console.warn "Posts nouvelles", @posts
 
@@ -24,6 +25,15 @@ class exports.Node extends Backbone.Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
+        console.warn "Node got subscription", subscription
+
+        switch subscription.subscription
+            when 'subscribed'
+                @users.get subscription.jid, yes
+            when 'unsubscribed', 'none'
+                if (user = @users.get subscription.jid)
+                    @users.remove user
+
         @trigger 'subscription', subscription
 
     push_post: (post) ->
