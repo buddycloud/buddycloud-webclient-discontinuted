@@ -4,6 +4,7 @@ dependencies:
   - underscore.js
   - jquery.npm-hack.js
   - jquery.js
+  - transform.js
   - backbone-master.js
   - backbone-localstorage.js
   - backbone-extensions.js
