@@ -6,7 +6,7 @@
 # Attribute jid: Jabber-Id
 class exports.Channel extends Backbone.Model
     initialize: ->
-        @nodes = new NodeStore this
+        @nodes = new NodeStore(channel: this)
         @avatar = gravatar @get('id'), s:50, d:'retro'
         @nodes.fetch()
 

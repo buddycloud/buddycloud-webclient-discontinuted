@@ -7,7 +7,8 @@ class exports.Node extends Backbone.Model
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata this, nodeid
         #@users    = new Users app.users.filter_by_node nodeid
-        @posts    = new Posts(parent: this)
+        @posts    ?= new Posts(parent: this)
+        console.warn "Posts nouvelles", @posts
 
     toJSON: (full) ->
         result = super

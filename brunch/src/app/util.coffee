@@ -37,3 +37,8 @@ NODEID_TO_USER_REGEX = /\/user\/([^\/]+@[^\/]+)\//
 exports.nodeid_to_user = (nodeid) ->
     nodeid?.match(NODEID_TO_USER_REGEX)?[1] # jid
 
+
+# "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
+NODEID_TO_TYPE_REGEX = /\/user\/([^\/]+)\/([^\/]+)/
+exports.nodeid_to_type = (nodeid) ->
+    nodeid?.match(NODEID_TO_TYPE_REGEX)?[2] # type

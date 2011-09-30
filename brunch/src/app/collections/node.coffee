@@ -1,3 +1,5 @@
+{ nodeid_to_type } = require 'util'
+
 lookup = _loaded:no
 lazyRequire = -> # to prevent require circles
     { SubscriptionsNode:lookup.subscriptions } = require 'models/node/subscriptions'
@@ -6,10 +8,6 @@ lazyRequire = -> # to prevent require circles
     { GeoNode   :lookup.geoloc } = require 'models/node/geo'
     { Node      :lookup.node   } = require 'models/node/base'
     lookup._loaded = yes
-
-getid = (nodeid) ->
-    # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
-    nodeid?.match(/\/user\/([^\/]+)\/([^\/]+)/)?[2]
 
 
 class exports.Nodes extends Backbone.Collection
@@ -26,16 +24,18 @@ class exports.Nodes extends Backbone.Collection
         super
 
     get: (nodeid) ->
-        id = getid(nodeid) or nodeid
+        id = nodeid_to_type(nodeid) or nodeid
         super id
 
     ##
     # @param opts Optional flags, such as silent: true
     create: (nodeid, opts) ->
+        throw 'up'
+
         unless typeof nodeid is 'string'
             return super(nodeid, opts)
 
-        id = getid nodeid
+        id = nodeid_to_type nodeid
         if (node = @get id)
             node.update nodeid
             node
@@ -47,14 +47,23 @@ class exports.Nodes extends Backbone.Collection
 
 
 class exports.NodeStore extends exports.Nodes
-    constructor: (@channel) ->
+    constructor: ({@channel}) ->
         @localStorage = new Store "#{@channel.get 'id'}-nodes"
         app.debug "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
 
         @channel.bind 'subscription', (subscription) =>
-            node = @create(subscription.node)
+            node = @get(subscription.node, yes)
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
-            node = @create(nodeid)
+            console.warn "NodeStore got post", nodeid, post
+            node = @get(nodeid, yes)
             node.push_post post
+
+    get: (id, create) ->
+        id = nodeid_to_type(id) or id
+        if (node = super(id))
+            node
+        else if create
+            @add id: id
+            super(id)

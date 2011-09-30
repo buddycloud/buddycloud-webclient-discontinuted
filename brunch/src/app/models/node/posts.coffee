@@ -4,6 +4,6 @@
 class exports.PostsNode extends Node
 
     initialize: ->
-        result = super
-        @posts = new TopicPosts # overwriting default Posts
-        result
+        # overwriting default Posts
+        @posts = new TopicPosts(parent: this)
+        super

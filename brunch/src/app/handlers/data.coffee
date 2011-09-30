@@ -49,7 +49,7 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
-        if (channel = app.channels.get nodeid)
+        if (channel = app.channels.get nodeid, yes)
             channel.push_post nodeid, post
 
     on_connection_established: =>
