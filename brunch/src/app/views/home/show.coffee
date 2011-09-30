@@ -26,9 +26,9 @@ class exports.HomeView extends Backbone.View
                     view.el.hide()
 
         app.users.current.channels.bind 'add', (channel) =>
-            @channels.update channel
+            @channels.create channel, update:yes
         app.users.current.channels.forEach (channel) =>
-            @channels.add channel
+            @channels.create channel
             new_channel_view channel
 
         @channels.bind 'change', new_channel_view

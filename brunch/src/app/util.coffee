@@ -32,6 +32,28 @@ exports.EventHandler = (handler) ->
         handler.apply(this, arguments)
         no
 
+
+exports.direct =
+    handle: (handler) ->
+        handler._direct_ = yes
+
+    allowed: (caller)  ->
+        return ->
+            @_direct_ = no
+            results = caller.apply(this, arguments)
+            @_direct_ = yes
+            return results
+
+    forbidden: (msg, func)  ->
+        unless func
+            [func, msg] = [msg, "direct call forbidden"]
+        return ->
+            if @_direct_
+                throw new Error msg
+            else
+                func.apply(this, arguments)
+
+
 # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
 NODEID_TO_USER_REGEX = /\/user\/([^\/]+@[^\/]+)\//
 exports.nodeid_to_user = (nodeid) ->

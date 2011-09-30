@@ -1,24 +1,13 @@
+{ Collection } = require 'collections/base'
 { Channel } = require 'models/channel'
 { nodeid_to_user } = require 'util'
 
 
 ##
 # collects model/channel by Jabber-Id
-class exports.Channels extends Backbone.Collection
-    sync: -> # do nothing
-
+class exports.Channels extends Collection
     model: Channel
 
-    ##
-    # @return {Bool} Whether channel is new
-    update: (channel) ->
-        existing_channel = @get channel.id
-        if existing_channel
-            existing_channel.set channel
-            no
-        else
-            @add channel
-            yes
 
 # used in models/user
 class exports.UserChannels extends exports.Channels
@@ -38,20 +27,24 @@ class exports.UserChannels extends exports.Channels
                     throw new Error 'FIXME pending' #@get(subscription.node).save
         @fetch()
 
-    fetch: ->
-        channel_ids = _.clone(@parent.get('channel_ids') or [])
-        for channelid in channel_ids
-            @add app.channels.get channelid
+    sync: (method, model, options) ->
+        if method is 'read'
+            channels = _.map @parent.get('channel_ids') or [], (channelid) ->
+                app.channels.get channelid
+            options.success(channels)
 
-    get: (id, create) ->
+    fetch: (options = {}) ->
+        options.add = yes unless options.add?
+        super
+
+    get: (id, options = {}) ->
         id = nodeid_to_user(id) or id
-        if (channel = super(id))
-            channel
-        else if (channel = app.channels.get(id, create))
-            @add channel
-            @get channel.id
-        else
-            null
+        opts = _.clone options
+        opts.create = no
+        channel = super(id, opts)
+        if not channel and options.create
+            channel = app.channels.get id, options
+            @create channel
 
     # overriding backbone internals
     _add: ->
@@ -76,10 +69,6 @@ class exports.ChannelStore extends exports.Channels
         @fetch()
 
     # returns cached channel or creates new cache entry
-    get: (id, create) ->
-        id = nodeid_to_user(id) or id
-        if (channel = super(id))
-            channel
-        else if create
-            @add(id: id)
-            super(id)
+    get: (id, options) ->
+        # if options.create is on and nothing was found it creates the dummy object {id:id}
+        super {id}, options

@@ -1,3 +1,4 @@
+{ Collection } = require 'collections/base'
 { nodeid_to_type } = require 'util'
 
 lookup = _loaded:no
@@ -10,40 +11,24 @@ lazyRequire = -> # to prevent require circles
     lookup._loaded = yes
 
 
-class exports.Nodes extends Backbone.Collection
-    sync: -> # do nothing
-
+class exports.Nodes extends Collection
     constructor: ->
         do lazyRequire unless lookup._loaded
         super
 
-    ##
     # Backbone-internal
     _prepareModel: (model) ->
         #little hack to change the model class to a specific one (defined by id)
         @model = lookup[model.id] or lookup.node
         super
 
-    get: (nodeid) ->
+    get: (nodeid, options) ->
         id = nodeid_to_type(nodeid) or nodeid
-        super id
+        super id, options
 
-    ##
-    # @param opts Optional flags, such as silent: true
-    create: (nodeid, opts) ->
-        throw 'up'
-
-        unless typeof nodeid is 'string'
-            return super(nodeid, opts)
-
-        id = nodeid_to_type nodeid
-        if (node = @get id)
-            node.update nodeid
-            node
-        else
-            app.debug "Create Node", id
-            @add {id, nodeid}, opts
-            @get id
+    create: (nodeid, options) ->
+        id = nodeid_to_type(nodeid) or nodeid
+        super id, options
 
 
 
@@ -57,11 +42,10 @@ class exports.NodeStore extends exports.Nodes
 
     initialize: ->
         @channel.bind 'subscription', (subscription) =>
-            node = @get(subscription.node, yes)
+            node = @get subscription.node, create:yes
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
-            console.warn "NodeStore got post", nodeid, post
-            node = @get(nodeid, yes)
+            node = @get nodeid, create:yes
             node.push_post post
 
     # When creating, you must always pass a full nodeid
@@ -73,6 +57,5 @@ class exports.NodeStore extends exports.Nodes
             id = nodeid_to_type(nodeid)
             unless id and nodeid
                 throw "NodeID missing"
-            console.warn "New node", "id=#{id}", "nodeid=#{nodeid}"
             @add { id, nodeid }
             super(id)

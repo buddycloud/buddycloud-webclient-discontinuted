@@ -1,6 +1,7 @@
+{ Collection } = require 'collections/base'
 { TopicPost } = require 'models/topicpost'
 
-class exports.TopicPosts extends Backbone.Collection
+class exports.TopicPosts extends Collection
     model: TopicPost
 
     constructor: ({@parent}) ->
@@ -8,18 +9,17 @@ class exports.TopicPosts extends Backbone.Collection
 
     initialize: ->
         @parent.bind 'post', (post) =>
-            console.warn 'TopicPosts got post', post, @
             @add post
 
     add: (post) ->
-        if (current = @get post.id)
-            current.set post
+        if (current = @get post)
+            current.save post
         else if post.in_reply_to
             opener = @get post.in_reply_to
             unless opener
                 super id:post.in_reply_to
                 opener = @get post.in_reply_to
-            opener.comments.add post
+            opener.comments.create post, update:yes
             this
         else
             super

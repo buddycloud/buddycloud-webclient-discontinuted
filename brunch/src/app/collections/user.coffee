@@ -1,17 +1,16 @@
+{ Collection } = require 'collections/base'
 { User } = require 'models/user'
 
-class exports.Users extends Backbone.Collection
-    sync: -> # do nothing
-
+class exports.Users extends Collection
     model: User
 
-    get: (jid, create) ->
-        if (user = super(jid))
-            user
-        else if create and (user = app.users.create(jid))
-            user
-        else
-            null
+    get: (jid, options = {}) ->
+        opts = _.clone options
+        opts.create = no
+        user = super(jid, opts)
+        if not user and options.create
+            user = app.users.get jid, options
+            @create user
 
 
 # The idea is that only this collection creates models, while the
@@ -26,9 +25,6 @@ class exports.UserStore extends exports.Users
         app.debug "nr of users in cache: #{@localStorage.records.length}"
         @fetch()
 
-    create: (jid) ->
-        if (user = @get(jid))
-            user
-        else
-            @add({ jid })
-            @get jid
+    create: (jid, options) ->
+        options.create = yes
+        super {id:jid, jid}, options

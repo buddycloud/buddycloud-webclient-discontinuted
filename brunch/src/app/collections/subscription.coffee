@@ -1,18 +1,15 @@
+{ Collection } = require 'collections/base'
 
-class exports.SubscriptionStore extends Backbone.Collection
+class exports.SubscriptionStore extends Collection
     sync: Backbone.sync
 
-    constructor: (@user) ->
+    constructor: () ->
         @localStorage = new Store("#{@user.get 'jid'}-subscriptions")
         app.debug "nr of #{@user.get 'jid'} subscriptions in cache: #{@localStorage.records.length}"
         super()
 
-    get: (id, everything) ->
-        return super(id) if everything
-        super(id)?.get('value')
-
-    update: (id, value) ->
-        if (subscription = @get(id, yes))
-            subscription.set {value}
+    get: (id, options = {}) ->
+        if options.all
+            super id
         else
-            @create {id, value}
+            super(id)?.get 'value'
