@@ -1,23 +1,15 @@
 // MIXINS
+@import "nib/vendor"
 
-vendor(prop, args)
-  -webkit-{prop} args
-  -moz-{prop} args
-  -ms-{prop} args
-  -o-{prop} args
-  {prop} args
+vendor-prefixes = webkit moz ms o official
+support-for-ie = true // srsly?
 
-animation()
-  vendor('animation', arguments)
 
-border-radius()
-  vendor('border-radius', arguments)
-
-border-top-radius() 
+border-top-radius()
   vendor('border-top-left-radius', arguments)
   vendor('border-top-right-radius', arguments)
 
-border-bottom-radius() 
+border-bottom-radius()
   vendor('border-bottom-left-radius', arguments)
   vendor('border-bottom-right-radius', arguments)
 
@@ -26,10 +18,10 @@ border-top-right-radius()
 
 border-bottom-left-radius()
   vendor('border-bottom-left-radius', arguments)
-  
+
 border-bottom-right-radius()
   vendor('border-bottom-right-radius', arguments)
-  
+
 radial-bg-gradient(shape, from, to)
   background from
   background -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 100%, from(from), to(to))
@@ -38,16 +30,11 @@ radial-bg-gradient(shape, from, to)
   background -o-radial-gradient(center center, shape, from, to)
   background -ms-radial-gradient(center center, shape, from, to)
   background radial-gradient(center center, shape, from, to)
-  
+
 background-clip()
   vendor('background-clip', arguments)
 
-box-shadow() 
-  -moz-box-shadow arguments
-  -webkit-box-shadow arguments
-  box-shadow arguments
-
-box(orient, pack, align) 
+box(orient, pack, align)
   display -webkit-box
   display -moz-box
   display box
@@ -56,39 +43,21 @@ box(orient, pack, align)
   vendor('box-align', align)
   vendor('box-lines', multiple)
 
-box-flex()
-  vendor('box-flex', arguments)
-  
-box-sizing()
-  vendor('box-sizing', arguments)
-
 text-fill-color()
   vendor('text-fill-color', arguments)
-  
-transform()
-  vendor('transform', arguments)
-  
+
 transform-origin()
   vendor('transform-origin', arguments)
 
-transition()
-  vendor('transition', arguments)
-  
-transition-delay()
-  vendor('transition-delay', arguments)
-  
 transform-style()
   vendor('transform-style', arguments)
-  
+
 perspective()
   vendor('perspective', arguments)
-  
-user-select()
-  vendor('user-select', arguments)
-  
+
 appearance()
   vendor('appearance', arguments)
-  
+
 .clearfix:after
   content ""
   clear both
