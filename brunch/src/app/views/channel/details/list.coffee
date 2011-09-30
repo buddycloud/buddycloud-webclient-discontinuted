@@ -34,5 +34,6 @@ class exports.UserList extends BaseView
     update_attributes: ->
         @users = []
         nodeid = "/user/#{@model.get 'id'}/posts"
-        @usertypes.forEach (type) =>
-            @users = @users.concat app.users.filter_by type, nodeid
+        # TODO: should use node.users now
+        #@usertypes.forEach (type) =>
+        #    @users = @users.concat app.users.filter_by type, nodeid
