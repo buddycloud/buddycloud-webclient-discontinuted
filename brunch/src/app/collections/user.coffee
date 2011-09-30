@@ -4,13 +4,6 @@ class exports.Users extends Backbone.Collection
     sync: -> Backbone.sync.apply(this, arguments) if @localStorage
     model: User
 
-    constructor: ->
-        for affiliation in app.affiliations
-            do (affiliation) =>
-                this["filter_by_#{affiliation}"] = (nodeid) ->
-                    @filter_by affiliation, nodeid
-        super
-
     get: (jid, create) ->
         if (user = super(jid))
             user
@@ -18,22 +11,6 @@ class exports.Users extends Backbone.Collection
             user
         else
             null
-
-    filter_by: (affiliation, nodeid) ->
-        @filter (user) ->
-            user.affiliations.get(nodeid) is affiliation
-
-    filter_by_node: (nodeid) ->
-        @filter (user) ->
-            user.affiliations.get(nodeid)? isnt undefined
-
-    # filter_by_owner
-    # filter_by_moderator
-    # filter_by_publisher
-    # filter_by_member
-    # filter_by_none
-    # filter_by_outcast
-    # ...
 
 
 # The idea is that only this collection creates models, while the

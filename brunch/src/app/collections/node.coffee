@@ -60,10 +60,15 @@ class exports.NodeStore extends exports.Nodes
             node = @get(nodeid, yes)
             node.push_post post
 
-    get: (id, create) ->
-        id = nodeid_to_type(id) or id
+    # When creating, you must always pass a full nodeid
+    get: (nodeid, create) ->
+        id = nodeid_to_type(nodeid) or nodeid
         if (node = super(id))
             node
         else if create
-            @add id: id
+            id = nodeid_to_type(nodeid)
+            unless id and nodeid
+                throw "NodeID missing"
+            console.warn "New node", "id=#{id}", "nodeid=#{nodeid}"
+            @add { id, nodeid }
             super(id)
