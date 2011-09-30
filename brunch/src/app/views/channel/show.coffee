@@ -25,6 +25,7 @@ class exports.ChannelView extends BaseView
                     parent: this
                     el: @el.find('.topics')
                 do @postsview.render
+                do @render
             else
                 @model.nodes.bind "add", init_posts
         do init_posts
