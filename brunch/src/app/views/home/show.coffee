@@ -20,7 +20,7 @@ class exports.HomeView extends Backbone.View
             @channels.add channel
             @new_channel_view channel
             # Attempt to come up with a default channel:
-            if !@current? and (channel.get('id') is app.users.current.get('id'))
+            if not @current? and (channel.get('id') is app.users.current.get('id'))
                 @setCurrentChannel channel
 
         @channels.bind 'change', @new_channel_view
@@ -50,7 +50,7 @@ class exports.HomeView extends Backbone.View
         @current?.el.hide()
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
-        if oldChannel and !app.users.current.channels.get(oldChannel.get('id'))?
+        if oldChannel and not app.users.current.channels.get(oldChannel.get('id'))?
             delete @views[oldChannel.cid]
 
         unless (@current = @views[channel.cid])
