@@ -10,6 +10,6 @@ class exports.SubscriptionStore extends Collection
 
     get: (id, options = {}) ->
         if options.all
-            super id
+            super id, options
         else
-            super(id)?.get 'value'
+            super(id, options)?.get 'value'

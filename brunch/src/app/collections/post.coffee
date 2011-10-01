@@ -10,4 +10,3 @@ class exports.Posts extends Collection
     initialize: ->
         @parent.bind 'post', (post) =>
             @create post, update:yes
-

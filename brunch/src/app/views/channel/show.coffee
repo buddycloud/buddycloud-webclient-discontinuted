@@ -14,7 +14,8 @@ class exports.ChannelView extends BaseView
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
         nodeid = @model.nodes.get('posts')?.get 'nodeid'
-        app.users.current.channels.bind "change:#{@model.get 'id'}", @render
+        app.users.current.channels.bind "add", @render
+        app.users.current.channels.bind "remove", @render
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
@@ -24,6 +25,7 @@ class exports.ChannelView extends BaseView
                     parent: this
                     el: @el.find('.topics')
                 do @postsview.render
+                do @render
             else
                 @model.nodes.bind "add", init_posts
         do init_posts
@@ -45,7 +47,8 @@ class exports.ChannelView extends BaseView
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, =>
                     post.content = value:post.content
-                    app.handler.data.add_post node, post
+                    # TODO: make sure prematurely added post correlates to incoming notification
+                    #app.handler.data.add_post node, post
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
 
@@ -83,10 +86,9 @@ class exports.ChannelView extends BaseView
         if (geo = @model.nodes.get 'geoloc')
             @geo = geo.toJSON yes
         # Permissions:
-        subscription = app.users.current.channels.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        followingThisChannel = app.users.current.channels.get(@model.nodes.get('posts')?.get 'nodeid')?
         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         # TODO: pending may require special handling
         @user =
-            followingThisChannel: subscription in ["subscribed", "pending"]
+            followingThisChannel: followingThisChannel
             hasRightToPost: yes #affiliation in ["owner", "publisher", "moderator", "member"]
-        app.debug "ChannelView.update_attributes", @user

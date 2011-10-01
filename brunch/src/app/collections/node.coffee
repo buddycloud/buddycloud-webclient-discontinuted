@@ -41,7 +41,7 @@ class exports.NodeStore extends exports.Nodes
         super()
 
     initialize: ->
-        @channel.bind 'subscription', (subscription) =>
+        @channel.bind "subscription:user:#{@channel.get 'id'}", (subscription) =>
             node = @get subscription.node, create:yes
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
@@ -49,13 +49,8 @@ class exports.NodeStore extends exports.Nodes
             node.push_post post
 
     # When creating, you must always pass a full nodeid
-    get: (nodeid, create) ->
-        id = nodeid_to_type(nodeid) or nodeid
-        if (node = super(id))
-            node
-        else if create
-            id = nodeid_to_type(nodeid)
-            unless id and nodeid
-                throw "NodeID missing"
-            @add { id, nodeid }
-            super(id)
+    get: (nodeid, options = {}) ->
+        id = nodeid_to_type(nodeid)
+        if options.create and not id
+            throw new Error "NodeID missing"
+        super id, options
