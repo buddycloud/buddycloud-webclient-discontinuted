@@ -10,7 +10,9 @@ class exports.Node extends Backbone.Model
         # Subscribers:
         @users    = new Users(parent: this)
         @posts    ?= new Posts(parent: this)
-        console.warn "Posts nouvelles", @posts
+
+        # TODO: only if !subscribed and therefore covered by MAM
+        do @retrieve_node
 
     toJSON: (full) ->
         result = super
@@ -40,4 +42,7 @@ class exports.Node extends Backbone.Model
     push_post: (post) ->
         @trigger 'post', post
 
+    retrieve_node: ->
+        nodeid = @get 'nodeid'
+        app.handler.data.get_node_posts nodeid, ->
 
