@@ -23,6 +23,22 @@ class exports.Sidebar extends Backbone.View
             app.views.overview = new ChannelOverView
         @overview = app.views.overview
 
+    events:
+        'keypress .search input': 'on_search_keypress'
+
+    on_search_keypress: (ev) ->
+        if ev.keyCode == 13
+            ev.preventDefault()
+
+            input = @$('.search input')
+            search = input.val()
+            if /[^\/]+@[^\/]/.test(search)
+                app.router.navigate search, yes
+                input.val('')
+            no
+        else
+            yes
+
     new_channel_entry: (channel) =>
         entry = @views[channel.cid]
         unless entry
