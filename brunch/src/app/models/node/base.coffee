@@ -28,8 +28,6 @@ class exports.Node extends Backbone.Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
-        console.warn "Node got subscription", subscription
-
         switch subscription.subscription
             when 'subscribed'
                 @users.get subscription.jid, yes
