@@ -20,7 +20,7 @@ class exports.HomeView extends Backbone.View
             @channels.create channel
             @new_channel_view channel
             # Attempt to come up with a default channel:
-            if !@current and channel.get('id') is app.users.current.get('id')
+            if !@current? and (channel.get('id') is app.users.current.get('id'))
                 @setCurrentChannel channel
 
         @channels.bind 'change', @new_channel_view
@@ -47,20 +47,16 @@ class exports.HomeView extends Backbone.View
         view
 
     setCurrentChannel: (channel) =>
-        @hideCurrent?()
+        @current?.el.hide()
+        # Throw away if current user did not subscribe:
+        oldChannel = @current?.model
+        if oldChannel and !app.users.current.channels.get(oldChannel.get('id'))?
+            delete @views[oldChannel.cid]
 
-        if (@current = @views[channel.cid])
-            # Present-before view
-            @hideCurrent = =>
-                @current.el.hide()
-        else
-            # Temporary view not added by @channels.bind('add')
-            @current = @views[channel.cid] = @new_channel_view channel
-            @hideCurrent = =>
-                @current.el.hide()
-                # Dispose when hiding:
-                delete @views[channel.cid]
-        app.router.navigate @current.model.get('id'), true
+        unless (@current = @views[channel.cid])
+            @current = @new_channel_view channel
+        # Indicate url change without routing:
+        app.router.navigate @current.model.get('id'), false
 
         @sidebar.setCurrentEntry channel
         @current.el.show()
