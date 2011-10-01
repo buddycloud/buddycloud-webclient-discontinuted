@@ -14,7 +14,7 @@
         <input type="checkbox" id="shouldShareLocation<%= @random?.number %>" />
         <label for="shouldShareLocation<%= @random?.number %>">Share Location: Home</label>
       </div>
-      <div class="button small prominent">Post</div>
+      <div class="button small prominent createComment">Post</div>
     </div>
   </section>
   <% end %>
