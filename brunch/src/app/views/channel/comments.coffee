@@ -11,6 +11,25 @@ class exports.CommentsView extends BaseView
         @model.forEach @add_comment
         @model.bind 'add', @add_comment
 
+    'click .createComment': 'createComment'
+
+    createComment: (ev) ->
+        ev.preventDefault()
+        text = @$('textarea')
+        unless text.val() is ""
+            post =
+                content: text.val()
+                author:
+                    name: app.users.current.get 'jid'
+                in_reply_to: 'TODO'
+            node = @model.nodes.get('posts')
+            app.handler.data.publish node, post, =>
+                    post.content = value:post.content
+                    app.handler.data.add_post node, post
+                    @el.find('.newTopic, .answer').removeClass 'write'
+                    text.val ""
+        no
+
     add_comment: (comment) =>
         entry = @views[comment.cid] ?= new PostView
             type:'comment'
