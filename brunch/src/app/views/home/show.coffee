@@ -44,21 +44,22 @@ class exports.HomeView extends Backbone.View
             @views[channel.cid] = view
             @el.append view.el
             view.el.hide()
+        view
 
     setCurrentChannel: (channel) =>
         @hideCurrent?()
 
-        unless (@current = @views[channel.cid])
+        if (@current = @views[channel.cid])
+            # Present-before view
+            @hideCurrent = =>
+                @current.el.hide()
+        else
             # Temporary view not added by @channels.bind('add')
             @current = @views[channel.cid] = @new_channel_view channel
             @hideCurrent = =>
                 @current.el.hide()
                 # Dispose when hiding:
                 delete @views[channel.cid]
-        else
-            # Present-before view
-            @hideCurrent = =>
-                @current.el.hide()
         app.router.navigate @current.model.get('id'), true
 
         @sidebar.setCurrentEntry channel
