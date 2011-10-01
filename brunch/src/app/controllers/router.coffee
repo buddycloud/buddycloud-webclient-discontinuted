@@ -32,7 +32,11 @@ class exports.Router extends Backbone.Router
     on_connected: =>
         app.views.index = new HomeView
         app.users.target ?= app.users.current
-        @navigate app.users.target.get('jid'), true
+        jid = app.users.target.get('jid')
+        @navigate jid
+        # in anonymous direct browsing route, navigate above doesn't
+        # trigger an URL change event at all
+        @loadingchannel jid
 
     # routes
 
@@ -55,7 +59,7 @@ class exports.Router extends Backbone.Router
         @setView app.views.overview
 
     loadingchannel: (id, domain) ->
-        jid = "#{id}@#{domain}"
+        jid = if domain then "#{id}@#{domain}" else id
         app.users.target = app.users.get jid, yes
 
         if app.handler.connection.connected

@@ -20,4 +20,4 @@ class exports.PostView extends BaseView
         'click .avatar': 'clickAuthor'
 
     clickAuthor: EventHandler ->
-        app.router.setCurrentChannel @author.get('jid')
+        app.router.navigate @author.get('jid'), true

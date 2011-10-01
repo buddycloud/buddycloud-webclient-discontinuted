@@ -1,11 +1,8 @@
 { NodeMetadata } = require 'models/metadata/node'
 { Users } = require('collections/user')
 { Posts } = require('collections/post')
-{ nodeid_to_type } = require 'util'
 
 class exports.Node extends Backbone.Model
-    defaults: ->
-        id: nodeid_to_type(@get 'nodeid')
 
     initialize: ->
         nodeid = @get 'nodeid'
@@ -13,7 +10,9 @@ class exports.Node extends Backbone.Model
         # Subscribers:
         @users    = new Users(parent: this)
         @posts    ?= new Posts(parent: this)
-        console.warn "Posts nouvelles", @posts
+
+        # TODO: only if !subscribed and therefore covered by MAM
+        do @retrieve_node
 
     toJSON: (full) ->
         result = super
@@ -29,8 +28,6 @@ class exports.Node extends Backbone.Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
-        console.warn "Node got subscription", subscription
-
         switch subscription.subscription
             when 'subscribed'
                 @users.get subscription.jid, yes
@@ -43,4 +40,7 @@ class exports.Node extends Backbone.Model
     push_post: (post) ->
         @trigger 'post', post
 
+    retrieve_node: ->
+        nodeid = @get 'nodeid'
+        app.handler.data.get_node_posts nodeid, ->
 
