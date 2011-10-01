@@ -11,7 +11,8 @@ class exports.CommentsView extends BaseView
         @model.forEach @add_comment
         @model.bind 'add', @add_comment
 
-    'click .createComment': 'createComment'
+    events:
+        'click .createComment': 'createComment'
 
     createComment: (ev) ->
         ev.preventDefault()
@@ -21,12 +22,12 @@ class exports.CommentsView extends BaseView
                 content: text.val()
                 author:
                     name: app.users.current.get 'jid'
-                in_reply_to: 'TODO'
-            node = @model.nodes.get('posts')
+                in_reply_to: @model.parent.id
+            node = @model.parent.collection.parent
             app.handler.data.publish node, post, =>
                     post.content = value:post.content
                     app.handler.data.add_post node, post
-                    @el.find('.newTopic, .answer').removeClass 'write'
+                    @el.find('.newTopic').removeClass 'write'
                     text.val ""
         no
 

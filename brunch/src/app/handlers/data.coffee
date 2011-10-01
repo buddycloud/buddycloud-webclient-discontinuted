@@ -12,6 +12,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
 
+    # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
         @connector.get_node_posts node, callback
 
