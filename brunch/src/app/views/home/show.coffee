@@ -13,25 +13,15 @@ class exports.HomeView extends Backbone.View
         # sidebar entries
         @views = {} # this contains the channelnode views
         @channels = new Channels
-        new_channel_view = (channel) =>
-            view = @views[channel.cid]
-            if not view
-                view = new ChannelView model:channel, parent:this
-                @views[channel.cid] = view
-                @el.append view.el
-                unless @current?
-                    @current = view
-                else
-                    view.el.hide()
 
         app.users.current.channels.bind 'add', (channel) =>
             @channels.update channel
         app.users.current.channels.forEach (channel) =>
             @channels.add channel
-            new_channel_view channel
+            @new_channel_view channel
 
-        @channels.bind 'change', new_channel_view
-        @channels.bind 'add',    new_channel_view
+        @channels.bind 'change', @new_channel_view
+        @channels.bind 'add',    @new_channel_view
         @channels.bind 'all', =>
             app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
@@ -44,6 +34,13 @@ class exports.HomeView extends Backbone.View
 
         @render()
         @el.show()
+
+    new_channel_view: (channel) =>
+        unless (view = @views[channel.cid])
+            view = new ChannelView model:channel, parent:this
+            @views[channel.cid] = view
+            @el.append view.el
+            view.el.hide()
 
     setCurrentChannel: (channel) =>
         @current?.el.hide()

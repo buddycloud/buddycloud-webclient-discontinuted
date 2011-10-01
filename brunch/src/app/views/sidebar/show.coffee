@@ -13,23 +13,25 @@ class exports.Sidebar extends Backbone.View
         # sidebar entries
         @current = undefined
         @views = {} # this contains the channel entry views
-        new_channel_entry = (channel) =>
-            entry = @views[channel.cid]
-            unless entry
-                entry = new ChannelEntry model:channel, parent:this
-                @views[channel.cid] = entry
-                @current ?= entry
-                @el.append entry.el
-            entry.render()
-        @parent.channels.forEach        new_channel_entry
-        @parent.channels.bind 'change', new_channel_entry
-        @parent.channels.bind 'add',    new_channel_entry
+        @parent.channels.forEach        @new_channel_entry
+        @parent.channels.bind 'change', @new_channel_entry
+        @parent.channels.bind 'add',    @new_channel_entry
         @parent.channels.bind 'all', =>
             app.debug "sidebar CHEV-ALL", arguments
 
         unless app.views.overview?
             app.views.overview = new ChannelOverView
         @overview = app.views.overview
+
+    new_channel_entry: (channel) =>
+        entry = @views[channel.cid]
+        unless entry
+            entry = new ChannelEntry model:channel, parent:this
+            @views[channel.cid] = entry
+            @current ?= entry
+            @el.append entry.el
+        entry.render()
+        entry
 
     setCurrentEntry: (channel) =>
         old = @current
