@@ -53,4 +53,4 @@ class exports.NodeStore extends exports.Nodes
         id = nodeid_to_type(nodeid)
         if options.create and not id
             throw new Error "NodeID missing"
-        super id, options
+        super {id, nodeid}, options

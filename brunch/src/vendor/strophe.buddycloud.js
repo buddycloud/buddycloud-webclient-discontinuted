@@ -347,7 +347,25 @@ Strophe.addConnectionPlugin('buddycloud', {
 			});
 		    });
                 } else if (child.nodeName === 'configuration') {
-		    /* TODO */
+		    var config = {};
+		    Strophe.forEachChild(child, 'x', function(x) {
+			Strophe.forEachChild(x, 'field', function(field) {
+			    var k = field.getAttribute('var'),
+				v = undefined;
+			    Strophe.forEachChild(field, 'value', function(value) {
+				if (!v)
+				    v = Strophe.getText(value);
+			    });
+			    if (k && v)
+				config[k] = v;
+			});
+		    });
+		    if (config.FORM_TYPE === "http://jabber.org/protocol/pubsub#node_config")
+			listener({
+			    type: 'config',
+			    node: child.getAttribute('node'),
+			    config: config
+			});
 		} else
 		    console.warn("Unhandled buddycloud event type", child.nodeName);
             });
