@@ -20,7 +20,12 @@ class exports.TopicPosts extends Backbone.Collection
                 # Create parent, may be retrieved later
                 super id:post.in_reply_to
                 opener = @get post.in_reply_to
-            opener.comments.add post
+            # TODO: Shorten that into create()/update()
+            if (current = opener.comments.get(post.id))
+                console.warn "updating comment #{opener.id}/#{post.id}: #{post.content.value}"
+                current.set post
+            else
+                opener.comments.add post
             this
         else
             super
