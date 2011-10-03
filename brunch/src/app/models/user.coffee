@@ -7,8 +7,11 @@ class exports.User extends Model
 
     initialize: ->
         # id and jid are the same
-        @id = @get('jid')
-        @save {@id}
+        @id = @get('jid') or @get('id')
+        @save {jid: @id, @id}
+        unless typeof @get('jid') is 'string'
+            console.error 'User', @, 'jid', @get('jid')
+            throw 'Stupid shit'
         @avatar = gravatar @id, s:50, d:'retro'
         # subscribed channels
         @channels = new UserChannels parent:this

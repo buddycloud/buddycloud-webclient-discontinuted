@@ -20,7 +20,7 @@ window.app =
 $(document).ready ->
 
     ### could be used to switch console output ###
-    app.debug_mode = off
+    app.debug_mode = on
     app.debug = ->
         console.log "DEBUG:", arguments if app.debug_mode
     app.error = ->

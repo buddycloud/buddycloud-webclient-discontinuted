@@ -23,16 +23,16 @@ class exports.Nodes extends Collection
         super
 
     get: (nodeid, options) ->
-        nodeid = nodeid?.nodeid or nodeid
         id = nodeid_to_type(nodeid) or nodeid
         # this is what a empty node looks like
-        super {id, nodeid}, options
+        super id, options
 
-    create: (nodeid, options) ->
-        nodeid = nodeid?.nodeid or nodeid
-        id = nodeid_to_type(nodeid) or nodeid
+    get_or_create: (attrs, options) ->
+        newAttrs = _.clone(attrs)
+        newAttrs.nodeid = attrs.nodeid or attrs.id
+        newAttrs.id = nodeid_to_type(attrs.id or attrs.nodeid) or attrs.id or attrs.nodeid
         # this is what a empty node looks like
-        super {id, nodeid}, options
+        super newAttrs, options
 
 
 
@@ -46,18 +46,15 @@ class exports.NodeStore extends exports.Nodes
 
     initialize: ->
         @channel.bind "subscription:user:#{@channel.get 'id'}", (subscription) =>
-            node = @get subscription.node, create:yes
+            node = @get_or_create nodeid: subscription.node
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
-            node = @get nodeid, create:yes
+            node = @get_or_create {nodeid}
             node.push_post post
 
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->
-        nodeid = nodeid?.nodeid or nodeid
         id = nodeid_to_type(nodeid) or nodeid
-        if options.create and not id
-            throw new Error "NodeID missing"
         console.warn "GET NODE FROM STORE", id, nodeid
         # this is what a empty node looks like
-        super {id, nodeid}, options
+        super id, options

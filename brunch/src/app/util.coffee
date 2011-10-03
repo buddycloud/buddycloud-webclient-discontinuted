@@ -36,10 +36,10 @@ exports.EventHandler = (handler) ->
 # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
 NODEID_TO_USER_REGEX = /\/user\/([^\/]+@[^\/]+)\//
 exports.nodeid_to_user = (nodeid) ->
-    (nodeid?.id or nodeid)?.match?(NODEID_TO_USER_REGEX)?[1] # jid
+    nodeid?.match?(NODEID_TO_USER_REGEX)?[1] # jid
 
 
 # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
 NODEID_TO_TYPE_REGEX = /\/user\/([^\/]+)\/([^\/]+)/
 exports.nodeid_to_type = (nodeid) ->
-    (nodeid?.id or nodeid)?.match?(NODEID_TO_TYPE_REGEX)?[2] # type
+    nodeid?.match?(NODEID_TO_TYPE_REGEX)?[2] # type

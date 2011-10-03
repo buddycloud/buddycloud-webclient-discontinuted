@@ -21,4 +21,4 @@ class exports.Post extends Model
 
     update_attributes: =>
         if (jid = @get('author')?.jid)
-            @author = app.users.get jid, create:yes
+            @author = app.users.get_or_create id: jid

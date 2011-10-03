@@ -15,7 +15,7 @@ class exports.Channel extends Model
         # Auto-create the default set of nodes for that channel, so
         # that its data can be retrieved via XMPP
         ["posts", "status", "subscriptions", "geo"].forEach (type) =>
-            @nodes.get type, create:yes
+            @nodes.get_or_create id: type
 
     push_post: (nodeid, post) ->
         @trigger "post", nodeid, post

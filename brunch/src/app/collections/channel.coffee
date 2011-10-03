@@ -8,6 +8,10 @@
 class exports.Channels extends Collection
     model: Channel
 
+    get: (id, options = {}) ->
+        id = nodeid_to_user(id) or id
+        super(id, options)
+
 
 # used in models/user
 class exports.UserChannels extends exports.Channels
@@ -36,14 +40,8 @@ class exports.UserChannels extends exports.Channels
         options.add = yes unless options.add?
         super
 
-    get: (id, options = {}) ->
-        id = nodeid_to_user(id) or id
-        opts = _.clone options
-        opts.create = no
-        channel = super(id, opts)
-        if not channel and options.create
-            channel = app.channels.get id, options
-            @create channel
+    get_or_create: (attrs, options) ->
+        super(app.channels.get_or_create(attrs, options), options)
 
 
     # overriding backbone internals
@@ -68,7 +66,7 @@ class exports.ChannelStore extends exports.Channels
         app.debug "nr of channels in cache: #{@localStorage.records.length}"
         @fetch()
 
-    # returns cached channel or creates new cache entry
-    get: (id, options) ->
-        # if options.create is on and nothing was found it creates the dummy object {id:id}
-        super {id}, options
+    get_or_create: (attrs, options = {}) ->
+        newAttrs = _.clone(attrs)
+        newAttrs.id = nodeid_to_user(attrs.id) or attrs.id
+        super newAttrs, options

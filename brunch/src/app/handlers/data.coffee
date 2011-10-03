@@ -52,7 +52,7 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
-        if (channel = app.channels.get nodeid, create:yes)
+        if (channel = app.channels.get_or_create { id: nodeid })
             channel.push_post nodeid, post
 
     on_connection_established: =>
@@ -73,10 +73,10 @@ class exports.DataHandler extends Backbone.EventHandler
     on_affiliation: (affiliation) =>
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node
 
-        user = app.users.get affiliation.jid, create:yes
+        user = app.users.get_or_create id: affiliation.jid
         #user.push_affiliation affiliation
 
-        channel = app.channels.get affiliation.node, create:yes
+        channel = app.channels.get_or_create id: affiliation.node
         #channel.push_affiliation affiliation
 
         return
@@ -89,10 +89,10 @@ class exports.DataHandler extends Backbone.EventHandler
         return unless /\/user\/([^\/]+@[^\/]+)\//.test subscription.node
         app.debug "GOT user subscription", subscription
 
-        user = app.users.get subscription.jid, create:yes
+        user = app.users.get_or_create id: subscription.jid
         user.push_subscription subscription
 
-        channel = app.channels.get subscription.node, create:yes
+        channel = app.channels.get_or_create id: subscription.node
         channel.push_subscription subscription
 
         return

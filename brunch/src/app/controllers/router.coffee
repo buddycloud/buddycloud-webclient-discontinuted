@@ -60,10 +60,10 @@ class exports.Router extends Backbone.Router
 
     loadingchannel: (id, domain) ->
         jid = if domain then "#{id}@#{domain}" else id
-        app.users.target = app.users.get jid, create:yes
+        app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected
-            channel = app.channels.get jid, create:yes
+            channel = app.channels.get_or_create id: jid
             app.views.index.setCurrentChannel channel
             @setView app.views.index
         else

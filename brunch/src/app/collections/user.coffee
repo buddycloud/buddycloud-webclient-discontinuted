@@ -4,12 +4,8 @@
 class exports.Users extends Collection
     model: User
 
-    get: (jid, options = {}) ->
-        opts = _.clone options
-        opts.create = no
-        user = super(jid, opts)
-        if not user and options.create
-            @create app.users.get jid, options
+    get_or_create: (attrs, options) ->
+        super(app.users.get_or_create(attrs, options), options)
 
 
 # The idea is that only this collection creates models, while the
@@ -25,9 +21,3 @@ class exports.UserStore extends Collection
         app.debug "nr of users in cache: #{@localStorage.records.length}"
         @fetch()
 
-    create: (jid, options = {}) ->
-        jid = jid?.jid or jid
-        options.create = yes
-        options.update = yes
-        # this is what a empty user looks like
-        super {id:jid, jid}, options

@@ -31,7 +31,7 @@ class exports.Node extends Model
     push_subscription: (subscription) ->
         switch subscription.subscription
             when 'subscribed'
-                @users.get subscription.jid, create:yes
+                @users.get_or_create id: subscription.jid
             when 'unsubscribed', 'none'
                 if (user = @users.get subscription.jid)
                     @users.remove user

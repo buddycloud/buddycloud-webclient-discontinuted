@@ -19,6 +19,7 @@ class exports.ChannelEntry extends BaseView
         super
 
     click_entry: EventHandler ->
+            app.debug "ChannelEntry.click_entry", @, @model
             @parent.parent.setCurrentChannel @model
 
     isPersonal : (a, b) =>
