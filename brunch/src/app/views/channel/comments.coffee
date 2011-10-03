@@ -16,8 +16,13 @@ class exports.CommentsView extends BaseView
         'click .createComment': 'createComment'
 
     createComment: EventHandler ->
+        if @isPosting
+            return
+
         text = @$('textarea')
         unless text.val() is ""
+            text.attr "disabled", "disabled"
+            @isPosting = true
             post =
                 content: text.val()
                 author:
@@ -29,6 +34,8 @@ class exports.CommentsView extends BaseView
                     #app.handler.data.add_post node, post
                     @el.find('.newTopic').removeClass 'write'
                     text.val ""
+                    text.removeAttr "disabled"
+                    @isPosting = false
 
     add_comment: (comment) =>
         entry = @views[comment.cid] ?= new PostView
