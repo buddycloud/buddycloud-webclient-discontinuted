@@ -23,7 +23,7 @@ exports.transEndEventNames = transEndEventNames =
 exports.transitionendEvent = transEndEventNames[getBrowserPrefix()+'transition']
 
 exports.gravatar = (mail, opts) ->
-    hash = MD5.hexdigest mail?.toLowerCase() or ""
+    hash = MD5.hexdigest mail?.toLowerCase?() or ""
     "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
 
 exports.EventHandler = (handler) ->
@@ -33,34 +33,13 @@ exports.EventHandler = (handler) ->
         no
 
 
-exports.direct =
-    handle: (handler) ->
-        handler._direct_ = yes
-
-    allowed: (caller)  ->
-        return ->
-            @_direct_ = no
-            results = caller.apply(this, arguments)
-            @_direct_ = yes
-            return results
-
-    forbidden: (msg, func)  ->
-        unless func
-            [func, msg] = [msg, "direct call forbidden"]
-        return ->
-            if @_direct_
-                throw new Error msg
-            else
-                func.apply(this, arguments)
-
-
 # /user/u@catz.net/posts → ["/user/u@catz.net/", "u@catz.net"]
 NODEID_TO_USER_REGEX = /\/user\/([^\/]+@[^\/]+)\//
 exports.nodeid_to_user = (nodeid) ->
-    nodeid?.match(NODEID_TO_USER_REGEX)?[1] # jid
+    (nodeid?.id or nodeid)?.match?(NODEID_TO_USER_REGEX)?[1] # jid
 
 
 # "/user/:jid/posts/stuff" → ["/user/:jid/posts", ":jid", "channel"]
 NODEID_TO_TYPE_REGEX = /\/user\/([^\/]+)\/([^\/]+)/
 exports.nodeid_to_type = (nodeid) ->
-    nodeid?.match(NODEID_TO_TYPE_REGEX)?[2] # type
+    (nodeid?.id or nodeid)?.match?(NODEID_TO_TYPE_REGEX)?[2] # type

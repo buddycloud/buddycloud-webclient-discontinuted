@@ -1,15 +1,16 @@
+{ Model } = require 'models/base'
 { NodeMetadata } = require 'models/metadata/node'
 { Users } = require('collections/user')
 { Posts } = require('collections/post')
 
-class exports.Node extends Backbone.Model
+class exports.Node extends Model
 
     initialize: ->
         nodeid = @get 'nodeid'
-        @metadata = new NodeMetadata this, nodeid
+        @metadata = new NodeMetadata parent:this, id:nodeid
         # Subscribers:
-        @users    = new Users(parent: this)
-        @posts    ?= new Posts(parent: this)
+        @users    = new Users parent:this
+        @posts   ?= new Posts parent:this
 
         # TODO: only if !subscribed and therefore covered by MAM
         do @retrieve_node
@@ -30,7 +31,7 @@ class exports.Node extends Backbone.Model
     push_subscription: (subscription) ->
         switch subscription.subscription
             when 'subscribed'
-                @users.get subscription.jid, yes
+                @users.get subscription.jid, create:yes
             when 'unsubscribed', 'none'
                 if (user = @users.get subscription.jid)
                     @users.remove user

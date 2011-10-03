@@ -1,5 +1,6 @@
+{ Model } = require 'models/base'
 
-class exports.Post extends Backbone.Model
+class exports.Post extends Model
 
     defaults: ->
         author:
@@ -14,5 +15,5 @@ class exports.Post extends Backbone.Model
 
     initialize: ->
         result = super
-        @author = app.users.get @get('author').jid, yes
+        @author = app.users.get @get('author').jid, create:yes
         result

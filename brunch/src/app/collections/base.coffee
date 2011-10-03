@@ -1,11 +1,5 @@
-{ direct } = require 'util'
-
 
 class exports.Collection extends Backbone.Collection
-
-    constructor: ->
-        direct.handle this
-        super
 
     sync: -> this # don't save anything anywhere
 
@@ -15,9 +9,13 @@ class exports.Collection extends Backbone.Collection
     # using update:yes in create or add will result in
     # updateing allready existing models with new data or just creates them
     _prepareModel: (model, options = {}) ->
-        if options.update and (known = @get(model, options))
-            known.set(model, options)
-            return known
+        if options.update
+            opts = _.clone options
+            opts.create = no
+            opts.update = no
+            if (known = @get(model, opts))
+                known.save(model, opts)
+                return known
         super
 
     get:(id, options = {}) ->
@@ -26,11 +24,4 @@ class exports.Collection extends Backbone.Collection
             return @create(id, options)
         else
             return model
-
-    add: direct.forbidden  -> super
-    create: direct.allowed -> super
-    reset : direct.allowed -> super
-    fetch : direct.allowed -> super
-
-
 

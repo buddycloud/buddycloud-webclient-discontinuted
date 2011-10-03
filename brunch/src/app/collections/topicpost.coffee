@@ -11,16 +11,10 @@ class exports.TopicPosts extends Collection
         @parent.bind 'post', (post) =>
             @add post
 
-    add: (post) ->
-        if (current = @get post)
-            current.save post
-        else if post.in_reply_to
-            opener = @get post.in_reply_to
-            unless opener
-                super id:post.in_reply_to
-                opener = @get post.in_reply_to
+    create: (post) ->
+        if post.in_reply_to
+            opener = @get {id:post.in_reply_to}, create:yes
             opener.comments.create post, update:yes
-            this
         else
             super
 

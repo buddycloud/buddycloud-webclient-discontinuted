@@ -15,4 +15,4 @@ class exports.UserAdmin extends BaseView
     update_attributes: ->
         @user = @model.toJSON()
         nodeid = "/user/#{@parent.model.get 'id'}/posts"
-        @usertype = @model.affiliations.get nodeid
+        @usertype = "unknown" # TODO

@@ -1,13 +1,14 @@
+{ Model } = require 'models/base'
 { NodeStore } = require 'collections/node'
 { gravatar } = require 'util'
 
 ##
 # Attribute id: Jabber-Id
 # Attribute jid: Jabber-Id
-class exports.Channel extends Backbone.Model
+class exports.Channel extends Model
     initialize: ->
         @id = @get 'id'
-        @nodes = new NodeStore(channel: this)
+        @nodes = new NodeStore channel:this
         @avatar = gravatar @id, s:50, d:'retro'
         @nodes.fetch()
 
@@ -15,7 +16,7 @@ class exports.Channel extends Backbone.Model
         # that its data can be retrieved via XMPP
         ["posts", "status", "subscriptions",
          "geo/previous", "geo/current", "geo/next"].forEach (type) =>
-            @nodes.get "/user/#{@id}/#{type}", yes
+            @nodes.get "/user/#{@id}/#{type}", create:yes
 
     push_post: (nodeid, post) ->
         @trigger "post", nodeid, post

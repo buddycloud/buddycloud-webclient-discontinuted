@@ -4,5 +4,5 @@
 class exports.TopicPost extends Post
 
     initialize: ->
-        @comments = new Posts(parent: this)
+        @comments = new Posts parent:this
         super

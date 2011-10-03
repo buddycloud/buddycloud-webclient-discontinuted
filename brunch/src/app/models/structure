@@ -1,5 +1,4 @@
 User (in global app.users) [jid==id]
-    affiliation (Affiliations)
     jid
     metadata (UserMetadata)
 

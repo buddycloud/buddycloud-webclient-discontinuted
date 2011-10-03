@@ -26,9 +26,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
     connect: (jid, password) ->
         unless jid
             jid = config.anon_domain
-            @user = app.users.get "anony@mous", yes
+            @user = app.users.get "anony@mous", create:yes
         else
-            @user = app.users.get jid, yes
+            @user = app.users.get jid, create:yes
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
 
@@ -62,7 +62,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 error()
 
     register: (username, password, email) ->
-        @user = app.users.get "#{username}@#{config.domain}", yes
+        @user = app.users.get "#{username}@#{config.domain}", create:yes
         @connection.register.connect config.domain, (status, moar...) =>
 
             if status is Strophe.Status.REGISTERING

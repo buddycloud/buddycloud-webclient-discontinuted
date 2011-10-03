@@ -1,13 +1,14 @@
+{ Model } = require 'models/base'
 { UserMetadata } = require 'models/metadata/user'
 { UserChannels } = require 'collections/channel'
 { gravatar } = require 'util'
 
-class exports.User extends Backbone.Model
+class exports.User extends Model
 
     initialize: ->
         # id and jid are the same
         @id = @get('jid')
-        @set {@id}
+        @save {@id}
         @avatar = gravatar @id, s:50, d:'retro'
         # subscribed channels
         @channels = new UserChannels parent:this

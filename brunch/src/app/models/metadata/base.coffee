@@ -1,5 +1,6 @@
+{ Model } = require 'models/base'
 
-class exports.Metadata extends Backbone.Model
+class exports.Metadata extends Model
     type:'unspecified' # should be overriden by extending classes
 
     initialize: ({@parent, @id}) ->
