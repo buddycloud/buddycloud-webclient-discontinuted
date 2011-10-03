@@ -15,5 +15,10 @@ class exports.Post extends Model
 
     initialize: ->
         result = super
-        @author = app.users.get @get('author').jid, create:yes
+        @bind 'change', @update_attributes
+        do @update_attributes
         result
+
+    update_attributes: =>
+        if (jid = @get('author')?.jid)
+            @author = app.users.get jid, create:yes

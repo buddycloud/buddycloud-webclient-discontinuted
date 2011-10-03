@@ -220,9 +220,9 @@ Strophe.addConnectionPlugin('buddycloud', {
 					     "country", "locality", "text");
 
 	    // in reply to
-            attr = entry.getElementsByTagName("thr:in-reply-to");
-            if (attr.length > 0)
-		post.in_reply_to = parseInt(attr.item(0).getAttribute("ref"));
+            var in_reply_tos = entry.getElementsByTagNameNS(Strophe.NS.ATOM_THR, "in-reply-to");
+            if (in_reply_tos.length > 0)
+		post.in_reply_to = in_reply_tos[0].getAttribute("ref");
 
 	    return post;
 	},

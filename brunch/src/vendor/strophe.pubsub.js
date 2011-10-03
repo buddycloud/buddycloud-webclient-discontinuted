@@ -140,6 +140,7 @@ Extend connection object to have plugin name 'pubsub'.
         Strophe.addNamespace('PUBSUB_META_DATA',
                              Strophe.NS.PUBSUB+"#meta-data");
         Strophe.addNamespace('ATOM', "http://www.w3.org/2005/Atom");
+        Strophe.addNamespace('ATOM_THR', "http://purl.org/syndication/thread/1.0");
 
         if (conn.disco)
             conn.disco.addFeature(Strophe.NS.PUBSUB);
@@ -533,9 +534,16 @@ Extend connection object to have plugin name 'pubsub'.
             if (atom.published && atom.published.toISOString)
                 atom.published = atom.published.toISOString();
 
+	    /* Rescue threading information because it does not get formatted with Builder::children */
+	    var in_reply_to = atom.in_reply_to;
+	    delete atom.in_reply_to;
+	    var entry = $build("entry", { xmlns:Strophe.NS.ATOM,
+					  'xmlns:thr':Strophe.NS.ATOM_THR })
+                .children(atom);
+	    if (in_reply_to)
+		entry.cnode($('<thr:in-reply-to/>').attr('ref', in_reply_to)[0]);
             entries.push({
-                data: $build("entry", { xmlns:Strophe.NS.ATOM })
-                        .children(atom).tree(),
+                data: entry.tree(),
                 attrs:(atom.id ? { id:atom.id } : {}),
             });
         }

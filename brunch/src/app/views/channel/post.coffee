@@ -7,12 +7,13 @@ class exports.PostView extends BaseView
 
     initialize: ({@parent, @type}) =>
         super
+        @model.bind 'change', @render
 
     render: =>
         @post = @model.toJSON() # data
         @author = @model.author # model
         super
-        @$('.name').attr href: @author.get('jid') or "?"
+        @$('.name').attr href: @author?.get('jid') or "?"
         formatdate.hook @el, update: off
 
     events:
