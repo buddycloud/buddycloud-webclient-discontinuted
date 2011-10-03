@@ -9,22 +9,27 @@ class exports.TopicPosts extends Collection
 
     initialize: ->
         @parent.bind 'post', (post) =>
-            @add post
+            @get_or_create post
 
     get_or_create: (post) ->
         if post.in_reply_to
             opener = @get_or_create {id:post.in_reply_to}
+            console.warn "TopicPosts.get_or_create", opener, post
             opener.comments.get_or_create post
         else
             super
 
+    ##
     # Alternatively searchs all comments, returns opener
+    #
+    # FIXME: This does not work if the opener comment comes in later
+    # than the comment on that comment.
     get: (id) ->
         if (topicpost = super)
             topicpost
         else
             @find (topicpost) ->
-                topicpost.get(id)?
+                topicpost.comments.get(id)?
 
 
     comparator: (post) ->

@@ -36,9 +36,13 @@ class exports.ChannelView extends BaseView
         'click #createNewTopic': 'clickPost'
 
     clickPost: EventHandler (ev) ->
+        if @isPosting
+            return
         self = @$('.newTopic').has(ev.target)
         text = self.find('textarea')
         unless text.val() is ""
+            text.attr "disabled", "disabled"
+            @isPosting = true
             post =
                 content: text.val()
                 author:
@@ -50,6 +54,8 @@ class exports.ChannelView extends BaseView
                     #app.handler.data.add_post node, post
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
+                    text.removeAttr "disabled"
+                    @isPosting = false
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
