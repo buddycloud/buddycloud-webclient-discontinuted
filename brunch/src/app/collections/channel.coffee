@@ -45,6 +45,7 @@ class exports.UserChannels extends exports.Channels
 
 
     # overriding backbone internals
+    # because code order matters
     _add: ->
         channel = super
         @parent.set channel_ids: @map((channel) -> channel.get 'id')
