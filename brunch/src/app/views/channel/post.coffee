@@ -8,7 +8,6 @@ class exports.PostView extends BaseView
     initialize: ({@parent, @type}) =>
         super
         @model.bind 'change', @render
-        @model.author.bind 'change', @render
 
     render: =>
         @post = @model.toJSON() # data

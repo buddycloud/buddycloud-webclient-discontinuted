@@ -14,5 +14,9 @@ class exports.Post extends Backbone.Model
 
     initialize: ->
         result = super
-        @author = app.users.get @get('author').jid, yes
+        @bind 'change', @update_attributes
+        do @update_attributes
         result
+
+    update_attributes: =>
+        @author = app.users.get @get('author').jid, yes
