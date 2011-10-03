@@ -22,7 +22,7 @@ class exports.ChannelOverView extends Backbone.View
         @render()
 
     collapse: =>
-        app.router.navigate "home"
+        app.router.navigate app.users.target.get 'jid'
         body = $('body')
         body.removeClass 'stateArrived'
         do document.redraw
