@@ -10,8 +10,8 @@ class exports.Collection extends Backbone.Collection
     has: (model, options) ->
         @get(model, options)?
 
-    # using update:yes in create or add will result in
-    # updateing allready existing models with new data or just creates them
+    # Keeps ids unique
+    # updateing already existing models with new data or just creates them
     _prepareModel: (raw_model, options = {}) ->
         opts = _.clone options
         opts.create = no
@@ -31,8 +31,6 @@ class exports.Collection extends Backbone.Collection
         super
 
     get_or_create: (attrs, options = {}) ->
-        # TODO: opts.update?
-
         if (model = @get(attrs.id))
             model.save(attrs, options)
             model
