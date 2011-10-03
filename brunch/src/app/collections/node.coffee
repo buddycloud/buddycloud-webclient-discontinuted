@@ -23,12 +23,16 @@ class exports.Nodes extends Collection
         super
 
     get: (nodeid, options) ->
+        nodeid = nodeid?.nodeid or nodeid
         id = nodeid_to_type(nodeid) or nodeid
-        super id, options
+        # this is what a empty node looks like
+        super {id, nodeid}, options
 
     create: (nodeid, options) ->
+        nodeid = nodeid?.nodeid or nodeid
         id = nodeid_to_type(nodeid) or nodeid
-        super id, options
+        # this is what a empty node looks like
+        super {id, nodeid}, options
 
 
 
@@ -50,7 +54,10 @@ class exports.NodeStore extends exports.Nodes
 
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->
+        nodeid = nodeid?.nodeid or nodeid
         id = nodeid_to_type(nodeid) or nodeid
         if options.create and not id
             throw new Error "NodeID missing"
+        console.warn "GET NODE FROM STORE", id, nodeid
+        # this is what a empty node looks like
         super {id, nodeid}, options

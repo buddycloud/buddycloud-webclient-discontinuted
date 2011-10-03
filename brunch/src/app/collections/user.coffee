@@ -26,6 +26,8 @@ class exports.UserStore extends Collection
         @fetch()
 
     create: (jid, options = {}) ->
+        jid = jid?.jid or jid
         options.create = yes
         options.update = yes
+        # this is what a empty user looks like
         super {id:jid, jid}, options
