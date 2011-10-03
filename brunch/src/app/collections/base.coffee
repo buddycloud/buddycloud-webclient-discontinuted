@@ -1,7 +1,8 @@
 
 class exports.Collection extends Backbone.Collection
 
-    sync: -> this # don't save anything anywhere
+    sync: (method, model, options) ->
+        options.success(model) # do nothing
 
     has: (model, options) ->
         @get(model, options)?
