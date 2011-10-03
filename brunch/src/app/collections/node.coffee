@@ -50,7 +50,7 @@ class exports.NodeStore extends exports.Nodes
 
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->
-        id = nodeid_to_type(nodeid)
+        id = nodeid_to_type(nodeid) or nodeid
         if options.create and not id
             throw new Error "NodeID missing"
         super {id, nodeid}, options
