@@ -1,5 +1,6 @@
 { BaseView } = require 'views/base'
 { PostView } = require 'views/channel/post'
+{ EventHandler } = require 'util'
 
 class exports.CommentsView extends BaseView
     template: require 'templates/channel/comments'
@@ -14,8 +15,7 @@ class exports.CommentsView extends BaseView
     events:
         'click .createComment': 'createComment'
 
-    createComment: (ev) ->
-        ev.preventDefault()
+    createComment: EventHandler ->
         text = @$('textarea')
         unless text.val() is ""
             post =
@@ -29,7 +29,6 @@ class exports.CommentsView extends BaseView
                     #app.handler.data.add_post node, post
                     @el.find('.newTopic').removeClass 'write'
                     text.val ""
-        no
 
     add_comment: (comment) =>
         entry = @views[comment.cid] ?= new PostView
