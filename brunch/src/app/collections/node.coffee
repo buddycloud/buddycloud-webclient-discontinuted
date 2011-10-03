@@ -55,6 +55,5 @@ class exports.NodeStore extends exports.Nodes
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->
         id = nodeid_to_type(nodeid) or nodeid
-        console.warn "GET NODE FROM STORE", id, nodeid
         # this is what a empty node looks like
         super id, options

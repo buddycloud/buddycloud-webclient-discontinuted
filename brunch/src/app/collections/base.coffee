@@ -22,11 +22,9 @@ class exports.Collection extends Backbone.Collection
 
         model ?= super
         model.sync = @sync
-        console.warn "Collection._prepareModel", @, raw_model, model
         return model
 
     get: (id, options = {}) ->
-        console.warn "Collection.get", id, options
         if typeof id isnt 'string'
             console.trace()
             throw 'get w/o str'
@@ -34,7 +32,6 @@ class exports.Collection extends Backbone.Collection
 
     get_or_create: (attrs, options = {}) ->
         # TODO: opts.update?
-        console.warn "Collection.get_or_create", attrs, options
 
         if (model = @get(attrs.id))
             model.save(attrs, options)
