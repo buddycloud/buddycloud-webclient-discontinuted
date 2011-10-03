@@ -23,5 +23,14 @@ class exports.TopicPosts extends Backbone.Collection
         else
             super
 
+    # Alternatively searchs all comments, returns opener
+    get: (id) ->
+        if (topicpost = super)
+            topicpost
+        else
+            @find (topicpost) ->
+                topicpost.get(id)?
+
+
     comparator: (post) ->
         - new Date(post.get 'published').getTime()
