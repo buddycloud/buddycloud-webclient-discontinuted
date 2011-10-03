@@ -9,13 +9,13 @@ class exports.Collection extends Backbone.Collection
 
     # using update:yes in create or add will result in
     # updateing allready existing models with new data or just creates them
-    _prepareModel: (modelclass, options = {}) ->
+    _prepareModel: (raw_model, options = {}) ->
         if options.update
             opts = _.clone options
             opts.create = no
             opts.update = no
-            if (known = @get(modelclass, opts))
-                known.save(modelclass, opts)
+            if (known = @get(raw_model, opts))
+                known.save(raw_model, opts)
                 model = known
         model ?= super
         model.sync = @sync
