@@ -14,8 +14,10 @@ class exports.TopicPosts extends Backbone.Collection
         if (current = @get post.id)
             current.set post
         else if post.in_reply_to
+            # Is a comment
             opener = @get post.in_reply_to
             unless opener
+                # Create parent, may be retrieved later
                 super id:post.in_reply_to
                 opener = @get post.in_reply_to
             opener.comments.add post
