@@ -26,7 +26,7 @@ class exports.CommentsView extends BaseView
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, =>
                     post.content = value:post.content
-                    app.handler.data.add_post node, post
+                    #app.handler.data.add_post node, post
                     @el.find('.newTopic').removeClass 'write'
                     text.val ""
         no
