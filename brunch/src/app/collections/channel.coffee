@@ -24,7 +24,7 @@ class exports.UserChannels extends exports.Channels
             switch subscription.subscription
                 # FIXME get 'pending' working when we need it
                 when 'subscribed', 'pending'
-                    @get_or_create id:subscription.node
+                    @get_or_create id: subscription.node
                 when 'unsubscribed', 'none'
                     if (channel = @get subscription.node)
                         @remove channel
@@ -39,6 +39,10 @@ class exports.UserChannels extends exports.Channels
     fetch: (options = {}) ->
         options.add = yes unless options.add?
         super
+
+    get: (id, options) ->
+        id = nodeid_to_user(id) or id
+        super(id, options)
 
     get_or_create: (attrs, options) ->
         super(app.channels.get_or_create(attrs, options), options)

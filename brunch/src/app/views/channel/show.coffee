@@ -91,7 +91,7 @@ class exports.ChannelView extends BaseView
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
         # Permissions:
-        followingThisChannel = app.users.current.channels.get(@model.nodes.get('posts')?.get 'nodeid')?
+        followingThisChannel = app.users.current.channels.get(channel?.get 'nodeid')?
         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         # TODO: pending may require special handling
         @user =
