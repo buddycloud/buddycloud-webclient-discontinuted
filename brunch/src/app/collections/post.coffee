@@ -10,3 +10,6 @@ class exports.Posts extends Collection
     initialize: ->
         @parent.bind 'post', (post) =>
             @get_or_create post
+
+    comparator: (post) ->
+        - new Date(post.get 'published').getTime()
