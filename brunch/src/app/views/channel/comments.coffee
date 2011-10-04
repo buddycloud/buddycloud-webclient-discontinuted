@@ -54,8 +54,10 @@ class exports.CommentsView extends BaseView
     render: =>
         @update_attributes()
         super
-        for cid, entry of @views
+        @model.forEach (comment) =>
+            entry = @views[comment.cid]
             entry.render()
+            @el.prepend entry.el
 
     update_attributes: ->
         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
