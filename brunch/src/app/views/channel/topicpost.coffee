@@ -7,6 +7,7 @@ class exports.TopicPostView extends BaseView
 
     initialize: ({@parent}) ->
         super
+        @model.bind 'change', @render
         @opener   = new PostView type:'opener', model:@model, parent:this
         @comments = new CommentsView model:@model.comments, parent:this
         @el.append @opener.el
@@ -20,3 +21,10 @@ class exports.TopicPostView extends BaseView
         @el.append @opener.el
         @el.append @comments.el
 
+        if @model.get('author')?.jid?
+            # Show only openers with content
+            @el.show()
+        else
+            # Do not yet show openers that were automatically created
+            # for an early-received comment
+            @el.hide()
