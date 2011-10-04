@@ -52,8 +52,8 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
-        if (channel = app.channels.get_or_create { id: nodeid })
-            channel.push_post nodeid, post
+        channel = app.channels.get_or_create id:nodeid
+        channel.push_post nodeid, post
 
     on_connection_established: =>
         user = app.users.current
@@ -65,7 +65,6 @@ class exports.DataHandler extends Backbone.EventHandler
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user
-        app.channels.fetch()
 
         app.users.forEach (user) ->
             #user.affiliations.fetch()
