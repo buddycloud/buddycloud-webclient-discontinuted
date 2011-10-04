@@ -46,7 +46,7 @@ class exports.CommentsView extends BaseView
         i = @model.indexOf(comment)
         newerComment = @views[@model.at(i - 1)?.cid]
         if newerComment
-            newerComment.el.after entry.el
+            newerComment.el.before entry.el
         else
             @el.prepend entry.el
         do entry.render
