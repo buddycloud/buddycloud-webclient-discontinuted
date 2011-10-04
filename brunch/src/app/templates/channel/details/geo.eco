@@ -1,6 +1,6 @@
 <p class="location">
-  <span class="title"><%= @geo?.metadata?['geoloc-text']?.label %>:</span>
-  <span class="previous"><%= @geo?.metadata?['geoloc-text-previous']?.value %></span> →
-  <span class="current"><%= @geo?.metadata?['geoloc-text']?.value %></span> →
-  <span class="future"><%= @geo?.metadata?['geoloc-future']?.value %></span>
+  <span class="title"><%= @geo?.metadata?['geo-text']?.label %>:</span>
+  <span class="previous"><%= @geo?.metadata?['geo-text-previous']?.value %></span> →
+  <span class="current"><%= @geo?.metadata?['geo-text']?.value %></span> →
+  <span class="future"><%= @geo?.metadata?['geo-future']?.value %></span>
 </p>

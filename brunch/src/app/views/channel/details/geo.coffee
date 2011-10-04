@@ -1,6 +1,6 @@
 { BaseView } = require('views/base')
 
-# this is the specific view for the geoloc node
+# this is the specific view for the geo node
 
 class exports.GeoDetail extends BaseView
     template: require 'templates/channel/details/geo'
@@ -17,5 +17,5 @@ class exports.GeoDetail extends BaseView
     update_attributes: ->
         if (posts = @model.nodes.get 'posts')
             @posts = posts.toJSON yes
-        if (geo = @model.nodes.get 'geoloc')
+        if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes

@@ -29,7 +29,7 @@
       <div class="controls">
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
-          <label for="shouldShareLocation">Share Location: <%= @channel?.metadata?['geoloc-text']?.value %></label>
+          <label for="shouldShareLocation">Share Location: <%= @channel?.metadata?['geo-text']?.value %></label>
         </div>
         <div class="button small prominent" id="createNewTopic">Post</div>
     </section>

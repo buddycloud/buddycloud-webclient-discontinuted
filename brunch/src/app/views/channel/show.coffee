@@ -88,7 +88,7 @@ class exports.ChannelView extends BaseView
     update_attributes: ->
         if (channel = @model.nodes.get 'posts')
             @channel = channel.toJSON yes
-        if (geo = @model.nodes.get 'geoloc')
+        if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
         # Permissions:
         followingThisChannel = app.users.current.channels.get(@model.nodes.get('posts')?.get 'nodeid')?

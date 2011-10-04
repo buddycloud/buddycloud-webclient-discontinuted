@@ -102,7 +102,7 @@ class exports.DataHandler extends Backbone.EventHandler
 forEachUserNode = (user, iter, callback) ->
     pending = 0
     ["posts", "status", "subscriptions",
-     "geoloc/previous", "geoloc/current", "geoloc/next"].forEach (type) ->
+     "geo/previous", "geo/current", "geo/next"].forEach (type) ->
         node = "/user/#{user}/#{type}"
         pending++
         iter node, ->

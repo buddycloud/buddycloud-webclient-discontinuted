@@ -213,11 +213,11 @@ Strophe.addConnectionPlugin('buddycloud', {
 		    post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
             }
 
-	    // geoloc
-	    attr = entry.getElementsByTagName("geoloc");
+	    // geo
+	    attr = entry.getElementsByTagName("geo");
 	    if (attr.length > 0)
-		post.geoloc = this._parsetag(attr.item(0),
-					     "country", "locality", "text");
+		post.geo = this._parsetag(attr.item(0),
+					  "country", "locality", "text");
 
 	    // in reply to
             var in_reply_tos = entry.getElementsByTagNameNS(Strophe.NS.ATOM_THR, "in-reply-to");
