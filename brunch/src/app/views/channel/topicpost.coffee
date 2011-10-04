@@ -15,8 +15,8 @@ class exports.TopicPostView extends BaseView
 
     render: =>
         super
-        @el.append @opener.el
-        @el.append @comments.el
         do @opener.render
         do @comments.render
+        @el.append @opener.el
+        @el.append @comments.el
 
