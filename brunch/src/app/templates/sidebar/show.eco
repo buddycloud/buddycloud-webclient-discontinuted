@@ -1,10 +1,18 @@
-<header id="globalHeader">
-  <div class="search"><input type="text" placeholder="Search..." /></div>
-</header>
 <div id="sidebar">
   <div id="channels" class="clearfix">
     <div class="scrollArea">
+      <!--
 
+        there goes the search bar as well
+        template: search.eco
+
+      -->
+      <!--
+
+        this contains the list of channels as sidebar entries
+        template: entry.eco
+
+      -->
     </div>
   </div>
   <div id="more_channels">

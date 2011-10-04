@@ -1,5 +1,6 @@
 { ChannelOverView } = require 'views/sidebar/more'
 { ChannelEntry } = require 'views/sidebar/entry'
+{ Searchbar } = require 'views/sidebar/search'
 
 # The sidebar shows all channels the user subscribed to
 class exports.Sidebar extends Backbone.View
@@ -10,6 +11,10 @@ class exports.Sidebar extends Backbone.View
         $('body').append @template()
         @el = $('#channels > .scrollArea')
         @hidden = yes
+
+        @search = new Searchbar parent:this
+        @el.append @search.el
+
         # sidebar entries
         @current = undefined
         @views = {} # this contains the channel entry views
@@ -22,22 +27,6 @@ class exports.Sidebar extends Backbone.View
         unless app.views.overview?
             app.views.overview = new ChannelOverView
         @overview = app.views.overview
-
-    events:
-        'keypress .search input': 'on_search_keypress'
-
-    on_search_keypress: (ev) ->
-        if ev.keyCode == 13
-            ev.preventDefault()
-
-            input = @$('.search input')
-            search = input.val()
-            if /[^\/]+@[^\/]/.test(search)
-                app.router.navigate search, yes
-                input.val('')
-            no
-        else
-            yes
 
     new_channel_entry: (channel) =>
         entry = @views[channel.cid]

@@ -1,0 +1,3 @@
+<header id="globalHeader">
+  <div class="search"><input type="text" placeholder="Search..." /></div>
+</header>
