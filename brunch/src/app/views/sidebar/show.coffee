@@ -51,7 +51,8 @@ class exports.Sidebar extends Backbone.View
 
     setCurrentEntry: (channel) =>
         old = @current
-        @current = @views[channel.cid]
+        unless (@current = @views[channel.cid])
+            @current = @new_channel_entry channel
         @current?.render()
         @current?.bubble()
         old?.render()
