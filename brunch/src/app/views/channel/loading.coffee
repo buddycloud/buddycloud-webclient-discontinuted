@@ -8,6 +8,7 @@ class exports.LoadingChannelView extends Backbone.View
 
     render: =>
         @el = $(@template())
+        $('body').removeClass('start').append @el
         $('.centerBox').remove()
 
     hide: =>
