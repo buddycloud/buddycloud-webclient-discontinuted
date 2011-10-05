@@ -348,18 +348,20 @@ Strophe.addConnectionPlugin('buddycloud', {
                     });
                 } else if (child.nodeName === 'configuration') {
                     Strophe.forEachChild(child, 'x', function(x) {
-                        var config = {};
-                        Strophe.forEachChild(x, 'field', function(field) {
-                            var k = field.getAttribute('var'),
-                                v = undefined;
-                            Strophe.forEachChild(field, 'value', function(value) {
-                                if (!v)
-                                    v = Strophe.getText(value);
-                            });
-                            if (k && v)
-                                config[k] = v;
-                        });
-                        if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
+                        // Flatten the namespaced fields into a hash
+                        var i,key,field,config = {},
+                            form = that._connection.dataforms.parse(x);
+                        for (i = 0; i < form.fields.length; i++) {
+                            field = form.fields[i];
+                            key = field.variable.replace(/.+#/,'');
+                            config[key] = {
+                                value: field.value,
+                                label: field.label,
+                                type:  field.type,
+                            };
+                        }
+                        if (config.FORM_TYPE &&
+                          config.FORM_TYPE.value === Strophe.NS.PUBSUB_NODE_CONFIG)
                             listener({
                                 type: 'config',
                                 node: child.getAttribute('node'),
