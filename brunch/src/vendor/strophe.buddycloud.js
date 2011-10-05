@@ -35,8 +35,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                 throw new Error(plugin + " plugin required!");
         });
 
-	Strophe.addNamespace('FORWARD', "urn:xmpp:forward:tmp");
-	Strophe.addNamespace('MAM', "urn:xmpp:archive#management");
+        Strophe.addNamespace('FORWARD', "urn:xmpp:forward:tmp");
+        Strophe.addNamespace('MAM', "urn:xmpp:archive#management");
     },
 
     // Called by Strophe on connection event
@@ -54,7 +54,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     // discovers the inbox service jid from the given domain
     discover: function (domain, success, error, timeout) {
-	console.log("discover", domain);
+        console.log("discover", domain);
         var conn = this._connection, self = this;
         domain = domain || Strophe.getDomainFromJid(conn.jid);
         conn.disco.items(domain, null, function /*success*/ (stanza) {
@@ -64,38 +64,38 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     _onDiscoItems: function (success, error, timeout, stanza) {
         var conn = this._connection, self = this;
-	/* Per-item callbacks */
-	var itemsPending = 1, done = false;
-	var itemSuccess = function(jid) {
-	    itemsPending--;
-	    if (!done) {
-		done = true;
-		success(jid);
-	    }
-	};
-	var itemError = function() {
-	    itemsPending--;
-	    if (!done && itemsPending < 1) {
-		done = true;
-		error();
-	    }
-	};
+        /* Per-item callbacks */
+        var itemsPending = 1, done = false;
+        var itemSuccess = function(jid) {
+            itemsPending--;
+            if (!done) {
+                done = true;
+                success(jid);
+            }
+        };
+        var itemError = function() {
+            itemsPending--;
+            if (!done && itemsPending < 1) {
+                done = true;
+                error();
+            }
+        };
 
-	Strophe.forEachChild(stanza, 'query', function(queryEl) {
-	    Strophe.forEachChild(queryEl, 'item', function(itemEl) {
-		var jid = itemEl.getAttribute('jid');
-		if (jid) {
-		    conn.disco.info(jid, null,
-			function /*success*/ (stanza) {
-			    self._onDiscoInfo(itemSuccess, itemError, timeout, jid, stanza);
-			},
-		    itemError, timeout);
-		    itemsPending++;
-		}
-	    });
+        Strophe.forEachChild(stanza, 'query', function(queryEl) {
+            Strophe.forEachChild(queryEl, 'item', function(itemEl) {
+                var jid = itemEl.getAttribute('jid');
+                if (jid) {
+                    conn.disco.info(jid, null,
+                        function /*success*/ (stanza) {
+                            self._onDiscoInfo(itemSuccess, itemError, timeout, jid, stanza);
+                        },
+                    itemError, timeout);
+                    itemsPending++;
+                }
+            });
         });
-	/* itemsPending initialized with 1 to catch 0 items case */
-	itemError();
+        /* itemsPending initialized with 1 to catch 0 items case */
+        itemError();
     },
 
     _onDiscoInfo: function (success, error, timeout, jid, stanza) {
@@ -109,7 +109,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                 return success(jid);
             }
         }
-	return error();
+        return error();
     },
 
     createChannel: function (success, error, timeout) {
@@ -160,94 +160,94 @@ Strophe.addConnectionPlugin('buddycloud', {
      * @param el <items/> element that contains <item/> children
      */
     _parsePost: function (el, callback) {
-	var posts = [];
-	var items = el.getElementsByTagName('item');
-	for(var i = 0; i < items.length; i++) {
-	    var item = items[i];
-	    /* Get first item child */
-	    var postEl = null;
-	    Strophe.forEachChild(item, null, function(child) {
-		if (!postEl)
-		    postEl = child;
-	    });
+        var posts = [];
+        var items = el.getElementsByTagName('item');
+        for(var i = 0; i < items.length; i++) {
+            var item = items[i];
+            /* Get first item child */
+            var postEl = null;
+            Strophe.forEachChild(item, null, function(child) {
+                if (!postEl)
+                    postEl = child;
+            });
 
-	    if (postEl)
-		try {
-		    var parser = this._postParsers['{' + postEl.namespaceURI + '}' + postEl.nodeName];
-		    var post = parser.call(this, postEl);
-		    if (post) {
-			if (!post.id)
-			    post.id = item.getAttribute('id');
-			posts.push(post);
-		    }
-		} catch(e) {
-		    console.error("Cannot parse post", postEl, e.stack || e);
-		}
-	}
+            if (postEl)
+                try {
+                    var parser = this._postParsers['{' + postEl.namespaceURI + '}' + postEl.nodeName];
+                    var post = parser.call(this, postEl);
+                    if (post) {
+                        if (!post.id)
+                            post.id = item.getAttribute('id');
+                        posts.push(post);
+                    }
+                } catch(e) {
+                    console.error("Cannot parse post", postEl, e.stack || e);
+                }
+        }
         callback(posts);
     },
 
     _postParsers: {
-	'{http://www.w3.org/2005/Atom}entry': function(entry) {
-	    var attr, post;
+        '{http://www.w3.org/2005/Atom}entry': function(entry) {
+            var attr, post;
 
             // Takes an <item /> element and returns a hash of it's attributes
             post = this._parsetag(entry, "id", "published", "updated");
 
-	    // content
-	    attr = entry.getElementsByTagName("content");
-	    if (attr.length > 0) {
-		attr = attr.item(0);
-		post.content = {
-		    type: attr.getAttribute("type"),
+            // content
+            attr = entry.getElementsByTagName("content");
+            if (attr.length > 0) {
+                attr = attr.item(0);
+                post.content = {
+                    type: attr.getAttribute("type"),
                     value:attr.textContent,
                 };
             }
 
-	    // author
-	    attr = entry.getElementsByTagName("author");
-	    if (attr.length > 0) {
-		post.author = this._parsetag(attr.item(0),
-					     "name", "uri");
+            // author
+            attr = entry.getElementsByTagName("author");
+            if (attr.length > 0) {
+                post.author = this._parsetag(attr.item(0),
+                                             "name", "uri");
                 if (post.author.uri)
-		    post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
+                    post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
             }
 
-	    // geo
-	    attr = entry.getElementsByTagName("geo");
-	    if (attr.length > 0)
-		post.geo = this._parsetag(attr.item(0),
-					  "country", "locality", "text");
+            // geo
+            attr = entry.getElementsByTagName("geo");
+            if (attr.length > 0)
+                post.geo = this._parsetag(attr.item(0),
+                                          "country", "locality", "text");
 
-	    // in reply to
+            // in reply to
             var in_reply_tos = entry.getElementsByTagNameNS(Strophe.NS.ATOM_THR, "in-reply-to");
             if (in_reply_tos.length > 0)
-		post.in_reply_to = in_reply_tos[0].getAttribute("ref");
+                post.in_reply_to = in_reply_tos[0].getAttribute("ref");
 
-	    return post;
-	},
-	'{http://jabber.org/protocol/disco#items}query': function(query) {
-	    var post = { subscriptions: {} };
-	    Strophe.forEachChild(query, 'item', function(item) {
-		var jid = item.getAttribute('jid'),
-		    node = item.getAttribute('node'),
-		    subscription = item.getAttributeNS(Strophe.NS.PUBSUB, 'subscription'),
-		    affiliation = item.getAttributeNS(Strophe.NS.PUBSUB, 'affiliation'),
-		    updated;
-		Strophe.forEachChild(item, 'updated', function(updated) {
-		    updated = updated.textContent;
-		});
-		if (jid && node)
-		    post.subscriptions[node] = {
-			jid: jid,
-			node: node,
-			subscription: subscription,
-			affiliation: affiliation,
-			updated: updated,
-		    };
-	    });
-	    return post;
-	}
+            return post;
+        },
+        '{http://jabber.org/protocol/disco#items}query': function(query) {
+            var post = { subscriptions: {} };
+            Strophe.forEachChild(query, 'item', function(item) {
+                var jid = item.getAttribute('jid'),
+                    node = item.getAttribute('node'),
+                    subscription = item.getAttributeNS(Strophe.NS.PUBSUB, 'subscription'),
+                    affiliation = item.getAttributeNS(Strophe.NS.PUBSUB, 'affiliation'),
+                    updated;
+                Strophe.forEachChild(item, 'updated', function(updated) {
+                    updated = updated.textContent;
+                });
+                if (jid && node)
+                    post.subscriptions[node] = {
+                        jid: jid,
+                        node: node,
+                        subscription: subscription,
+                        affiliation: affiliation,
+                        updated: updated,
+                    };
+            });
+            return post;
+        }
     },
 
     getMetadata: function (jid, node, succ, err, timeout) {
@@ -282,15 +282,15 @@ Strophe.addConnectionPlugin('buddycloud', {
      * @param end {Date} Optional
      */
     replayNotifications: function(start, end, success, error) {
-	var conn = this._connection;
-	var queryAttrs = { xmlns: Strophe.NS.MAM };
-	if (start)
-	    queryAttrs.start = start.toISOString();
-	if (end)
-	    queryAttrs.end = end.toISOString();
+        var conn = this._connection;
+        var queryAttrs = { xmlns: Strophe.NS.MAM };
+        if (start)
+            queryAttrs.start = start.toISOString();
+        if (end)
+            queryAttrs.end = end.toISOString();
         var iq = $iq({ from: conn.jid,
-		       to: this.channels.jid,
-		       type: 'get' }).
+                       to: this.channels.jid,
+                       type: 'get' }).
             c('query', queryAttrs);
         conn.sendIQ(iq, success, error);
     },
@@ -299,67 +299,67 @@ Strophe.addConnectionPlugin('buddycloud', {
      * TODO: filter for sender
      */
     addNotificationListener: function(listener) {
-	var that = this;
-	var safeListener = function() {
-	    try {
-		listener.apply(that, arguments);
-	    } catch(e) {
-		Strophe.fatal(e.stack || e);
-	    }
-	};
-	this._connection.pubsub.addNotificationListener(function(stanza) {
-	    that._handleNotification(stanza, safeListener);
-	});
-	this._connection.addHandler(function(stanza) {
-	    Strophe.forEachChild(stanza, 'forwarded', function(forwarded) {
-		Strophe.forEachChild(forwarded, 'message', function(innerStanza) {
-		    that._handleNotification(innerStanza, safeListener);
-		});
-	    });
-	    return true;
-	}, Strophe.NS.FORWARD, 'message');
+        var that = this;
+        var safeListener = function() {
+            try {
+                listener.apply(that, arguments);
+            } catch(e) {
+                Strophe.fatal(e.stack || e);
+            }
+        };
+        this._connection.pubsub.addNotificationListener(function(stanza) {
+            that._handleNotification(stanza, safeListener);
+        });
+        this._connection.addHandler(function(stanza) {
+            Strophe.forEachChild(stanza, 'forwarded', function(forwarded) {
+                Strophe.forEachChild(forwarded, 'message', function(innerStanza) {
+                    that._handleNotification(innerStanza, safeListener);
+                });
+            });
+            return true;
+        }, Strophe.NS.FORWARD, 'message');
     },
 
     _handleNotification: function(stanza, listener) {
-	var that = this;
-	Strophe.forEachChild(stanza, 'event', function(eventEl) {
-	    Strophe.forEachChild(eventEl, null, function(child) {
+        var that = this;
+        Strophe.forEachChild(stanza, 'event', function(eventEl) {
+            Strophe.forEachChild(eventEl, null, function(child) {
                 if (child.nodeName === 'subscription') {
-		    listener({
-			type: 'subscription',
-			node: child.getAttribute('node'),
-			jid: child.getAttribute('jid'),
-			subscription: child.getAttribute('subscription')
+                    listener({
+                        type: 'subscription',
+                        node: child.getAttribute('node'),
+                        jid: child.getAttribute('jid'),
+                        subscription: child.getAttribute('subscription')
                     });
                 } else if (child.nodeName === 'affiliation') {
-		    listener({
-			type: 'affiliation',
-			node: child.getAttribute('node'),
-			jid: child.getAttribute('jid'),
-			affiliation: child.getAttribute('affiliation')
+                    listener({
+                        type: 'affiliation',
+                        node: child.getAttribute('node'),
+                        jid: child.getAttribute('jid'),
+                        affiliation: child.getAttribute('affiliation')
                     });
                 } else if (child.nodeName === 'items') {
-		    that._parsePost(child, function(posts) {
-			listener({
-			    type: 'posts',
-			    node: child.getAttribute('node'),
-			    posts: posts
-			});
-		    });
+                    that._parsePost(child, function(posts) {
+                        listener({
+                            type: 'posts',
+                            node: child.getAttribute('node'),
+                            posts: posts
+                        });
+                    });
                 } else if (child.nodeName === 'configuration') {
-		    Strophe.forEachChild(child, 'x', function(x) {
-			var config = {};
-			Strophe.forEachChild(x, 'field', function(field) {
-			    var k = field.getAttribute('var'),
-				v = undefined;
-			    Strophe.forEachChild(field, 'value', function(value) {
-				if (!v)
-				    v = Strophe.getText(value);
-			    });
-			    if (k && v)
-				config[k] = v;
-			});
-			if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
+                    Strophe.forEachChild(child, 'x', function(x) {
+                        var config = {};
+                        Strophe.forEachChild(x, 'field', function(field) {
+                            var k = field.getAttribute('var'),
+                                v = undefined;
+                            Strophe.forEachChild(field, 'value', function(value) {
+                                if (!v)
+                                    v = Strophe.getText(value);
+                            });
+                            if (k && v)
+                                config[k] = v;
+                        });
+                        if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
                             listener({
                                 type: 'config',
                                 node: child.getAttribute('node'),
