@@ -13,6 +13,7 @@ class exports.Sidebar extends Backbone.View
         @hidden = yes
 
         @search = new Searchbar parent:this
+        @search.bind 'filter', @render
         @el.append @search.el
 
         # sidebar entries
@@ -57,3 +58,12 @@ class exports.Sidebar extends Backbone.View
         @el.animate(left:"-#{@el.width()}px", t)
         @overview.hide(t)
         @hidden = yes
+
+    render: =>
+        for channel, view of @views
+            view.el.hide()
+
+        @parent.channels.filter(@search.filter).forEach (channel) =>
+            unless (view = @views[channel.cid])
+                view = @new_channel_entry channel
+            view.el.show()

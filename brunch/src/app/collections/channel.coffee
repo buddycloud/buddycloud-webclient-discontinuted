@@ -12,6 +12,18 @@ class exports.Channels extends Collection
         id = nodeid_to_user(id) or id
         super(id, options)
 
+    filter: (filter) ->
+        return @models if not filter? or filter is ""
+        filter = filter.toLowerCase()
+        super (channel) ->
+            # FIXME only id to check, there meight be more (hope so)
+            if (id = channel.get('id'))?
+                id.toLowerCase().indexOf(filter) > -1
+
+            else
+                # nothing to compare with, channel must be empty, so we can ignore it
+                no
+
 
 # used in models/user
 class exports.UserChannels extends exports.Channels
