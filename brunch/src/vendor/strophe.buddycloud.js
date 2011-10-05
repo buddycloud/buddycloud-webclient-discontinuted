@@ -360,7 +360,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 				config[k] = v;
 			});
 		    });
-		    if (config.FORM_TYPE === "http://jabber.org/protocol/pubsub#node_config")
+		    if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
 			listener({
 			    type: 'config',
 			    node: child.getAttribute('node'),
