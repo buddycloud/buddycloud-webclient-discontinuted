@@ -37,6 +37,9 @@ Strophe.addConnectionPlugin('buddycloud', {
 
         Strophe.addNamespace('FORWARD', "urn:xmpp:forward:tmp");
         Strophe.addNamespace('MAM', "urn:xmpp:archive#management");
+
+        // generate _postParsers with the right namespaces
+        this._postParsers = this._postParsers_template();
     },
 
     // Called by Strophe on connection event
@@ -187,8 +190,12 @@ Strophe.addConnectionPlugin('buddycloud', {
         callback(posts);
     },
 
-    _postParsers: {
-        '{http://www.w3.org/2005/Atom}entry': function(entry) {
+    /* This is just a simple function that we call in the constructor to
+     * generate _postParsers from it with the right namespaces.
+     */
+    _postParsers_template: function () {
+        var parsers = {};
+        parsers['{'+Strophe.NS.ATOM+'}entry'] = function(entry) {
             var attr, post;
 
             // Takes an <item /> element and returns a hash of it's attributes
@@ -225,8 +232,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                 post.in_reply_to = in_reply_tos[0].getAttribute("ref");
 
             return post;
-        },
-        '{http://jabber.org/protocol/disco#items}query': function(query) {
+        };
+        parsers['{'+Strophe.NS.DISCO_ITEMS+'}query'] = function(query) {
             var post = { subscriptions: {} };
             Strophe.forEachChild(query, 'item', function(item) {
                 var jid = item.getAttribute('jid'),
@@ -247,7 +254,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                     };
             });
             return post;
-        }
+        };
+        return parsers;
     },
 
     getMetadata: function (jid, node, succ, err, timeout) {
