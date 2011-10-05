@@ -366,8 +366,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                                 config: config
                             });
                     });
-		} else
-		    console.warn("Unhandled buddycloud event type", child.nodeName);
+                } else
+                    console.warn("Unhandled buddycloud event type", child.nodeName);
             });
         });
     },
