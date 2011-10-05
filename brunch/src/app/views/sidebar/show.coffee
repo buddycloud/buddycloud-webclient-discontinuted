@@ -12,7 +12,7 @@ class exports.Sidebar extends Backbone.View
         @el = $('#channels > .scrollArea')
         @hidden = yes
 
-        @search = new Searchbar parent:this
+        @search = new Searchbar parent:this, channels:@parent.channels
         @search.bind 'filter', @render
         @el.append @search.el
 
