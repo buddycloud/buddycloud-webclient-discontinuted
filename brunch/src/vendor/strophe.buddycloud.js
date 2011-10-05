@@ -347,8 +347,8 @@ Strophe.addConnectionPlugin('buddycloud', {
 			});
 		    });
                 } else if (child.nodeName === 'configuration') {
-		    var config = {};
 		    Strophe.forEachChild(child, 'x', function(x) {
+			var config = {};
 			Strophe.forEachChild(x, 'field', function(field) {
 			    var k = field.getAttribute('var'),
 				v = undefined;
@@ -359,13 +359,13 @@ Strophe.addConnectionPlugin('buddycloud', {
 			    if (k && v)
 				config[k] = v;
 			});
+			if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
+			    listener({
+				type: 'config',
+				node: child.getAttribute('node'),
+				config: config
+			    });
 		    });
-		    if (config.FORM_TYPE === Strophe.NS.PUBSUB_NODE_CONFIG)
-			listener({
-			    type: 'config',
-			    node: child.getAttribute('node'),
-			    config: config
-			});
 		} else
 		    console.warn("Unhandled buddycloud event type", child.nodeName);
             });
