@@ -22,8 +22,6 @@ class exports.Sidebar extends Backbone.View
         @parent.channels.forEach        @new_channel_entry
         @parent.channels.bind 'change', @new_channel_entry
         @parent.channels.bind 'add',    @new_channel_entry
-        @parent.channels.bind 'all', =>
-            app.debug "sidebar CHEV-ALL", arguments
 
         unless app.views.overview?
             app.views.overview = new ChannelOverView

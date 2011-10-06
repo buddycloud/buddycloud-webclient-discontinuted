@@ -9,6 +9,10 @@ class exports.ChannelView extends BaseView
 
     initialize: ->
         super
+
+        @bind 'show', @show
+        @bind 'hide', @hide
+
         @details = new ChannelDetails model:@model, parent:this
 
         @model.bind 'change', @render
@@ -28,6 +32,14 @@ class exports.ChannelView extends BaseView
             else
                 @model.nodes.bind "add", init_posts
         do init_posts
+
+    show: =>
+        @hidden = false
+        @el.show()
+
+    hide: =>
+        @hidden = true
+        @el.hide()
 
     events:
         'click .follow': 'clickFollow'
@@ -77,6 +89,9 @@ class exports.ChannelView extends BaseView
     render: =>
         @update_attributes()
         super
+
+        if @hidden
+            @el.hide()
         do @details.render
         @el.append @details.el
 
@@ -93,7 +108,9 @@ class exports.ChannelView extends BaseView
         # Permissions:
         followingThisChannel = app.users.current.channels.get(channel?.get 'nodeid')?
         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        isAnonymous = app.users.current.get('id') is 'anony@mous'
         # TODO: pending may require special handling
         @user =
             followingThisChannel: followingThisChannel
-            hasRightToPost: yes #affiliation in ["owner", "publisher", "moderator", "member"]
+            hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
+            isAnonymous: isAnonymous
