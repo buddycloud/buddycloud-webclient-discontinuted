@@ -22,6 +22,7 @@ class exports.HomeView extends Backbone.View
             if not @current? and (channel.get('id') is app.users.current.get('id'))
                 @setCurrentChannel channel
 
+        @channels.bind 'remove', @remove_channel_view
         @channels.bind 'change', @new_channel_view
         @channels.bind 'add',    @new_channel_view
         @channels.bind 'all', =>
@@ -46,12 +47,15 @@ class exports.HomeView extends Backbone.View
             view.el.hide()
         view
 
+    remove_channel_view: (channel) =>
+        delete @views[channel.cid]
+
     setCurrentChannel: (channel) =>
         @current?.el.hide()
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
         if oldChannel and not app.users.current.channels.get(oldChannel.get('id'))?
-            delete @views[oldChannel.cid]
+            @channels.remove oldChannel
 
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel
