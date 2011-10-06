@@ -108,7 +108,9 @@ class exports.ChannelView extends BaseView
         # Permissions:
         followingThisChannel = app.users.current.channels.get(channel?.get 'nodeid')?
         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
+        isAnonymous = app.users.current.get('id') is 'anony@mous'
         # TODO: pending may require special handling
         @user =
             followingThisChannel: followingThisChannel
-            hasRightToPost: yes #affiliation in ["owner", "publisher", "moderator", "member"]
+            hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
+            isAnonymous: isAnonymous
