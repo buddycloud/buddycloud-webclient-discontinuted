@@ -15,10 +15,9 @@ class exports.HomeView extends Backbone.View
         @channels = new Channels
 
         app.users.current.channels.bind 'add', (channel) =>
-            @channels.create channel, update:yes
+            @channels.get_or_create channel
         app.users.current.channels.forEach (channel) =>
-            @channels.create channel
-            @new_channel_view channel
+            @channels.get_or_create channel
             # Attempt to come up with a default channel:
             if not @current? and (channel.get('id') is app.users.current.get('id'))
                 @setCurrentChannel channel
