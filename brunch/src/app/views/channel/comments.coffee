@@ -48,7 +48,7 @@ class exports.CommentsView extends BaseView
         if newerComment
             newerComment.el.before entry.el
         else
-            @el.prepend entry.el
+            @el.append entry.el
         do entry.render
 
     render: =>
