@@ -28,6 +28,8 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             jid = config.anon_domain
             @user = app.users.get_or_create id: "anony@mous"
         else
+            if jid.indexOf("@") < 0
+                jid = "#{jid}@#{config.domain}"
             @user = app.users.get_or_create id: jid
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
@@ -62,8 +64,13 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 error()
 
     register: (username, password, email) ->
-        @user = app.users.get_or_create id: "#{username}@#{config.domain}"
-        @connection.register.connect config.domain, (status, moar...) =>
+        if (m = username.match(/^(.+)@(.+)$/))
+            username = m[1]
+            domain = m[2]
+        else
+            domain = config.domain
+        @user = app.users.get_or_create id: "#{username}@#{domain}"
+        @connection.register.connect domain, (status, moar...) =>
 
             if status is Strophe.Status.REGISTERING
                 @trigger 'registering'
