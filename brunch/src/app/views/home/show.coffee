@@ -12,6 +12,7 @@ class exports.HomeView extends Backbone.View
         @current = undefined
         # sidebar entries
         @views = {} # this contains the channelnode views
+        @timeouts = {} # this contains the channelview remove timeouts
         @channels = new Channels
 
         app.users.current.channels.bind 'add', (channel) =>
@@ -48,6 +49,7 @@ class exports.HomeView extends Backbone.View
         view
 
     remove_channel_view: (channel) =>
+        delete @timeouts[channel.cid]
         delete @views[channel.cid]
 
     setCurrentChannel: (channel) =>
@@ -55,7 +57,11 @@ class exports.HomeView extends Backbone.View
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
         if oldChannel and not app.users.current.channels.get(oldChannel.get('id'))?
-            @channels.remove oldChannel
+            if @timeouts[oldChannel.cid]?
+                clearTimeout @timeouts[oldChannel.cid]
+            @timeouts[oldChannel.cid] = setTimeout ( =>
+                @channels.remove oldChannel
+            ), 5*60*1000 # 5 min
 
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel
