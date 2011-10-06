@@ -24,8 +24,6 @@ class exports.HomeView extends Backbone.View
 
         @channels.bind 'change', @new_channel_view
         @channels.bind 'add',    @new_channel_view
-        @channels.bind 'all', =>
-            app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
         #@current?.el.show()
 
