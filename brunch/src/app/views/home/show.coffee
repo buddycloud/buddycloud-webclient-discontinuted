@@ -19,7 +19,7 @@ class exports.HomeView extends Backbone.View
         app.users.current.channels.forEach (channel) =>
             @channels.get_or_create channel
             # Attempt to come up with a default channel:
-            if not @current? and (channel.get('id') is app.users.current.get('id'))
+            if not @current? and (channel.get('id') is app.users.target.get('id'))
                 @setCurrentChannel channel
 
         @channels.bind 'change', @new_channel_view
@@ -27,7 +27,7 @@ class exports.HomeView extends Backbone.View
         @channels.bind 'all', =>
             app.debug "home CHEV-ALL", arguments
         # if we already found a view in the cache
-        @current?.el.show()
+        #@current?.el.show()
 
         @sidebar = new Sidebar parent:this
 
@@ -43,11 +43,11 @@ class exports.HomeView extends Backbone.View
             @views[channel.cid] = view
             @channels.get_or_create channel, silent:yes
             @el.append view.el
-            view.el.hide()
+            view.trigger 'hide'
         view
 
     setCurrentChannel: (channel) =>
-        @current?.el.hide()
+        @current?.trigger 'hide'
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
         if oldChannel and not app.users.current.channels.get(oldChannel.get('id'))?
@@ -59,7 +59,7 @@ class exports.HomeView extends Backbone.View
         app.router.navigate @current.model.get('id'), false
 
         @sidebar.setCurrentEntry channel
-        @current.el.show()
+        @current.trigger 'show'
 
     render: ->
         @current?.render()
