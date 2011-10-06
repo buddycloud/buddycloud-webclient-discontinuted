@@ -63,6 +63,9 @@ class exports.HomeView extends Backbone.View
 
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel
+        if @timeouts[@current.model.cid]?
+            clearTimeout @timeouts[@current.model.cid]
+            delete @timeouts[@current.model.cid]
         # Indicate url change without routing:
         app.router.navigate @current.model.get('id'), false
 
