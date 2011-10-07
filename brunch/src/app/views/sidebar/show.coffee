@@ -77,10 +77,18 @@ class exports.Sidebar extends Backbone.View
         @hidden = yes
 
     render: =>
-        for channel, view of @views
-            view.el.hide()
+        views = {}
+        for cid, view of @views
+            view.el.detach()
+            view.el.css opacity:0.5
+            views[cid] = view
 
         @parent.channels.filter(@search.filter).forEach (channel) =>
             unless (view = @views[channel.cid])
                 view = @new_channel_entry channel
-            view.el.show()
+            view.el.css opacity:1
+            @el.append view.el
+            delete views[channel.cid]
+
+        for cid, view of views
+            @el.append view.el
