@@ -41,6 +41,9 @@
 
     -->
     <section class="topics">
+    <header class="topic loader">
+      <span class="spinner"> </span>
+    </header>
     <!--
 
       this contains the list of channel posts
