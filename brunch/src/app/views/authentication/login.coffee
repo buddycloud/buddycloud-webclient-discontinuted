@@ -7,8 +7,8 @@ class exports.LoginView extends AuthenticationView
     initialize: ->
         @el = $('#login')
         $('#home_login_jid').autoSuggestion
-            suffix: (suffix) ->
-                if suffix is "" or suffix.indexOf("@") isnt -1
+            suffix: (val) ->
+                if val is "" or val.indexOf("@") isnt -1
                     ""
                 else
                     "@#{config.domain}"

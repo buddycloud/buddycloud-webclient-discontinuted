@@ -21,8 +21,8 @@ class exports.RegisterView extends AuthenticationView
 
 
         $('#home_register_new_jid').autoSuggestion
-            suffix: (suffix) ->
-                if suffix is "" or suffix.indexOf("@") isnt -1
+            suffix: (val) ->
+                if val is "" or val.indexOf("@") isnt -1
                     ""
                 else
                     "@#{config.domain}"
