@@ -27,6 +27,10 @@ class exports.ChannelDetails extends BaseView
     events:
         "click .infoToggle": "click_toggle"
 
+    click_toggle: EventHandler ->
+        @el.toggleClass 'hidden'
+        @hidden = @el.hasClass('hidden')
+
     render: =>
         @update_attributes()
         super
@@ -41,10 +45,6 @@ class exports.ChannelDetails extends BaseView
             meta.append list.el
 
         formatdate.hook @el, update: off
-
-    click_toggle: EventHandler ->
-        @el.toggleClass 'hidden'
-        @hidden = @el.hasClass('hidden')
 
     update_attributes: ->
         if (posts = @model.nodes.get 'posts')
