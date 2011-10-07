@@ -1,4 +1,5 @@
 #!/bin/sh -e
+git submodule update --init
 echo 'brunching bits...'
 ./node_modules/.bin/brunch build --minify $@
 echo 'packing bits of awesomeness...'
