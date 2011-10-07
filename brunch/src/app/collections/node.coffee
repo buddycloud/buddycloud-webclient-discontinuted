@@ -45,12 +45,15 @@ class exports.NodeStore extends exports.Nodes
         super()
 
     initialize: ->
-        @channel.bind "subscription", (subscription) =>
+        @channel.bind 'subscription', (subscription) =>
             node = @get_or_create nodeid: subscription.node
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
             node = @get_or_create {nodeid}
             node.push_post post
+        @channel.bind 'metadata', (nodeid, metadata) =>
+            node = @get_or_create {nodeid}
+            node.push_metadata metadata
 
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->

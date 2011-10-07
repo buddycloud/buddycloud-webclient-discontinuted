@@ -27,3 +27,5 @@ class exports.Channel extends Model
         # subscription.subscription is either subscribed, unsubscribed or pending
         @trigger 'subscription', subscription
 
+    push_metadata: (nodeid, metadata) ->
+        @trigger 'metadata', nodeid, metadata

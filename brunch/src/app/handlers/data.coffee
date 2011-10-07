@@ -9,6 +9,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'post', @on_node_post
         @connector.bind 'affiliation', @on_affiliation
         @connector.bind 'subscription', @on_subscription
+        @connector.bind 'metadata', @on_metadata
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
 
@@ -93,6 +94,12 @@ class exports.DataHandler extends Backbone.EventHandler
 
         channel = app.channels.get_or_create id: subscription.node
         channel.push_subscription subscription
+
+        return
+
+    on_metadata: (node, metadata) =>
+        channel = app.channels.get_or_create id: node
+        channel.push_metadata node, metadata
 
         return
 
