@@ -59,7 +59,7 @@ class exports.HomeView extends Backbone.View
                 clearTimeout @timeouts[oldChannel.cid]
             @timeouts[oldChannel.cid] = setTimeout ( =>
                 @channels.remove oldChannel
-            ), 5*60*1000 # 5 min
+            ), 15*60*1000 # 15 min
 
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel
