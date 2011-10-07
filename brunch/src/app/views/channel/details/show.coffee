@@ -21,8 +21,7 @@ class exports.ChannelDetails extends BaseView
             model:@model.nodes.get('posts').users
             parent:this
 
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
+        @model.nodes.get('posts').metadata.bind 'change', @render
 
     events:
         "click .infoToggle": "click_toggle"
@@ -47,5 +46,4 @@ class exports.ChannelDetails extends BaseView
         formatdate.hook @el, update: off
 
     update_attributes: ->
-        if (posts = @model.nodes.get 'posts')
-            @posts = posts.toJSON yes
+        @metadata = @model.nodes.get('posts').metadata.toJSON()
