@@ -5,6 +5,7 @@ dependencies:
   - jquery.npm-hack.js
   - jquery.js
   - jquery.copycss.js
+  - jquery.autosuggestion.js
   - transform.js
   - backbone-master.js
   - backbone-localstorage.js
