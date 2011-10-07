@@ -19,8 +19,14 @@ class exports.UserList extends BaseView
         @update_attributes()
         super
 
+    # @model can be a users (followers) or channels (following)
+    # collection
     update_attributes: ->
-        @users = @model.toArray()
+        @users = @model.map (user) ->
+            if user.has('jid')
+                user
+            else
+                app.users.get user.get('id')
 
     clickUser: EventHandler (ev) =>
         userid = $(ev.currentTarget).attr 'href'
