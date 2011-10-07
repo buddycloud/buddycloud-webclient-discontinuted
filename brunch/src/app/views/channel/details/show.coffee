@@ -12,16 +12,10 @@ class exports.ChannelDetails extends BaseView
         @geo = new GeoDetail model:@model, parent:this
 
         @list = {}
-        @list.moderator = new UserList
-            model:@model
-            parent:this
-            name:'moderators'
-            usertypes:['owner', 'moderator']
         @list.followers = new UserList
-            model:@model
+            title:'followers'
+            model:@model.nodes.get('posts').users
             parent:this
-            name:'followers'
-            usertypes:['publisher', 'member']
 
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
