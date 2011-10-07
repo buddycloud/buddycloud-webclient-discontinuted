@@ -36,12 +36,18 @@ class exports.Node extends Model
                 if (user = @users.get subscription.jid)
                     @users.remove user
 
+        # TODO: needed by?
         @trigger "subscription:node:#{subscription.node}", subscription
 
     push_post: (post) ->
         @trigger 'post', post
 
+    push_metadata: (metadata) ->
+        console.warn "metadata.set", metadata
+        @metadata.set metadata
+
     retrieve_node: ->
         nodeid = @get 'nodeid'
+        # TODO: move to posts collection?
         app.handler.data.get_node_posts nodeid, ->
-
+        # TODO: get_subscribers, get_user_subscriptions, get_metadata

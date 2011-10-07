@@ -1,9 +1,11 @@
 <section class="channelList">
-  <h3><%= @name %> <span class="count"><%= @users?.length %></count></h3>
+  <h3><%= @title %> <span class="count"><%= @users?.length %></count></h3>
   <div class="list">
     <% if @users?.length: %>
       <% for user in @users: %>
-        <img src="<%= user.avatar %>" class="user" data-user="<%= user.get('jid') %>" />
+        <a href="<%= user.get('jid') %>" title="<%= user.get('jid') %>">
+          <img src="<%= user.avatar %>" class="user" alt="<%= user.get('jid') %>" />
+	</a>
       <% end %>
     <% else: %>
         <!-- empty text -->

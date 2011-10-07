@@ -82,7 +82,7 @@ class exports.Connector extends Backbone.EventHandler
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>
             success = (metadata) =>
-                @trigger "metadata:#{nodeid}", metadata
+                @trigger 'metadata', nodeid, metadata
                 callback? metadata
                 done()
             error = =>
@@ -100,8 +100,6 @@ class exports.Connector extends Backbone.EventHandler
     # notification with type subscription/affiliation already is
     # proper obj
     on_notification: (notification) =>
-        app.debug "on_notification", notification
-
         switch notification.type
             when 'subscription'
                 @trigger 'subscription', notification
@@ -110,5 +108,7 @@ class exports.Connector extends Backbone.EventHandler
             when 'posts'
                 for post in notification.posts
                     @trigger 'post', post, notification.node
+            when 'config'
+                @trigger 'metadata', notification.node, notification.config
             else
                 app.debug "Cannot handle notification for #{notification.type}"

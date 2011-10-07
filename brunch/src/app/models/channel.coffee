@@ -20,10 +20,12 @@ class exports.Channel extends Model
             @nodes.get_or_create {id:nodeid, nodeid}
 
     push_post: (nodeid, post) ->
-        @trigger "post", nodeid, post
+        @trigger 'post', nodeid, post
 
     # subscription.jid is already filtered for this channel id (user)
     push_subscription: (subscription) ->
         # subscription.subscription is either subscribed, unsubscribed or pending
-        @trigger "subscription:user:#{subscription.jid}", subscription
+        @trigger 'subscription', subscription
 
+    push_metadata: (nodeid, metadata) ->
+        @trigger 'metadata', nodeid, metadata

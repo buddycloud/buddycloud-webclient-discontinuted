@@ -12,22 +12,24 @@ class exports.ChannelDetails extends BaseView
         @geo = new GeoDetail model:@model, parent:this
 
         @list = {}
-        @list.moderator = new UserList
-            model:@model
+        @list.following = new UserList
+            title:'following'
+            model:app.users.get_or_create(id: @model.get 'id').channels
             parent:this
-            name:'moderators'
-            usertypes:['owner', 'moderator']
         @list.followers = new UserList
-            model:@model
+            title:'followers'
+            model:@model.nodes.get('posts').users
             parent:this
-            name:'followers'
-            usertypes:['publisher', 'member']
 
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
 
     events:
         "click .infoToggle": "click_toggle"
+
+    click_toggle: EventHandler ->
+        @el.toggleClass 'hidden'
+        @hidden = @el.hasClass('hidden')
 
     render: =>
         @update_attributes()
@@ -43,10 +45,6 @@ class exports.ChannelDetails extends BaseView
             meta.append list.el
 
         formatdate.hook @el, update: off
-
-    click_toggle: EventHandler ->
-        @el.toggleClass 'hidden'
-        @hidden = @el.hasClass('hidden')
 
     update_attributes: ->
         if (posts = @model.nodes.get 'posts')
