@@ -45,7 +45,7 @@ class exports.NodeStore extends exports.Nodes
         super()
 
     initialize: ->
-        @channel.bind "subscription:user:#{@channel.get 'id'}", (subscription) =>
+        @channel.bind "subscription", (subscription) =>
             node = @get_or_create nodeid: subscription.node
             node.push_subscription subscription
         @channel.bind 'post', (nodeid, post) =>
