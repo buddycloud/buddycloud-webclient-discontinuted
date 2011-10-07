@@ -6,6 +6,13 @@ class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
+        $('#home_login_jid').autoSuggestion
+            suffix: (suffix) ->
+                if suffix is "" or suffix.indexOf("@") isnt -1
+                    ""
+                else
+                    "@#{config.domain}"
+
         @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection

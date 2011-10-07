@@ -19,6 +19,14 @@ class exports.RegisterView extends AuthenticationView
                     confirm.removeClass 'match'
                     confirm.addClass 'missmatch'
 
+
+        $('#home_register_new_jid').autoSuggestion
+            suffix: (suffix) ->
+                if suffix is "" or suffix.indexOf("@") isnt -1
+                    ""
+                else
+                    "@#{config.domain}"
+
         @el.find('#home_register_account').live 'click', EventHandler (ev) =>
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection
