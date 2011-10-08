@@ -21,7 +21,6 @@ class exports.ChannelDetails extends BaseView
             parent:this
 
         @model.nodes.get('posts').metadata.bind 'change', =>
-            console.warn "ChannelDetails posts metadata change", @model.nodes.get('posts').metadata
             if @el.hasClass 'hidden'
                 # Show on metadata update:
                 @el.removeClass 'hidden'

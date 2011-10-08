@@ -43,7 +43,6 @@ class exports.Node extends Model
         @trigger 'post', post
 
     push_metadata: (metadata) ->
-        console.warn "metadata.set", metadata
         @metadata.set metadata
 
     retrieve_node: ->
