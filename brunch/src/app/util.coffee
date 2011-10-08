@@ -43,3 +43,13 @@ exports.nodeid_to_user = (nodeid) ->
 NODEID_TO_TYPE_REGEX = /\/user\/([^\/]+)\/([^\/]+)/
 exports.nodeid_to_type = (nodeid) ->
     nodeid?.match?(NODEID_TO_TYPE_REGEX)?[2] # type
+
+exports.compare_by_id = (model1, model2) ->
+    id1 = model1.get 'id'
+    id2 = model2.get 'id'
+    if id1 < id2
+        -1
+    else if id1 > id2
+        1
+    else
+        0

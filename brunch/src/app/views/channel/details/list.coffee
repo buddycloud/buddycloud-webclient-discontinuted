@@ -1,6 +1,6 @@
 { UserAdmin } = require 'views/channel/details/admin/user'
 { BaseView } = require('views/base')
-{ EventHandler } = require 'util'
+{ EventHandler, compare_by_id } = require 'util'
 
 # this shows a list of user avatars
 
@@ -27,6 +27,7 @@ class exports.UserList extends BaseView
                 user
             else
                 app.users.get user.get('id')
+        @users = @users.sort compare_by_id
 
     clickUser: EventHandler (ev) =>
         userid = $(ev.currentTarget).attr 'href'
