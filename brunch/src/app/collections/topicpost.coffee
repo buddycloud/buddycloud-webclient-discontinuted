@@ -19,4 +19,9 @@ class exports.TopicPosts extends Collection
             super
 
     comparator: (post) ->
-        - new Date(post.get 'published').getTime()
+        latest = new Date(post.get 'published').getTime()
+        post.comments.forEach (comment) ->
+            published = new Date(post.get 'published').getTime()
+            if published > latest
+                published = latest
+        - latest
