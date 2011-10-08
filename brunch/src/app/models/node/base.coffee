@@ -23,7 +23,6 @@ class exports.Node extends Model
 
     fetch: ->
         app.handler.data.get_node_subscriptions @get 'nodeid'
-        @metadata.fetch()
 
     # I am very afraid of the dead. They walk.
     update: -> # api function - every node should be updateable
@@ -43,7 +42,7 @@ class exports.Node extends Model
         @trigger 'post', post
 
     push_metadata: (metadata) ->
-        @metadata.set metadata
+        @metadata.save metadata
 
     retrieve_node: ->
         nodeid = @get 'nodeid'
