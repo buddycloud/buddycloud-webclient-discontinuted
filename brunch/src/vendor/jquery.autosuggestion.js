@@ -55,8 +55,10 @@
             input.keyup(function (ev) {
                 var code = ev.keyCode || ev.which;
                 var val = input.val();
-                if ((31 > code && code > 127) || code > 159)
-                    val += String.fromCharCode(code);
+                if (ev.type === 'keydown') {
+                    if ((31 < code && code < 127) || code > 159)
+                        val += String.fromCharCode(code);
+                }
                 preview.find('.'+classprefix+'content').text(val+" ");
                 el.val(val);
                 if (typeof options.suffix === 'function') {

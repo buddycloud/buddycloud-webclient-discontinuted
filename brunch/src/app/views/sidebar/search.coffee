@@ -13,8 +13,9 @@ class exports.Searchbar extends BaseView
         code = ev.keyCode or ev.which # bloody browsers
         input = @$('.search input')
         search = input.val()
-        if 31 > code > 127 or code > 159
-            search += String.fromCharCode(code)
+        if ev.type is 'keydown'
+            if 31 < code < 127 or code > 159
+                search += String.fromCharCode(code)
         @filter = search
 
         if code is 13
