@@ -5,17 +5,21 @@
   </div>
   <div class="holder">
     <section class="meta">
-      <p><span class="title"><%= @metadata?.title?.label %>:</span><%= @metadata?.title?.value %></p>
-      <p><span class="title"><%= @metadata?.description?.label %>:</span></p><%= @metadata?.description?.value %>
-      <p class="<%= @metadata?.access_model?.value %>"><span class="title"><%= @metadata?.access_model?.label %>:</span></p><%= @metadata?.access_model?.value %>
+      <p><span class="title">Title:</span><%= @metadata?.title?.value %></p>
+      <p><span class="title">Description:</span><%= @metadata?.description?.value %></p>
+      <p class="<%= if @metadata?.access_model?.value is 'open' then 'open' else 'closed' %>">
+	<span class="title">Access:</span><%= @metadata?.access_model?.value %>
       <!--
-        the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
-      -->
-      <!-- Broadcasting since: 182 days (beautiful time)-->
-      <p class="broadcast" title="<%= @metadata?.channelCreationTime?.label %>">
-        <span class="title"><%= @metadata?.creation_date?.label %>:</span>
-        <span class="format-date time ago" strftime="%d.%m.%Y %H:%M" strftitle="%A %d %B %Y %H:%M"><%= @metadata?.creation_date?.value %></span>
+          the class "channel.stateLowercase" is used to display an icon. classname should be either 'open' or 'closed'
+	-->
       </p>
+      <!-- Broadcasting since: 182 days (beautiful time)-->
+      <% if @metadata?.creation_date?: %>
+        <p class="broadcast">
+          <span class="title">Broadcasting for:</span>
+          <span class="format-date time ago" strftime="%d.%m.%Y %H:%M" strftitle="%A %d %B %Y %H:%M"><%= @metadata.creation_date.value %></span>
+	</p>
+      <% end %>
       <!--
 
         geo node view
