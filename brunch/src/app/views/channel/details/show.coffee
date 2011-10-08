@@ -9,7 +9,7 @@ class exports.ChannelDetails extends BaseView
     initialize: ({@parent}) ->
         @hidden = yes
         super
-        @geo = new GeoDetail model:@model, parent:this
+        #@geo = new GeoDetail model:@model, parent:this
 
         @list = {}
         @list.following = new UserList
@@ -36,8 +36,8 @@ class exports.ChannelDetails extends BaseView
         meta = @el.find('.meta')
         @el.toggleClass('hidden', @hidden)
 
-        do @geo.render
-        meta.append @geo.el
+        #do @geo.render
+        #meta.append @geo.el
 
         for own listname, list of @list
             do list.render
