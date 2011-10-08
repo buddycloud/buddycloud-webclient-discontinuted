@@ -44,11 +44,11 @@ class exports.CommentsView extends BaseView
             parent:this
 
         i = @model.indexOf(comment)
-        newerComment = @views[@model.at(i - 1)?.cid]
-        if newerComment
-            newerComment.el.before entry.el
+        olderComment = @views[@model.at(i + 1)?.cid]
+        if olderComment
+            olderComment.el.after entry.el
         else
-            @el.append entry.el
+            @el.prepend entry.el
         do entry.render
 
     render: =>
