@@ -7,7 +7,6 @@ class exports.ChannelDetails extends BaseView
     template: require 'templates/channel/details/show'
 
     initialize: ({@parent}) ->
-        @hidden = yes
         super
         #@geo = new GeoDetail model:@model, parent:this
 
@@ -21,20 +20,26 @@ class exports.ChannelDetails extends BaseView
             model:@model.nodes.get('posts').users
             parent:this
 
-        @model.nodes.get('posts').metadata.bind 'change', @render
+        @model.nodes.get('posts').metadata.bind 'change', =>
+            console.warn "ChannelDetails posts metadata change", @model.nodes.get('posts').metadata
+            if @el.hasClass 'hidden'
+                # Show on metadata update:
+                @el.removeClass 'hidden'
+            @render()
 
     events:
         "click .infoToggle": "click_toggle"
 
     click_toggle: EventHandler ->
         @el.toggleClass 'hidden'
-        @hidden = @el.hasClass('hidden')
 
     render: =>
+        hidden = @el.hasClass 'hidden'
         @update_attributes()
         super
+        unless hidden
+            @el.removeClass 'hidden'
         meta = @el.find('.meta')
-        @el.toggleClass('hidden', @hidden)
 
         #do @geo.render
         #meta.append @geo.el
