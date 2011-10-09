@@ -7,7 +7,7 @@ class exports.LoadingChannelView extends Backbone.View
         do @render
 
     render: =>
-        @el = $(@template())
+        @el = $(@template( jid: app.users.target.get('jid') ))
         $('body').removeClass('start').addClass('center').append @el
         $('.centerBox').remove()
 
