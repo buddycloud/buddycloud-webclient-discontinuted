@@ -12,5 +12,5 @@
   </div>
   <a class="name" href="#"><%= @post?.author?.name or @post?.author?.jid %></a>
   <span class="location"><%= @post?.location %></span>
-  <pre><p><%= @post?.content?.value %></p></pre>
+  <p class="postcontent"><%= @post?.content?.value %></p>
 </section>
