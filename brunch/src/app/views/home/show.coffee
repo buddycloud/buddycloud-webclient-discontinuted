@@ -69,6 +69,9 @@ class exports.HomeView extends Backbone.View
         # Indicate url change without routing:
         app.router.navigate @current.model.get('id'), false
 
+        title = @current.model.nodes.get('posts')?.metadata.get('title')?.value
+        document.title = title or @current.model.get('id')
+
         @sidebar.setCurrentEntry channel
         @current.trigger 'show'
 
