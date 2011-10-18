@@ -8,6 +8,18 @@
 class exports.Channels extends Collection
     model: Channel
 
+    ##
+    # Allow listening for specific channels to avoid calling too many
+    # handlers on one generic 'add' event.
+    #
+    # 'add' & 'remove' events only for now
+    initialize: ->
+        super
+        @bind 'add', (channel, channels, opts) =>
+            @trigger "add:{channel.get 'id'}", channel, channels, opts
+        @bind 'remove', (channel, channels, opts) =>
+            @trigger "remove:{channel.get 'id'}", channel, channels, opts
+
     get: (id, options = {}) ->
         id = nodeid_to_user(id) or id
         super(id, options)

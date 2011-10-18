@@ -17,8 +17,8 @@ class exports.ChannelView extends BaseView
 
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
-        app.users.current.channels.bind "add", @render
-        app.users.current.channels.bind "remove", @render
+        app.users.current.channels.bind "add:#{@model.get 'id'}", @render
+        app.users.current.channels.bind "remove:#{@model.get 'id'}", @render
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
