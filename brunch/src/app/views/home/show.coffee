@@ -24,7 +24,6 @@ class exports.HomeView extends Backbone.View
                 @setCurrentChannel channel
 
         @channels.bind 'remove', @remove_channel_view
-        @channels.bind 'change', @new_channel_view
         @channels.bind 'add',    @new_channel_view
         # if we already found a view in the cache
         #@current?.el.show()
