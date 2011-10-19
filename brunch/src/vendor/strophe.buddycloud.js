@@ -299,6 +299,19 @@ Strophe.addConnectionPlugin('buddycloud', {
             }, self._errorcode(err), timeout);
     },
 
+    getSubscribers: function(node, success, error) {
+	this._connection.getNodeSubscriptions(node, function(stanza) {
+	    var subscribers;
+	    var pubsubEl = stanza.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
+	    if (pubsubEl) {
+		var subscriptionsEls = pubsubEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'subscriptions');
+		for(var i = 0; i < subscriptionsEls.length; i++)
+		    subscribers[subscriptionsEls.getAttribute('jid')] = subscriptionsEls.getAttribute('subscription') || 'subscribed';
+	    }
+	    return success(subscribers);
+	}, this._errorcode(error));
+    },
+
     /**
      * @param start {Date} Optional
      * @param end {Date} Optional

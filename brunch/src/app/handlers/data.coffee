@@ -21,6 +21,9 @@ class exports.DataHandler extends Backbone.EventHandler
     get_node_metadata: (node, callback) ->
         @connector.get_node_metadata node.get('nodeid'), callback
 
+    get_node_subscriptions: (node, callback) ->
+        @connector.get_node_subscriptions node.get('nodeid'), callback
+
     publish: (node, item, success, error) ->
         @connector.publish node.get('nodeid'), item, success, error
 
@@ -43,13 +46,13 @@ class exports.DataHandler extends Backbone.EventHandler
             @connector.unsubscribe node, callback2
         , callback
 
-    get_user_subscriptions: (jid) =>
+    get_user_subscriptions: (jid, callback) =>
         unless jid?
             # Default: own JID
             jid = app.users.current.get('jid')
 
         if jid isnt "anony@mous"
-            @connector.get_node_posts "/user/#{jid}/subscriptions"
+            @connector.get_node_posts "/user/#{jid}/subscriptions", callback
 
     # event callbacks
 
@@ -108,9 +111,19 @@ class exports.DataHandler extends Backbone.EventHandler
 
         return
 
-    refresh_channel: (userid) ->
+    refresh_channel: (userid, callback) ->
         forEachUserNode userid, (nodeid, cb) =>
-            @get_node_posts nodeid, cb
+            pending = 3
+            done = ->
+                pending--
+                if pending < 1
+                    cb()
+
+            @get_node_posts nodeid, done
+            @get_node_metadata nodeid, done
+            @get_node_subscriptions nodeid, done
+        , ->
+            @get_user_subscriptions userid, callback
 
 ##
 # @param iter {Function} callback(node, callback)

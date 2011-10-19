@@ -75,8 +75,8 @@ class exports.Connector extends Backbone.EventHandler
                 callback? posts
                 done()
             error = (e) =>
-                @trigger 'node:error', nodeid, e
                 app.error "get_node_posts", nodeid, arguments
+                @trigger 'node:error', nodeid, e
                 callback? []
                 done()
             @connection.buddycloud.getChannelPosts(
@@ -88,16 +88,31 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'metadata', nodeid, metadata
                 callback? metadata
                 done()
-            error = =>
+            error = (e) =>
                 app.error "get_node_metadata", nodeid, arguments
+                @trigger 'node:error', nodeid, e
+                callback?()
                 done()
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
 
     # this fetches all subscriptions to a specific node
-    get_node_subscriptions: (nodeid) ->
-        # TODO
-        # @trigger 'subscription:node', subscription
+    get_node_subscriptions: (nodeid, callback) ->
+        @request (done) =>
+            success = (subscribers) =>
+                for own user, subscription of subscribers
+                    @trigger 'subscription:node',
+                        jid: jid
+                        node: nodeid
+                        subscription: subscription
+                    callback? subscribers
+                    done()
+            error = (e) =>
+                @trigger 'node:error', nodeid, e
+                callback?()
+                done()
+            @connection.buddycloud.getSubscribers(
+                nodeid, success, error, @connection.timeout)
 
     ##
     # notification with type subscription/affiliation already is
