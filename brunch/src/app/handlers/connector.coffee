@@ -12,15 +12,16 @@ class exports.Connector extends Backbone.EventHandler
     replayNotifications: =>
         @connection.buddycloud.replayNotifications()
 
-    publish: (nodeid, item, callback) =>
+    publish: (nodeid, item, success, error) =>
         @request (done) =>
-            @connection.pubsub.publishAtom nodeid, item
+            @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
                 app.debug "publish", stanza
-                callback? stanza
+                success? stanza
                 done()
-            , =>
-                app.error "publish", nodeid
+            , (e) =>
+                app.error "publish", nodeid, e
+                error? e
                 done()
 
     subscribe: (nodeid, callback) =>

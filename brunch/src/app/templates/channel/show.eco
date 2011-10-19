@@ -27,6 +27,9 @@
       <img class="avatar" src="<%= app.users.current.avatar %>" />
       <textarea placeholder="New Topic..."></textarea>
       <div class="controls">
+	<% if @postError?: %>
+	<p class="button"><%= @postError.message %></p>
+	<% end %>
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
           <label for="shouldShareLocation">Share Location: <%= @channel?.metadata?['geo-text']?.value %></label>

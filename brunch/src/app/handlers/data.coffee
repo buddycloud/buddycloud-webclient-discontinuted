@@ -20,8 +20,8 @@ class exports.DataHandler extends Backbone.EventHandler
     get_node_metadata: (node, callback) ->
         @connector.get_node_metadata node.get('nodeid'), callback
 
-    publish: (node, item, callback) ->
-        @connector.publish node.get('nodeid'), item, callback
+    publish: (node, item, success, error) ->
+        @connector.publish node.get('nodeid'), item, success, error
 
     add_post: (node, post) ->
         @on_node_post post, node.get 'nodeid'

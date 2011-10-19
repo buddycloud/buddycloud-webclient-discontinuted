@@ -20,7 +20,17 @@ This library is free software; you can redistribute it and/or modify it
 Strophe.getJidFromNode = function (node) {
     var match = node.match(/\/([^\/]+)\/([^\/]+)\/([^\/]+)/);
     return match.length > 3 ? match[2] : null;
-}
+};
+
+Strophe.StanzaError = function(condition, text) {
+    this.name = "StanzaError";
+    this.condition = condition;
+    this.text = text;
+    this.message = condition + ": " + text;
+};
+/* https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types */
+Strophe.StanzaError.prototype = new Error();
+Strophe.StanzaError.prototype.constructor = Strophe.StanzaError;
 
 Strophe.addConnectionPlugin('buddycloud', {
     _connection: null,
@@ -138,6 +148,10 @@ Strophe.addConnectionPlugin('buddycloud', {
             function  /*success*/ (stanza) {
                 if (succ) self._parsePost(stanza, succ);
             }, self._errorcode(err), timeout);
+    },
+
+    publishAtom: function(node, atoms, success, error) {
+	this._connection.pubsub.publishAtom(node, atoms, success, this._errorcode(error));
     },
 
     /* TODO: what is this for?
@@ -384,12 +398,25 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     // helper
 
-    _errorcode: function (error) {
+    _errorcode: function (callback) {
         return function (stanza) {
-            if (!error) return;
+	    if (!stanza)
+		return;
             var errors = stanza.getElementsByTagName("error");
-            var code = errors.item(0).getAttribute('code');
-            error(code);
+	    var condition = 'error', text = null;
+	    for(var i = 0; i < errors.length; i++) {
+		var errorEl = errors[i];
+		for(var j = 0; j < errorEl.childNodes.length; j++) {
+		    var errorChild = errorEl.childNodes[j];
+		    if (errorChild.namespaceURI === Strophe.NS.STANZAS) {
+			if (errorChild.localName === "text")
+			    text = errorChild.textContent;
+			else
+			    condition = errorChild.localName;
+		    }
+		}
+	    }
+            callback(new Strophe.StanzaError(condition, text));
         };
     },
 

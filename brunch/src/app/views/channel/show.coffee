@@ -50,6 +50,7 @@ class exports.ChannelView extends BaseView
     clickPost: EventHandler (ev) ->
         if @isPosting
             return
+        @$('.newTopic .postError').remove()
         self = @$('.newTopic').has(ev.target)
         text = self.find('textarea')
         unless text.val() is ""
@@ -61,13 +62,26 @@ class exports.ChannelView extends BaseView
                     name: app.users.current.get 'jid'
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, =>
-                    post.content = value:post.content
-                    # TODO: make sure prematurely added post correlates to incoming notification
-                    #app.handler.data.add_post node, post
-                    @el.find('.newTopic, .answer').removeClass 'write'
-                    text.val ""
-                    text.removeAttr "disabled"
-                    @isPosting = false
+                # TODO: make sure prematurely added post
+                # correlates to incoming notification
+                # (in comments.coffee too)
+                #post.content = value:post.content
+                #app.handler.data.add_post node, post
+
+                # Re-enable form
+                text.removeAttr "disabled"
+                @isPosting = false
+                # Reset form
+                @el.find('.newTopic, .answer').removeClass 'write'
+                text.val ""
+            , (e) =>
+                console.error "postError", e
+                # Re-enable form
+                text.removeAttr "disabled"
+                @isPosting = false
+                # Show error
+                @$('.newTopic .controls').prepend('<p class="postError"></p>')
+                @$('.newTopic .postError').text(e.text or e.condition)
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()

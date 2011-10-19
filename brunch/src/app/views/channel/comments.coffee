@@ -18,7 +18,7 @@ class exports.CommentsView extends BaseView
     createComment: EventHandler ->
         if @isPosting
             return
-
+        @$('.newTopic .postError').remove()
         text = @$('textarea')
         unless text.val() is ""
             text.attr "disabled", "disabled"
@@ -30,12 +30,20 @@ class exports.CommentsView extends BaseView
                 in_reply_to: @model.parent.id
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, =>
-                    post.content = value:post.content
-                    #app.handler.data.add_post node, post
-                    @el.find('.newTopic').removeClass 'write'
-                    text.val ""
-                    text.removeAttr "disabled"
-                    @isPosting = false
+                # Re-enable form
+                @el.find('.newTopic').removeClass 'write'
+                @isPosting = false
+                text.removeAttr "disabled"
+                # Reset form
+                text.val ""
+            , (e) =>
+                # Re-enable form
+                @el.find('.newTopic').removeClass 'write'
+                @isPosting = false
+                text.removeAttr "disabled"
+                # Show error
+                @$('.newTopic .controls').prepend('<p class="postError"></p>')
+                @$('.newTopic .postError').text(e.text or e.condition)
 
     add_comment: (comment) =>
         entry = @views[comment.cid] ?= new PostView
