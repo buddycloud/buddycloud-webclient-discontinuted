@@ -2,7 +2,9 @@
 { ChannelEntry } = require 'views/sidebar/entry'
 { Searchbar } = require 'views/sidebar/search'
 
-# The sidebar shows all channels the user subscribed to
+# The sidebar shows all channels the user is:
+# * subscribed to
+# * viewed recently
 class exports.Sidebar extends Backbone.View
     template: require 'templates/sidebar/show'
 
@@ -22,7 +24,6 @@ class exports.Sidebar extends Backbone.View
         @timeouts = {} # this contains the channelview remove timeouts
         @parent.channels.forEach        @new_channel_entry
         @parent.channels.bind 'add',    @new_channel_entry
-        @parent.channels.bind 'change', @new_channel_entry
         @parent.channels.bind 'remove', @remove_channel_entry
 
         unless app.views.overview?

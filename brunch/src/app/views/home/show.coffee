@@ -18,13 +18,16 @@ class exports.HomeView extends Backbone.View
         app.users.current.channels.bind 'add', (channel) =>
             @channels.get_or_create channel
         app.users.current.channels.forEach (channel) =>
-            @channels.get_or_create channel
             # Attempt to come up with a default channel:
             if not @current? and (channel.get('id') is app.users.target.get('id'))
+                # on-demand:
+                @channels.get_or_create channel
                 @setCurrentChannel channel
 
         @channels.bind 'remove', @remove_channel_view
-        @channels.bind 'add',    @new_channel_view
+        # FIXME: let the ChannelView be created on-demand, they're
+        # rendering much too often during startup. mrflix supposedly says
+        #@channels.bind 'add',    @new_channel_view
         # if we already found a view in the cache
         #@current?.el.show()
 
