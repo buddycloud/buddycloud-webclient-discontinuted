@@ -54,6 +54,9 @@ class exports.NodeStore extends exports.Nodes
         @channel.bind 'metadata', (nodeid, metadata) =>
             node = @get_or_create {nodeid}
             node.push_metadata metadata
+        @channel.bind 'node:error', (nodeid, error) =>
+            node = @get_or_create {nodeid}
+            node.push_error error
 
     # When creating, you must always pass a full nodeid
     get: (nodeid, options = {}) ->

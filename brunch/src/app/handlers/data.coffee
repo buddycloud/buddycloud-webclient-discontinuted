@@ -10,6 +10,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'affiliation', @on_affiliation
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
+        @connector.bind 'node:error', @on_node_error
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
 
@@ -55,6 +56,10 @@ class exports.DataHandler extends Backbone.EventHandler
     on_node_post: (post, nodeid) =>
         channel = app.channels.get_or_create id:nodeid
         channel.push_post nodeid, post
+
+    on_node_error: (nodeid, error) =>
+        channel = app.channels.get_or_create id:nodeid
+        channel.push_node_error nodeid, error
 
     on_connection_established: =>
         user = app.users.current
@@ -102,6 +107,10 @@ class exports.DataHandler extends Backbone.EventHandler
         channel.push_metadata node, metadata
 
         return
+
+    refresh_channel: (userid) ->
+        forEachUserNode userid, (nodeid, cb) =>
+            @get_node_posts nodeid, cb
 
 ##
 # @param iter {Function} callback(node, callback)

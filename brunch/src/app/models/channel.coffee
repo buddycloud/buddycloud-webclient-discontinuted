@@ -29,3 +29,6 @@ class exports.Channel extends Model
 
     push_metadata: (nodeid, metadata) ->
         @trigger 'metadata', nodeid, metadata
+
+    push_node_error: (nodeid, error) ->
+        @trigger 'node:error', nodeid, error

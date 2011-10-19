@@ -1,15 +1,15 @@
 <div class="channelView">
   <header class="clearfix">
-    <a href="http://www.buddycloud.com" id="poweredby">powered by Buddycloud</a>
-    <h2 class="title"><%= @channel?.metadata?.title?.value %></h2>
-    <span class="status"><%= @channel?.metadata?.status?.value %></span>
+    <a href="http://www.buddycloud.com" id="poweredby">powered by buddycloud</a>
+    <h2 class="title"><%= @postsNode?.metadata?.title?.value %></h2>
+    <span class="status"><%= @postsNode?.metadata?.status?.value %></span>
     <nav class="<%= @viewname %>"> <!-- viewname = either 'inMessages' or 'inChannel' to show/hide the messages or channel button -->
       <% if @user?.followingThisChannel: %>
       <!-- No IM functionality implemented yet:
-      <div class="messages button <%= @channel?.gotNewMessage and 'newMessage' %>">
+      <div class="messages button <%= @postsNode?.gotNewMessage and 'newMessage' %>">
         <span class="holder">Messages</span>
-        <% if @channel?.gotNewMessage: %>
-          <span class="message counter"><%= @channel?.messageCount %></span>
+        <% if @postsNode?.gotNewMessage: %>
+          <span class="message counter"><%= @postsNode?.messageCount %></span>
         <% end %>
       </div>
       <div class="channel button">
@@ -22,6 +22,14 @@
     </nav>
   </header>
   <section class="stream">
+    <% if @error?: %>
+    <article class="notification">
+      <section>
+	<span class="name"><%= @error.condition %></span>
+	<p><%= @error.text %></p>
+      </section>
+    </article>
+    <% end %>
     <% if @user?.hasRightToPost: %>
     <section class="newTopic">
       <img class="avatar" src="<%= app.users.current.avatar %>" />
@@ -32,7 +40,7 @@
 	<% end %>
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
-          <label for="shouldShareLocation">Share Location: <%= @channel?.metadata?['geo-text']?.value %></label>
+          <label for="shouldShareLocation">Share Location: <%= @postsNode?.metadata?['geo-text']?.value %></label>
         </div>
         <div class="button small prominent" id="createNewTopic">Post</div>
     </section>

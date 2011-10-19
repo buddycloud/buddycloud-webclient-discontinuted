@@ -28,6 +28,10 @@ class exports.ChannelView extends BaseView
                     parent: this
                     el: @el.find('.topics')
                 do @postsview.render
+                # To display posts node errors:
+                postsnode.bind 'change', =>
+                    console.log "postsnode change", arguments...
+                    @render()
                 do @render
             else
                 @model.nodes.bind "add", init_posts
@@ -36,6 +40,9 @@ class exports.ChannelView extends BaseView
     show: =>
         @hidden = false
         @el.show()
+
+        unless app.users.current.channels.get(@model.get 'id')?
+            app.handler.data.refresh_channel(@model.get 'id')
 
     hide: =>
         @hidden = true
@@ -114,13 +121,19 @@ class exports.ChannelView extends BaseView
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
 
+        setTimeout =>
+            @$('.notification').addClass 'visible'
+        , 1
+
     update_attributes: ->
-        if (channel = @model.nodes.get 'posts')
-            @channel = channel.toJSON yes
+        if (postsNode = @model.nodes.get 'posts')
+            @error = postsNode.get 'error'
+            console.warn "ChannelView.update_attributes", @error
+            @postsNode = postsNode.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
         # Permissions:
-        followingThisChannel = app.users.current.channels.get(channel?.get 'nodeid')?
+        followingThisChannel = app.users.current.channels.get(postsNode?.get 'nodeid')?
         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
         isAnonymous = app.users.current.get('id') is 'anony@mous'
         # TODO: pending may require special handling

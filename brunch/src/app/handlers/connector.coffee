@@ -33,7 +33,7 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'subscribed'
+                    subscription: 'subscribed' # FIXME
                 callback? stanza
                 done()
             , =>
@@ -74,8 +74,10 @@ class exports.Connector extends Backbone.EventHandler
                             @trigger 'subscription', subscription
                 callback? posts
                 done()
-            error = =>
+            error = (e) =>
+                @trigger 'node:error', nodeid, e
                 app.error "get_node_posts", nodeid, arguments
+                callback? []
                 done()
             @connection.buddycloud.getChannelPosts(
                 nodeid, success, error, @connection.timeout)
