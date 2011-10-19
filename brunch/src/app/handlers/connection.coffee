@@ -34,6 +34,10 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
 
+    reset: () ->
+        app.debug "RESET", @user
+        @connection.disconnect()
+
     # make sure we allways have a channel
     createChannel: (done) =>
         @connection.buddycloud.createChannel done, done

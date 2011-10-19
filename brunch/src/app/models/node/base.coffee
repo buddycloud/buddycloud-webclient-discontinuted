@@ -12,8 +12,6 @@ class exports.Node extends Model
         @users    = new Users parent:this
         @posts   ?= new Posts parent:this
 
-        # TODO: only if !subscribed and therefore covered by MAM
-
     toJSON: (full) ->
         result = super
         if full

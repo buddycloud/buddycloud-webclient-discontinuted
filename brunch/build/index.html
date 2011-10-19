@@ -31,8 +31,11 @@
           <label for="home_login_pwd">Password</label>
           <input type="password" id="home_login_pwd" placeholder="Password" required />
           <div class="leftBox">
-            <a href="#" class="resetPassword">Forgot password?</a>
             <span class="spinner">Logging in</span>
+            <span id="authfail">Authentification unssuccessful. Please try again.</span>
+            <span id="connfail">Connection closed :(</span>
+            <span id="disconnected">Thats weird. You disconnected D:</span>
+            <a href="#" class="resetPassword">Forgot password?</a>
           </div>
           <button type="submit" id="home_login_submit" class="callToAction">Login</button>
         </form>

@@ -32,7 +32,7 @@ class exports.AuthenticationView extends Backbone.View
          .animate top:"-800px", =>
             @remove()
 
-    error: =>
+    error: (type) =>
         # wobble animation
         curr_pos = @box.position()
         @box.css(
@@ -41,5 +41,11 @@ class exports.AuthenticationView extends Backbone.View
         ).animate({left:"#{curr_pos.left + 10}"},50)
          .animate({left:"#{curr_pos.left - 10}"},50)
          .animate({left:"#{curr_pos.left + 10}"},50)
-         .animate {left:"#{curr_pos.left - 10}"},50, ->
-            alert "Wrong credentials!" # FIXME more info
+         .animate {left:"#{curr_pos.left - 10}"},50, =>
+            @el.find("##{type}").show()
+
+    reset: () =>
+        @unbind 'hide', @go_away
+        @bind 'hide', @hide
+        app.handler.connection.unbind "connected", @reset
+        app.handler.connection.reset()
