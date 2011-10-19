@@ -34,7 +34,6 @@ class exports.HomeView extends Backbone.View
             @setCurrentChannel channel
 
         $('body').removeClass('start').append @el
-        $('.centerBox').remove() # FIXME ugly
 
         @render()
         @el.show()

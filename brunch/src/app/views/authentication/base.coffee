@@ -24,8 +24,8 @@ class exports.AuthenticationView extends Backbone.View
 
     go_away: =>
         # nicely animate the login form away
-        curr_pos = @el.position()
-        @el.css(
+        curr_pos = @box.position()
+        @box.css(
             top : "#{curr_pos.top}px"
             left: "#{curr_pos.left}px"
         ).animate({top:"#{curr_pos.top + 50}px"}, 200)
@@ -34,8 +34,8 @@ class exports.AuthenticationView extends Backbone.View
 
     error: =>
         # wobble animation
-        curr_pos = @el.position()
-        @el.css(
+        curr_pos = @box.position()
+        @box.css(
             top : "#{curr_pos.top}px"
             left: "#{curr_pos.left}px"
         ).animate({left:"#{curr_pos.left + 10}"},50)

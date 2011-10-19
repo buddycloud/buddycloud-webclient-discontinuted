@@ -32,6 +32,7 @@ class exports.LoginView extends AuthenticationView
         app.handler.connection.connect jid, password
         app.handler.connection.bind "connected", @success
         # TODO: find out which is the correct fail callback and remove it on success
+        app.handler.connection.bind "authfail", @error
         app.handler.connection.bind "connfail", @error
         app.handler.connection.bind "disconnected", @error
 
