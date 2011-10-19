@@ -18,11 +18,7 @@ class exports.HomeView extends Backbone.View
         app.users.current.channels.bind 'add', (channel) =>
             @channels.get_or_create channel
         app.users.current.channels.forEach (channel) =>
-            # Attempt to come up with a default channel:
-            if not @current? and (channel.get('id') is app.users.target.get('id'))
-                # on-demand:
-                @channels.get_or_create channel
-                @setCurrentChannel channel
+            @channels.get_or_create channel
 
         @channels.bind 'remove', @remove_channel_view
         # FIXME: let the ChannelView be created on-demand, they're
@@ -32,6 +28,10 @@ class exports.HomeView extends Backbone.View
         #@current?.el.show()
 
         @sidebar = new Sidebar parent:this
+
+        channel = app.users.current.channels.get(app.users.target.get('id'))
+        if channel?
+            @setCurrentChannel channel
 
         $('body').removeClass('start').append @el
         $('.centerBox').remove() # FIXME ugly

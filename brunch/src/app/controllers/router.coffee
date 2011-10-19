@@ -30,9 +30,9 @@ class exports.Router extends Backbone.Router
         @current_view.trigger 'show'
 
     on_connected: =>
-        app.views.index = new HomeView
         app.users.target ?= app.users.current
         jid = app.users.target.get('jid')
+        app.views.index = new HomeView
         @navigate jid
         # in anonymous direct browsing route, navigate above doesn't
         # trigger an URL change event at all

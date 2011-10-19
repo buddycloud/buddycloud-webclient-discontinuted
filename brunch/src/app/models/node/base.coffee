@@ -13,7 +13,6 @@ class exports.Node extends Model
         @posts   ?= new Posts parent:this
 
         # TODO: only if !subscribed and therefore covered by MAM
-        do @retrieve_node
 
     toJSON: (full) ->
         result = super
@@ -44,8 +43,3 @@ class exports.Node extends Model
     push_metadata: (metadata) ->
         @metadata.save metadata
 
-    retrieve_node: ->
-        nodeid = @get 'nodeid'
-        # TODO: move to posts collection?
-        app.handler.data.get_node_posts nodeid, ->
-        # TODO: get_subscribers, get_user_subscriptions, get_metadata
