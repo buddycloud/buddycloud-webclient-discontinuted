@@ -49,3 +49,4 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'hide', @hide
         app.handler.connection.unbind "connected", @reset
         app.handler.connection.reset()
+        @el.find('.leftBox').removeClass "working"

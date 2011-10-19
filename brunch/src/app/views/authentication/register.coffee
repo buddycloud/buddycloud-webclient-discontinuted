@@ -36,15 +36,16 @@ class exports.RegisterView extends AuthenticationView
             email = undefined unless email.length
             if name.length and password.length
                 unless confirm.val() is passwd.val()
-                    alert "password missmatch!" # FIXME
+                    @error "passwdmissmatch"
                     return false
                 @start_registration(name, password, email)
                 # disable the form
                 $('#home_register_submit').prop "disabled", yes
                 $('#register_waiting').css "visibility","visible"
+                @el.find('.leftBox').addClass "working"
             else
-                alert "no name!" unless name.length # FIXME
-                alert "no password!" unless password.length # FIXME
+                @error "noname" unless name.length
+                @error "nopasswd" unless password.length
         super
 
     start_registration: (name, password, email) ->
@@ -53,18 +54,26 @@ class exports.RegisterView extends AuthenticationView
         app.handler.connection.register name, password, email
         app.handler.connection.bind "registered", @register_success
         app.handler.connection.bind "connected",  @login_success
-        # TODO: find out which is the correct fail callback and remove it on success
-        app.handler.connection.bind "regifail", @error
-        app.handler.connection.bind "authfail", @error
-        app.handler.connection.bind "sbmtfail", =>
-            if app.handler.connection.isRegistered()
-                @register_success()
-            else
-                @error()
+
+        ["regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) =>
+            event = () =>
+                app.handler.connection.unbind type, event
+                if type is "sbmtfail" and app.handler.connection.isRegistered()
+                    @register_success()
+                else
+                    @reset()
+                    @error(type)
+            app.handler.connection.bind type, event
 
     register_success: =>
         $('#register_waiting').html $('#login_waiting').html()
+        @reset()
 
     login_success: =>
         $('#home_register_submit').removeAttr "disabled"
+        @reset()
+
+    reset: =>
+        super
+        $('#home_register_submit').prop "disabled", false
         $('#register_waiting').css "visibility","hidden"

@@ -56,7 +56,14 @@
           <label for="home_register_new_email">Email (for password recovery (if server supports it))</label>
           <input type="text" id="home_register_new_email" placeholder="Email" />
           <div class="leftBox">
-            <span class="spinner">registering account</span>
+            <span class="spinner">creating new account</span>
+            <span id="authfail">Authentification unssuccessful. Please try again.</span>
+            <span id="connfail">Connection closed :(</span>
+            <span id="regifail">Cannot create new Account.</span>
+            <span id="noname">No Name given.</span>
+            <span id="nopasswd">No Password given.</span>
+            <span id="passwdmissmatch">Passwords doesnt match.</span>
+            <span id="disconnected">Thats weird. You disconnected D:</span>
           </div>
           <button type="submit" id="home_register_account">Register</button>
         </form>

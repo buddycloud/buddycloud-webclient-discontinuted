@@ -43,4 +43,3 @@ class exports.LoginView extends AuthenticationView
     reset: =>
         super
         $('#home_login_submit').prop "disabled", false
-        @el.find('.leftBox').removeClass "working"
