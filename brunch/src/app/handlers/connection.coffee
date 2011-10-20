@@ -47,6 +47,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             app.error "discover_channel_server success", arguments
             @connection.buddycloud.connect pubsubjid
             @connection.presence.authorize pubsubjid
+            @pubsubJid = pubsubJid
             @announce_presence()
             @connection.presence.addSubscribeHandler (stanza) ->
                 if stanza.getAttribute('from') is pubsubjid
@@ -139,5 +140,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @trigger 'attached'
 
     announce_presence: =>
+        unless @pubsubjid
+            return
+
         @connection.presence.set
+            to: @pubsubJid
             status: "buddycloud"

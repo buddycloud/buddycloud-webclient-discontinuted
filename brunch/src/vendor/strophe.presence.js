@@ -41,7 +41,10 @@ Strophe.addConnectionPlugin('presence', {
 
     set: function (opts) {
         opts = opts || {};
-        this._connection.send($pres()
+	var stanzaAttrs = {};
+	if (opts.to)
+	    stanzaAttrs.to = opts.to;
+        this._connection.send($pres(stanzaAttrs)
             .c('status')  .t(opts.status || "N/A").up()
             .c('show')    .t(opts.show   || "na" ).up()
             .c('priority').t("" + (opts.priority || -1))
