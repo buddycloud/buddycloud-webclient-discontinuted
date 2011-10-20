@@ -16,19 +16,24 @@ class exports.DataHandler extends Backbone.EventHandler
 
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
-        @connector.get_node_posts node, callback
+        nodeid = node.get?('nodeid') or node
+        @connector.get_node_posts nodeid, callback
 
     get_node_metadata: (node, callback) ->
-        @connector.get_node_metadata node.get('nodeid'), callback
+        nodeid = node.get?('nodeid') or node
+        @connector.get_node_metadata nodeid, callback
 
     get_node_subscriptions: (node, callback) ->
-        @connector.get_node_subscriptions node.get('nodeid'), callback
+        nodeid = node.get?('nodeid') or node
+        @connector.get_node_subscriptions nodeid, callback
 
     publish: (node, item, success, error) ->
-        @connector.publish node.get('nodeid'), item, success, error
+        nodeid = node.get?('nodeid') or node
+        @connector.publish nodeid, item, success, error
 
     add_post: (node, post) ->
-        @on_node_post post, node.get 'nodeid'
+        nodeid = node.get?('nodeid') or node
+        @on_node_post post, nodeid
 
     ##
     # TODO: we can get very mixed responses according to the
