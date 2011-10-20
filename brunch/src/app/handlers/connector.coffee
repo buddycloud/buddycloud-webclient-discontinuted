@@ -97,7 +97,7 @@ class exports.Connector extends Backbone.EventHandler
                 nodeid, success, error, @connection.timeout)
 
     # this fetches all subscriptions to a specific node
-    get_node_subscriptions: (nodeid, callback) ->
+    get_node_subscriptions: (nodeid, callback) =>
         @request (done) =>
             success = (subscribers) =>
                 for own user, subscription of subscribers
