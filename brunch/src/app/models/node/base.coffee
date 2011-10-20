@@ -18,9 +18,6 @@ class exports.Node extends Model
             result.metadata = @metadata.toJSON()
         result
 
-    fetch: ->
-        app.handler.data.get_node_subscriptions @get 'nodeid'
-
     # I am very afraid of the dead. They walk.
     update: -> # api function - every node should be updateable
 
