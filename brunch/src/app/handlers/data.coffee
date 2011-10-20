@@ -39,7 +39,8 @@ class exports.DataHandler extends Backbone.EventHandler
     subscribeUser: (user, callback) ->
         forEachUserNode user, (node, callback2) =>
             @connector.subscribe node, callback2
-        , callback
+        , =>
+            @refresh_channel user, callback
 
     unsubscribeUser: (user, callback) ->
         forEachUserNode user, (node, callback2) =>
