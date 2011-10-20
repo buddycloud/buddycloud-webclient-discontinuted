@@ -91,7 +91,6 @@ class exports.UserChannels extends exports.Channels
                         commentTimestamp = comment.get('updated')
                         if commentTimestamp > timestamp
                             timestamp = commentTimestamp
-        alert timestamp
         timestamp
 
 # global channel collection store
