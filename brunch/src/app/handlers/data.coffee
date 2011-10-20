@@ -71,7 +71,9 @@ class exports.DataHandler extends Backbone.EventHandler
             forEachUserNode app.users.target.get('id'), (nodeid, cb) =>
                 @connector.get_node_posts nodeid, cb
         else
-            @connector.replayNotifications()
+            # TODO: dodo needs to implement node posts fetching from
+            # localStorage before this point
+            @connector.replayNotifications(app.users.current.channels.get_last_timestamp())
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user
