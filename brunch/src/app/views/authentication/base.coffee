@@ -33,6 +33,7 @@ class exports.AuthenticationView extends Backbone.View
             @remove()
 
     error: (type) =>
+        app.handler.connection.reset()
         # wobble animation
         curr_pos = @box.position()
         @box.css(
@@ -48,5 +49,4 @@ class exports.AuthenticationView extends Backbone.View
         @unbind 'hide', @go_away
         @bind 'hide', @hide
         app.handler.connection.unbind "connected", @reset
-        app.handler.connection.reset()
         @el.find('.leftBox').removeClass "working"
