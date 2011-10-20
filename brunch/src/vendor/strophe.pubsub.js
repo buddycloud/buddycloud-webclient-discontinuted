@@ -145,12 +145,12 @@ Extend connection object to have plugin name 'pubsub'.
         if (conn.disco)
             conn.disco.addFeature(Strophe.NS.PUBSUB);
 
-	/* Setup notification handling */
-	this._notificationListeners = [];
-	var that = this;
-	conn.addHandler(function(stanza) {
-	    return that.onEventNotification(stanza);
-	}, Strophe.NS.PUBSUB_EVENT, 'message');
+        /* Setup notification handling */
+        this._notificationListeners = [];
+        var that = this;
+        conn.addHandler(function(stanza) {
+            return that.onEventNotification(stanza);
+        }, Strophe.NS.PUBSUB_EVENT, 'message');
     },
 
     // Called by Strophe on connection event
@@ -343,7 +343,7 @@ Extend connection object to have plugin name 'pubsub'.
         var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
           .c('unsubscribe', {'node':node});
-	if (jid) iq.attrs({jid:jid});
+        if (jid) iq.attrs({jid:jid});
         if (subid) iq.attrs({subid:subid});
 
         that.sendIQ(iq.tree(), success, error);
@@ -425,10 +425,10 @@ Extend connection object to have plugin name 'pubsub'.
      *    Iq id
      */
     getNodeSubscriptions: function(node, success, error) {
-	var that = this._connection;
-	var iqid = that.getUniqueId("pubsubsubscriptions");
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsubscriptions");
 
-	var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
+        var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
             .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
             .c('subscriptions', {'node':node});
 
@@ -535,14 +535,14 @@ Extend connection object to have plugin name 'pubsub'.
             if (atom.published && atom.published.toISOString)
                 atom.published = atom.published.toISOString();
 
-	    /* Rescue threading information because it does not get formatted with Builder::children */
-	    var in_reply_to = atom.in_reply_to;
-	    delete atom.in_reply_to;
-	    var entry = $build("entry", { xmlns:Strophe.NS.ATOM,
-					  'xmlns:thr':Strophe.NS.ATOM_THR })
+            /* Rescue threading information because it does not get formatted with Builder::children */
+            var in_reply_to = atom.in_reply_to;
+            delete atom.in_reply_to;
+            var entry = $build("entry", { xmlns:Strophe.NS.ATOM,
+                                          'xmlns:thr':Strophe.NS.ATOM_THR })
                 .children(atom);
-	    if (in_reply_to)
-		entry.cnode($('<thr:in-reply-to/>').attr('ref', in_reply_to)[0]);
+            if (in_reply_to)
+                entry.cnode($('<thr:in-reply-to/>').attr('ref', in_reply_to)[0]);
             entries.push({
                 data: entry.tree(),
                 attrs:(atom.id ? { id:atom.id } : {}),
@@ -556,24 +556,24 @@ Extend connection object to have plugin name 'pubsub'.
      * TODO: should payload parsing go into strophe.buddycloud.js?
      */
     onEventNotification: function(stanza) {
-	var hasEvent = false;
-	Strophe.forEachChild(stanza, 'event', function(eventEl) {
-	    hasEvent = true;
-	});
-	if (hasEvent)
-	    this._callNotificationListeners(stanza);
+        var hasEvent = false;
+        Strophe.forEachChild(stanza, 'event', function(eventEl) {
+            hasEvent = true;
+        });
+        if (hasEvent)
+            this._callNotificationListeners(stanza);
 
-	return true;
+        return true;
     },
 
     _callNotificationListeners: function(stanza) {
-	this._notificationListeners.forEach(function(listener) {
-	    listener(stanza);
-	});
+        this._notificationListeners.forEach(function(listener) {
+            listener(stanza);
+        });
     },
 
     addNotificationListener: function(listener) {
-	this._notificationListeners.push(listener);
+        this._notificationListeners.push(listener);
     }
 
 });

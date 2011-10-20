@@ -151,7 +151,7 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     publishAtom: function(node, atoms, success, error) {
-	this._connection.pubsub.publishAtom(node, atoms, success, this._errorcode(error));
+        this._connection.pubsub.publishAtom(node, atoms, success, this._errorcode(error));
     },
 
     /* TODO: what is this for?
@@ -300,16 +300,16 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getSubscribers: function(node, success, error) {
-	this._connection.getNodeSubscriptions(node, function(stanza) {
-	    var subscribers;
-	    var pubsubEl = stanza.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
-	    if (pubsubEl) {
-		var subscriptionsEls = pubsubEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'subscriptions');
-		for(var i = 0; i < subscriptionsEls.length; i++)
-		    subscribers[subscriptionsEls.getAttribute('jid')] = subscriptionsEls.getAttribute('subscription') || 'subscribed';
-	    }
-	    return success(subscribers);
-	}, this._errorcode(error));
+        this._connection.getNodeSubscriptions(node, function(stanza) {
+            var subscribers;
+            var pubsubEl = stanza.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
+            if (pubsubEl) {
+                var subscriptionsEls = pubsubEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'subscriptions');
+                for(var i = 0; i < subscriptionsEls.length; i++)
+                    subscribers[subscriptionsEls.getAttribute('jid')] = subscriptionsEls.getAttribute('subscription') || 'subscribed';
+            }
+            return success(subscribers);
+        }, this._errorcode(error));
     },
 
     /**
@@ -413,22 +413,22 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     _errorcode: function (callback) {
         return function (stanza) {
-	    if (!stanza)
-		return;
+            if (!stanza)
+                return;
             var errors = stanza.getElementsByTagName("error");
-	    var condition = 'error', text = null;
-	    for(var i = 0; i < errors.length; i++) {
-		var errorEl = errors[i];
-		for(var j = 0; j < errorEl.childNodes.length; j++) {
-		    var errorChild = errorEl.childNodes[j];
-		    if (errorChild.namespaceURI === Strophe.NS.STANZAS) {
-			if (errorChild.localName === "text")
-			    text = errorChild.textContent;
-			else
-			    condition = errorChild.localName;
-		    }
-		}
-	    }
+            var condition = 'error', text = null;
+            for(var i = 0; i < errors.length; i++) {
+                var errorEl = errors[i];
+                for(var j = 0; j < errorEl.childNodes.length; j++) {
+                    var errorChild = errorEl.childNodes[j];
+                    if (errorChild.namespaceURI === Strophe.NS.STANZAS) {
+                        if (errorChild.localName === "text")
+                            text = errorChild.textContent;
+                        else
+                            condition = errorChild.localName;
+                    }
+                }
+            }
             callback(new Strophe.StanzaError(condition, text));
         };
     },
