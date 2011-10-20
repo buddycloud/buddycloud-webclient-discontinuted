@@ -100,7 +100,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                 if (jid) {
                     conn.disco.info(jid, null,
                         function /*success*/ (stanza) {
-                            self._onDiscoInfo(itemSuccess, itemError, timeout, jid, stanza);
+                            self._onDiscoInfo(itemSuccess, itemError,
+                                              timeout, jid, stanza);
                         },
                     itemError, timeout);
                     itemsPending++;
@@ -151,7 +152,8 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     publishAtom: function(node, atoms, success, error) {
-        this._connection.pubsub.publishAtom(node, atoms, success, this._errorcode(error));
+        this._connection.pubsub.publishAtom(node, atoms, success,
+                                            this._errorcode(error));
     },
 
     /* TODO: what is this for?
@@ -190,7 +192,8 @@ Strophe.addConnectionPlugin('buddycloud', {
 
             if (postEl)
                 try {
-                    var parser = this._postParsers['{' + postEl.namespaceURI + '}' + postEl.nodeName];
+                    var parser = this._postParsers[
+                        '{' + postEl.namespaceURI + '}' + postEl.nodeName];
                     var post = parser.call(this, postEl);
                     if (post) {
                         if (!post.id)
@@ -241,7 +244,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                                           "country", "locality", "text");
 
             // in reply to
-            var in_reply_tos = entry.getElementsByTagNameNS(Strophe.NS.ATOM_THR, "in-reply-to");
+            var in_reply_tos = entry.getElementsByTagNameNS(
+                Strophe.NS.ATOM_THR, "in-reply-to");
             if (in_reply_tos.length > 0)
                 post.in_reply_to = in_reply_tos[0].getAttribute("ref");
 
@@ -252,8 +256,10 @@ Strophe.addConnectionPlugin('buddycloud', {
             Strophe.forEachChild(query, 'item', function(item) {
                 var jid = item.getAttribute('jid'),
                     node = item.getAttribute('node'),
-                    subscription = item.getAttributeNS(Strophe.NS.PUBSUB, 'subscription'),
-                    affiliation = item.getAttributeNS(Strophe.NS.PUBSUB, 'affiliation'),
+                    subscription = item.getAttributeNS(
+                        Strophe.NS.PUBSUB, 'subscription'),
+                    affiliation = item.getAttributeNS(
+                        Strophe.NS.PUBSUB, 'affiliation'),
                     updated;
                 Strophe.forEachChild(item, 'updated', function(updated) {
                     updated = updated.textContent;
