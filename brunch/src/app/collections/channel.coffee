@@ -16,9 +16,9 @@ class exports.Channels extends Collection
     initialize: ->
         super
         @bind 'add', (channel, channels, opts) =>
-            @trigger "add:{channel.get 'id'}", channel, channels, opts
+            @trigger "add:#{channel.get 'id'}", channel, channels, opts
         @bind 'remove', (channel, channels, opts) =>
-            @trigger "remove:{channel.get 'id'}", channel, channels, opts
+            @trigger "remove:#{channel.get 'id'}", channel, channels, opts
 
     get: (id, options = {}) ->
         id = nodeid_to_user(id) or id
