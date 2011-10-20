@@ -300,13 +300,29 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getSubscribers: function(node, success, error) {
-        this._connection.getNodeSubscriptions(node, function(stanza) {
-            var subscribers;
-            var pubsubEl = stanza.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
-            if (pubsubEl) {
-                var subscriptionsEls = pubsubEl.getElementsByTagNameNS(Strophe.NS.PUBSUB_OWNER, 'subscriptions');
-                for(var i = 0; i < subscriptionsEls.length; i++)
-                    subscribers[subscriptionsEls.getAttribute('jid')] = subscriptionsEls.getAttribute('subscription') || 'subscribed';
+        this._connection.pubsub.getNodeSubscriptions(node, function(stanza) {
+            var i, pubsubs, pubsub;
+            pubsubs = stanza.getElementsByTagNameNS(
+                Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
+            if (pubsubs) {
+                var j, subscribers = {};
+                for(i = 0; i < pubsubs.length; i++) {
+                    pubsub = pubsubs[i];
+                    var subscriptions, subscription;
+                    subscriptions = pubsub.getElementsByTagNameNS(
+                        Strophe.NS.PUBSUB_OWNER, 'subscriptions');
+                    if (subscriptions) {
+                        for(i = 0; i < subscriptions.length; i++) {
+                            subscription = subscriptions[i];
+                            if (subscription) {
+                                subscribers[subscription.getAttribute('jid')] =
+                                    subscription.getAttribute('subscription') ||
+                                    "subscribed";
+                            }
+                        }
+                    }
+
+                }
             }
             return success(subscribers);
         }, this._errorcode(error));
