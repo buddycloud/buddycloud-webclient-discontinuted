@@ -1,5 +1,6 @@
 dependencies:
   - ConsoleDummy.js
+  - es5-shim.js
   - document-redraw.js
   - underscore.js
   - jquery.npm-hack.js
