@@ -127,7 +127,7 @@ class exports.ChannelView extends BaseView
 
     update_attributes: ->
         if (postsNode = @model.nodes.get 'posts')
-            @error = postsNode.get 'error'
+            @error = postsNode.error
             console.warn "ChannelView.update_attributes", @error
             @postsNode = postsNode.toJSON yes
         if (geo = @model.nodes.get 'geo')

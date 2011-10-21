@@ -39,6 +39,6 @@ class exports.Node extends Model
         @metadata.save metadata
 
     push_error: (error) ->
-        @save error:
+        @error =
             condition: error.condition
             text: error.text
