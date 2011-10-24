@@ -20,11 +20,18 @@ class exports.ChannelDetails extends BaseView
             model:@model.nodes.get('posts').users
             parent:this
 
-        @model.nodes.get('posts').metadata.bind 'change', =>
-            if @el.hasClass 'hidden'
-                # Show on metadata update:
-                @el.removeClass 'hidden'
-            @render()
+        @model.nodes.get('posts').metadata.bind 'change', @may_show
+        do @may_show
+
+    may_show: =>
+        unless @model.nodes.get('posts').metadata.has 'title'
+            # metadata still absent, may not show
+            return
+
+        if @el.hasClass 'hidden'
+            # Show on metadata update:
+            @el.removeClass 'hidden'
+        @render()
 
     events:
         "click .infoToggle": "click_toggle"
