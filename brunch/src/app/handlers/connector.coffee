@@ -12,17 +12,17 @@ class exports.Connector extends Backbone.EventHandler
     replayNotifications: =>
         @connection.buddycloud.replayNotifications()
 
-    publish: (nodeid, item, success, error) =>
+    publish: (nodeid, item, callback) =>
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
                 app.debug "publish", stanza
-                success? stanza
                 done()
-            , (e) =>
-                app.error "publish", nodeid, e
-                error? e
+                callback? null
+            , (error) =>
+                app.error "publish", nodeid, error
                 done()
+                callback? error
 
     subscribe: (nodeid, callback) =>
         @request (done) =>
@@ -34,11 +34,12 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'subscribed' # FIXME
-                callback? stanza
                 done()
+                callback? null
             , =>
                 app.error "subscribe", nodeid
                 done()
+                callback? new Error("Cannot subscribe")
 
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
@@ -49,11 +50,12 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'unsubscribed'
-                callback? stanza
                 done()
+                callback? null
             , =>
                 app.error "unsubscribe", nodeid
                 done()
+                callback? new Error("Cannot unsubscribe")
 
 #     start_fetch_node_posts: (nodeid) =>
 #         success = (posts) =>
@@ -72,13 +74,13 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
-                callback? posts
                 done()
-            error = (e) =>
+                callback? null, posts
+            error = (error) =>
                 app.error "get_node_posts", nodeid, arguments
-                @trigger 'node:error', nodeid, e
-                callback? []
+                @trigger 'node:error', nodeid, error
                 done()
+                callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
                 nodeid, success, error, @connection.timeout)
 
@@ -86,13 +88,13 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             success = (metadata) =>
                 @trigger 'metadata', nodeid, metadata
-                callback? metadata
                 done()
-            error = (e) =>
+                callback? null, metadata
+            error = (error) =>
                 app.error "get_node_metadata", nodeid, arguments
-                @trigger 'node:error', nodeid, e
-                callback?()
+                @trigger 'node:error', nodeid, error
                 done()
+                callback? new Error("Cannot get metadata")
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
 
@@ -105,12 +107,12 @@ class exports.Connector extends Backbone.EventHandler
                         jid: jid
                         node: nodeid
                         subscription: subscription
-                    callback? subscribers
                     done()
-            error = (e) =>
-                @trigger 'node:error', nodeid, e
-                callback?()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
                 done()
+                callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
                 nodeid, success, error, @connection.timeout)
 
