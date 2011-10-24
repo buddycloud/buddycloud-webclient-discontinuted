@@ -69,5 +69,7 @@ $(document).ready ->
         formatdate.options.max.amount = 20 # 2000 years
         formatdate.hook 'html'
 
-
-    app.initialize()
+    Modernizr.load
+        test:Modernizr.localStorage
+        yep:'web/js/store.js'
+        complete:app.initialize
