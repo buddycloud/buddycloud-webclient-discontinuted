@@ -27,9 +27,9 @@ class exports.DataHandler extends Backbone.EventHandler
         nodeid = node.get?('nodeid') or node
         @connector.get_node_subscriptions nodeid, callback
 
-    publish: (node, item, success, error) ->
+    publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node
-        @connector.publish nodeid, item, success, error
+        @connector.publish nodeid, item, callback
 
     add_post: (node, post) ->
         nodeid = node.get?('nodeid') or node
@@ -41,16 +41,34 @@ class exports.DataHandler extends Backbone.EventHandler
     # * Success
     # * Error
     # * Pending
-    subscribeUser: (user, callback) ->
+    subscribe_user: (user, callback) ->
+        # We show success if subscription to at least one node worked:
+        oneSuccess = false
+        oneError = null
         forEachUserNode user, (node, callback2) =>
-            @connector.subscribe node, callback2
+            @connector.subscribe node, (error) =>
+                if error
+                    oneError = error
+                else
+                    oneSuccess = true
+                callback2()
         , =>
-            @refresh_channel user, callback
+            callback? if oneSuccess then null else oneError
+            @refresh_channel user
 
-    unsubscribeUser: (user, callback) ->
+    unsubscribe_user: (user, callback) ->
+        # We show success if unsubscribing from at least one node worked:
+        oneSuccess = false
+        oneError = null
         forEachUserNode user, (node, callback2) =>
-            @connector.unsubscribe node, callback2
-        , callback
+            @connector.unsubscribe node, (error) =>
+                if error
+                    oneError = error
+                else
+                    oneSuccess = true
+                callback2()
+        , =>
+            callback? if oneSuccess then null else oneError
 
     get_user_subscriptions: (jid, callback) =>
         unless jid?
@@ -121,6 +139,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
     refresh_channel: (userid, callback) ->
         forEachUserNode userid, (nodeid, cb) =>
+            # 3: get_node_posts + get_node_metadata + get_node_subscriptions
             pending = 3
             done = ->
                 pending--

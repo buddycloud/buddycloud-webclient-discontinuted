@@ -68,7 +68,7 @@ class exports.ChannelView extends BaseView
                 author:
                     name: app.users.current.get 'jid'
             node = @model.nodes.get('posts')
-            app.handler.data.publish node, post, =>
+            app.handler.data.publish node, post, (error) =>
                 # TODO: make sure prematurely added post
                 # correlates to incoming notification
                 # (in comments.coffee too)
@@ -78,17 +78,18 @@ class exports.ChannelView extends BaseView
                 # Re-enable form
                 text.removeAttr "disabled"
                 @isPosting = false
-                # Reset form
-                @el.find('.newTopic, .answer').removeClass 'write'
-                text.val ""
-            , (e) =>
-                console.error "postError", e
-                # Re-enable form
-                text.removeAttr "disabled"
-                @isPosting = false
-                # Show error
-                @$('.newTopic .controls').prepend('<p class="postError"></p>')
-                @$('.newTopic .postError').text(e.text or e.condition)
+                unless error
+                    # Reset form
+                    @el.find('.newTopic, .answer').removeClass 'write'
+                    text.val ""
+                else
+                    console.error "postError", error
+                    @show_post_error error
+
+    show_post_error: (error) =>
+        p = $('<p class="postError"></p>')
+        @$('.newTopic .controls').prepend(p)
+        p.text(error.text or error.condition)
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
@@ -102,10 +103,16 @@ class exports.ChannelView extends BaseView
                     self.removeClass 'write'
 
     clickFollow: EventHandler (ev) ->
-        app.handler.data.subscribeUser @model.get('id')
+        app.handler.data.subscribe_user @model.get('id'), (error) =>
+            if error
+                @error = error
+                @render()
 
     clickUnfollow: EventHandler (ev) ->
-        app.handler.data.unsubscribeUser @model.get('id')
+        app.handler.data.unsubscribe_user @model.get('id'), (error) =>
+            if error
+                @error = error
+                @render()
 
     render: =>
         @update_attributes()
@@ -121,14 +128,15 @@ class exports.ChannelView extends BaseView
             @el.find('.topics').replaceWith @postsview.el
             do @postsview.render
 
+        # Delay class="visible" for CSS3 transition:
         setTimeout =>
             @$('.notification').addClass 'visible'
         , 1
 
     update_attributes: ->
         if (postsNode = @model.nodes.get 'posts')
+            # @error is also set by clickFollow() & clickUnfollow()
             @error = postsNode.error
-            console.warn "ChannelView.update_attributes", @error
             @postsNode = postsNode.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
