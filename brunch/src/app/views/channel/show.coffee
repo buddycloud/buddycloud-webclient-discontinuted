@@ -29,9 +29,7 @@ class exports.ChannelView extends BaseView
                     el: @el.find('.topics')
                 do @postsview.render
                 # To display posts node errors:
-                postsnode.bind 'change', =>
-                    console.log "postsnode change", arguments...
-                    @render()
+                postsnode.bind 'error', @render
                 do @render
             else
                 @model.nodes.bind "add", init_posts
