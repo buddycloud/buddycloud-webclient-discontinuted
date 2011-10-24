@@ -19,6 +19,7 @@
 ,   "jqueryify": "0.0.1"
 ,   "formatdate": "0.0.1"
 ,   "es5-shim": "1.2.10"
+,   "dynamictemplate": "0.1.0"
   }
 , "_dependencies_missing_from_npm": {
     "normalize.css": "6d085d7e520572ca4a8c73fe09a44362792e30d0"

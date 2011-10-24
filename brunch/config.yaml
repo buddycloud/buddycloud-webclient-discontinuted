@@ -20,5 +20,6 @@ dependencies:
   - strophe.register.js
   - strophe.dataforms.js
   - strophe.buddycloud.js
+  - dynamictemplate.js
   - formatdate.js
   - modernizr.js
