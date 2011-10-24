@@ -67,7 +67,6 @@ class exports.RegisterView extends AuthenticationView
 
     register_success: =>
         $('#register_waiting').html $('#login_waiting').html()
-        @reset()
 
     login_success: =>
         $('#home_register_submit').removeAttr "disabled"
