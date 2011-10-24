@@ -13,7 +13,6 @@ class exports.PostsView extends Backbone.View
     # TODO add different post type switch here
     # currently only TopicPosts are supported
     add_post: (post) =>
-        @el.find(".topic.loader").remove()
         entry = @views[post.cid] ?= new TopicPostView model:post, parent:this
 
         i = @model.posts.indexOf(post)
@@ -25,7 +24,5 @@ class exports.PostsView extends Backbone.View
         do entry.render
 
     render: =>
-        if @model.posts.length > 0
-            @el.find(".topic.loader").remove()
         for cid, entry of @views
             entry.render()

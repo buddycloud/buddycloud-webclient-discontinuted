@@ -51,10 +51,12 @@
       template: notififications.eco
 
     -->
-    <section class="topics">
-    <header class="topic loader">
+    <% if @isLoading: %>
+    <section class="topic loader">
       <span class="spinner"> </span>
-    </header>
+    </section>
+    <% end %>
+    <section class="topics">
     <!--
 
       this contains the list of channel posts

@@ -77,6 +77,9 @@ class exports.DataHandler extends Backbone.EventHandler
 
         if jid isnt "anony@mous"
             @connector.get_node_posts "/user/#{jid}/subscriptions", callback
+        else
+            # anony@mous has no retrievable subscriptions
+            callback?()
 
     # event callbacks
 
@@ -91,12 +94,19 @@ class exports.DataHandler extends Backbone.EventHandler
     on_connection_established: =>
         user = app.users.current
         if user.get('jid') is "anony@mous"
-            forEachUserNode app.users.target.get('id'), (nodeid, cb) =>
-                @connector.get_node_posts nodeid, cb
+            @refresh_channel app.users.target.get('id')
         else
-            # TODO: dodo needs to implement node posts fetching from
-            # localStorage before this point
-            @connector.replayNotifications(app.users.current.channels.get_last_timestamp())
+            @set_loading true
+            @connector.replayNotifications app.users.current.channels.get_last_timestamp()
+            , (error) =>
+                @set_loading false
+
+    # Global loading state for MAM replaying, see on_connection_established above
+    set_loading: (@isLoading) =>
+        if @isLoading
+            @trigger 'loading:start'
+        else
+            @trigger 'loading:stop'
 
     on_prefill_from_cache: =>
         app.users.current = app.handler.connection.user
@@ -138,19 +148,23 @@ class exports.DataHandler extends Backbone.EventHandler
         return
 
     refresh_channel: (userid, callback) ->
-        forEachUserNode userid, (nodeid, cb) =>
+        channel = app.channels.get_or_create id: userid
+        channel.set_loading true
+        forEachUserNode userid, (nodeid, callback2) =>
             # 3: get_node_posts + get_node_metadata + get_node_subscriptions
             pending = 3
             done = ->
                 pending--
                 if pending < 1
-                    cb()
+                    callback2()
 
             @get_node_posts nodeid, done
             @get_node_metadata nodeid, done
             @get_node_subscriptions nodeid, done
-        , ->
-            @get_user_subscriptions userid, callback
+        , =>
+            @get_user_subscriptions userid, =>
+                channel.set_loading false
+                callback?()
 
 ##
 # @param iter {Function} callback(node, callback)
@@ -158,9 +172,9 @@ forEachUserNode = (user, iter, callback) ->
     pending = 0
     ["posts", "status", "subscriptions",
      "geo/previous", "geo/current", "geo/next"].forEach (type) ->
-        node = "/user/#{user}/#{type}"
+        nodeid = "/user/#{user}/#{type}"
         pending++
-        iter node, ->
+        iter nodeid, ->
             pending--
             if pending < 1
                 callback?()

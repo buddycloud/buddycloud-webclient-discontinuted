@@ -349,7 +349,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                        to: this.channels.jid,
                        type: 'get' }).
             c('query', queryAttrs);
-        conn.sendIQ(iq, success, error);
+        conn.sendIQ(iq, success, this._errorcode(error));
     },
 
     /**

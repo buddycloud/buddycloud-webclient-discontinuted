@@ -2,6 +2,8 @@
 
 class exports.Connector extends Backbone.EventHandler
 
+    ##
+    # @handler: ConnectionHandler
     constructor: (@handler, @connection) ->
         @handler.bind 'connecting', => @trigger 'connection:start'
         @handler.bind 'connected',  => @trigger 'connection:established'
@@ -9,8 +11,11 @@ class exports.Connector extends Backbone.EventHandler
         app.handler.request = @request.handler
         @connection.buddycloud.addNotificationListener @on_notification
 
-    replayNotifications: =>
-        @connection.buddycloud.replayNotifications()
+    replayNotifications: (start, callback) =>
+        @connection.buddycloud.replayNotifications start, null, =>
+            callback? null
+        , (error) =>
+            callback? new Error("Cannot replay notifications")
 
     publish: (nodeid, item, callback) =>
         @request (done) =>
@@ -107,8 +112,8 @@ class exports.Connector extends Backbone.EventHandler
                         jid: jid
                         node: nodeid
                         subscription: subscription
-                    done()
-                    callback? null
+                done()
+                callback? null
             error = (error) =>
                 @trigger 'node:error', nodeid, error
                 done()

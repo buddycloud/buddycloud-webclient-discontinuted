@@ -19,6 +19,13 @@ class exports.ChannelView extends BaseView
         @model.bind 'change:node:metadata', @render
         app.users.current.channels.bind "add:#{@model.get 'id'}", @render
         app.users.current.channels.bind "remove:#{@model.get 'id'}", @render
+
+        # Show progress spinner throbber loader
+        @model.bind 'loading:start', @render
+        @model.bind 'loading:stop', @render
+        app.handler.data.bind 'loading:start', @render
+        app.handler.data.bind 'loading:stop', @render
+
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
@@ -39,6 +46,7 @@ class exports.ChannelView extends BaseView
         @hidden = false
         @el.show()
 
+        # Not subscribed? Refresh!
         unless app.users.current.channels.get(@model.get 'id')?
             app.handler.data.refresh_channel(@model.get 'id')
 
@@ -147,3 +155,4 @@ class exports.ChannelView extends BaseView
             followingThisChannel: followingThisChannel
             hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
             isAnonymous: isAnonymous
+        @isLoading = @model.isLoading or app.handler.data.isLoading

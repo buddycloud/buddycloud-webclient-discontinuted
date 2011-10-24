@@ -32,3 +32,9 @@ class exports.Channel extends Model
 
     push_node_error: (nodeid, error) ->
         @trigger 'node:error', nodeid, error
+
+    set_loading: (@isLoading) =>
+        if @isLoading
+            @trigger 'loading:start'
+        else
+            @trigger 'loading:stop'
