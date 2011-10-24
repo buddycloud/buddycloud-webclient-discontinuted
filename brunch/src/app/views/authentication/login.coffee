@@ -42,4 +42,5 @@ class exports.LoginView extends AuthenticationView
 
     reset: =>
         super
+        app.handler.connection.unbind "connected", @reset
         $('#home_login_submit').prop "disabled", false

@@ -75,5 +75,7 @@ class exports.RegisterView extends AuthenticationView
 
     reset: =>
         super
+        app.handler.connection.unbind "registered", @register_success
+        app.handler.connection.unbind "connected",  @login_success
         $('#home_register_submit').prop "disabled", false
         $('#register_waiting').css "visibility","hidden"
