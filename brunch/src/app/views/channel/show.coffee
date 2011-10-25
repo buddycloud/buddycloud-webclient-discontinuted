@@ -1,5 +1,6 @@
 { ChannelDetails } = require 'views/channel/details/show'
 { PostsView } = require 'views/channel/posts'
+{ ErrorNotificationView } = require 'views/channel/error_notification'
 { BaseView } = require 'views/base'
 { EventHandler } = require 'util'
 
@@ -34,9 +35,11 @@ class exports.ChannelView extends BaseView
                     model: postsnode
                     parent: this
                     el: @el.find('.topics')
-                do @postsview.render
                 # To display posts node errors:
-                postsnode.bind 'error', @render
+                postsnode.bind 'error', @set_error
+                @set_error postsnode.error
+
+                do @postsview.render
                 do @render
             else
                 @model.nodes.bind "add", init_posts
@@ -92,10 +95,21 @@ class exports.ChannelView extends BaseView
                     console.error "postError", error
                     @show_post_error error
 
+    # error display in .newTopic .controls
     show_post_error: (error) =>
         p = $('<p class="postError"></p>')
         @$('.newTopic .controls').prepend(p)
         p.text(error.text or error.condition)
+
+    set_error: (error) =>
+        if error
+            unless @error_notification
+                @error_notification = new ErrorNotificationView({ error })
+            else
+                @error_notification.error = error
+        else
+            delete @error_notification
+        @render()
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
@@ -110,18 +124,20 @@ class exports.ChannelView extends BaseView
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').remove()
-        delete @error
+        @set_error null
 
         app.handler.data.subscribe_user @model.get('id'), (error) =>
-            @error ?= error
+            if error
+                @set_error error
             @render()
 
     clickUnfollow: EventHandler (ev) ->
         @$('.unfollow').remove()
-        delete @error
+        @set_error null
 
         app.handler.data.unsubscribe_user @model.get('id'), (error) =>
-            @error ?= error
+            if error
+                @set_error error
             @render()
 
     render: =>
@@ -133,20 +149,17 @@ class exports.ChannelView extends BaseView
         do @details.render
         @el.append @details.el
 
+        if @error_notification
+            @error_notification.render()
+            @$('.stream').prepend @error_notification.el
         if @postsview
             # TODO: save form content?
-            @el.find('.topics').replaceWith @postsview.el
-            do @postsview.render
-
-        # Delay class="visible" for CSS3 transition:
-        setTimeout =>
-            @$('.notification').addClass 'visible'
-        , 1
+            @$('.topics').replaceWith @postsview.el
+            @postsview.render()
 
     update_attributes: ->
         if (postsNode = @model.nodes.get 'posts')
             # @error is also set by clickFollow() & clickUnfollow()
-            @error = postsNode.error
             @postsNode = postsNode.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes

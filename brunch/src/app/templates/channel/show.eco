@@ -22,14 +22,6 @@
     </nav>
   </header>
   <section class="stream">
-    <% if @error?: %>
-    <article class="notification">
-      <section>
-	<span class="name"><%= @error.condition %></span>
-	<p><%= @error.text %></p>
-      </section>
-    </article>
-    <% end %>
     <% if @user?.hasRightToPost: %>
     <section class="newTopic">
       <img class="avatar" src="<%= app.users.current.avatar %>" />

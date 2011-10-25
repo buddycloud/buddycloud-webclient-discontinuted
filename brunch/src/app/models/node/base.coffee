@@ -42,4 +42,4 @@ class exports.Node extends Model
         @error =
             condition: error.condition
             text: error.text
-        @trigger 'error'
+        @trigger 'error', error
