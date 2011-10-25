@@ -20,3 +20,7 @@ class exports.User extends Model
     push_subscription: (subscription) ->
         if subscription.jid is @get('jid')
             @trigger "subscription:user:#{@get 'jid'}", subscription
+
+    push_affiliation: (affiliation) ->
+        if affiliation.jid is @get('jid')
+            @trigger "affiliation:user:#{@get 'jid'}", affiliation

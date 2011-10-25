@@ -32,6 +32,11 @@ class exports.Node extends Model
         # TODO: needed by?
         @trigger "subscription:node:#{subscription.node}", subscription
 
+    push_affiliation: (affiliation) ->
+        if (user = @users.get affiliation.jid)
+            # TODO: how to store affiliations?
+            do ->
+
     push_post: (post) ->
         @trigger 'post', post
 

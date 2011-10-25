@@ -118,10 +118,10 @@ class exports.DataHandler extends Backbone.EventHandler
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node
 
         user = app.users.get_or_create id: affiliation.jid
-        #user.push_affiliation affiliation
+        user.push_affiliation affiliation
 
         channel = app.channels.get_or_create id: affiliation.node
-        #channel.push_affiliation affiliation
+        channel.push_affiliation affiliation
 
         return
 

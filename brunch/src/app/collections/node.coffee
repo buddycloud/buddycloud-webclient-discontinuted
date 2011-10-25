@@ -48,6 +48,9 @@ class exports.NodeStore extends exports.Nodes
         @channel.bind 'subscription', (subscription) =>
             node = @get_or_create nodeid: subscription.node
             node.push_subscription subscription
+        @channel.bind 'affiliation', (affiliation) =>
+            node = @get_or_create nodeid: affiliation.node
+            node.push_affiliation affiliation
         @channel.bind 'post', (nodeid, post) =>
             node = @get_or_create {nodeid}
             node.push_post post
