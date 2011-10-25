@@ -60,6 +60,7 @@ class exports.Router extends Backbone.Router
 
     loadingchannel: (id, domain) ->
         jid = if domain then "#{id}@#{domain}" else id
+        jid = jid.toLowerCase()
         app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected

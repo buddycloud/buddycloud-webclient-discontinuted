@@ -30,6 +30,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         else
             if jid.indexOf("@") < 0
                 jid = "#{jid}@#{config.domain}"
+            jid = jid.toLowerCase()
             @user = app.users.get_or_create id: jid
         app.debug "CONNECT", jid, @user
         @connection.connect jid, password, @connection_event
@@ -64,6 +65,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         @connection.buddycloud.discover domain, success, error
 
     register: (username, password, email) ->
+        username = username.toLowerCase()
         if (m = username.match(/^(.+)@(.+)$/))
             username = m[1]
             domain = m[2]

@@ -23,7 +23,7 @@ class exports.Searchbar extends BaseView
 
     on_search: EventHandler ->
         input = @$('.search input')
-        search = input.val()
+        search = input.val().toLowerCase()
 
         is_jid = /[^\/]+@[^\/]/.test(search)
         channels = @channels.filter(@filter)
