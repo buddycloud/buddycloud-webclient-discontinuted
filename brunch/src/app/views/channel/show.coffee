@@ -109,16 +109,20 @@ class exports.ChannelView extends BaseView
                     self.removeClass 'write'
 
     clickFollow: EventHandler (ev) ->
+        @$('.follow').remove()
+        delete @error
+
         app.handler.data.subscribe_user @model.get('id'), (error) =>
-            if error
-                @error = error
-                @render()
+            @error ?= error
+            @render()
 
     clickUnfollow: EventHandler (ev) ->
+        @$('.unfollow').remove()
+        delete @error
+
         app.handler.data.unsubscribe_user @model.get('id'), (error) =>
-            if error
-                @error = error
-                @render()
+            @error ?= error
+            @render()
 
     render: =>
         @update_attributes()
