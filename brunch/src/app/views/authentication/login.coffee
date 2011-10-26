@@ -1,17 +1,29 @@
 { AuthenticationView } = require 'views/authentication/base'
-{ EventHandler } = require 'util'
+{ EventHandler, getBrowserPrefix } = require 'util'
 
 
 class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        $('#home_login_jid').autoSuggestion
+        input = $('#home_login_jid')
+        input.autoSuggestion
             suffix: (val) ->
                 if val is "" or val.indexOf("@") isnt -1
                     ""
                 else
                     "@#{config.domain}"
+
+        ##
+        # webkit only saves input content when submit was successful
+        # this includes a full pagereload, which is not suitable
+        # firefox does it well and asks the user if he wants to save the passwd
+        if getBrowserPrefix() is "-webkit-"
+            $('#home_login_pwd').textSaver()
+            # only track what is before the @
+            userinput = input.parent().find('#auto-suggestion-'+input.prop 'id')
+            userinput.textSaver()
+            userinput.keyup() # update underlying inputfields
 
         @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()
