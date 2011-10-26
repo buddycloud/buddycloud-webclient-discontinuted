@@ -27,7 +27,7 @@ class exports.CommentsView extends BaseView
                 content: text.val()
                 author:
                     name: app.users.current.get 'jid'
-                in_reply_to: @model.parent.id
+                in_reply_to: @model.parent.get 'id'
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, (error) =>
                 # Re-enable form
