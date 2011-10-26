@@ -115,12 +115,16 @@ class exports.ChannelView extends BaseView
         ev.stopPropagation()
 
         self = @$('.newTopic, .answer').has(ev.target)
-        unless self.hasClass 'write'
+        self = $(ev.target) unless self.length
+        text = self.find('textarea')
+
+        unless self.hasClass 'write' or text.val() is ""
             self.addClass 'write'
-            $(document).one 'click', ->
+            $(document).click on_click = ->
                 # minimize the textarea only if the textarea is empty
-                if self.find('textarea').val() is ""
+                if text.val() is ""
                     self.removeClass 'write'
+                    $(document).unbind 'click', on_click
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').remove()
