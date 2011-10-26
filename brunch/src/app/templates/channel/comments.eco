@@ -6,9 +6,9 @@
 
     -->
   <% if @user?.hasRightToPost: %>
-  <section class="answer">
+  <section class="answer" id="<%= @model.parent.get 'id' %>-answer">
     <img class="avatar" src="<%= app.users.current.avatar %>" />
-    <textarea placeholder="post a comment..."></textarea>
+    <textarea name="comment-text" placeholder="post a comment..."></textarea>
     <div class="controls">
       <div class="button small checkbox">
         <input type="checkbox" id="shouldShareLocation<%= @random?.number %>" />

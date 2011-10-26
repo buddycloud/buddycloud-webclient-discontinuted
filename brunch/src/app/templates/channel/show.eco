@@ -23,9 +23,9 @@
   </header>
   <section class="stream">
     <% if @user?.hasRightToPost: %>
-    <section class="newTopic">
+    <section class="newTopic" id="<%= @model.get 'id' %>-topicpost">
       <img class="avatar" src="<%= app.users.current.avatar %>" />
-      <textarea placeholder="New Topic..."></textarea>
+      <textarea name="topic-text" placeholder="New Topic..."></textarea>
       <div class="controls">
 	<% if @postError?: %>
 	<p class="button"><%= @postError.message %></p>

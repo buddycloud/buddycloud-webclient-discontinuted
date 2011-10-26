@@ -148,6 +148,11 @@ class exports.ChannelView extends BaseView
         @update_attributes()
         super
 
+        if @model
+            text = @$('.newTopic textarea')
+            text.textSaver()
+            @$('.newTopic').click() unless text.val() is ""
+
         if @hidden
             @el.hide()
         do @details.render

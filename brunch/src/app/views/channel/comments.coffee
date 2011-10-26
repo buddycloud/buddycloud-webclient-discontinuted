@@ -63,6 +63,12 @@ class exports.CommentsView extends BaseView
     render: =>
         @update_attributes()
         super
+
+        if @model
+            text = @$('.answer textarea')
+            text.textSaver()
+            @$('.answer').click() unless text.val() is ""
+
         @model.forEach (comment) =>
             entry = @views[comment.cid]
             entry.render()
