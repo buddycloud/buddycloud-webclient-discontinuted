@@ -6,6 +6,7 @@ dependencies:
   - jquery.npm-hack.js
   - jquery.js
   - jquery.copycss.js
+  - jquery.textsaver.js
   - jquery.autosuggestion.js
   - transform.js
   - backbone-master.js
