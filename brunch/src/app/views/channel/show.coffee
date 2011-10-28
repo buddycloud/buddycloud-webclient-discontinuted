@@ -91,6 +91,7 @@ class exports.ChannelView extends BaseView
                     # Reset form
                     @el.find('.newTopic, .answer').removeClass 'write'
                     text.val ""
+                    text.keyup() # clear localstorage
                 else
                     console.error "postError", error
                     @show_post_error error
