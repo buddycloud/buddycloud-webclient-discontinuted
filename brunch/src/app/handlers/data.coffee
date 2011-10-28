@@ -100,6 +100,7 @@ class exports.DataHandler extends Backbone.EventHandler
             @connector.replayNotifications app.users.current.channels.get_last_timestamp()
             , (error) =>
                 @set_loading false
+                @scan_roster_for_channels()
 
     # Global loading state for MAM replaying, see on_connection_established above
     set_loading: (@isLoading) =>
@@ -165,6 +166,27 @@ class exports.DataHandler extends Backbone.EventHandler
             @get_user_subscriptions userid, =>
                 channel.set_loading false
                 callback?()
+
+    ##
+    # Background job that comes after MAM, when the connection is
+    # hopefully idle
+    scan_roster_for_channels: ->
+        @connector.get_roster (items) =>
+            app.debug "roster", items
+            items.forEach (item) =>
+                if item.subscription is 'both' or
+                   item.subscription is 'to'
+
+                    jid = item.jid
+                    unless app.channels.get jid
+                        # In roster, but channel did not become known
+                        # during MAM.
+                        # Can we discover?
+                        @connector.get_node_metadata "/user/#{item.jid}/posts", (err) =>
+                            unless err
+                                # Worked! Go subscribe...
+                                app.debug "subscribe_user", jid
+                                @subscribe_user item.jid
 
 ##
 # @param iter {Function} callback(node, callback)

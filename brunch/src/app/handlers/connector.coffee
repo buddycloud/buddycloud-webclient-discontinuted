@@ -137,3 +137,7 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'metadata', notification.node, notification.config
             else
                 app.debug "Cannot handle notification for #{notification.type}"
+
+    get_roster: (callback) =>
+        @connection.roster.get (items) ->
+            callback? items
