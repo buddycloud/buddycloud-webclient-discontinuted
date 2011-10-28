@@ -88,9 +88,12 @@ Strophe.addConnectionPlugin('roster',
             this.items = items || [];
         }
         var iq = $iq({type: 'get',  'id' : this._connection.getUniqueId('roster')}).c('query', attrs);
-        this._connection.sendIQ(iq,
-                                this._onReceiveRosterSuccess.bind(this).prependArg(userCallback),
-                                this._onReceiveRosterError.bind(this).prependArg(userCallback));
+	var that = this;
+        this._connection.sendIQ(iq, function success(stanza) {
+	    that._onReceiveRosterSuccess(userCallback, stanza);
+	}, function error(stanza) {
+	    that._onReceiveRosterError(userCallback, stanza);
+	});
     },
     /** Function: registerCallback
      * register callback on roster (presence and iq)
