@@ -41,14 +41,16 @@
 			localStorage.setItem(tsName, obj.val());
 		});
 	}
-	
+
 	function get_tsName(obj, m) {
 		var tsName = obj.parent().attr('id');
-		if(tsName === '') {
+		if(!tsName) {
 			tsName = window.location.host+window.location.pathname;
 		}
-		if(obj.attr('name') !== '') {
+		if(obj.attr('name')) {
 			tsName += '_'+obj.attr('name');
+		} else if(obj.attr('id')) {
+			tsName += '_'+obj.attr('id');
 		} else {
 			tsName += "_"+obj.get(0).tagName;
 			tsName += tsVars.noNameCounter;
