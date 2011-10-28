@@ -89,7 +89,7 @@ class exports.ChannelView extends BaseView
                 @isPosting = false
                 unless error
                     # Reset form
-                    @el.find('.newTopic, .answer').removeClass 'write'
+                    @el.find('.newTopic').removeClass 'write'
                     text.val ""
                     text.keyup() # clear localstorage
                 else
