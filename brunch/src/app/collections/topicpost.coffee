@@ -11,8 +11,9 @@ class exports.TopicPosts extends Collection
         @parent.bind 'post', (post) =>
             @get_or_create post
         @bind 'add', (post) =>
+            # Hook 'change' as Backbone Collections only sort on 'add'
             post.bind 'change', =>
-                @sort()
+                @sort(silent: true)
 
     get_or_create: (post) ->
         if post.in_reply_to

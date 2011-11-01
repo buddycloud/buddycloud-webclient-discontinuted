@@ -9,8 +9,6 @@ class exports.TopicPost extends Post
         @comments = new Posts parent:this
         # Bubble changes up:
         @comments.bind 'all', =>
-            console.warn "comments.sort"
-            @comments.sort(silent: true)
             @trigger 'change'
         super
 
