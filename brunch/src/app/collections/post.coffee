@@ -12,4 +12,4 @@ class exports.Posts extends Collection
             @get_or_create post
 
     comparator: (post) ->
-        - new Date(post.get 'published').getTime()
+        - new Date(post.get_last_update()).getTime()

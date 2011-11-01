@@ -22,3 +22,6 @@ class exports.Post extends Model
     update_attributes: =>
         if (jid = @get('author')?.jid)
             @author = app.users.get_or_create id: jid
+
+    get_last_update: =>
+        @get('updated') or @get('published') or '1970-01-01T00:00:00Z'

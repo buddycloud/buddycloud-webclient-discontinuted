@@ -48,18 +48,24 @@ class exports.CommentsView extends BaseView
         p.text(error.text or error.condition)
 
     add_comment: (comment) =>
-        entry = @views[comment.cid] ?= new PostView
+        view = @views[comment.cid] ?= new PostView
             type:'comment'
             model:comment
             parent:this
+        @insert_comment_view view
 
-        i = @model.indexOf(comment)
+        comment.bind 'change', =>
+            view.el.remove()
+            @insert_comment_view view
+
+    insert_comment_view: (view) =>
+        i = @model.indexOf(view.model)
         olderComment = @views[@model.at(i + 1)?.cid]
         if olderComment
-            olderComment.el.after entry.el
+            olderComment.el.after view.el
         else
-            @el.prepend entry.el
-        do entry.render
+            @el.prepend view.el
+        view.render()
 
     render: =>
         @update_attributes()

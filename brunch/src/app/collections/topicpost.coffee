@@ -10,6 +10,9 @@ class exports.TopicPosts extends Collection
     initialize: ->
         @parent.bind 'post', (post) =>
             @get_or_create post
+        @bind 'add', (post) =>
+            post.bind 'change', =>
+                @sort()
 
     get_or_create: (post) ->
         if post.in_reply_to
@@ -19,9 +22,5 @@ class exports.TopicPosts extends Collection
             super
 
     comparator: (post) ->
-        latest = new Date(post.get 'published').getTime()
-        post.comments.forEach (comment) ->
-            published = new Date(post.get 'published').getTime()
-            if published > latest
-                published = latest
-        - latest
+        console.log "TopicPosts.comparator", post, (- new Date(post.get_last_update()).getTime())
+        - new Date(post.get_last_update()).getTime()

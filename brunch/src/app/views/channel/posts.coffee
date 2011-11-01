@@ -5,24 +5,30 @@ class exports.PostsView extends Backbone.View
         # INFO @el will be set by parent
         @el.attr id:@cid
         @views = {}
-        @model.bind "change", @render
+        @model.bind 'change', @render
         @model.posts.forEach @add_post
-        @model.posts.bind "add", @add_post
+        @model.posts.bind 'add', @add_post
 
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported
     add_post: (post) =>
-        entry = @views[post.cid] ?= new TopicPostView model:post, parent:this
+        view = @views[post.cid] ?= new TopicPostView model:post, parent:this
+        @insert_post_view view
 
-        i = @model.posts.indexOf(post)
+        post.bind 'change', =>
+            view.el.remove()
+            @insert_post_view view
+
+    insert_post_view: (view) =>
+        i = @model.posts.indexOf(view.model)
         olderPost = @views[@model.posts.at(i + 1)?.cid]
         if olderPost
-            olderPost.el.before entry.el
+            olderPost.el.before view.el
         else
-            @el.append entry.el
-        do entry.render
+            @el.append view.el
+        view.render()
 
     render: =>
-        for cid, entry of @views
-            entry.render()
+        for cid, view of @views
+            view.render()
