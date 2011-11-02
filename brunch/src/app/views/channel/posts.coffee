@@ -2,6 +2,7 @@
 
 class exports.PostsView extends Backbone.View
     tutorial: require 'templates/channel/tutorial'
+    empty:    require 'templates/channel/empty'
 
     initialize: ({@parent, @el}) ->
         # INFO @el will be set by parent
@@ -15,7 +16,7 @@ class exports.PostsView extends Backbone.View
     # TODO add different post type switch here
     # currently only TopicPosts are supported
     add_post: (post) =>
-        @$('.tutorial').remove()
+        @$('.tutorial, .empty').remove()
         view = @views[post.cid] ?= new TopicPostView model:post, parent:this
         @insert_post_view view
 
@@ -38,6 +39,9 @@ class exports.PostsView extends Backbone.View
             view.render()
             count++
 
-        @$('.tutorial').remove()
+        @$('.tutorial, .empty').remove()
         if not @parent.isLoading and count is 0
-            @el.append @tutorial()
+            if app.users.current.get('id') is @parent.model.get('id') # FIXME show tutorial for all users which have write access
+                @el.append @tutorial()
+            else
+                @el.append @empty()
