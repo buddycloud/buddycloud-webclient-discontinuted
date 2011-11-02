@@ -23,7 +23,7 @@ class exports.ChannelEntry extends BaseView
             @parent.parent.setCurrentChannel @model
 
     isPersonal : (a, b) =>
-        (@channel?.metadata?.owner?.value is app.users.current.get('jid')) and (a ? true) or (b ? false)
+        (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
 
     isSelected : (a, b) =>
         (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)

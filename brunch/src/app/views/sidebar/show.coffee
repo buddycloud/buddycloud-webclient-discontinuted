@@ -36,7 +36,10 @@ class exports.Sidebar extends Backbone.View
             entry = new ChannelEntry model:channel, parent:this
             @views[channel.cid] = entry
             @current ?= entry
-            @el.append entry.el
+            if entry.isPersonal()
+                entry.el.insertBefore @search.el
+            else
+                @el.append entry.el
         entry.render()
         entry
 
@@ -88,8 +91,14 @@ class exports.Sidebar extends Backbone.View
             unless (view = @views[channel.cid])
                 view = @new_channel_entry channel
             view.el.css opacity:1
-            @el.append view.el
+            if view.isPersonal()
+                view.el.insertBefore @search.el
+            else
+                @el.append view.el
             delete views[channel.cid]
 
         for cid, view of views
-            @el.append view.el
+            if view.isPersonal()
+                view.el.insertBefore @search.el
+            else
+                @el.append view.el
