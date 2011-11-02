@@ -1,0 +1,8 @@
+<div class="channel tutorial">
+  <div class="holder">
+    <span class="arrow">➽</span>
+    <span class="info">
+        start typing into the searchbar to filter your sidebar or enter a full user address (like name@domain) to navigate to its channel ...
+    </span>
+  </div>
+</div>

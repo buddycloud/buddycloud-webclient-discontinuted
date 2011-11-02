@@ -6,6 +6,7 @@
 # * subscribed to
 # * viewed recently
 class exports.Sidebar extends Backbone.View
+    tutorial: require 'templates/sidebar/tutorial'
     template: require 'templates/sidebar/show'
 
     initialize: ({@parent}) ->
@@ -87,7 +88,8 @@ class exports.Sidebar extends Backbone.View
             view.el.css opacity:0.5
             views[cid] = view
 
-        @parent.channels.filter(@search.filter).forEach (channel) =>
+        channels = @parent.channels.filter(@search.filter)
+        channels.forEach (channel) =>
             unless (view = @views[channel.cid])
                 view = @new_channel_entry channel
             view.el.css opacity:1
@@ -102,3 +104,7 @@ class exports.Sidebar extends Backbone.View
                 view.el.insertBefore @search.el
             else
                 @el.append view.el
+
+        @$('.tutorial').remove()
+        if channels.length < 2
+            @el.append @tutorial()
