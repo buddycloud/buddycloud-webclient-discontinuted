@@ -17,7 +17,7 @@ class exports.PostsView extends Backbone.View
         @insert_post_view view
 
         post.bind 'change', =>
-            view.el.remove()
+            view.el.detach()
             @insert_post_view view
 
     insert_post_view: (view) =>
