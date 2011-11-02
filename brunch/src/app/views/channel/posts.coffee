@@ -1,6 +1,8 @@
 { TopicPostView } = require 'views/channel/topicpost'
 
 class exports.PostsView extends Backbone.View
+    tutorial: require 'templates/channel/tutorial'
+
     initialize: ({@parent, @el}) ->
         # INFO @el will be set by parent
         @el.attr id:@cid
@@ -13,6 +15,7 @@ class exports.PostsView extends Backbone.View
     # TODO add different post type switch here
     # currently only TopicPosts are supported
     add_post: (post) =>
+        @$('.tutorial').remove()
         view = @views[post.cid] ?= new TopicPostView model:post, parent:this
         @insert_post_view view
 
@@ -30,5 +33,11 @@ class exports.PostsView extends Backbone.View
         view.render()
 
     render: =>
+        count = 0
         for cid, view of @views
             view.render()
+            count++
+
+        @$('.tutorial').remove()
+        if not @parent.isLoading and count is 0
+            @el.append @tutorial()
