@@ -1,6 +1,5 @@
 { BaseView } = require 'views/base'
-{ transitionendEvent, getBrowserPrefix, EventHandler } = require 'util'
-prefix = getBrowserPrefix()
+{ transitionendEvent, EventHandler } = require 'util'
 
 
 class exports.ChannelEntry extends BaseView
@@ -39,17 +38,20 @@ class exports.ChannelEntry extends BaseView
         # the channel has an offset of 0 - it should stay where it is. so stop
         return off if offset is 0 or @el.hasClass 'bubbleUp'
         channels = $('#channels')
-        distance = 20 - offset # TODO add searchbar height
+        search = @parent.search.el
+        distance = 20 - offset + search.height() + search.position().top
         # enable transitions
         channels.removeClass 'curtainsDown'
         # undock => sets z-index
         @el.addClass 'bubbleUp'
         #  bind the transitionend to the reset function which resets the DOM after the animation
-        @el.one transitionendEvent, @reset_bubble
+        #@el.one transitionendEvent, @reset_bubble
         # enable transitions again and start to move the channels above the moved channel to close the gap
         channels.addClass 'makePlace'
         # animate the channel to bubble up
-        @el.css "#{prefix}transform", "translateY(#{distance}px)"
+        @el.animate
+            translateY:"+=#{distance}"
+            complete: @reset_bubble
 
 
     reset_bubble: (ev) =>
@@ -59,7 +61,8 @@ class exports.ChannelEntry extends BaseView
         # extract the bubbling channel from the DOM, remove the classes, reset the transformation and add it at the top
         #@$.detach()
         @el.removeClass 'undock bubbleUp'
-        @el.css "#{prefix}transform", ""
+        #@el.css "#{prefix}transform", ""
         #@$.insertAfter personal_channel
         channels.removeClass 'makePlace'
+        @parent.render()
 

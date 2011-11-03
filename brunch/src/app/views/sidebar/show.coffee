@@ -26,6 +26,7 @@ class exports.Sidebar extends Backbone.View
         @parent.channels.forEach        @new_channel_entry
         @parent.channels.bind 'add',    @new_channel_entry
         @parent.channels.bind 'remove', @remove_channel_entry
+        @parent.channels.bind 'change', @render
 
         unless app.views.overview?
             app.views.overview = new ChannelOverView
@@ -68,6 +69,9 @@ class exports.Sidebar extends Backbone.View
         @current?.render()
         @current?.bubble()
         old?.render()
+
+    bubble: (channel) =>
+        @views[channel.cid]?.bubble()
 
     # sliding in animation
     moveIn: (t = 200) ->

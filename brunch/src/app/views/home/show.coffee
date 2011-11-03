@@ -14,6 +14,10 @@ class exports.HomeView extends Backbone.View
         @views = {} # this contains the channelnode views
         @timeouts = {} # this contains the channelview remove timeouts
         @channels = new Channels
+        @channels.comparator = (channel) ->
+            a = new Date(channel.last_touched)
+            b = new Date(channel.nodes.get('posts')?.posts.at(0)?.get_last_update() or 0)
+            a.getTime() - b.getTime()
 
         app.users.current.channels.bind 'add', (channel) =>
             @channels.get_or_create channel
@@ -61,6 +65,9 @@ class exports.HomeView extends Backbone.View
             @timeouts[oldChannel.cid] = setTimeout ( =>
                 @channels.remove oldChannel
             ), 15*60*1000 # 15 min
+
+        #@channels.touch channel, silent:true
+        #@sidebar.bubble channel
 
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel

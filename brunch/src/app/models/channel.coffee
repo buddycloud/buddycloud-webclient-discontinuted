@@ -8,6 +8,7 @@
 class exports.Channel extends Model
     initialize: ->
         @id = @get 'id'
+        @last_touched = new Date
         @nodes = new NodeStore channel:this
         @avatar = gravatar @id, s:50, d:'retro'
         @nodes.fetch()

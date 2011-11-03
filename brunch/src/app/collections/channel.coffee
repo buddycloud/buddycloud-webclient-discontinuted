@@ -17,6 +17,8 @@ class exports.Channels extends Collection
         super
         @bind 'add', (channel, channels, opts) =>
             @trigger "add:#{channel.get 'id'}", channel, channels, opts
+            channel.bind 'post:change', (post) =>
+                @touch channel, date:post.get_last_update()
         @bind 'remove', (channel, channels, opts) =>
             @trigger "remove:#{channel.get 'id'}", channel, channels, opts
 
@@ -35,6 +37,11 @@ class exports.Channels extends Collection
             else
                 # nothing to compare with, channel must be empty, so we can ignore it
                 no
+
+    touch: (channel, opts = {}) =>
+        channel.last_touched = opts.date or new Date
+        @sort(silent:true)
+        @trigger 'change' unless opts.silent
 
 
 # used in models/user
