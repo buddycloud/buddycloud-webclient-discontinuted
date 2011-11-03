@@ -39,10 +39,10 @@ class exports.HomeView extends Backbone.View
         @el.show()
 
     new_channel_view: (channel) =>
+        channel = @channels.get_or_create channel, silent:yes
         unless (view = @views[channel.cid])
             view = new ChannelView model:channel, parent:this
             @views[channel.cid] = view
-            @channels.get_or_create channel, silent:yes
             @el.append view.el
             view.trigger 'hide'
         view

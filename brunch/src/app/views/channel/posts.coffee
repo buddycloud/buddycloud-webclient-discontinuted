@@ -28,7 +28,7 @@ class exports.PostsView extends Backbone.View
         i = @model.posts.indexOf(view.model)
         olderPost = @views[@model.posts.at(i + 1)?.cid]
         if olderPost
-            olderPost.el.before view.el
+            view.el.insertBefore olderPost.el
         else
             @el.append view.el
         view.render()
