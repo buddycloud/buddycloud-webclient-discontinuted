@@ -55,7 +55,7 @@ class exports.CommentsView extends BaseView
         @insert_comment_view view
 
         comment.bind 'change', =>
-            view.el.remove()
+            view.el.detach()
             @insert_comment_view view
 
     insert_comment_view: (view) =>
