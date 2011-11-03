@@ -23,5 +23,4 @@ class exports.TopicPosts extends Collection
             super
 
     comparator: (post) ->
-        console.log "TopicPosts.comparator", post, (- new Date(post.get_last_update()).getTime())
         - new Date(post.get_last_update()).getTime()
