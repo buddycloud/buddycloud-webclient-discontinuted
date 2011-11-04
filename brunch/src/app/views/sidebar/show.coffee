@@ -75,7 +75,7 @@ class exports.Sidebar extends Backbone.View
 
     # sliding in animation
     moveIn: (t = 200) ->
-        @el.animate(left:"0px", t)
+        @el.animate(left:"0", t)
         @overview.show(t)
         @hidden = no
 
