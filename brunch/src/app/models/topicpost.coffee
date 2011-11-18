@@ -10,8 +10,6 @@ class exports.TopicPost extends Post
         # Bubble changes up:
         @comments.bind 'all', =>
             @trigger 'change'
-        @comments.bind 'change:unread', =>
-            @trigger 'change:unread'
         super
 
     # Also dives into comments
@@ -22,14 +20,3 @@ class exports.TopicPost extends Post
             if last < last1
                 last = last1
         last
-
-    count_unread: ->
-        count = 0
-        if @get('unread')
-            count++
-        count += @comments.count_unread()
-        count
-
-    mark_read: ->
-        @unset 'unread'
-        @comments.mark_read()

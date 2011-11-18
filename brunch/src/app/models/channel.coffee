@@ -46,6 +46,25 @@ class exports.Channel extends Model
         else
             @trigger 'loading:stop'
 
+    count_unread: ->
+        last_view = @get('last_view') or '1970-01-01T00:00:00'
+        count = 0
+        @nodes.get('posts').posts.each (post) ->
+            if post.get('updated') > last_view
+                count++
+            post.comments.each (comment) ->
+                if comment.get('updated') > last_view
+                    count++
+        count
+
     mark_read: ->
-        @nodes.each (node) ->
-            node.mark_read()
+        last_view = '1970-01-01T00:00:00'
+        @nodes.get('posts').posts.each (post) ->
+            last_update = post.get_last_update()
+            if last_update > last_view
+                last_view = last_update
+            post.comments.each (comment) ->
+                last_update = comment.get_last_update()
+                if last_update > last_view
+                    last_view = last_update
+        @set { last_view }

@@ -11,9 +11,6 @@ class exports.Node extends Model
         # Subscribers:
         @users    = new Users parent:this
         @posts   ?= new Posts parent:this
-        @posts.bind 'change:unread', =>
-            app.debug "node got unread"
-            @trigger 'change:unread'
 
     toJSON: (full) ->
         result = super
@@ -51,9 +48,3 @@ class exports.Node extends Model
             condition: error.condition
             text: error.text
         @trigger 'error', error
-
-    count_unread: ->
-        @posts.count_unread()
-
-    mark_read: ->
-        @posts.mark_read()
