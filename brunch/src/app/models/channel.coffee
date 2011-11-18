@@ -67,4 +67,4 @@ class exports.Channel extends Model
                 last_update = comment.get_last_update()
                 if last_update > last_view
                     last_view = last_update
-        @set { last_view }
+        @save { last_view }
