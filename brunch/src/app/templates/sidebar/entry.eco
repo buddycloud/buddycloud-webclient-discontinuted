@@ -1,8 +1,8 @@
 <div class="<%= @isPersonal("personal","") %> channel <%= @isSelected("selected","") %>">
   <div class="holder">
     <div class="avatar" title="<%= @channel?.metadata?.title?.value or @channel?.id %>" style="background-image: url(<%= @model.avatar %>)">
-      <% if @channelmessage?: %>
-        <span class="channelpost counter"><%= @channel.channelmessage.count %></span>
+      <% if @unread_posts_count: %>
+        <span class="channelpost counter"><%= @unread_posts_count %></span>
       <% end %>
       <% if @personalmessage?: %>
         <span class="message counter"><%= @channel.personalmessage.count %></span>

@@ -18,7 +18,10 @@ class exports.Channel extends Model
         ["posts", "status", "subscriptions",
          "geo/previous", "geo/current", "geo/next"].forEach (type) =>
             nodeid = "/user/#{@id}/#{type}"
-            @nodes.get_or_create {id:nodeid, nodeid}
+            node = @nodes.get_or_create {id:nodeid, nodeid}
+            node.bind 'change:unread', =>
+                app.debug "channel got unread"
+                @trigger 'change:node:unread'
 
     push_post: (nodeid, post) ->
         @trigger 'post', nodeid, post
@@ -42,3 +45,7 @@ class exports.Channel extends Model
             @trigger 'loading:start'
         else
             @trigger 'loading:stop'
+
+    mark_read: ->
+        @nodes.each (node) ->
+            node.mark_read()

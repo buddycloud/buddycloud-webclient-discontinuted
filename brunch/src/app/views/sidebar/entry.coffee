@@ -9,6 +9,8 @@ class exports.ChannelEntry extends BaseView
         super
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
+        # Update unread counter:
+        @model.bind 'change:node:unread', @render
 
     events:
         "click": "click_entry"
@@ -20,6 +22,7 @@ class exports.ChannelEntry extends BaseView
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model
             @parent.parent.setCurrentChannel @model
+            @model.mark_read()
 
     isPersonal : (a, b) =>
         (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
@@ -31,6 +34,7 @@ class exports.ChannelEntry extends BaseView
         @channel = @model.toJSON yes
         if (status = @model.nodes.get 'status')
             @status = status.toJSON yes
+        @unread_posts_count = @model.nodes.get('posts').count_unread()
 
     bubble: =>
         return # FIXME turned off because it doesnt work right

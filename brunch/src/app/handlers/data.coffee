@@ -84,6 +84,8 @@ class exports.DataHandler extends Backbone.EventHandler
     # event callbacks
 
     on_node_post: (post, nodeid) =>
+        unless @isLoading
+            post.unread = true
         channel = app.channels.get_or_create id:nodeid
         channel.push_post nodeid, post
 

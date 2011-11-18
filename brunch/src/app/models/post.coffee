@@ -17,6 +17,9 @@ class exports.Post extends Model
         result = super
         @bind 'change', @update_attributes
         do @update_attributes
+        @bind 'change', =>
+            if @hasChanged('unread')
+                @trigger 'change:unread'
         result
 
     update_attributes: =>
@@ -25,3 +28,6 @@ class exports.Post extends Model
 
     get_last_update: =>
         @get('updated') or @get('published') or "#{new Date(0)}"
+
+    mark_read: ->
+        @unset 'unread'

@@ -14,6 +14,8 @@ class exports.TopicPosts extends Collection
             # Hook 'change' as Backbone Collections only sort on 'add'
             post.bind 'change', =>
                 @sort(silent: true)
+            post.bind 'change:unread', =>
+                @trigger 'change:unread'
 
     get_or_create: (post) ->
         if post.in_reply_to
@@ -24,3 +26,14 @@ class exports.TopicPosts extends Collection
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()
+
+    count_unread: ->
+        count = 0
+        @each (post) ->
+            if post.count_unread?
+                count += post.count_unread()
+        count
+
+    mark_read: ->
+        @each (post) ->
+            post.mark_read()
