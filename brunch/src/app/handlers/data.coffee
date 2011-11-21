@@ -111,7 +111,10 @@ class exports.DataHandler extends Backbone.EventHandler
             @refresh_channel app.users.target.get('id')
         else
             @set_loading true
-            @connector.replayNotifications app.users.current.channels.get_last_timestamp()
+            # Replay starting one day before last view
+            lastView = new Date(app.users.current.channels.get_last_timestamp())
+            mamStart = new Date(lastView - 23 * 60 * 60 * 1000).toISOString()
+            @connector.replayNotifications mamStart
             , (error) =>
                 @set_loading false
                 @scan_roster_for_channels()

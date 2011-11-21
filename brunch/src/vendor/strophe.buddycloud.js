@@ -353,9 +353,9 @@ Strophe.addConnectionPlugin('buddycloud', {
         var conn = this._connection;
         var queryAttrs = { xmlns: Strophe.NS.MAM };
         if (start)
-            queryAttrs.start = start.toISOString();
+            queryAttrs.start = start.toISOString ? start.toISOString() : start;
         if (end)
-            queryAttrs.end = end.toISOString();
+            queryAttrs.end = end.toISOString ? end.toISOString() : end;
         var iq = $iq({ from: conn.jid,
                        to: this.channels.jid,
                        type: 'get' }).

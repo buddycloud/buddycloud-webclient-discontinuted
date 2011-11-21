@@ -86,18 +86,16 @@ class exports.UserChannels extends exports.Channels
         @parent.set channel_ids: @map((channel) -> channel.get 'id')
         channel
 
+    ##
+    # From when do we need to catch up?
+    #
+    # Probably since newest post viewed
     get_last_timestamp: ->
         timestamp = null
         @each (channel) ->
-            channel.nodes.each (node) ->
-                node.posts.each (post) ->
-                    openerTimestamp = post.get('updated')
-                    if openerTimestamp > timestamp
-                        timestamp = openerTimestamp
-                    post.comments?.each (comment) ->
-                        commentTimestamp = comment.get('updated')
-                        if commentTimestamp > timestamp
-                            timestamp = commentTimestamp
+            last_view = channel.get 'last_view'
+            if not timestamp or last_view > timestamp
+                timestamp = last_view
         timestamp
 
 # global channel collection store
