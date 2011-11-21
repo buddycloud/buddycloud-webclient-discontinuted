@@ -47,7 +47,7 @@ class exports.Channel extends Model
             @trigger 'loading:stop'
 
     count_unread: ->
-        last_view = @get('last_view') or '1970-01-01T00:00:00'
+        last_view = @get('last_view') or (new Date 0).toISOString()
         count = 0
         @nodes.get('posts').posts.each (post) ->
             if post.get('updated') > last_view
@@ -58,7 +58,7 @@ class exports.Channel extends Model
         count
 
     mark_read: ->
-        last_view = '1970-01-01T00:00:00'
+        last_view = (new Date 0).toISOString()
         @nodes.get('posts').posts.each (post) ->
             last_update = post.get_last_update()
             if last_update > last_view
