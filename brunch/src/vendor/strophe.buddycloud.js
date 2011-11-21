@@ -204,6 +204,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                     console.error("Cannot parse post", postEl, e.stack || e);
                 }
         }
+	this._applyRSM(el, posts);
         callback(posts);
     },
 
@@ -276,6 +277,15 @@ Strophe.addConnectionPlugin('buddycloud', {
             return post;
         };
         return parsers;
+    },
+
+    _applyRSM: function(el, target) {
+	var rsmEl;
+	if ((rsmEl = el.getElementsByTagNameNS(Strophe.NS.RSM, 'set')[0])) {
+	    var lastEl = rsmEl.getElementsByTagName('last');
+	    if (lastEl)
+		target.rsmLast = lastEl.textContent;
+	}
     },
 
     getMetadata: function (jid, node, succ, err, timeout) {

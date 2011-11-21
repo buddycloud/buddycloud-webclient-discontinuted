@@ -141,6 +141,7 @@ Extend connection object to have plugin name 'pubsub'.
                              Strophe.NS.PUBSUB+"#meta-data");
         Strophe.addNamespace('ATOM', "http://www.w3.org/2005/Atom");
         Strophe.addNamespace('ATOM_THR', "http://purl.org/syndication/thread/1.0");
+	Strophe.addNamespace('RSM', "http://jabber.org/protocol/rsm");
 
         if (conn.disco)
             conn.disco.addFeature(Strophe.NS.PUBSUB);
@@ -378,11 +379,16 @@ Extend connection object to have plugin name 'pubsub'.
     Used to retrieve the persistent items from the pubsub node.
 
     */
-    items: function(node, success, error, timeout) {
+    items: function(options, success, error, timeout) {
         //ask for all items
+	var node = options.node || options;
         var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
           .c('items', {node:node});
+	if (options.rsmAfter)
+	    iq.up().
+		c('set', { xmlns: Strophe.NS.RSM }).
+		c('after').t(options.rsmAfter);
 
         return this._connection.sendIQ(iq.tree(), success, error, timeout);
     },

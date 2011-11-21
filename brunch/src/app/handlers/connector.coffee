@@ -70,7 +70,7 @@ class exports.Connector extends Backbone.EventHandler
 #             app.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
-    get_node_posts: (nodeid, callback) =>
+    get_node_posts: (nodeid, rsmAfter, callback) =>
         @request (done) =>
             success = (posts) =>
                 for post in posts
@@ -79,6 +79,8 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
+                if posts.rsmLast
+                    @trigger 'posts:rsm:last', nodeid, posts.rsmLast
                 done()
                 callback? null, posts
             error = (error) =>
@@ -87,7 +89,7 @@ class exports.Connector extends Backbone.EventHandler
                 done()
                 callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
-                nodeid, success, error, @connection.timeout)
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>

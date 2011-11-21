@@ -7,6 +7,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @get_node_subscriptions = @connector.get_node_subscriptions
 
         @connector.bind 'post', @on_node_post
+        @connector.bind 'posts:rsm:last', @on_node_posts_rsm_last
         @connector.bind 'affiliation', @on_affiliation
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
@@ -17,7 +18,8 @@ class exports.DataHandler extends Backbone.EventHandler
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
-        @connector.get_node_posts nodeid, callback
+        rsm_after = node.get?('rsm_last')
+        @connector.get_node_posts nodeid, rsm_after, callback
 
     get_node_metadata: (node, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -88,6 +90,12 @@ class exports.DataHandler extends Backbone.EventHandler
             post.unread = true
         channel = app.channels.get_or_create id:nodeid
         channel.push_post nodeid, post
+
+    on_node_posts_rsm_last: (nodeid, rsmLast) =>
+        channel = app.cahnnels.get_or_create id:nodeid
+        # FIXME: more indirection like above?
+        node = channel.nodes.get_or_create id:nodeid
+        node.push_posts_rsm_last rsmLast
 
     on_node_error: (nodeid, error) =>
         channel = app.channels.get_or_create id:nodeid

@@ -48,3 +48,11 @@ class exports.Node extends Model
             condition: error.condition
             text: error.text
         @trigger 'error', error
+
+    push_posts_rsm_last: (rsm_last) ->
+        if rsm_last is @get('rsm_last')
+            @save history_end_reached: yes
+        @save { rsm_last }
+
+    can_load_more: ->
+        not @has 'history_end_reached'

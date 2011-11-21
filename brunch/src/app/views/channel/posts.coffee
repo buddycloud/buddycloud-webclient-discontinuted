@@ -12,6 +12,10 @@ class exports.PostsView extends Backbone.View
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
+        @$('.topic.loader.foot').waypoint (ev, direction) =>
+            if direction is 'down'
+                @load_more()
+
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported
@@ -45,3 +49,10 @@ class exports.PostsView extends Backbone.View
                 @el.append @tutorial()
             else
                 @el.append @empty()
+
+    load_more: =>
+        if @model.can_load_more()
+            foot = @$('.topic.loader.foot')
+            foot.append('<span class="spinner"> </span>')
+            app.handler.data.get_node_posts @model, =>
+                foot.empty()
