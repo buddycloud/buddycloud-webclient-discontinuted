@@ -1,5 +1,5 @@
 window.app =
-    version: '0.0.0-30'
+    version: '0.0.0-35'
     handler: {}
     views: {}
     affiliations: [ # all possible pubsub affiliations
