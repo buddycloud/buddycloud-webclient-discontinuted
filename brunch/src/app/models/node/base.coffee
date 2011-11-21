@@ -54,7 +54,7 @@ class exports.Node extends Model
         # same <last/> as previous page
         if not rsm_last or
            rsm_last is @get('rsm_last')
-            @save history_end_reached: yes
+            @set history_end_reached: yes
         @save { rsm_last }
 
     can_load_more: ->

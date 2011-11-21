@@ -79,8 +79,8 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
-                if posts.rsmLast
-                    @trigger 'posts:rsm:last', nodeid, posts.rsmLast
+                if posts.rsm
+                    @trigger 'posts:rsm:last', nodeid, posts.rsm.last
                 done()
                 callback? null, posts
             error = (error) =>
