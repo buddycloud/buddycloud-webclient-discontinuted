@@ -50,7 +50,10 @@ class exports.Node extends Model
         @trigger 'error', error
 
     push_posts_rsm_last: (rsm_last) ->
-        if rsm_last is @get('rsm_last')
+        # No RSM support or
+        # same <last/> as previous page
+        if not rsm_last or
+           rsm_last is @get('rsm_last')
             @save history_end_reached: yes
         @save { rsm_last }
 

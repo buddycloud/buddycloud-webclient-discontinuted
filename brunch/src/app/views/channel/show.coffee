@@ -145,6 +145,9 @@ class exports.ChannelView extends BaseView
                 @set_error error
             @render()
 
+    on_scroll_bottom: ->
+        @postsview?.on_scroll_bottom()
+
     render: =>
         @update_attributes()
         super

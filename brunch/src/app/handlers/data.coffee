@@ -18,6 +18,10 @@ class exports.DataHandler extends Backbone.EventHandler
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
+        @connector.get_node_posts nodeid, null, callback
+
+    get_more_node_posts: (node, callback) ->
+        nodeid = node.get?('nodeid') or node
         rsm_after = node.get?('rsm_last')
         @connector.get_node_posts nodeid, rsm_after, callback
 
@@ -92,7 +96,7 @@ class exports.DataHandler extends Backbone.EventHandler
         channel.push_post nodeid, post
 
     on_node_posts_rsm_last: (nodeid, rsmLast) =>
-        channel = app.cahnnels.get_or_create id:nodeid
+        channel = app.channels.get_or_create id:nodeid
         # FIXME: more indirection like above?
         node = channel.nodes.get_or_create id:nodeid
         node.push_posts_rsm_last rsmLast
