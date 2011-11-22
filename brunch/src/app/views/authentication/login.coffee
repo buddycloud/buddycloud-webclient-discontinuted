@@ -21,6 +21,7 @@ class exports.LoginView extends AuthenticationView
         # firefox does it well and asks the user if he wants to save the passwd
         if getBrowserPrefix() is "-webkit-"
             # get elements from login form (index.html)
+            warning = $('label[for="store_local"] > div')
             checkbox = $('#store_local')
             passwdinput = $('#home_login_pwd')
             userinput = input.parent().find('#auto-suggestion-'+input.prop 'id')
@@ -30,22 +31,27 @@ class exports.LoginView extends AuthenticationView
 
             if localStorage.getItem(LSlpk) is "true"
                 passwdinput.textSaver()
+                passwdinput.keyup() # update underlying inputfields
                 # only track what is before the @
                 userinput.textSaver()
                 userinput.keyup() # update underlying inputfields
                 # letz the user choose if he really wants it to be saved in the localstorage
                 checkbox.prop 'checked', yes
+                warning.show()
             #bind checkbox
             checkbox.change ->
                 if checkbox.is ':checked'
                     passwdinput.textSaver()
+                    passwdinput.keyup() # update underlying inputfields
                     userinput.textSaver()
                     userinput.keyup() # update underlying inputfields
                     localStorage.setItem(LSlpk, yes)
+                    warning.show()
                 else
                     passwdinput.trigger 'textsaver:remove'
                     userinput.trigger 'textsaver:remove'
                     localStorage.setItem(LSlpk, no)
+                    warning.hide()
 
         @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()

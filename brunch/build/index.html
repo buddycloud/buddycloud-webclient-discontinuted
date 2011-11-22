@@ -35,7 +35,12 @@
           <input type="text" id="home_login_jid" name="login-jid" placeholder="Jabber ID" required />
           <label for="home_login_pwd">Password</label>
           <input type="password" id="home_login_pwd" name="login-pwd" placeholder="Password" required />
-          <label for="store_local"><input type="checkbox" id="store_local"/> Store Password local?</label>
+          <span>
+            <label for="store_local">
+              <input type="checkbox" id="store_local"/> Store Password local?
+              <div>stored as plain text on device</div>
+            </label>
+          </span>
           <div class="leftBox">
             <span class="spinner">Logging in</span>
             <a href="#" class="resetPassword">Forgot password?</a>
