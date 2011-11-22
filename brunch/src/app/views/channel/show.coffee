@@ -50,8 +50,7 @@ class exports.ChannelView extends BaseView
         @el.show()
 
         # Not subscribed? Refresh!
-        unless @model.get('posts_synced')
-            app.handler.data.refresh_channel(@model.get 'id')
+        app.handler.data.refresh_channel(@model.get 'id')
 
     hide: =>
         @hidden = true

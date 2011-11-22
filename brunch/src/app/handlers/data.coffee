@@ -21,6 +21,9 @@ class exports.DataHandler extends Backbone.EventHandler
         if typeof node is 'string'
             channel = app.channels.get_or_create id:nodeid
             node = channel.nodes.get_or_create id:nodeid
+            # Not requesting a next page here
+            node.unset 'history_end_reached'
+
         @connector.get_node_posts nodeid, null, (err, posts) =>
             unless err
                 # Success retrieving first page?
@@ -175,8 +178,12 @@ class exports.DataHandler extends Backbone.EventHandler
 
     refresh_channel: (userid, callback) ->
         channel = app.channels.get_or_create id: userid
+        if channel.isLoading
+            return
         channel.set_loading true
+
         forEachUserNode userid, (nodeid, callback2) =>
+            node = channel.nodes.get_or_create id:nodeid
             # 3: get_node_posts + get_node_metadata + get_node_subscriptions
             pending = 3
             done = ->
@@ -184,7 +191,10 @@ class exports.DataHandler extends Backbone.EventHandler
                 if pending < 1
                     callback2()
 
-            @get_node_posts nodeid, done
+            unless node.posts_synced
+                @get_node_posts nodeid, done
+            else
+                done()
             @get_node_metadata nodeid, done
             @get_node_subscriptions nodeid, done
         , =>

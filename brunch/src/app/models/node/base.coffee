@@ -62,9 +62,9 @@ class exports.Node extends Model
     # FIXME: clear on xmpp disconnect
     on_posts_synced: ->
         if app.users.current.channels.get(@get 'nodeid')?
-            @set posts_synced: yes
+            @posts_synced = yes
         else
-            @set posts_synced: no
+            @posts_synced = no
 
     can_load_more: ->
         not @has 'history_end_reached'
