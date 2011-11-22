@@ -106,14 +106,17 @@ class exports.Connector extends Backbone.EventHandler
                 nodeid, success, error, @connection.timeout)
 
     # this fetches all subscriptions to a specific node
-    get_node_subscriptions: (nodeid, callback) =>
+    get_node_subscriptions: (nodeid, rsmAfter, callback) =>
         @request (done) =>
             success = (subscribers) =>
+                console.warn "connector get_node_subscriptions", nodeid, rsmAfter, subscribers, subscribers.rsm
                 for own user, subscription of subscribers
                     @trigger 'subscription:node',
-                        jid: jid
+                        jid: user
                         node: nodeid
                         subscription: subscription
+                if subscribers.rsm
+                    @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
                 done()
                 callback? null
             error = (error) =>
@@ -121,7 +124,7 @@ class exports.Connector extends Backbone.EventHandler
                 done()
                 callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
-                nodeid, success, error, @connection.timeout)
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
     ##
     # notification with type subscription/affiliation already is

@@ -3,6 +3,10 @@
 { Users } = require('collections/user')
 { Posts } = require('collections/post')
 
+##
+# Attributes:
+# * id is only the tail for a channel (eg. posts)
+# * nodeid is the full node name (eg. /user/astro@spaceboyz.net/posts)
 class exports.Node extends Model
 
     initialize: ->
@@ -43,6 +47,11 @@ class exports.Node extends Model
     push_metadata: (metadata) ->
         @metadata.save metadata
 
+        if app.users.current.channels.get(@get 'nodeid')?
+            @metadata_synced = yes
+        else
+            @metadata_synced = no
+
     push_error: (error) ->
         @error =
             condition: error.condition
@@ -53,9 +62,9 @@ class exports.Node extends Model
         # No RSM support or
         # same <last/> as previous page
         if not rsm_last or
-           rsm_last is @get('rsm_last')
-            @set history_end_reached: yes
-        @save { rsm_last }
+           rsm_last is @posts_rsm_last
+            @posts_end_reached = yes
+        @posts_rsm_last = rsm_last
 
     # If we are subscribed, newer/updated posts will come in
     # through notifications. No need to poll again.
@@ -67,4 +76,21 @@ class exports.Node extends Model
             @posts_synced = no
 
     can_load_more: ->
-        not @has 'history_end_reached'
+        not @posts_end_reached
+
+    on_subscribers_synced: ->
+        if app.users.current.channels.get(@get 'nodeid')?
+            @subscribers_synced = yes
+        else
+            @subscribers_synced = no
+        console.warn "on_subscribers_synced", @subscribers_synced
+
+    push_subscribers_rsm_last: (rsm_last) ->
+        console.warn "push_subscribers_rsm_last", rsm_last, @subscribers_rsm_last
+        if not rsm_last or
+           rsm_last is @subscribers_rsm_last
+            @subscribers_end_reached = yes
+        @subscribers_rsm_last = rsm_last
+
+    can_load_more_subscribers: ->
+        not @subscribers_end_reached

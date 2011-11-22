@@ -4,10 +4,9 @@
 class exports.DataHandler extends Backbone.EventHandler
 
     constructor: (@connector) ->
-        @get_node_subscriptions = @connector.get_node_subscriptions
-
         @connector.bind 'post', @on_node_post
         @connector.bind 'posts:rsm:last', @on_node_posts_rsm_last
+        @connector.bind 'subscribers:rsm:last', @on_node_subscribers_rsm_last
         @connector.bind 'affiliation', @on_affiliation
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
@@ -21,8 +20,6 @@ class exports.DataHandler extends Backbone.EventHandler
         if typeof node is 'string'
             channel = app.channels.get_or_create id:nodeid
             node = channel.nodes.get_or_create id:nodeid
-            # Not requesting a next page here
-            node.unset 'history_end_reached'
 
         @connector.get_node_posts nodeid, null, (err, posts) =>
             unless err
@@ -32,7 +29,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
     get_more_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
-        rsm_after = node.get?('rsm_last')
+        rsm_after = node.posts_rsm_last
         @connector.get_node_posts nodeid, rsm_after, callback
 
     get_node_metadata: (node, callback) ->
@@ -41,7 +38,20 @@ class exports.DataHandler extends Backbone.EventHandler
 
     get_node_subscriptions: (node, callback) ->
         nodeid = node.get?('nodeid') or node
-        @connector.get_node_subscriptions nodeid, callback
+        if typeof node is 'string'
+            channel = app.channels.get_or_create id:nodeid
+            node = channel.nodes.get_or_create id:nodeid
+
+        console.warn "data get_node_subscriptions", nodeid, node
+        @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
+            unless err
+                node.on_subscriptions_synced()
+            callback? err, subscribers
+
+    get_more_node_subscriptions: (node, callback) ->
+        nodeid = node.get?('nodeid') or node
+        rsm_after = node.subscribers_rsm_last
+        @connector.get_node_subscriptions nodeid, rsm_after, callback
 
     publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -170,6 +180,13 @@ class exports.DataHandler extends Backbone.EventHandler
 
         return
 
+    on_node_subscribers_rsm_last: (nodeid, rsmLast) =>
+        console.warn "on_node_subscribers_rsm_last", nodeid, rsmLast
+        channel = app.channels.get_or_create nodeid:nodeid
+        node = channel.nodes.get_or_create nodeid:nodeid
+        # Push info to retrieve next page
+        node.push_subscribers_rsm_last rsmLast
+
     on_metadata: (node, metadata) =>
         channel = app.channels.get_or_create id: node
         channel.push_metadata node, metadata
@@ -183,9 +200,9 @@ class exports.DataHandler extends Backbone.EventHandler
         channel.set_loading true
 
         forEachUserNode userid, (nodeid, callback2) =>
-            node = channel.nodes.get_or_create id:nodeid
-            # 3: get_node_posts + get_node_metadata + get_node_subscriptions
-            pending = 3
+            node = channel.nodes.get_or_create nodeid:nodeid
+            # 2: get_node_posts + get_node_metadata
+            pending = 2
             done = ->
                 pending--
                 if pending < 1
@@ -195,9 +212,14 @@ class exports.DataHandler extends Backbone.EventHandler
                 @get_node_posts nodeid, done
             else
                 done()
-            @get_node_metadata nodeid, done
-            @get_node_subscriptions nodeid, done
+            unless node.metadata_synced
+                @get_node_metadata nodeid, done
+            else
+                done()
         , =>
+            channel.set_loading false
+            return callback?()
+            # TODO: synced?
             @get_user_subscriptions userid, =>
                 channel.set_loading false
                 callback?()

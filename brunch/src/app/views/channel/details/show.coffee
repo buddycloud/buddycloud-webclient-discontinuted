@@ -20,24 +20,28 @@ class exports.ChannelDetails extends BaseView
             model:@model.nodes.get('posts').users
             parent:this
 
-        @model.nodes.get('posts').metadata.bind 'change', @may_show
-        do @may_show
-
-    may_show: =>
-        unless @model.nodes.get('posts').metadata.has 'title'
-            # metadata still absent, may not show
-            return
-
-        if @el.hasClass 'hidden'
-            # Show on metadata update:
-            @el.removeClass 'hidden'
-        @render()
-
     events:
         "click .infoToggle": "click_toggle"
 
     click_toggle: EventHandler ->
         @el.toggleClass 'hidden'
+        unless @el.hasClass 'hidden'
+            @on_show()
+
+    on_show: =>
+        console.warn "Channels", @model.get('id'), "on_show"
+        node = @model.nodes.get_or_create id: 'posts'
+        nodeid = node.get 'nodeid'
+        step = (err) =>
+            if err
+                # Cancel on all errors:
+                return
+            unless node.subscribers_synced
+                app.handler.data.get_node_subscriptions nodeid, step
+            else if node.can_load_more_subscribers()
+                app.handler.data.get_more_node_subscriptions nodeid, step
+        step()
+        @render()
 
     render: =>
         hidden = @el.hasClass 'hidden'
@@ -57,4 +61,4 @@ class exports.ChannelDetails extends BaseView
         formatdate.hook @el, update: off
 
     update_attributes: ->
-        @metadata = @model.nodes.get('posts').metadata.toJSON()
+        @metadata = @model.nodes.get_or_create(id: 'posts').metadata.toJSON()

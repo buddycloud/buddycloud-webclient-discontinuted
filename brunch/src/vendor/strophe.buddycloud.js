@@ -317,6 +317,7 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     getSubscribers: function(node, success, error) {
+	var that = this;
         this._connection.pubsub.getNodeSubscriptions(node, function(stanza) {
             var i, pubsubs, pubsub;
             pubsubs = stanza.getElementsByTagNameNS(
@@ -341,6 +342,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
                 }
             }
+	    that._applyRSM(stanza, subscribers);
             return success(subscribers);
         }, this._errorcode(error));
     },
