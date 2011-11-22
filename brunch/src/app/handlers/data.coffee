@@ -18,7 +18,14 @@ class exports.DataHandler extends Backbone.EventHandler
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
-        @connector.get_node_posts nodeid, null, callback
+        if typeof node is 'string'
+            channel = app.channels.get_or_create id:nodeid
+            node = channel.nodes.get_or_create id:nodeid
+        @connector.get_node_posts nodeid, null, (err, posts) =>
+            unless err
+                # Success retrieving first page?
+                node.on_posts_synced()
+            callback? err, posts
 
     get_more_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -82,7 +89,7 @@ class exports.DataHandler extends Backbone.EventHandler
             jid = app.users.current.get('jid')
 
         if jid isnt "anony@mous"
-            @connector.get_node_posts "/user/#{jid}/subscriptions", callback
+            @connector.get_node_posts "/user/#{jid}/subscriptions", null, callback
         else
             # anony@mous has no retrievable subscriptions
             callback?()
@@ -99,6 +106,7 @@ class exports.DataHandler extends Backbone.EventHandler
         channel = app.channels.get_or_create id:nodeid
         # FIXME: more indirection like above?
         node = channel.nodes.get_or_create id:nodeid
+        # Push info to retrieve next page
         node.push_posts_rsm_last rsmLast
 
     on_node_error: (nodeid, error) =>

@@ -57,5 +57,14 @@ class exports.Node extends Model
             @set history_end_reached: yes
         @save { rsm_last }
 
+    # If we are subscribed, newer/updated posts will come in
+    # through notifications. No need to poll again.
+    # FIXME: clear on xmpp disconnect
+    on_posts_synced: ->
+        if app.users.current.channels.get(@get 'nodeid')?
+            @set posts_synced: yes
+        else
+            @set posts_synced: no
+
     can_load_more: ->
         not @has 'history_end_reached'
