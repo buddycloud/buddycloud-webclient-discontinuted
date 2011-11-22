@@ -31,15 +31,20 @@
 			tsVars.n++;
 		});
 	}
-	
+
 	function ts(obj, m) {
 		var tsName = get_tsName(obj, m);
 		if(localStorage.getItem(tsName) != null) {
 			obj.val(localStorage.getItem(tsName));
 		}
-		obj.bind('keyup', function() {
+		var onkeyup;
+		obj.bind('keyup', onkeyup = function() {
 			localStorage.setItem(tsName, obj.val());
 		});
+        obj.one("textsaver:remove", function () {
+            obj.unbind('keyup', onkeyup);
+            localStorage.removeItem(tsName);
+        });
 	}
 
 	function get_tsName(obj, m) {
