@@ -11,16 +11,17 @@ class exports.ChannelDetails extends BaseView
         #@geo = new GeoDetail model:@model, parent:this
 
         @list = {}
+        postnode = @model.nodes.get('posts')
         @list.following = new UserList
             title:'following'
-            model:app.users.get_or_create(id: @model.get 'id').channels
+            model:postnode.subscriptions
             parent:this
         @list.followers = new UserList
             title:'followers'
-            model:@model.nodes.get('posts').users
+            model:postnode.affiliations
             parent:this
 
-        @model.nodes.get('posts').metadata.bind 'change', @may_show
+        postnode.metadata.bind 'change', @may_show
         do @may_show
 
     may_show: =>

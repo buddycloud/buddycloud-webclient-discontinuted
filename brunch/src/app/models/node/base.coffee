@@ -1,7 +1,7 @@
 { Model } = require 'models/base'
 { NodeMetadata } = require 'models/metadata/node'
-{ Users } = require('collections/user')
-{ Posts } = require('collections/post')
+{ Users } = require 'collections/user'
+{ Posts } = require 'collections/post'
 
 class exports.Node extends Model
 
@@ -9,8 +9,9 @@ class exports.Node extends Model
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         # Subscribers:
-        @users    = new Users parent:this
-        @posts   ?= new Posts parent:this
+        @subscriptions = new Users parent:this
+        @affiliations  = new Users parent:this
+        @posts        ?= new Posts parent:this
 
     toJSON: (full) ->
         result = super
@@ -26,18 +27,18 @@ class exports.Node extends Model
     push_subscription: (subscription) ->
         switch subscription.subscription
             when 'subscribed'
-                @users.get_or_create id: subscription.jid
+                @subscriptions.get_or_create id: subscription.jid
             when 'unsubscribed', 'none'
-                if (user = @users.get subscription.jid)
-                    @users.remove user
-
-        # TODO: needed by?
-        @trigger "subscription:node:#{subscription.node}", subscription
+                if (user = @subscriptions.get subscription.jid)
+                    @subscriptions.remove user
 
     push_affiliation: (affiliation) ->
-        if (user = @users.get affiliation.jid)
-            # TODO: how to store affiliations?
-            do ->
+        switch affiliation.affiliation
+            when 'outcast', 'none'
+                if (user = @affiliations.get subscription.jid)
+                    @affiliations.remove user
+            else # owner, moderator, publisher, member
+                @affiliations.get_or_create id: affiliation.jid
 
     push_post: (post) ->
         @trigger 'post', post
