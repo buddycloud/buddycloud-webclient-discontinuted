@@ -19,6 +19,8 @@ class exports.Node extends Model
         result
 
     # I am very afraid of the dead. They walk.
+    # but this will be needed for the geonode
+    # (its seperated in subnodes, which are themself represented as node)
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
