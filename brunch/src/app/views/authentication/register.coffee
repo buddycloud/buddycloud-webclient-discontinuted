@@ -59,7 +59,7 @@ class exports.RegisterView extends AuthenticationView
             event = () =>
                 app.handler.connection.unbind type, event
                 @reset()
-                if type is "sbmtfail" and app.handler.connection.isRegistered()
+                if type is "regifail" and app.handler.connection.isRegistered()
                     @register_success()
                 else
                     @error(type)

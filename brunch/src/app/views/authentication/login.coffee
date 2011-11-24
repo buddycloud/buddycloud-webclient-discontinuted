@@ -1,6 +1,7 @@
 { AuthenticationView } = require 'views/authentication/base'
 { EventHandler, getBrowserPrefix } = require 'util'
 
+LSlpk = '__localpasswd__' # localStorage local password key
 
 class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
@@ -19,11 +20,38 @@ class exports.LoginView extends AuthenticationView
         # this includes a full pagereload, which is not suitable
         # firefox does it well and asks the user if he wants to save the passwd
         if getBrowserPrefix() is "-webkit-"
-            $('#home_login_pwd').textSaver()
-            # only track what is before the @
+            # get elements from login form (index.html)
+            warning = $('label[for="store_local"] > div')
+            checkbox = $('#store_local')
+            passwdinput = $('#home_login_pwd')
             userinput = input.parent().find('#auto-suggestion-'+input.prop 'id')
-            userinput.textSaver()
-            userinput.keyup() # update underlying inputfields
+
+            # show checkbox only in webkit
+            $('label[for="store_local"]').show()
+
+            if localStorage.getItem(LSlpk) is "true"
+                passwdinput.textSaver()
+                passwdinput.keyup() # update underlying inputfields
+                # only track what is before the @
+                userinput.textSaver()
+                userinput.keyup() # update underlying inputfields
+                # letz the user choose if he really wants it to be saved in the localstorage
+                checkbox.prop 'checked', yes
+                warning.show()
+            #bind checkbox
+            checkbox.change ->
+                if checkbox.is ':checked'
+                    passwdinput.textSaver()
+                    passwdinput.keyup() # update underlying inputfields
+                    userinput.textSaver()
+                    userinput.keyup() # update underlying inputfields
+                    localStorage.setItem(LSlpk, yes)
+                    warning.show()
+                else
+                    passwdinput.trigger 'textsaver:remove'
+                    userinput.trigger 'textsaver:remove'
+                    localStorage.setItem(LSlpk, no)
+                    warning.hide()
 
         @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()

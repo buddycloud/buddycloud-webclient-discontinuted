@@ -2,6 +2,13 @@
   transform-style preserve-3d
   perspective 1000
 
+label[for="store_local"]
+  display none
+  & > div
+    display none
+    font-weight bold
+    color red
+
 .centerBox
   z-index 23
   width 566px
@@ -103,5 +110,7 @@
   text-shadow 0 1px white
   border-radius 5px
   display none
+  & > div
+    display none
 .hasError .error
   display block

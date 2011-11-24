@@ -26,14 +26,21 @@
         <form class="clearfix" id="login-form">
           <h2>buddycloud login</h2>
           <div class="error">
-            <span id="authfail">Unable to confirm your username or password. Please try again.</span>
-            <span id="connfail">Connection to the server closed.</span>
-            <span id="disconnected">Thats weird. You disconnected.</span>
+            <div id="nobosh">BOSH Service unavailable!</div>
+            <div id="authfail">Unable to confirm your username or password. Please try again.</div>
+            <div id="connfail">Connection to the server closed.</div>
+            <div id="disconnected">Thats weird. You disconnected.</div>
           </div>
           <label for="home_login_jid">Jabber ID</label>
           <input type="text" id="home_login_jid" name="login-jid" placeholder="Jabber ID" required />
           <label for="home_login_pwd">Password</label>
           <input type="password" id="home_login_pwd" name="login-pwd" placeholder="Password" required />
+          <span>
+            <label for="store_local">
+              <input type="checkbox" id="store_local"/> Store Password local?
+              <div>stored as plain text on device</div>
+            </label>
+          </span>
           <div class="leftBox">
             <span class="spinner">Logging in</span>
             <a href="#" class="resetPassword">Forgot password?</a>
@@ -58,6 +65,7 @@
           <input type="text" id="home_register_new_email" placeholder="Email" />
           <div class="leftBox">
             <span class="spinner">creating new account</span>
+            <span class="fail" id="nobosh">BOSH Service unavailable!</span>
             <span class="fail" id="authfail">Authentification unssuccessful. Please try again.</span>
             <span class="fail" id="connfail">Connection closed :(</span>
             <span class="fail" id="regifail">Cannot create new Account.</span>

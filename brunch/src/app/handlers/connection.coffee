@@ -33,7 +33,18 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             jid = jid.toLowerCase()
             @user = app.users.get_or_create id: jid
         app.debug "CONNECT", jid, @user
-        @connection.connect jid, password, @connection_event
+
+        # workaround for development
+        if window.location.hostname is "localhost"
+            @connection.connect jid, password, @connection_event
+            return
+
+        jQuery.ajax
+            url:config.bosh_service
+            success: =>
+                @connection.connect jid, password, @connection_event
+            error: =>
+                @trigger 'nobosh'
 
     reset: () ->
         app.debug "RESET", @user
