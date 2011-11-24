@@ -10,7 +10,11 @@ class exports.ChannelEntry extends BaseView
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
         # Update unread counter:
-        @model.bind 'post', @render
+        @model.bind 'post', =>
+            if @parent.current is this
+                do @model.mark_read
+            else
+                do @render
 
     events:
         "click": "click_entry"
