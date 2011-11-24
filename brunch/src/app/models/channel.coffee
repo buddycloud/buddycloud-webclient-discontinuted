@@ -49,22 +49,15 @@ class exports.Channel extends Model
     count_unread: ->
         last_view = @get('last_view') or (new Date 0).toISOString()
         count = 0
-        @nodes.get('posts').posts.each (post) ->
-            if post.get('updated') > last_view
+        for post in (@nodes.get('posts')?.posts.models or [])
+            if post.get_last_update() > last_view
                 count++
-            post.comments.each (comment) ->
-                if comment.get('updated') > last_view
-                    count++
+            else break
         count
 
     mark_read: ->
         last_view = (new Date 0).toISOString()
-        @nodes.get('posts').posts.each (post) ->
-            last_update = post.get_last_update()
-            if last_update > last_view
-                last_view = last_update
-            post.comments.each (comment) ->
-                last_update = comment.get_last_update()
-                if last_update > last_view
-                    last_view = last_update
+        last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
+        if last_update > last_view
+            last_view = last_update
         @save { last_view }
