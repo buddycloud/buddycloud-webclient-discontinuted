@@ -19,7 +19,7 @@ class exports.DataHandler extends Backbone.EventHandler
         nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
             channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create id:nodeid
+            node = channel.nodes.get_or_create nodeid:nodeid
 
         @connector.get_node_posts nodeid, null, (err, posts) =>
             unless err
@@ -42,10 +42,9 @@ class exports.DataHandler extends Backbone.EventHandler
             channel = app.channels.get_or_create id:nodeid
             node = channel.nodes.get_or_create id:nodeid
 
-        console.warn "data get_node_subscriptions", nodeid, node
         @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
             unless err
-                node.on_subscriptions_synced()
+                node.on_subscribers_synced()
             callback? err, subscribers
 
     get_more_node_subscriptions: (node, callback) ->
@@ -181,8 +180,7 @@ class exports.DataHandler extends Backbone.EventHandler
         return
 
     on_node_subscribers_rsm_last: (nodeid, rsmLast) =>
-        console.warn "on_node_subscribers_rsm_last", nodeid, rsmLast
-        channel = app.channels.get_or_create nodeid:nodeid
+        channel = app.channels.get_or_create id:nodeid
         node = channel.nodes.get_or_create nodeid:nodeid
         # Push info to retrieve next page
         node.push_subscribers_rsm_last rsmLast

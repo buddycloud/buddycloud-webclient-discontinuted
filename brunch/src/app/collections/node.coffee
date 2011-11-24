@@ -31,7 +31,10 @@ class exports.Nodes extends Collection
         newAttrs = _.clone(attrs)
         newAttrs.nodeid = attrs.nodeid or attrs.id
         newAttrs.id = nodeid_to_type(attrs.id or attrs.nodeid) or attrs.id or attrs.nodeid
-        # this is what a empty node looks like
+        unless newAttrs.nodeid and newAttrs.nodeid.indexOf("/") >= 0
+            # look at parent @channel to construct full nodeid
+            newAttrs.nodeid = "/user/#{@channel.get 'id'}/#{newAttrs.id}"
+        # this is what an empty node looks like
         super newAttrs, options
 
 

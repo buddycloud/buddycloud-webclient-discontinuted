@@ -12,8 +12,8 @@ class exports.Collection extends Backbone.Collection
 
     get: (id, options = {}) ->
         if typeof id isnt 'string'
+            console.warn 'get w/o str', arguments
             console.trace()
-            throw 'get w/o str'
         super
 
     get_or_create: (attrs, options = {}) ->
