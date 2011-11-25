@@ -50,8 +50,10 @@ class exports.PostsView extends Backbone.View
         @load_more()
 
     load_more: =>
-        if @model.can_load_more()
-            foot = @$('.topic.loader.more')
-            foot.append('<span class="spinner"> </span>')
+        if @model.can_load_more_posts() and
+           not @model.collection.channel.isLoading
+            @model.collection.channel.set_loading true
             app.handler.data.get_more_node_posts @model, =>
-                foot.empty()
+                @model.collection.channel.set_loading false
+                # Still scrolled to bottom? Try loading more.
+                app.views.index?.on_scroll()

@@ -23,8 +23,6 @@ class exports.HomeView extends Backbone.View
             @channels.get_or_create channel
         app.users.current.channels.forEach (channel) =>
             @channels.get_or_create channel
-        # TODO: when all posts have come in, recheck if we already
-        # scrolled to bottom again!
 
         @channels.bind 'remove', @remove_channel_view
         # FIXME: let the ChannelView be created on-demand, they're

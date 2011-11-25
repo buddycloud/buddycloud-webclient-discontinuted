@@ -43,11 +43,6 @@
       template: notififications.eco
 
     -->
-    <% if @isLoading: %>
-    <section class="topic loader">
-      <span class="spinner"> </span>
-    </section>
-    <% end %>
     <section class="topics">
     <!--
 
@@ -56,8 +51,11 @@
 
     -->
     </section>
-    <section class="topic loader more">
+    <% if @isLoading: %>
+    <section class="topic loader">
+      <span class="spinner"> </span>
     </section>
+    <% end %>
   </section><!-- /stream -->
     <!--
 

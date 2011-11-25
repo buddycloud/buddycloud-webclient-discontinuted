@@ -384,11 +384,12 @@ Extend connection object to have plugin name 'pubsub'.
 	var node = options.node || options;
         var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('items', {node:node});
+          .c('items', {node:node}).up()
+	  .c('set', { xmlns: Strophe.NS.RSM })
+	  .c('max').t("40")
+	  .up();
 	if (options.rsmAfter)
-	    iq.up().
-		c('set', { xmlns: Strophe.NS.RSM }).
-		c('after').t(options.rsmAfter);
+	    iq.c('after').t(options.rsmAfter);
 
         return this._connection.sendIQ(iq.tree(), success, error, timeout);
     },

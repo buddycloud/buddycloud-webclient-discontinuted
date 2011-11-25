@@ -21,6 +21,9 @@ class exports.DataHandler extends Backbone.EventHandler
             channel = app.channels.get_or_create id:nodeid
             node = channel.nodes.get_or_create nodeid:nodeid
 
+        # Reset pagination
+        node.push_posts_rsm_last null
+
         @connector.get_node_posts nodeid, null, (err, posts) =>
             unless err
                 # Success retrieving first page?
@@ -29,6 +32,10 @@ class exports.DataHandler extends Backbone.EventHandler
 
     get_more_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
+        if typeof node is 'string'
+            channel = app.channels.get_or_create id:nodeid
+            node = channel.nodes.get_or_create nodeid:nodeid
+
         rsm_after = node.posts_rsm_last
         @connector.get_node_posts nodeid, rsm_after, callback
 
@@ -40,7 +47,7 @@ class exports.DataHandler extends Backbone.EventHandler
         nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
             channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create id:nodeid
+            node = channel.nodes.get_or_create nodeid:nodeid
 
         @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
             unless err

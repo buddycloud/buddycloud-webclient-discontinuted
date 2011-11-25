@@ -64,9 +64,8 @@ class exports.Node extends Model
     push_posts_rsm_last: (rsm_last) ->
         # No RSM support or
         # same <last/> as previous page
-        if not rsm_last or
+        @posts_end_reached = not rsm_last or
            rsm_last is @posts_rsm_last
-            @posts_end_reached = yes
         @posts_rsm_last = rsm_last
 
     # If we are subscribed, newer/updated posts will come in
@@ -78,7 +77,7 @@ class exports.Node extends Model
         else
             @posts_synced = no
 
-    can_load_more: ->
+    can_load_more_posts: ->
         not @posts_end_reached
 
     on_subscribers_synced: ->
