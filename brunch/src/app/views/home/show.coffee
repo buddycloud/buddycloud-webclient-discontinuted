@@ -108,6 +108,6 @@ class exports.HomeView extends Backbone.View
         @current?.trigger 'hide'
 
     on_scroll: =>
-        if $(window).scrollTop() == $(document).height() - $(window).height()
+        if $(window).scrollTop() >= $(document).height() - $(window).height() * 1.1
             @current?.on_scroll_bottom?()
-
+        no
