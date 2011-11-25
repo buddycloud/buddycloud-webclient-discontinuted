@@ -43,9 +43,7 @@ class exports.HomeView extends Backbone.View
         @el.show()
 
         # Set up InfiniteScrolling™ when reaching the bottom
-        $(window).scroll =>
-            if $(window).scrollTop() == $(document).height() - $(window).height()
-                @current?.on_scroll_bottom?()
+        $(window).scroll @on_scroll
 
     new_channel_view: (channel) =>
         channel = @channels.get_or_create channel, silent:yes
@@ -88,6 +86,14 @@ class exports.HomeView extends Backbone.View
         @sidebar.setCurrentEntry channel
         @current.trigger 'show'
 
+        # when scrolled to the bottom, cause loading of more posts via
+        # RSM because we are showing too few of them.
+        #
+        # example: so far only retrieved comments to an older post
+        # which are all hidden, because that parent post is on a
+        # further RSM page.
+        @on_scroll()
+
     render: ->
         @current?.render()
         @sidebar.render()
@@ -101,4 +107,7 @@ class exports.HomeView extends Backbone.View
         @sidebar.moveOut()
         @current?.trigger 'hide'
 
+    on_scroll: =>
+        if $(window).scrollTop() == $(document).height() - $(window).height()
+            @current?.on_scroll_bottom?()
 
