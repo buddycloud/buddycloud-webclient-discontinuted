@@ -49,14 +49,22 @@ class exports.DataHandler extends Backbone.EventHandler
             channel = app.channels.get_or_create id:nodeid
             node = channel.nodes.get_or_create nodeid:nodeid
 
+        # Reset pagination
+        node.push_subscribers_rsm_last null
+
         @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
             unless err
+                # Success retrieving first page?
                 node.on_subscribers_synced()
             callback? err, subscribers
 
     get_more_node_subscriptions: (node, callback) ->
         nodeid = node.get?('nodeid') or node
         rsm_after = node.subscribers_rsm_last
+        if typeof node is 'string'
+            channel = app.channels.get_or_create id:nodeid
+            node = channel.nodes.get_or_create nodeid:nodeid
+
         @connector.get_node_subscriptions nodeid, rsm_after, callback
 
     publish: (node, item, callback) ->
