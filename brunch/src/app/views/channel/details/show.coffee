@@ -14,11 +14,11 @@ class exports.ChannelDetails extends BaseView
         postnode = @model.nodes.get('posts')
         @list.following = new UserList
             title:'following'
-            model:postnode.subscriptions
+            model:app.users.get_or_create(id: @model.get 'id').channels
             parent:this
         @list.followers = new UserList
             title:'followers'
-            model:postnode.affiliations
+            model:postnode.subscriptions
             parent:this
 
     events:
@@ -42,6 +42,8 @@ class exports.ChannelDetails extends BaseView
             else if node.can_load_more_subscribers()
                 app.handler.data.get_more_node_subscriptions nodeid, step
         step()
+        unless app.users.get(@model.get 'id').subscribers_synced?
+            app.handler.data.get_user_subscriptions @model.get('id')
         @render()
 
     render: =>

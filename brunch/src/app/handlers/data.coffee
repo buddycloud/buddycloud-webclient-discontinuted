@@ -111,12 +111,21 @@ class exports.DataHandler extends Backbone.EventHandler
             callback? if oneSuccess then null else oneError
 
     get_user_subscriptions: (jid, callback) =>
-        unless jid?
-            # Default: own JID
-            jid = app.users.current.get('jid')
+        nodeid = "/user/#{jid}/subscriptions"
 
         if jid isnt "anony@mous"
-            @connector.get_node_posts "/user/#{jid}/subscriptions", null, callback
+            rsmAfter = null
+            step = =>
+                @connector.get_node_posts nodeid, rsmAfter, (err, posts) =>
+                    if not posts?.rsm?.after or posts?.rsm?.after is rsmAfter
+                        # Final page
+                        app.users.get(jid).subscriptions_synced = app.users.current.channels.get(nodeid)?
+                        callback? err
+                    else
+                        # Next page
+                        rsmAfter = posts.rsm.after
+                        step()
+            step()
         else
             # anony@mous has no retrievable subscriptions
             callback?()
@@ -231,11 +240,7 @@ class exports.DataHandler extends Backbone.EventHandler
                 done()
         , =>
             channel.set_loading false
-            return callback?()
-            # TODO: synced?
-            @get_user_subscriptions userid, =>
-                channel.set_loading false
-                callback?()
+            callback?()
 
     ##
     # Background job that comes after MAM, when the connection is
