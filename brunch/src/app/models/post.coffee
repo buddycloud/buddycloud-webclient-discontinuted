@@ -10,8 +10,8 @@ class exports.Post extends Model
         content:
             type: undefined
             value: undefined
-        published: new Date().toISOString()
-        updated: new Date().toISOString()
+        published: new Date(0).toISOString()
+        updated: new Date(0).toISOString()
 
     initialize: ->
         result = super
