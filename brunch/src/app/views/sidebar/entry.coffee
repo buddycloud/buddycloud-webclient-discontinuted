@@ -10,11 +10,7 @@ class exports.ChannelEntry extends BaseView
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
         # Update unread counter:
-        @model.bind 'post', =>
-            if @parent.current is this
-                do @model.mark_read
-            else
-                do @render
+        @model.bind 'post', @render
 
     events:
         "click": "click_entry"
@@ -26,7 +22,6 @@ class exports.ChannelEntry extends BaseView
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model
             @parent.parent.setCurrentChannel @model
-            @model.mark_read()
             @render()
 
     isPersonal : (a, b) =>

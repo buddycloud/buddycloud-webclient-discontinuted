@@ -21,6 +21,11 @@ class exports.ChannelView extends BaseView
         app.users.current.channels.bind "add:#{@model.get 'id'}", @render
         app.users.current.channels.bind "remove:#{@model.get 'id'}", @render
 
+        # New post, visible? Mark read.
+        @model.bind 'post', =>
+            unless @hidden
+                @model.mark_read()
+
         # Show progress spinner throbber loader
         @model.bind 'loading:start', @render
         @model.bind 'loading:stop', @render
@@ -49,6 +54,7 @@ class exports.ChannelView extends BaseView
         @hidden = false
         @el.show()
 
+        @model.mark_read()
         # Not subscribed? Refresh!
         app.handler.data.refresh_channel(@model.get 'id')
 
