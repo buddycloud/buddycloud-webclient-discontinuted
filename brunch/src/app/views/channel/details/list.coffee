@@ -27,6 +27,8 @@ class exports.UserList extends BaseView
                 user
             else
                 app.users.get user.get('id')
+        @users = @users.filter (user) ->
+            user?.has 'jid'
         @users = @users.sort compare_by_id
 
     clickUser: EventHandler (ev) =>
