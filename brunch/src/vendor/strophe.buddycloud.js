@@ -316,33 +316,32 @@ Strophe.addConnectionPlugin('buddycloud', {
             }, self._errorcode(err), timeout);
     },
 
+    /**
+     * Attention:
+     * 
+     * subscriptions may contain extraneous `rsm' key that must be
+     * filtered from the user ids.
+     */
     getSubscribers: function(node, success, error) {
-	var that = this;
+        var that = this;
         this._connection.pubsub.getNodeSubscriptions(node, function(stanza) {
-            var i, pubsubs, pubsub;
-            pubsubs = stanza.getElementsByTagNameNS(
+            var pubsub, subscribers = {};
+            pubsub = stanza.getElementsByTagNameNS(
                 Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
-            if (pubsubs) {
-                var j, subscribers = {};
-                for(i = 0; i < pubsubs.length; i++) {
-                    pubsub = pubsubs[i];
-                    var subscriptions, subscription;
-                    subscriptions = pubsub.getElementsByTagNameNS(
-                        Strophe.NS.PUBSUB_OWNER, 'subscriptions');
-                    if (subscriptions) {
-                        for(i = 0; i < subscriptions.length; i++) {
-                            subscription = subscriptions[i];
-                            if (subscription) {
-                                subscribers[subscription.getAttribute('jid')] =
-                                    subscription.getAttribute('subscription') ||
-                                    "subscribed";
-                            }
-                        }
-                    }
+            if (pubsub)
+                Strophe.forEachChild(pubsub, 'subscriptions',
+                    function(subscriptions) {
+                        Strophe.forEachChild(subscriptions, 'subscription',
+                            function(subscription) {
+                                var jid = subscription.getAttribute('jid');
+                                if (jid)
+                                    subscribers[jid] =
+                                        subscription.getAttribute('subscription') ||
+                                        "subscribed";
+                        });
+                });
 
-                }
-            }
-	    that._applyRSM(stanza, subscribers);
+            that._applyRSM(stanza, subscribers);
             return success(subscribers);
         }, this._errorcode(error));
     },
