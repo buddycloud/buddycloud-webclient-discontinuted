@@ -58,6 +58,6 @@ class exports.Channel extends Model
     mark_read: ->
         last_view = @get('last_view') or (new Date 0).toISOString()
         last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
-        if last_update > last_view
+        if last_update and last_update > last_view
             last_view = last_update
         @save { last_view }
