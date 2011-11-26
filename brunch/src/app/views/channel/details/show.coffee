@@ -6,6 +6,9 @@
 class exports.ChannelDetails extends BaseView
     template: require 'templates/channel/details/show'
 
+    ##
+    # @parent: ChannelView
+    # @model: Channel
     initialize: ({@parent}) ->
         super
         #@geo = new GeoDetail model:@model, parent:this
@@ -33,6 +36,8 @@ class exports.ChannelDetails extends BaseView
         console.warn "Channels", @model.get('id'), "on_show"
         node = @model.nodes.get_or_create id: 'posts'
         nodeid = node.get 'nodeid'
+
+        # Fill @list.followers model
         step = (err) =>
             if err
                 # Cancel on all errors:
