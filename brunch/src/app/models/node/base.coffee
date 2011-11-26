@@ -89,9 +89,8 @@ class exports.Node extends Model
 
     push_subscribers_rsm_last: (rsm_last) ->
         console.warn "push_subscribers_rsm_last", rsm_last, @subscribers_rsm_last
-        if not rsm_last or
-           rsm_last is @subscribers_rsm_last
-            @subscribers_end_reached = yes
+        @subscribers_end_reached = not rsm_last or
+            rsm_last is @subscribers_rsm_last
         @subscribers_rsm_last = rsm_last
 
     can_load_more_subscribers: ->

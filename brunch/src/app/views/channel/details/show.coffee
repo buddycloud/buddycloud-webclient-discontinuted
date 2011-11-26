@@ -42,8 +42,11 @@ class exports.ChannelDetails extends BaseView
             else if node.can_load_more_subscribers()
                 app.handler.data.get_more_node_subscriptions nodeid, step
         step()
-        unless app.users.get(@model.get 'id').subscribers_synced?
+
+        # Fill @list.following model
+        unless app.users.get(@model.get 'id').subscriptions_synced
             app.handler.data.get_user_subscriptions @model.get('id')
+
         @render()
 
     render: =>
