@@ -111,10 +111,11 @@ class exports.Connector extends Backbone.EventHandler
             success = (subscribers) =>
                 console.warn "connector get_node_subscriptions", nodeid, rsmAfter, subscribers, subscribers.rsm
                 for own user, subscription of subscribers
-                    @trigger 'subscription:node',
-                        jid: user
-                        node: nodeid
-                        subscription: subscription
+                    unless user is 'rsm'
+                        @trigger 'subscription',
+                            jid: user
+                            node: nodeid
+                            subscription: subscription
                 if subscribers.rsm
                     @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
                 done()
