@@ -1,7 +1,7 @@
 <section class="hero"></section>
 <section class="content">
   <h1>buddycloud</h1>
-  <p class="subtitle">Federated Social Networking</p>
+  <p class="subtitle">Open Federated Social Networking</p>
 </section>
 <section class="navigation clearfix">
   <div id="goLogin" class="button">Login</div>
