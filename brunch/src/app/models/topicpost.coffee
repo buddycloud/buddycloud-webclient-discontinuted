@@ -15,7 +15,8 @@ class exports.TopicPost extends Post
     # Also dives into comments
     get_last_update: =>
         last = super
-        last1 = @comments.at(0)?.get_last_update()
-        if last < last1
+        # Comments are sorted newest last
+        last1 = @comments.at(@comments.length)?.get_last_update()
+        if last1 and last1 > last
             last = last1
         last
