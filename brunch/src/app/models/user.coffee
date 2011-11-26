@@ -9,9 +9,6 @@ class exports.User extends Model
         # id and jid are the same
         @id = @get('jid') or @get('id')
         @save {jid: @id, @id}
-        unless typeof @get('jid') is 'string'
-            console.error 'User', @, 'jid', @get('jid')
-            console.trace()
         @avatar = gravatar @id, s:50, d:'retro'
         # subscribed channels
         @channels = new UserChannels parent:this

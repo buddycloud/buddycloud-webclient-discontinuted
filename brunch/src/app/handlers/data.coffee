@@ -65,7 +65,6 @@ class exports.DataHandler extends Backbone.EventHandler
             node = channel.nodes.get_or_create nodeid:nodeid
 
         rsm_after = node.subscribers_rsm_last
-        console.warn "get_more_node_subscriptions", nodeid, node, rsm_after
         @connector.get_node_subscriptions nodeid, rsm_after, callback
 
     publish: (node, item, callback) ->

@@ -33,7 +33,6 @@ class exports.ChannelDetails extends BaseView
             @on_show()
 
     on_show: =>
-        console.warn "Channels", @model.get('id'), "on_show"
         node = @model.nodes.get_or_create id: 'posts'
         nodeid = node.get 'nodeid'
 

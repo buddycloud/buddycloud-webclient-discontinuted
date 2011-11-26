@@ -85,10 +85,8 @@ class exports.Node extends Model
             @subscribers_synced = yes
         else
             @subscribers_synced = no
-        console.warn "on_subscribers_synced", @subscribers_synced
 
     push_subscribers_rsm_last: (rsm_last) ->
-        console.warn "push_subscribers_rsm_last", rsm_last, @subscribers_rsm_last
         @subscribers_end_reached = not rsm_last or
             rsm_last is @subscribers_rsm_last
         @subscribers_rsm_last = rsm_last
