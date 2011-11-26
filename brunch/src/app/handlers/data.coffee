@@ -117,6 +117,7 @@ class exports.DataHandler extends Backbone.EventHandler
             rsmAfter = null
             step = =>
                 @connector.get_node_posts nodeid, rsmAfter, (err, posts) =>
+                    # TODO: synced?
                     if not posts?.rsm?.after or posts?.rsm?.after is rsmAfter
                         # Final page
                         app.users.get(jid).subscriptions_synced = app.users.current.channels.get(nodeid)?
