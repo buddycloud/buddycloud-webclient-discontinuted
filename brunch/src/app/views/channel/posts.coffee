@@ -47,7 +47,7 @@ class exports.PostsView extends Backbone.View
                 @el.append @empty()
 
         # Still scrolled to bottom? Try cause loading more.
-        app.views.index?.on_scroll()
+        app.views.index?.on_scroll?()
 
     on_scroll_bottom: =>
         @load_more()
