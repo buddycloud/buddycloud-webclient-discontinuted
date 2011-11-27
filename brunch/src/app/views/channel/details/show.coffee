@@ -40,6 +40,7 @@ class exports.ChannelDetails extends BaseView
         step = (err) =>
             if err
                 # Cancel on all errors:
+                # TODO show them
                 return
             unless node.subscribers_synced
                 app.handler.data.get_node_subscriptions nodeid, step
