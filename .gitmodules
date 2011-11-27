@@ -1,3 +1,6 @@
 [submodule "external/normalizecss"]
 	path = external/normalizecss
 	url = git://github.com/necolas/normalize.css.git
+[submodule "external/antiscroll"]
+	path = external/antiscroll
+	url = git://github.com/LearnBoost/antiscroll.git
