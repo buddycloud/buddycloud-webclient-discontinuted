@@ -189,6 +189,22 @@ Strophe.addConnectionPlugin('roster',
         }
         this._connection.sendIQ(iq, call_back, call_back);
     },
+    delete: function(jid, call_back)
+    {
+        var item = this.findItem(jid);
+        if (!item)
+	    this.items.push({ jid: jid, subscription: 'remove' });
+
+	var that = this;
+	this.update(jid, null, [], function() {
+	    /* TODO: detect error */
+	    that.items = that.items.filter(function(item) {
+		return item.jid !== jid;
+	    });
+	    if (call_back)
+		call_back();
+	});
+    },
     /** PrivateFunction: _onReceiveRosterSuccess
      *
      */

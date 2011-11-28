@@ -161,6 +161,9 @@ class exports.Connector extends Backbone.EventHandler
             @work_queue.push ->
                 callback? items
 
+    remove_from_roster: (jid) =>
+        @connection.roster.delete jid
+
     ##
     # Overwrite Backbone.EventHandler::trigger to be called delayed
     # by @work_work_queue()
