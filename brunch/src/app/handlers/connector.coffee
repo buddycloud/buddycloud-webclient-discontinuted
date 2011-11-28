@@ -5,6 +5,7 @@ class exports.Connector extends Backbone.EventHandler
     ##
     # @handler: ConnectionHandler
     constructor: (@handler, @connection) ->
+        @event_queue = []
         @handler.bind 'connecting', => @trigger 'connection:start'
         @handler.bind 'connected',  => @trigger 'connection:established'
         @request = new RequestHandler
@@ -146,3 +147,26 @@ class exports.Connector extends Backbone.EventHandler
     get_roster: (callback) =>
         @connection.roster.get (items) ->
             callback? items
+
+    ##
+    # Overwrite Backbone.EventHandler::trigger to be called delayed
+    # by @work_event_queue()
+    trigger: ->
+        @event_queue.push arguments
+
+        @work_event_queue()
+
+    ##
+    # Triggers events in-order with a 1ms timer in between to ensure
+    # GUI responsiveness
+    work_event_queue: ->
+        unless @event_queue_timeout
+            @event_queue_timeout = setTimeout =>
+                delete @event_queue_timeout
+
+                args = @event_queue.shift()
+                if args
+                    # Actual trigger:
+                    Backbone.EventHandler::trigger.apply this, args
+                    @work_event_queue()
+            , 1
