@@ -53,3 +53,19 @@ exports.compare_by_id = (model1, model2) ->
         1
     else
         0
+
+##
+# Delay a callback by `interval' ms, while avoiding calling it
+# multiple times successively.
+exports.throttle_callback = (interval, callback) ->
+    timeout = null
+    # We return a proxy callback:
+    () ->
+        that = this
+        args = arguments
+        # None yet scheduled?
+        unless timeout
+            timeout = setTimeout ->
+                timeout = null
+                callback?.apply that, args
+            , interval

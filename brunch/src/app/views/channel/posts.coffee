@@ -1,4 +1,5 @@
 { TopicPostView } = require 'views/channel/topicpost'
+{ throttle_callback } = require 'util'
 
 class exports.PostsView extends Backbone.View
     tutorial: require 'templates/channel/tutorial'
@@ -8,7 +9,7 @@ class exports.PostsView extends Backbone.View
         # INFO @el will be set by parent
         @el.attr id:@cid
         @views = {}
-        @model.bind 'change', @render
+        @model.bind 'change', throttle_callback(50, @render)
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
