@@ -1,4 +1,4 @@
-<div class="channelView">
+<div class="channelView personal scrollHolder clearfix">
   <header class="clearfix">
     <a href="http://www.buddycloud.com" id="poweredby">powered by buddycloud</a>
     <h2 class="title"><%= @postsNode?.metadata?.title?.value %></h2>
