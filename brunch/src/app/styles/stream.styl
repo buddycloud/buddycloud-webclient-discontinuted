@@ -31,14 +31,14 @@
 
 #content
   margin-left 233px
-  min-height 100%
+  min-width 790px
+  height 100%
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
   background #eee url("../../public/images/logo.png") no-repeat center center
+  box-shadow -1px 0 rgba(0, 0, 0, 0.21)
+  border-left 1px solid black
   position relative
-  box-shadow 0 0 8px black
-  z-index 1
-  box-flex 1
   &.overlapping
     min-height 100%
     position absolute
@@ -64,18 +64,15 @@
   //overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
-  padding 13px
-  position relative
-  z-index 1
   &.personal
     > header
         height 58px
       nav
         top 8px
   > header
+    margin 21px 13px 0
     width 500px
     height 40px
-    margin-top 8px
     position relative
     &.small
       height 40px
@@ -143,6 +140,7 @@
   
   
 .stream  
+  margin 0 0 13px 13px
   width 500px
   border-radius 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)

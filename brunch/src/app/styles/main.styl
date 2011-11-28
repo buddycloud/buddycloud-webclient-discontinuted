@@ -1,5 +1,54 @@
+@css {
+  .antiscroll-wrap {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .antiscroll-scrollbar {
+    background: #666;
+    background: rgba(0, 0, 0, .6);
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    position: absolute;
+    opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    -webkit-transition: linear 300ms opacity;
+    -moz-transition: linear 300ms opacity;
+    -o-transition: linear 300ms opacity;
+  }
+
+  .antiscroll-scrollbar-shown {
+    opacity: 1;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  }
+
+  .antiscroll-scrollbar-horizontal {
+    height: 7px;
+    margin-left: 2px;
+    bottom: 2px;
+    left: 0;
+  }
+
+  .antiscroll-scrollbar-vertical {
+    width: 7px;
+    margin-top: 2px;
+    right: 2px;
+    top: 0;
+  }
+
+  .antiscroll-inner {
+    overflow: scroll;
+  }
+
+  .antiscroll-inner::-webkit-scrollbar, .antiscroll-inner::scrollbar {
+    width: 0;
+    height: 0;
+  }
+  
+}
 @import "normalize"
-@import "antiscroll"
 @import "nib/gradients"
 @import "reset"
 @import "shim"
@@ -23,21 +72,23 @@ textarea
 
 html
   height 100%
+  overflow-y hidden
+  overflow-x auto
   font 13px/17px "Helvetica Neue", Helvetica, Arial, sans-serif
   //background black url(../../public/images/smooth-aura.jpg) fixed
   //linear-bg-gradient #024, #909, #035
   //linear-bg-gradient #035, #065 //blau
-  background linear-gradient(top, #035, #3c88ab)
+  background linear-gradient(top, darkBackground, lightBackground)
   background-attachment fixed
   //-webkit-font-smoothing antialiased
 
-body
+body  
   width 100%
-  min-height 100%
-  overflow-x hidden
+  height 100%
+  overflow-y hidden
+  overflow-x auto
   radial-bg-gradient cover, rgba(255,255,255,.34), rgba(255,255,255,0)
   background-attachment fixed
-  box horizontal center justify
   -webkit-text-size-adjust none
   &.start
     box none none none
