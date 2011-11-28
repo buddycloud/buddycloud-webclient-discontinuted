@@ -12,21 +12,21 @@
 </head>
 <body class="wideChannelView">
   <div id="sidebar">
-    <div id="channels" class="clearfix">
-      <div class="scrollArea">
-        <div class="personal channel">
-          <div class="avatar" style="background-image: url(public/avatars/user1.jpg)">
-            <span class="channelpost counter">2</span>
-            <span class="message counter">2</span>
-          </div>
-          <div class="info">
-            <span class="owner">felix<span class="domain">@buddycloud.com</span></span>
-            <span class="status">Aww yeah, Lion rocks</span>
-          </div>
-        </div>
-        <div class="search">
-          <input type="search" results="5" autosave="channelSearch" placeholder="Search Channels ..." />
-        </div>
+    <div class="personal channel">
+      <div class="avatar" style="background-image: url(public/avatars/user1.jpg)">
+        <span class="channelpost counter">2</span>
+        <span class="message counter">2</span>
+      </div>
+      <div class="info">
+        <span class="owner">felix<span class="domain">@buddycloud.com</span></span>
+        <span class="status">Aww yeah, Lion rocks</span>
+      </div>
+    </div>
+    <div class="search">
+      <input type="search" results="5" autosave="channelSearch" placeholder="Search Channels ..." />
+    </div>
+    <div id="channels" class="antiscroll-wrap clearfix">
+      <div class="antiscroll-inner">
         <div class="channel selected">
           <div class="avatar" style="background-image: url(public/avatars/user2.jpg)">
             <span class="channelpost counter">2</span>
@@ -179,11 +179,12 @@
             <span class="status">Buy minecraft - now!</span>
           </div>
         </div>
-      </div><!-- /scrollArea -->
+      </div><!-- /antiscroll-inner -->
     </div><!-- /channels -->
+    <!-- replaced by scrolling
     <div id="more_channels">
       all Channels
-    </div>
+    </div>-->
   </div>
   <div id="content">
     <div class="channelView personal clearfix">
@@ -213,6 +214,7 @@
             <div class="button small prominent" id="createNewTopic">Post</div>
           </div>
         </section>
+        <!-- this produces some weird bug - some content below it gets lost when this is visible
         <article class="notification">
           <section>
             <img class="avatar" src="public/avatars/user4.jpg" />
@@ -225,7 +227,7 @@
               <div class="button small prominent positive light">Grant Martin to join</div>
             </div>
           </section>
-        </article>
+        </article>-->
         <article class="topic">
           <section class="opener">
             <img class="avatar" src="public/avatars/user2.jpg" />
@@ -693,6 +695,10 @@
   
   notificationButtons.click(logNotifaction);
   setTimeout('notify()', 2000);
+  
+  $(function () {
+      $('#channels').antiscroll();
+  });
 </script>
 </body>
 </html>
