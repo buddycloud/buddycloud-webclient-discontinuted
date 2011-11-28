@@ -2,7 +2,7 @@
 { PostsView } = require 'views/channel/posts'
 { ErrorNotificationView } = require 'views/channel/error_notification'
 { BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ EventHandler, throttle_callback } = require 'util'
 
 # The channel shows channel content
 class exports.ChannelView extends BaseView
@@ -16,10 +16,11 @@ class exports.ChannelView extends BaseView
 
         @details = new ChannelDetails model:@model, parent:this
 
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
-        app.users.current.channels.bind "add:#{@model.get 'id'}", @render
-        app.users.current.channels.bind "remove:#{@model.get 'id'}", @render
+        render_callback = throttle_callback(50, @render)
+        @model.bind 'change', render_callback
+        @model.bind 'change:node:metadata', render_callback
+        app.users.current.channels.bind "add:#{@model.get 'id'}", render_callback
+        app.users.current.channels.bind "remove:#{@model.get 'id'}", render_callback
 
         # New post, visible? Mark read.
         @model.bind 'post', =>
