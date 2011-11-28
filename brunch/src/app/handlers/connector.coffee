@@ -5,7 +5,7 @@ class exports.Connector extends Backbone.EventHandler
     ##
     # @handler: ConnectionHandler
     constructor: (@handler, @connection) ->
-        @event_queue = []
+        @work_queue = []
         @handler.bind 'connecting', => @trigger 'connection:start'
         @handler.bind 'connected',  => @trigger 'connection:established'
         @request = new RequestHandler
@@ -23,12 +23,14 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
                 app.debug "publish", stanza
-                done()
-                callback? null
+                @work_queue.push ->
+                    done()
+                    callback? null
             , (error) =>
                 app.error "publish", nodeid, error
-                done()
-                callback? error
+                @work_queue.push ->
+                    done()
+                    callback? error
 
     subscribe: (nodeid, callback) =>
         @request (done) =>
@@ -40,12 +42,14 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'subscribed' # FIXME
-                done()
-                callback? null
+                @work_queue.push ->
+                    done()
+                    callback? null
             , =>
                 app.error "subscribe", nodeid
-                done()
-                callback? new Error("Cannot subscribe")
+                @work_queue.push ->
+                    done()
+                    callback? new Error("Cannot subscribe")
 
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
@@ -56,12 +60,14 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'unsubscribed'
-                done()
-                callback? null
+                @work_queue.push ->
+                    done()
+                    callback? null
             , =>
                 app.error "unsubscribe", nodeid
-                done()
-                callback? new Error("Cannot unsubscribe")
+                @work_queue.push ->
+                    done()
+                    callback? new Error("Cannot unsubscribe")
 
 #     start_fetch_node_posts: (nodeid) =>
 #         success = (posts) =>
@@ -82,13 +88,15 @@ class exports.Connector extends Backbone.EventHandler
                             @trigger 'subscription', subscription
                 if posts.rsm
                     @trigger 'posts:rsm:last', nodeid, posts.rsm.last
-                done()
-                callback? null, posts
+                @work_queue.push ->
+                    done()
+                    callback? null, posts
             error = (error) =>
                 app.error "get_node_posts", nodeid, arguments
                 @trigger 'node:error', nodeid, error
-                done()
-                callback? new Error("Cannot get posts")
+                @work_queue.push ->
+                    done()
+                    callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
@@ -96,13 +104,15 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             success = (metadata) =>
                 @trigger 'metadata', nodeid, metadata
-                done()
-                callback? null, metadata
+                @work_queue.push ->
+                    done()
+                    callback? null, metadata
             error = (error) =>
                 app.error "get_node_metadata", nodeid, arguments
                 @trigger 'node:error', nodeid, error
-                done()
-                callback? new Error("Cannot get metadata")
+                @work_queue.push ->
+                    done()
+                    callback? new Error("Cannot get metadata")
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
 
@@ -118,12 +128,14 @@ class exports.Connector extends Backbone.EventHandler
                             subscription: subscription
                 if subscribers.rsm
                     @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
-                done()
-                callback? null
+                @work_queue.push ->
+                    done()
+                    callback? null
             error = (error) =>
                 @trigger 'node:error', nodeid, error
-                done()
-                callback? new Error("Cannot get subscriptions")
+                @work_queue.push ->
+                    done()
+                    callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
@@ -145,28 +157,31 @@ class exports.Connector extends Backbone.EventHandler
                 app.debug "Cannot handle notification for #{notification.type}"
 
     get_roster: (callback) =>
-        @connection.roster.get (items) ->
-            callback? items
+        @connection.roster.get (items) =>
+            @work_queue.push ->
+                callback? items
 
     ##
     # Overwrite Backbone.EventHandler::trigger to be called delayed
-    # by @work_event_queue()
+    # by @work_work_queue()
     trigger: ->
-        @event_queue.push arguments
+        args = arguments
+        @work_queue.push =>
+            Backbone.EventHandler::trigger.apply this, args
 
-        @work_event_queue()
+        @work_work_queue()
 
     ##
     # Triggers events in-order with a 1ms timer in between to ensure
     # GUI responsiveness
-    work_event_queue: ->
-        unless @event_queue_timeout
-            @event_queue_timeout = setTimeout =>
-                delete @event_queue_timeout
+    work_work_queue: ->
+        unless @work_queue_timeout
+            @work_queue_timeout = setTimeout =>
+                delete @work_queue_timeout
 
-                args = @event_queue.shift()
-                if args
+                fun = @work_queue.shift()
+                if fun?
                     # Actual trigger:
-                    Backbone.EventHandler::trigger.apply this, args
-                    @work_event_queue()
+                    fun()
+                    @work_work_queue()
             , 1
