@@ -21,14 +21,17 @@
   position absolute
 
 #sidebar
-  .personal.channel
+  .personal.channel,
+  .personal.channel.selected
     width 233px
     height 76px
     background linear-gradient(top, lighten(desaturate(darkBackground, 75%), 40%), lighten(desaturate(darkBackground, 70%), 30%))
     box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
     position relative
     z-index 5
-    transition none
+    transition 250ms
+    .active_channel_indicator
+      display none
   .search
     width 223px
     padding 6px 5px 5px
