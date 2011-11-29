@@ -23,12 +23,12 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
                 app.debug "publish", stanza
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null
             , (error) =>
                 app.error "publish", nodeid, error
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? error
 
@@ -42,12 +42,12 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'subscribed' # FIXME
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null
             , =>
                 app.error "subscribe", nodeid
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? new Error("Cannot subscribe")
 
@@ -60,12 +60,12 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'unsubscribed'
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null
             , =>
                 app.error "unsubscribe", nodeid
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? new Error("Cannot unsubscribe")
 
@@ -88,13 +88,13 @@ class exports.Connector extends Backbone.EventHandler
                             @trigger 'subscription', subscription
                 if posts.rsm
                     @trigger 'posts:rsm:last', nodeid, posts.rsm.last
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null, posts
             error = (error) =>
                 app.error "get_node_posts", nodeid, arguments
                 @trigger 'node:error', nodeid, error
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
@@ -104,13 +104,13 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             success = (metadata) =>
                 @trigger 'metadata', nodeid, metadata
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null, metadata
             error = (error) =>
                 app.error "get_node_metadata", nodeid, arguments
                 @trigger 'node:error', nodeid, error
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? new Error("Cannot get metadata")
             @connection.buddycloud.getMetadata(
@@ -128,12 +128,12 @@ class exports.Connector extends Backbone.EventHandler
                             subscription: subscription
                 if subscribers.rsm
                     @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? null
             error = (error) =>
                 @trigger 'node:error', nodeid, error
-                @work_queue.push ->
+                @work_enqueue ->
                     done()
                     callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
@@ -158,7 +158,7 @@ class exports.Connector extends Backbone.EventHandler
 
     get_roster: (callback) =>
         @connection.roster.get (items) =>
-            @work_queue.push ->
+            @work_enqueue ->
                 callback? items
 
     remove_from_roster: (jid) =>
@@ -169,9 +169,11 @@ class exports.Connector extends Backbone.EventHandler
     # by @work_work_queue()
     trigger: ->
         args = arguments
-        @work_queue.push =>
+        @work_enqueue =>
             Backbone.EventHandler::trigger.apply this, args
 
+    work_enqueue: (cb) ->
+        @work_queue.push cb
         @work_work_queue()
 
     ##
