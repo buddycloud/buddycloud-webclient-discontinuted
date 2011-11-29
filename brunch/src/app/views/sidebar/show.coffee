@@ -16,6 +16,9 @@ class exports.Sidebar extends Backbone.View
         @channelsel = $('#channels')
         @hidden = yes
 
+        $(window).resize =>
+            @channelsel.antiscroll()
+
         @search = new Searchbar parent:this, channels:@parent.channels
         @search.bind 'filter', @render
         @search.el.insertBefore @channelsel
@@ -45,12 +48,7 @@ class exports.Sidebar extends Backbone.View
                 @el.append entry.el
         entry.render()
 
-        ##
-        # antiscroll has this behavoir that it adds only scrollbars
-        # when the scrollarea is bigger than the container
-        unless @channelsel.data('antiscroll')
-            if @el.get(0).scrollHeight > @channelsel.height()
-                @channelsel.antiscroll()
+        @channelsel.antiscroll()
 
         return entry
 
