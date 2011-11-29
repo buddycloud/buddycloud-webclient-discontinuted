@@ -15,7 +15,9 @@
       <div class="channel button">
         <span class="holder">Channel</span>
       </div-->
-      <div class="button unfollow">Unfollow</div>
+        <% unless @user?.isCurrent: %>
+	  <div class="button unfollow">Unfollow</div>
+        <% end %>
       <% else if not @user?.isAnonymous: %>
       <div class="button follow">Follow</div>
       <% end %>
