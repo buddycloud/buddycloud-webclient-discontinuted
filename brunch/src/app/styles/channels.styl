@@ -3,27 +3,39 @@
   width 233px
   color white
   border-right 0 1px black
-  position fixed
+  position absolute
+  box vertical start start
+  overflow hidden
+  
+#channels
+  width 233px
+  height 100%
+  box-flex 1
+  position relative
+
+.scrollHolder
+  width 100%
+  height 100%
+  overflow-y auto
+  position absolute
 
 #sidebar
   .personal.channel
     height 76px
-    background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21))
-    box-shadow 0 1px rgba(0, 0, 0, 0.99), 0 2px rgba(255, 255, 255, 0.21)
+    background linear-gradient(top, lighten(desaturate(darkBackground, 75%), 40%), lighten(desaturate(darkBackground, 70%), 30%))
+    box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
     position relative
     z-index 5
     transition none
   .search
-    padding 6px 0 5px
-    background linear-gradient(top, rgba(255, 255, 255, 0.21), rgba(0, 0, 0, 0.13), rgba(255, 255, 255, 0.21))
-    box-shadow 0 1px rgba(0, 0, 0, 0.55), 0 2px rgba(255, 255, 255, 0.21)
+    padding 6px 5px 5px
+    background lighten(desaturate(darkBackground, 70%), 30%)
+    box-shadow 0 1px rgba(0,0,0,0.55),0 2px rgba(0,0,0,0.21), 0 3px rgba(0,0,0,0.13)
     position relative
     z-index 4
     input
-      width 207px
+      width 223px
       height 18px
-      padding 1px 8px
-      margin 0 auto
       color black
       background white
       border none
@@ -51,8 +63,8 @@
     transition 500ms
     transform-origin top
     &.selected
-      background linear-gradient(top, rgba(0, 0, 0, .13) 50%, rgba(255, 255, 255, 0.21))
-      box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21), 0 1px black inset, 0 -1px rgba(255, 255, 255, 0.21)
+      background rgba(0, 0, 0, .13)
+      box-shadow 0 1px rgba(0,0,0,.55), 0 2px rgba(255, 255, 255, 0.21), 0 1px rgba(0,0,0,.55) inset, 0 -1px rgba(255, 255, 255, 0.21)
     &.bubbleUp
       z-index 2
     .info      
@@ -92,7 +104,7 @@
       transition 500ms
       cursor pointer
       z-index 1
-      box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 7px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
+      box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
   .tutorial
     height 123px
     background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21))

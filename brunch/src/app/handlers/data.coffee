@@ -108,6 +108,7 @@ class exports.DataHandler extends Backbone.EventHandler
                     oneSuccess = true
                 callback2()
         , =>
+            @connector.remove_from_roster user
             callback? if oneSuccess then null else oneError
 
     get_user_subscriptions: (jid, callback) =>
