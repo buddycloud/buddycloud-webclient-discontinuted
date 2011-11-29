@@ -18,11 +18,13 @@
 ,   "backbone": "0.5.3"
 ,   "jqueryify": "0.0.1"
 ,   "jquery-autosuggestion": "0.0.1"
+,   "jquery-textsaver": "0.0.2"
 ,   "formatdate": "0.1.1"
 ,   "es5-shim": "1.2.10"
 ,   "store": "1.1.1"
   }
 , "_dependencies_missing_from_npm": {
-    "normalize.css": "6d085d7e520572ca4a8c73fe09a44362792e30d0"
+    "antiscroll":    "fa1eb21de5b474637a93f3666883117b69270c97",
+    "normalize.css": "3404fcb8b966373340e9428d21cccb0b4801d7c0"
   }
 }

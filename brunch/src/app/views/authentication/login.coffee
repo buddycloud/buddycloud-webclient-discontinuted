@@ -48,8 +48,8 @@ class exports.LoginView extends AuthenticationView
                     localStorage.setItem(LSlpk, yes)
                     warning.show()
                 else
-                    passwdinput.trigger 'textsaver:remove'
-                    userinput.trigger 'textsaver:remove'
+                    passwdinput.data('textSaver')?.destroy()
+                    userinput.data('textSaver')?.destroy()
                     localStorage.setItem(LSlpk, no)
                     warning.hide()
 

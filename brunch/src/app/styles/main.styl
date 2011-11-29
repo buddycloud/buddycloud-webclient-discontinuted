@@ -1,5 +1,5 @@
 @import "normalize"
-@css { @import "antiscroll" }
+@import "antiscroll"
 @import "nib/gradients"
 @import "reset"
 @import "shim"
@@ -23,27 +23,29 @@ textarea
 
 html
   height 100%
+  overflow-y hidden
+  overflow-x auto
   font 13px/17px "Helvetica Neue", Helvetica, Arial, sans-serif
   //background black url(../../public/images/smooth-aura.jpg) fixed
   //linear-bg-gradient #024, #909, #035
   //linear-bg-gradient #035, #065 //blau
-  background linear-gradient(top, #035, #3c88ab)
+  background linear-gradient(top, darkBackground, lightBackground)
   background-attachment fixed
   //-webkit-font-smoothing antialiased
 
 body
   width 100%
-  min-height 100%
-  overflow-x hidden
+  height 100%
+  overflow-y hidden
+  overflow-x auto
   radial-bg-gradient cover, rgba(255,255,255,.34), rgba(255,255,255,0)
   background-attachment fixed
-  box horizontal center justify
   -webkit-text-size-adjust none
   &.start
     box none none none
     display block
   &.center
-    box horizontal center center 
+    box horizontal center center
 
 .headbar
   top 0
