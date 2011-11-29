@@ -20,8 +20,10 @@ window.app =
 # app bootstrapping on document ready
 $(document).ready ->
 
+
+
     ### could be used to switch console output ###
-    app.debug_mode = on
+    app.debug_mode = config.debug ? on
     app.debug = ->
         console.log "DEBUG:", arguments if app.debug_mode
     app.error = ->
