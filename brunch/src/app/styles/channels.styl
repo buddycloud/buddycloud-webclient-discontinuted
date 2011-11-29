@@ -126,28 +126,29 @@
     box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px default_highlight, 0 0 0 4px lighten(default_highlight, 8%), 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
 .counter
-  top -6px
-  right -6px
+  top -5px
+  right -5px
   padding 0 5px
-  height 20px
   color white
   font-size 14px
   line-height 18px
   text-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
   background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.01))
-  border 1px solid rgba(0, 0, 0, 0.34)
   border-radius 10px
-  box-shadow 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 2px rgba(0, 0, 0, 0.21)
+  box-shadow 0 1px rgba(255, 255, 255, 0.55) inset, 0 1px 2px black
   position absolute
   box-sizing border-box
   &.channelpost
     top auto
-    bottom -6px
+    bottom -5px
     background-color default_highlight
+    box-shadow 0 0 0 1px darken(default_highlight, 15%), 0 1px rgba(255, 255, 255, 0.55) inset, 0 1px 2px black
   &.message
     background-color personal_color
+    box-shadow 0 0 0 1px darken(personal_color, 15%), 0 1px rgba(255, 255, 255, 0.55) inset, 0 1px 2px black
   &.admin
     background-color admin_highlight
+    box-shadow 0 0 0 1px darken(admin_highlight, 15%), 0 1px rgba(255, 255, 255, 0.55) inset, 0 1px 2px black
 
 .channelOverview #sidebar
   box-flex 1
@@ -213,7 +214,7 @@
   border-top-right-radius 5px
   
 .active_channel_indicator
-  top 25px
+  top 26px
   right 0
   width 10px
   height 12px
