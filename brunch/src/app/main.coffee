@@ -20,7 +20,17 @@ window.app =
 # app bootstrapping on document ready
 $(document).ready ->
 
-
+    # show error message when config isnt loaded
+    if typeof config is 'undefined'
+        $('#index')
+            .html("<p>Your config file seems to be b0rken!</p>"+
+                  "<p>Or the rewrite rule is missing.</p>")
+            .css
+                background   :'red'
+                color        :'white'
+                'text-align' :'center'
+                'font-size'  :'2em'
+        return
 
     ### could be used to switch console output ###
     app.debug_mode = config.debug ? on
