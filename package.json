@@ -23,6 +23,7 @@
 ,   "store": "1.1.1"
   }
 , "_dependencies_missing_from_npm": {
+    "antiscroll":    "fa1eb21de5b474637a93f3666883117b69270c97",
     "normalize.css": "3404fcb8b966373340e9428d21cccb0b4801d7c0"
   }
 }
