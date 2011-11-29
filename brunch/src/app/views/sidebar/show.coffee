@@ -12,12 +12,13 @@ class exports.Sidebar extends Backbone.View
     initialize: ({@parent}) ->
         # default's not visible due to nice animation
         $('body').append @template()
-        @el = $('#channels > .scrollArea')
+        @el = $('#channels > .scrollHolder')
+        @channelsel = $('#channels')
         @hidden = yes
 
         @search = new Searchbar parent:this, channels:@parent.channels
         @search.bind 'filter', @render
-        @el.append @search.el
+        @search.el.insertBefore @channelsel
 
         # sidebar entries
         @current = undefined
@@ -43,7 +44,15 @@ class exports.Sidebar extends Backbone.View
             else
                 @el.append entry.el
         entry.render()
-        entry
+
+        ##
+        # antiscroll has this behavoir that it adds only scrollbars
+        # when the scrollarea is bigger than the container
+        unless @channelsel.data('antiscroll')
+            if @el.get(0).scrollHeight > @channelsel.height()
+                @channelsel.antiscroll()
+
+        return entry
 
     remove_channel_entry: (channel) =>
         { el } = @views[channel.cid]
