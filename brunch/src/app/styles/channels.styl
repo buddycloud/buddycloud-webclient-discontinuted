@@ -4,14 +4,15 @@
   color white
   border-right 0 1px black
   position absolute
-  box vertical start start
   overflow hidden
+  .flexHolder
+    height 100%
+    box vertical start start
   
 #channels
   width 233px
-  height 100%
   box-flex 1
-  position relative
+  display block // overwrites antiscroll's display: inline-block which brakes the flex-box
 
 .scrollHolder
   width 100%
