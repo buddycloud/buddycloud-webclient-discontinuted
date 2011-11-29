@@ -5,8 +5,10 @@ class exports.PostsView extends Backbone.View
     tutorial: require 'templates/channel/tutorial'
     empty:    require 'templates/channel/empty'
 
+    # @parent is ChannelView
+    # @el will be passed by @parent
+    # @model is a PostsNode
     initialize: ({@parent, @el}) ->
-        # INFO @el will be set by parent
         @el.attr id:@cid
         @views = {}
         @model.bind 'change', throttle_callback(50, @render)

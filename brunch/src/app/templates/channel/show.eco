@@ -49,7 +49,7 @@
     <!--
 
       this contains the list of channel posts
-      template: posts.eco
+      template: post.eco
 
     -->
     </section>
