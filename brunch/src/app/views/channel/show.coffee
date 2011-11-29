@@ -188,6 +188,7 @@ class exports.ChannelView extends BaseView
         isAnonymous = app.users.current.get('id') is 'anony@mous'
         # TODO: pending may require special handling
         @user =
+            isCurrent: @model.get('id') is app.users.current.get('id')
             followingThisChannel: followingThisChannel
             hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
             isAnonymous: isAnonymous

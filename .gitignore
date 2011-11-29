@@ -10,5 +10,3 @@ node_modules/*
 buddycloud.tmproj
 build.tar.gz
 brunch/src/app/styles/main.styl
-
-external/antiscroll
