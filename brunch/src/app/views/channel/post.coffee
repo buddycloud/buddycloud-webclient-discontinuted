@@ -1,5 +1,5 @@
 { BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ EventHandler, throttle_callback } = require 'util'
 
 
 class exports.PostView extends BaseView
@@ -7,7 +7,7 @@ class exports.PostView extends BaseView
 
     initialize: ({@parent, @type}) =>
         super
-        @model.bind 'change', @render
+        @model.bind 'change', throttle_callback(50, @render)
 
     render: =>
         @post = @model.toJSON() # data
