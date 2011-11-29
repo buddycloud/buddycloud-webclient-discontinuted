@@ -1,1 +1,1 @@
-../../../node_modules/jquery-textsaver/jquery.textsaver.js
+../../../node_modules/jquery-textsaver/textSaver-0.1.2.js
