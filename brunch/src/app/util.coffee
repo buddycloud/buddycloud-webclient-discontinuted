@@ -28,7 +28,7 @@ exports.gravatar = (mail, opts) ->
 
 exports.EventHandler = (handler) ->
     return (ev) ->
-        ev.preventDefault()
+        ev?.preventDefault?()
         handler.apply(this, arguments)
         no
 
