@@ -29,7 +29,6 @@
     box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
     position relative
     z-index 5
-    transition 250ms
     .active_channel_indicator
       display none
   .search
@@ -50,23 +49,11 @@
       display block
     + .channel
       padding-top 6px
-  &.makePlace > .search
-    margin-bottom 64px
-    transition 500ms
-  &.makePlace > .channel.bubbleUp + .channel
-    margin-top -64px
-  &.curtainsDown > .search
-    transition none
-  &.curtainsDown > .channel
-    transition none
-  .search + .channel.selected
-    box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
   .channel
     width 234px
     height 64px
     position relative
     overflow hidden
-    transition 500ms
     transform-origin top
     &.selected
       background rgba(0, 0, 0, .13)
@@ -131,10 +118,11 @@
 .counter
   top -5px
   right -5px
+  height 18px
   padding 0 5px
   color white
   font-size 14px
-  line-height 18px
+  line-height 17px
   text-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
   background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.01))
   border-radius 10px
