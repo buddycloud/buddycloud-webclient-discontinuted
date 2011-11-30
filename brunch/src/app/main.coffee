@@ -24,7 +24,7 @@ $(document).ready ->
     if typeof config is 'undefined'
         $('#index')
             .html("<p>Your config file seems to be broken.</p>"+
-                  "<p>Also check your webserver rewrite rules are in place.</p>")
+                  "<p>Also check your webserver rewrite rules are in place. These can be found at https://buddycloud.org/wiki/Install</p>")
             .css
                 background   :'red'
                 color        :'white'
