@@ -9,7 +9,7 @@
   <script src="web/js/app.js"></script>
   <!--<script>require('main');</script>-->
 </head>
-<body class="wideChannelView">
+<body>
   <div id="sidebar">
     <div class="flexHolder">
       <div class="personal channel">
@@ -546,60 +546,87 @@
     Channel bubbling
   
     ### */
-  var channels = $('#channels');
-  var channel = channels.find('.channel');
-  var personal_channel = channels.find('.search');
-  var canidate;
-  var transEndEventNames = {
-    '-webkit-transition' : 'webkitTransitionEnd',
-    '-moz-transition' : 'transitionend',
-    '-o-transition' : 'oTransitionEnd',
-    'transition' : 'transitionEnd'
-  };
-  var prefix = getBrowserPrefix();
-  var transitionendEvent = transEndEventNames[prefix+'transition'];
+  var channelHolder = $('#channels');
+  var innerHolder = channelHolder.find('.scrollHolder');
+  var channels = channelHolder.find('.channel');
   
-  function getBrowserPrefix(){
-      var regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/;
-      var tester = document.getElementsByTagName('script')[0];
-      var prefix = "";
-      for(var prop in tester.style) {
-          if(regex.test(prop)) {
-              prefix = prop.match(regex)[0];
-              break;
-          }
-      }
-      if('WebkitOpacity' in tester.style) prefix = 'Webkit';
-      return prefix === "" ? "" : '-' + prefix.charAt(0).toLowerCase() + prefix.slice(1) +'-';
+  // prefixes for cutting edge css properties and javascript events:
+  //
+  //  transition => MozTransition
+  var transition = Modernizr.prefixed('transition');
+  //  transform => MozTransform
+  var transform = Modernizr.prefixed('transform');
+  var transEndEventNames = {
+      'WebkitTransition' : 'webkitTransitionEnd',
+      'MozTransition'    : 'transitionend',
+      'OTransition'      : 'oTransitionEnd',
+      'msTransition'     : 'msTransitionEnd', // maybe?
+      'transition'       : 'transitionEnd'
   }
+  //  transitionendEvent => transitionend
+  var transitionendEvent = transEndEventNames[ transition ];
+  // cache channelHeight - it's the same for every channel-preview
+  var channelHeight = channels.first().height();
+  // count of currently moving channels
+  var movingChannels = 0;
+  //  animationSpeed to slow down the animation while developing
+  var animationSpeed = "10000ms";
   
   function bubble(){
-    var offset = $(this).position().top;
-    if(offset === 0) return false; // the channel has an offset of 0 - it should stay where it is. so stop
-    var distance = -offset+20+31; // 31 is searchbar height
-    canidate = $(this);
-    // enable transitions
-    channels.removeClass('curtainsDown');
-    // undock => sets z-index 
-    canidate.addClass('bubbleUp');
-    // bind the transitionend to the reset function which resets the DOM after the animation
-    canidate.one(transitionendEvent, reset);
-    // enable transitions again and start to move the channels above the moved channel to close the gap
-    channels.addClass('makePlace');
+    // relative offset + absolute offset 
+    var offset = $(this).position().top + innerHolder.scrollTop();
+    
+    // don't bubble the first channel, because it's already on top
+    if(offset === 0) return false;
+    
+    // distance is the offset + the already moving channels height's
+    var distance = -offset;
+    movingChannels++;
+    
+    // we call the bubbling channel candidate
+    var candidate = $(this);
+    var sibling = candidate.prev();
+    
+    // sets z-index so that the element moves on top of all the others
+    candidate.addClass('bubbleUp');
+    
+    // it might be, that the candidate is providing space
+    // because the channel below it is currently bubbling
+    var candidateOffset = candidate.css('marginBottom').slice(0,-2)*1;
+    // in that case reset the space
+    if(candidateOffset) candidate.css('marginBottom', 0);
+    // and add the space to the next sibling
+    var siblingOffset = sibling.css('marginBottom').slice(0,-2)*1 + candidateOffset + channelHeight;
+    
+    // reset the DOM after the transition ends
+    candidate.one(transitionendEvent, { self: this }, reset);
+    
+    // open a gap at the top for the candidate to land
+    innerHolder.css(transition, animationSpeed).css('paddingTop', movingChannels*channelHeight);
+    // and close the gap where the candidate was
+    sibling.css(transition, animationSpeed).css('marginBottom', - siblingOffset);
+    
     // animate the channel to bubble up
-    canidate.css(prefix+'transform', "translateY("+distance+"px)");
+    candidate.css(transition, animationSpeed).css(transform, "translateY("+distance+"px)");
   }
   
   function reset(event){
-    // disable transitions
-    channels.addClass('curtainsDown');
-    // extract the bubbling channel from the DOM, remove the classes, reset the transformation and add it at the top
-    canidate.detach().removeClass('undock bubbleUp').css(prefix+'transform', "").insertAfter(personal_channel);
-    // move the channels back in place
-    channels.removeClass('makePlace');
+    var candidate = $(event.data.self);
+    
+    movingChannels--;
+    
+    // remove the landing-gap
+    innerHolder.css('paddingTop', -=channelHeight);
+    
+    // extract the bubbling channel from the DOM,
+    // remove the class and reset the transformation
+    // then add it inside the DOM to the top of the list
+    candidate.detach().removeClass('bubbleUp').css(transition, "").css(transform, "").insertBefore(channels.first());
+    // refresh the list
+    channels = channelHolder.find('.channel');
   }
   
-  channel.bind('click', bubble);
+  channels.click(bubble);
   
   /* ###
     
