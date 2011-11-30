@@ -4,12 +4,15 @@ class exports.Connector extends Backbone.EventHandler
 
     ##
     # @handler: ConnectionHandler
-    constructor: (@handler, @connection) ->
+    constructor: (@handler) ->
         @work_queue = []
         @handler.bind 'connecting', => @trigger 'connection:start'
         @handler.bind 'connected',  => @trigger 'connection:established'
+        @handler.bind 'disconnected',  => @trigger 'connection:end'
         @request = new RequestHandler
         app.handler.request = @request.handler
+
+    setConnection: (@connection) =>
         @connection.buddycloud.addNotificationListener @on_notification
 
     replayNotifications: (start, callback) =>

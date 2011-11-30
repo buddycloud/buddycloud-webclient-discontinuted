@@ -13,6 +13,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'node:error', @on_node_error
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
+        @connector.bind 'connection:end', @on_connection_end
 
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
@@ -169,6 +170,14 @@ class exports.DataHandler extends Backbone.EventHandler
                 done()
                 @scan_roster_for_channels()
             @connector.replayNotifications mamStart, done
+
+    on_connection_end: =>
+        app.channels.each (channel) ->
+            channel.nodes.each (node) ->
+                delete node.posts_synced
+                delete node.metadata_synced
+        app.users.each (user) ->
+            delete user.subscriptions_synced
 
     # Global loading state for MAM replaying, see on_connection_established above
     set_loading: (@isLoading) =>

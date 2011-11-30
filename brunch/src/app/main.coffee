@@ -72,7 +72,7 @@ $(document).ready ->
         #else
         #  # prefilled password detected, sign in the user automatically
         #  $('#login_form').trigger "submit"
-        formatdate.options.max.unit = 9 # centrury
+        formatdate.options.max.unit = 9 # century
         formatdate.options.max.amount = 20 # 2000 years
         formatdate.hook 'html'
 
