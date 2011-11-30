@@ -23,8 +23,8 @@ $(document).ready ->
     # show error message when config isnt loaded
     if typeof config is 'undefined'
         $('#index')
-            .html("<p>Your config file seems to be b0rken!</p>"+
-                  "<p>Or the rewrite rule is missing.</p>")
+            .html("<p>Your config file seems to be broken.</p>"+
+                  "<p>Also check your webserver rewrite rules are in place.</p>")
             .css
                 background   :'red'
                 color        :'white'
