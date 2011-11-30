@@ -40,6 +40,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             return
 
         jQuery.ajax
+            method:'POST'
             url:config.bosh_service
             success: =>
                 @connection.connect jid, password, @connection_event
