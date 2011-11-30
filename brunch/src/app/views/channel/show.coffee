@@ -155,6 +155,7 @@ class exports.ChannelView extends BaseView
         @postsview?.on_scroll_bottom()
 
     render: =>
+        scrollTop = @el.scrollTop();
         @update_attributes()
         super
 
@@ -175,6 +176,7 @@ class exports.ChannelView extends BaseView
             # TODO: save form content?
             @$('.topics').replaceWith @postsview.el
             @postsview.render()
+        @el.scrollTop(scrollTop);
 
     update_attributes: ->
         if (postsNode = @model.nodes.get 'posts')
