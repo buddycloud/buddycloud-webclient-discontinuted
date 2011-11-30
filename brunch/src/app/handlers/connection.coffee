@@ -4,26 +4,23 @@
 class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->
         @connected = false
-        @connection = new Strophe.Connection(config.bosh_service)
-        @connection.addHandler (stanza) ->
-            app.debug "IN", Strophe.serialize stanza
-            true
-        @connector = new Connector(this, @connection) # before datahandler
+        @connector = new Connector(this) # before datahandler
         app.handler.data = new DataHandler(@connector)
 
-        # debugging
-        if app.debug_mode
-            send = @connection.send
-            @connection.send = (stanza) =>
-                app.debug "OUT", Strophe.serialize stanza
-                send.apply @connection, arguments
-
+        @last_login = {}
 
         # for debug purposes only
         @bind "all", (status) -> app.debug "connection_event", status
 
     # connect the current user with his jid and pw
     connect: (jid, password) ->
+        if jid isnt @last_login.jid or password isnt @last_login.password
+            # We're not confident anymore whether thid jid/pw pair
+            # actually authenticates.
+            @last_login.connected = false
+        @last_login.jid = jid
+        @last_login.password = password
+
         unless jid
             jid = config.anon_domain
             @user = app.users.get_or_create id: "anony@mous"
@@ -34,12 +31,26 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @user = app.users.get_or_create id: jid
         app.debug "CONNECT", jid, @user
 
+        # Set up connection
+        @connection = new Strophe.Connection(config.bosh_service)
+        @connection.addHandler (stanza) ->
+            app.debug "IN", Strophe.serialize stanza
+            true
+        @connector.setConnection @connection
+        # debugging
+        if app.debug_mode
+            send = @connection.send
+            @connection.send = (stanza) =>
+                app.debug "OUT", Strophe.serialize stanza
+                send.apply @connection, arguments
+
         # workaround for development
         if window.location.hostname is "localhost"
             @connection.connect jid, password, @connection_event
             return
 
         jQuery.ajax
+            method:'POST'
             url:config.bosh_service
             success: =>
                 @connection.connect jid, password, @connection_event
@@ -139,6 +150,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.CONNECTED
             @connected = true
+            @last_login.connected = true
             @discover_channel_server =>
                 @trigger 'connected'
 

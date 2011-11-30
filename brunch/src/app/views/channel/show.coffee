@@ -59,6 +59,14 @@ class exports.ChannelView extends BaseView
         # Not subscribed? Refresh!
         app.handler.data.refresh_channel(@model.get 'id')
 
+        # when scrolled to the bottom, cause loading of more posts via
+        # RSM because we are showing too few of them.
+        #
+        # example: so far only retrieved comments to an older post
+        # which are all hidden, because that parent post is on a
+        # further RSM page.
+        @on_scroll()
+
     hide: =>
         @hidden = true
         @el.hide()
@@ -68,6 +76,7 @@ class exports.ChannelView extends BaseView
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
         'click #createNewTopic': 'clickPost'
+        'scroll': 'on_scroll'
 
     clickPost: EventHandler (ev) ->
         if @isPosting
@@ -150,6 +159,11 @@ class exports.ChannelView extends BaseView
             if error
                 @set_error error
             @render()
+
+    # InfiniteScrolling™ when reaching the bottom
+    on_scroll: ->
+        if @el.scrollTop() >= @$('.stream').innerHeight() - @el.outerHeight() * 1.1
+            @on_scroll_bottom()
 
     on_scroll_bottom: ->
         @postsview?.on_scroll_bottom()
