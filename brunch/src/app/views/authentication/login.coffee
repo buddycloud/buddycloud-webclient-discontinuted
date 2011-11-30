@@ -33,10 +33,8 @@ class exports.LoginView extends AuthenticationView
         @store_auth()
 
         warning = $('label[for="store_local"] > div')
-        if @checkbox.is ':checked'
-            warning.show()
-        else
-            warning.hide()
+        warning.css 'visibility',
+            if @checkbox.is(':checked') then 'visible' else 'hidden'
 
     click_login: EventHandler (ev) ->
         ev.stopPropagation()
