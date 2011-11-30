@@ -23,13 +23,8 @@ $(document).ready ->
     # show error message when config isnt loaded
     if typeof config is 'undefined'
         $('#index')
-            .html("<p>Your config file seems to be broken.</p>"+
-                  "<p>Also check your webserver rewrite rules are in place. These can be found at https://buddycloud.org/wiki/Install</p>")
-            .css
-                background   :'red'
-                color        :'white'
-                'text-align' :'center'
-                'font-size'  :'2em'
+            .addClass('broken')
+            .html(do require 'templates/welcome/configerror')
         return
 
     ### could be used to switch console output ###
