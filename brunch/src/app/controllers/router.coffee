@@ -68,7 +68,8 @@ class exports.Router extends Backbone.Router
             app.views.index.setCurrentChannel channel
             @setView app.views.index
         else
-            # FIXME: we could redirect to /login for honest URL bars
-            @login()
             # connect as anony@mous
-            app.views.login.click_login()
+            do app.handler.connection.connect unless app.users.current
+            # Wait for on_connected...
+            app.views.loadingchannel ?= new LoadingChannelView
+            @setView app.views.loadingchannel

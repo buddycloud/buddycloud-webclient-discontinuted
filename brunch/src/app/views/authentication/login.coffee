@@ -37,18 +37,17 @@ class exports.LoginView extends AuthenticationView
             if @checkbox.is(':checked') then 'visible' else 'hidden'
 
     click_login: EventHandler (ev) ->
-        ev?.stopPropagation?()
+        ev.stopPropagation()
         @store_auth()
 
         # the form sumbit will always trigger a new connection
         jid = $('#home_login_jid').val()
         password = $('#home_login_pwd').val()
-        @start_connection(jid, password)
-
-        # disable the form and give feedback
-        $('#home_login_submit').prop "disabled", yes
-        @$('.leftBox').addClass "working"
-
+        if jid.length > 0 and password.length > 0
+            @start_connection(jid, password)
+            # disable the form and give feedback
+            $('#home_login_submit').prop "disabled", yes
+            @$('.leftBox').addClass "working"
         false
 
     start_connection: (jid, password) ->
