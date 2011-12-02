@@ -10,10 +10,12 @@
     <img class="avatar" src="<%= app.users.current.avatar %>" />
     <textarea name="comment-text" placeholder="post a comment..."></textarea>
     <div class="controls">
+      <!-- No Location functionality implemented yet:
       <div class="button small checkbox">
         <input type="checkbox" id="shouldShareLocation<%= @random?.number %>" />
         <label for="shouldShareLocation<%= @random?.number %>">Share Location: Home</label>
-      </div>
+      </div>  
+      -->
       <div class="button small prominent createComment">Post</div>
     </div>
   </section>

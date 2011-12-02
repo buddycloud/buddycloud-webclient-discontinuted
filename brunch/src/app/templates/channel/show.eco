@@ -32,10 +32,12 @@
 	<% if @postError?: %>
 	<p class="button"><%= @postError.message %></p>
 	<% end %>
+        <!-- No Location functionality implemented yet:
         <div class="button small checkbox">
           <input type="checkbox" id="shouldShareLocation" />
           <label for="shouldShareLocation">Share Location: <%= @postsNode?.metadata?['geo-text']?.value %></label>
-        </div>
+        </div>  
+        -->
         <div class="button small prominent" id="createNewTopic">Post</div>
     </section>
     <% end %>
