@@ -50,7 +50,8 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             return
 
         jQuery.ajax
-            method:'POST'
+            type:'POST'
+            data:'<body xmlns="http://jabber.org/protocol/httpbind"/>'
             url:config.bosh_service
             success: =>
                 @connection.connect jid, password, @connection_event
