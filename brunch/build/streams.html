@@ -570,59 +570,55 @@
   // count of currently moving channels
   var movingChannels = 0;
   //  animationSpeed to slow down the animation while developing
-  var animationDuration = 5000;
+  var animationDuration = 500;
   
   function bubble(){
+    var bubblingChannel = $(this);
+    var sibling = bubblingChannel.prev();
+    
     // relative offset + absolute offset 
     var offset = $(this).position().top + innerHolder.scrollTop();
     
-    // don't bubble the first channel, because it's already on top
-    if(offset === 0) return false;
-    
-    movingChannels++;
-    
-    // we call the bubbling channel candidate
-    var candidate = $(this);
-    var sibling = candidate.prev();
+    // don't bubble if the channel is..
+    //  - on top
+    //  - bubbling
+    if(offset === 0 || bubblingChannel.hasClass('bubbleUp')) {
+      return false;
+    }
     
     // sets z-index so that the element moves on top of all the others
-    candidate.addClass('bubbleUp');
+    bubblingChannel.addClass('bubbleUp');
     
-    // it might be, that the candidate is providing space
-    // because the channel below it is currently bubbling
-    var candidateOffset = candidate.css('marginBottom').slice(0,-2)*1;
-    // in that case reset the space
-    if(candidateOffset) candidate.css('marginBottom', 0);
-    // and add the space to the next sibling
-    var siblingOffset = sibling.css('marginBottom').slice(0,-2)*1 + candidateOffset + channelHeight;
+    // create a gap where the channel starts off
+    var startingArea = $('<div>').height( channelHeight );
+    startingArea.animate({ 'height': 0 }, { duration: animationDuration, complete: destroy });
+    bubblingChannel.before( startingArea );
     
-    // open a gap at the top for the candidate to land
-    innerHolder.animate({ 'paddingTop': movingChannels*channelHeight }, { duration: animationDuration });
-    // and close the gap where the candidate was
-    sibling.animate({ 'marginBottom': -siblingOffset }, { duration: animationDuration });
+    // detach the bubbling channel from the DOM
+    // and insert it at the top
+    bubblingChannel.detach().css('top', offset);
+    innerHolder.prepend(bubblingChannel);
     
-    // animate the channel to bubble up
-    candidate.animate({ translateY: -offset }, { duration: animationDuration, complete: reset.bind(this) });
+    // wrap a growing holder around it
+    var landingArea = $('<div>').css('position', 'relative').height( 0 );
+    bubblingChannel.wrap(landingArea);
+    
+    // bubble the channel
+    bubblingChannel.animate({ top: 0 }, { duration: animationDuration, complete: reset }).css('z-index', ++movingChannels+1);
+    // let the holder grow
+    bubblingChannel.parent().animate({ 'height': channelHeight }, { duration: animationDuration }).css( 'overflow', 'visible' );
+    
   }
   
-  function reset(event){
-    var candidate = $(this);
-    
+  function destroy(){
+    // remove the gap-div
+    $(this).remove();
+  }
+  
+  function reset(){
+    // reset the bubbling channel and unwrap it
+    $(this).removeClass('bubbleUp').css({ 'top': '', 'z-index': '' }).unwrap();
     movingChannels--;
-    
-    // remove the landing-gap
-    var currentPadding = innerHolder.css('paddingTop').slice(0,-2)*1;
-    innerHolder.stop().css('paddingTop', currentPadding - channelHeight).animate({ 'paddingTop': movingChannels*channelHeight }, { duration: animationDuration });
-    
-    // close gap
-    candidate.prev().css('marginBottom', 0);
-    
-    // extract the bubbling channel from the DOM,
-    // remove the class and reset the transformation
-    // then add it inside the DOM to the top of the list
-    candidate.detach().removeClass('bubbleUp').css(transform, "").insertBefore(channels.first());
-    // refresh the list
-    channels = channelHolder.find('.channel');
   }
   
   channels.click(bubble);
