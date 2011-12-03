@@ -59,7 +59,7 @@ class exports.HomeView extends Backbone.View
         @current?.trigger 'hide'
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
-        if oldChannel and not app.users.current.channels.get(oldChannel.get('id'))?
+        if oldChannel and not app.users.current.isFollowing(oldChannel)
             if @timeouts[oldChannel.cid]?
                 clearTimeout @timeouts[oldChannel.cid]
             @timeouts[oldChannel.cid] = setTimeout ( =>

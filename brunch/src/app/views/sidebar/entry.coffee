@@ -30,6 +30,9 @@ class exports.ChannelEntry extends BaseView
     isSelected : (a, b) =>
         (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
 
+    isFollowed : (a, b) =>
+        app.users.current.isFollowing(oldChannel) and (a ? true) or (b ? false)
+
     update_attributes: ->
         @channel = @model.toJSON yes
         if (status = @model.nodes.get 'status')

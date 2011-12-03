@@ -21,3 +21,6 @@ class exports.User extends Model
     push_affiliation: (affiliation) ->
         if affiliation.jid is @get('jid')
             @trigger "affiliation:user:#{@get 'jid'}", affiliation
+
+    isFollowing: (channel) ->
+        @channels.get(channel.get 'id')?
