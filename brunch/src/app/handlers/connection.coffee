@@ -62,7 +62,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
     reset: () ->
         app.debug "RESET", @user
-        @connection.disconnect()
+        @connection?.disconnect()
 
     # make sure we allways have a channel
     createChannel: (done) =>
@@ -129,7 +129,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             else @connection_event.apply(this, arguments)
 
     isRegistered: ->
-        @connection.register.registered
+        @connection?.register?.registered
 
     # forwards all events of the connection
     connection_event: (status) =>
