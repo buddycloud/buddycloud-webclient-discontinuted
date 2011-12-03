@@ -48,6 +48,7 @@ class exports.Sidebar extends Backbone.View
                 @el.append entry.el
         entry.render()
 
+        @$('.tutorial').remove()
         @channelsel.antiscroll()
 
         return entry
