@@ -41,7 +41,7 @@ class exports.ChannelEntry extends BaseView
             @status = status.toJSON yes
         @unread_posts_count = @model.count_unread()
 
-    bubble: (duration = 5000) =>
+    bubble: (duration = 500) =>
         @parent._movingChannels ?= 0
 
         # relative offset + absolute offset
