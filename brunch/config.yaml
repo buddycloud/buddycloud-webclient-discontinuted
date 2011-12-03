@@ -9,6 +9,7 @@ dependencies:
   - jquery.textsaver.js
   - jquery.mousewheel.js
   - jquery.antiscroll.js
+  - jquery.inputevent.js
   - jquery.autosuggestion.js
   - transform.js
   - backbone-master.js
