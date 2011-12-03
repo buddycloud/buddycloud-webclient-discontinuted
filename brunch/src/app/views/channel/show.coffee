@@ -57,7 +57,8 @@ class exports.ChannelView extends BaseView
 
         @model.mark_read()
         # Not subscribed? Refresh!
-        app.handler.data.refresh_channel(@model.get 'id')
+        if app.users.current.isFollowing(@model)
+            app.handler.data.refresh_channel(@model.get 'id')
 
         # when scrolled to the bottom, cause loading of more posts via
         # RSM because we are showing too few of them.
