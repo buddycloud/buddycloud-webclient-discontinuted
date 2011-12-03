@@ -34,8 +34,10 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         # check if the bosh service is reachable
         jQuery.ajax
             type:'POST'
-            data:'<body xmlns="http://jabber.org/protocol/httpbind"/>'
+            contentType:"text/xml"
+            data:'<body rid="-1" xmlns="http://jabber.org/protocol/httpbind"/>'
             url:config.bosh_service
+            processData:off
             success: callback
             error: =>
                 @trigger 'nobosh'
