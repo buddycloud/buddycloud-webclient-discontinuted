@@ -31,10 +31,8 @@ class exports.LoginView extends AuthenticationView
 
             if localStorage.getItem(LSlpk) is "true"
                 passwdinput.textSaver()
-                passwdinput.keyup() # update underlying inputfields
                 # only track what is before the @
                 userinput.textSaver()
-                userinput.keyup() # update underlying inputfields
                 # letz the user choose if he really wants it to be saved in the localstorage
                 checkbox.prop 'checked', yes
                 warning.show()
@@ -42,9 +40,7 @@ class exports.LoginView extends AuthenticationView
             checkbox.change ->
                 if checkbox.is ':checked'
                     passwdinput.textSaver()
-                    passwdinput.keyup() # update underlying inputfields
                     userinput.textSaver()
-                    userinput.keyup() # update underlying inputfields
                     localStorage.setItem(LSlpk, yes)
                     warning.show()
                 else
