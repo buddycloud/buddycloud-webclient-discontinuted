@@ -4,3 +4,6 @@
 [submodule "external/antiscroll"]
 	path = external/antiscroll
 	url = git://github.com/LearnBoost/antiscroll.git
+[submodule "external/jquery-autoResize"]
+	path = external/jquery-autoResize
+	url = git://github.com/padolsey/jQuery.fn.autoResize.git
