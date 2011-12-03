@@ -40,6 +40,10 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             error: =>
                 @trigger 'nobosh'
 
+    reconnect: () =>
+        {jid, password} = @last_login ? {}
+        @connect jid, password
+
     # connect the current user with his jid and pw
     connect: (jid, password) ->
         if jid isnt @last_login.jid or password isnt @last_login.password
@@ -127,6 +131,9 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 @connection.authenticate()
 
             else @connection_event.apply(this, arguments)
+
+    wasConnected: ->
+        @last_login?.connected
 
     isRegistered: ->
         @connection?.register?.registered

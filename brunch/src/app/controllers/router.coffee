@@ -45,17 +45,17 @@ class exports.Router extends Backbone.Router
         app.views.index.el.remove()
         delete app.views.index
 
-        connection = app.handler.connection
         # Last login succeeded? Reconnect!
-        if connection.last_login.connected
+        if app.handler.connection.wasConnected()
+            setTimeout ( ->
+                # Discard all the channel views
+                do app.handler.connection.reconnect
+            ), 1000
+            # Wait for on_connected...
             app.views.loadingchannel ?= new LoadingChannelView
             @setView app.views.loadingchannel
-            setTimeout ->
-                # Discard all the channel views
-                connection.connect connection.last_login.jid, connection.last_login.password
-            , 1000
-        else
-            @login()
+
+        else @navigate 'login'
 
     # routes
 
