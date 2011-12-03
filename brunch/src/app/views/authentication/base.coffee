@@ -46,7 +46,8 @@ class exports.AuthenticationView extends Backbone.View
          .animate({left:"#{curr_pos.left + 10}"},50)
          .animate {left:"#{curr_pos.left - 10}"},50, =>
         @el.find("form").addClass('hasError')
-        @el.find("##{type}").show()
+        par = @el.find("##{type}").show().parent()
+        do par.show if par.hasClass('error')
 
     reset: () =>
         @unbind 'hide', @go_away

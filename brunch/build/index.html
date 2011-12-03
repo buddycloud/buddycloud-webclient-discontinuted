@@ -56,23 +56,25 @@
       <section class="content">
         <form id="register_account" class="clearfix visible">
           <p class="negative">Let's create a new Jabber ID:</p>
+          <div class="error">
+            <div id="nobosh">BOSH Service unavailable!</div>
+            <div id="regifail">Cannot create new Account.</div>
+            <div id="authfail">Unable to confirm your username or password.</div>
+            <div id="connfail">Connection to the server closed.</div>
+            <div id="disconnected">Thats weird. You disconnected.</div>
+          </div>
           <label for="home_register_new_jid">Username</label>
+          <div class="error alone" id="noname">Please provide a suitable Name for You.</div>
           <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
           <label for="home_register_new_password">Password</label>
+          <div class="error alone" id="nopasswd">No Password given.</div>
           <input type="password" id="home_register_new_password" placeholder="Password" />
+          <div class="error alone" id="passwdmissmatch">Passwords doesnt match.</div>
           <input type="password" id="home_register_new_confirm" placeholder="Repeat Password" />
           <label for="home_register_new_email">Email (for password recovery (if server supports it))</label>
           <input type="text" id="home_register_new_email" placeholder="Email" />
           <div class="leftBox">
             <span class="spinner">creating new account</span>
-            <span class="fail" id="nobosh">BOSH Service unavailable!</span>
-            <span class="fail" id="authfail">Authentification unssuccessful. Please try again.</span>
-            <span class="fail" id="connfail">Connection closed :(</span>
-            <span class="fail" id="regifail">Cannot create new Account.</span>
-            <span class="fail" id="noname">No Name given.</span>
-            <span class="fail" id="nopasswd">No Password given.</span>
-            <span class="fail" id="passwdmissmatch">Passwords doesnt match.</span>
-            <span class="fail" id="disconnected">Thats weird. You disconnected D:</span>
           </div>
           <button type="submit" id="home_register_account">Register</button>
         </form>
