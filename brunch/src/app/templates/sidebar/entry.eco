@@ -1,4 +1,4 @@
-<div class="<%= @isPersonal("personal","") %>channel <%= @isSelected("selected","") %> <%= @isFollowed("","unknown") %>">
+<div class="<%= @isPersonal("personal","") %> channel <%= @isSelected("selected","") %> <%= @isFollowed(" ","unknown") %>">
   <div class="holder">
     <div class="avatar" title="<%= @channel?.metadata?.title?.value or @channel?.id %>" style="background-image: url(<%= @model.avatar %>)">
       <% if @unread_posts_count: %>
