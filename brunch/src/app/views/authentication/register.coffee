@@ -9,7 +9,7 @@ class exports.RegisterView extends AuthenticationView
 
         passwd = $('#home_register_new_password')
         confirm = $('#home_register_new_confirm')
-        confirm.keyup =>
+        confirm.input ->
             if passwd.val() is confirm.val()
                 unless confirm.hasClass 'match'
                     confirm.removeClass 'missmatch'
