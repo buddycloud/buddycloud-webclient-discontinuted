@@ -11,9 +11,11 @@
         this.unbind();
 
         // use the special oninput event
-        this.el.input(function() {
+        var oninput;
+        this.el.input(oninput = function() {
             setTimeout(function() { check(); }, 0);
         });
+        oninput();
 
         if (!this.el.is(':hidden')) {
             this.check(null, true);
