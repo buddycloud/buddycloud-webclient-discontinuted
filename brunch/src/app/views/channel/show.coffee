@@ -109,7 +109,6 @@ class exports.ChannelView extends BaseView
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'
-                    text.keyup()
                 else
                     console.error "postError", error
                     @show_post_error error
