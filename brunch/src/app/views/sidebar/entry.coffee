@@ -11,6 +11,7 @@ class exports.ChannelEntry extends BaseView
         @model.bind 'change:node:metadata', @render
         # Update unread counter:
         @model.bind 'post', @render
+        @model.bind 'bubble', @bubble
         bubble = @bubble # FIXME
         @bubble = (args...) =>
             setTimeout ( -> bubble args... ), 200

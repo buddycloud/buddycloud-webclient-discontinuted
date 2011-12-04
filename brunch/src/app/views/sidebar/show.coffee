@@ -75,7 +75,6 @@ class exports.Sidebar extends Backbone.View
             @current.el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.render()
-        @current?.bubble()
         old?.render()
 
     bubble: (channel) =>

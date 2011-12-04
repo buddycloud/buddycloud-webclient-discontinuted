@@ -53,6 +53,7 @@ class exports.Channel extends Model
             if post.get_last_update() > last_view
                 count++
             else break
+        @trigger 'bubble'
         count
 
     mark_read: ->
