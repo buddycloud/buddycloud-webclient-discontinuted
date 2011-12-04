@@ -6,12 +6,16 @@ class exports.Searchbar extends BaseView
 
     initialize: ({@channels}) ->
         super
+        @$('input[type="search"]').input @on_input
 
     events:
-        'keyup input[type="search"]': 'on_key'
         'search input[type="search"]': 'on_search'
 
-    on_key: (ev) ->
+    render: ->
+        super
+        @$('input[type="search"]').input @on_input
+
+    on_input: (ev) =>
         code = ev.keyCode or ev.which # bloody browsers
         input = @$('input[type="search"]')
         search = input.val()
