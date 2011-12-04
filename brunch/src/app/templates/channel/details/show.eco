@@ -16,7 +16,7 @@
       <!-- Broadcasting since: 182 days (beautiful time)-->
       <% if @metadata?.creation_date?: %>
         <p class="broadcast">
-          <span class="title">Broadcasting started:</span>
+          <span class="title">Broadcasting for </span>
           <span class="format-date time ago" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M"><%= @metadata.creation_date.value %></span>
 	</p>
       <% end %>
