@@ -43,6 +43,7 @@ class exports.ChannelEntry extends BaseView
         @unread_posts_count = @model.count_unread()
 
     bubble: (duration = 500) =>
+        return # FIXME totally buggy
         @parent._movingChannels ?= 0
 
         # relative offset + absolute offset
