@@ -1,5 +1,6 @@
 window.app =
     version: '0.0.0-43'
+    localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}
     affiliations: [ # all possible pubsub affiliations
@@ -43,9 +44,9 @@ $(document).ready ->
 
         # when domain used an older webclient version before, we clear localStorage
         version = localStorage.getItem('__version__')
-        if not version? or app.version > version
+        unless app.localStorageVersion is version
             localStorage.clear()
-            localStorage.setItem('__version__', app.version)
+            localStorage.setItem('__version__', app.localStorageVersion)
 
         # caches
         app.channels = new ChannelStore
