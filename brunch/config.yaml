@@ -12,6 +12,7 @@ dependencies:
   - jquery.inputevent.js
   - jquery.autoresize.js
   - jquery.autoresize+input.js
+  - jquery.animate-enhanced.js
   - jquery.autosuggestion.js
   - transform.js
   - backbone-master.js

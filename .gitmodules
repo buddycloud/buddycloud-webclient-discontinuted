@@ -7,3 +7,6 @@
 [submodule "external/jquery-autoResize"]
 	path = external/jquery-autoResize
 	url = git://github.com/padolsey/jQuery.fn.autoResize.git
+[submodule "external/jquery-animate-enhanced"]
+	path = external/jquery-animate-enhanced
+	url = git://github.com/benbarnett/jQuery-Animate-Enhanced.git
