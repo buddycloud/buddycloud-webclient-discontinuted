@@ -74,6 +74,10 @@ class exports.CommentsView extends BaseView
         if @model
             text = @$('.answer textarea')
             text.textSaver()
+            text.autoResize
+                extraSpace:0
+                animate:off
+
             @$('.answer').click() unless text.val() is ""
 
         @model.forEach (comment) =>

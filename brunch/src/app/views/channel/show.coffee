@@ -137,6 +137,7 @@ class exports.ChannelView extends BaseView
 
         unless self.hasClass 'write' or text.val() is ""
             self.addClass 'write'
+
             $(document).click on_click = ->
                 # minimize the textarea only if the textarea is empty
                 if text.val() is ""
@@ -177,6 +178,9 @@ class exports.ChannelView extends BaseView
         if @model
             text = @$('.newTopic textarea')
             text.textSaver()
+            text.autoResize
+                extraSpace:0
+                animate:off
             @$('.newTopic').click() unless text.val() is ""
 
         if @hidden
