@@ -31,18 +31,18 @@
             <div id="connfail">Connection to the server closed.</div>
             <div id="disconnected">Thats weird. You disconnected.</div>
           </div>
-          <label for="home_login_jid">Jabber ID</label>
+          <label for="home_login_jid">username</label>
           <input type="text" id="home_login_jid" name="login-jid" placeholder="Jabber ID" required />
-          <label for="home_login_pwd">Password</label>
+          <label for="home_login_pwd">password</label>
           <input type="password" id="home_login_pwd" name="login-pwd" placeholder="Password" required />
           <span>
             <label for="store_local">
-              <input type="checkbox" id="store_local"/> Store Password local?
-              <div>stored as plain text on device</div>
+              <input type="checkbox" id="store_local"/> store password locally?
+              <div>your password is now stored on this computer</div>
             </label>
           </span>
           <div class="leftBox">
-            <span class="spinner">Logging in</span>
+            <span class="spinner">logging in</span>
             <a href="#" class="resetPassword">Forgot password?</a>
           </div>
           <button type="submit" id="home_login_submit" class="callToAction">Login</button>
@@ -55,7 +55,7 @@
     <div id="register">
       <section class="content">
         <form id="register_account" class="clearfix visible">
-          <p class="negative">Let's create a new Jabber ID:</p>
+          <p class="negative">Let's get setup</p>
           <div class="error">
             <div id="nobosh">BOSH Service unavailable!</div>
             <div id="regifail">Cannot create new Account.</div>
@@ -63,20 +63,20 @@
             <div id="connfail">Connection to the server closed.</div>
             <div id="disconnected">Thats weird. You disconnected.</div>
           </div>
-          <label for="home_register_new_jid">Username</label>
-          <div class="error alone" id="noname">Please provide a suitable Name for You.</div>
+          <label for="home_register_new_jid">username</label>
+          <div class="error alone" id="noname">please provide a username</div>
           <input type="text" id="home_register_new_jid" placeholder="Username" /><!-- will be jabber id = username + domain -->
-          <label for="home_register_new_password">Password</label>
-          <div class="error alone" id="nopasswd">No Password given.</div>
+          <label for="home_register_new_password">password</label>
+          <div class="error alone" id="nopasswd">no password entered.</div>
           <input type="password" id="home_register_new_password" placeholder="Password" />
-          <div class="error alone" id="passwdmissmatch">Passwords doesnt match.</div>
+          <div class="error alone" id="passwdmissmatch">Your passwords don't match.</div>
           <input type="password" id="home_register_new_confirm" placeholder="Repeat Password" />
-          <label for="home_register_new_email">Email (for password recovery (if server supports it))</label>
+          <label for="home_register_new_email">email address (used for password recovery)</label>
           <input type="text" id="home_register_new_email" placeholder="Email" />
           <div class="leftBox">
-            <span class="spinner">creating new account</span>
+            <span class="spinner">creating your account</span>
           </div>
-          <button type="submit" id="home_register_account">Register</button>
+          <button type="submit" id="home_register_account">Join buddycloud</button>
         </form>
       </section>
       <section class="navigation clearfix">
