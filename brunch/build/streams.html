@@ -843,26 +843,24 @@
           .input(function(){
             var text = $(this).text();
             if(text === "") $(this).html("&nbsp;");
-            var enter = text.indexOf('\n');
-            console.log(enter);
-            if(enter !== -1){
-              $(this).text( text.slice(0, enter) );
-            }
-          })
-          .keydown(function(event){
-            return !($(this).data('editmode') === 'singleLine' && event.keyCode == 13);
-          }); 
+          }).keydown(function (ev) {
+            var code = ev.keyCode || ev.which;
+            if ($(this).data('editmode') === 'singleLine' && code == 13) {
+                ev.preventDefault();
+                return false;
+            } else return true;
+          });
         // only allow enter when the target is not singleLine
       }
     }
     $(editableElements[0]).focus();
   }
-  
+
   function stopEditMode(save){
     for(var i = 0, l = editableElements.length; i < l; i++){
       var el = editableElements[i];
       if($(el).data('editmode') !== 'boolean') {
-        
+
         // remove designMode & contenteditable
         $(el).prop('contenteditable', false);
 
