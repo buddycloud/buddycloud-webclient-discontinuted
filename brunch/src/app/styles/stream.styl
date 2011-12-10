@@ -38,6 +38,7 @@
   background #eee url("../../public/images/logo.png") no-repeat center center
   box-shadow -1px 0 black, -2px 0 rgba(0, 0, 0, 0.21)
   position relative
+  z-index 1
   &.overlapping
     min-height 100%
     position absolute
@@ -63,6 +64,7 @@
   //overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
+  transition 250ms
   &.personal
     > header
         height 58px
@@ -79,13 +81,14 @@
         top 0
     h2, .status, .location
       margin-left 8px
-      width 305px
+      width 247px
       white-space nowrap
       overflow hidden
       text-overflow ellipsis
       display block
     h2
-      line-height 30px
+      margin-bottom 2px
+      line-height 28px
     .status
       font-size 12px
       color #808080 // rgba(0, 0, 0, 0.55)
@@ -148,20 +151,28 @@
   z-index 2
   transform-style preserve-3d
   perspective 1000
-  article
-    padding 13px
-    background white
-    position relative
-    box-shadow inset 0 -1px rgba(0,0,0,.21)
-    overflow hidden
-    &:first-child
-      border-radius 5px 5px 0 0
-    &:last-child
-      border-radius 0 0 5px 5px
-      box-shadow none
-    &:only-child
-      border-radius 5px
-      box-shadow none
+  .topics 
+    article
+      padding 13px
+      background white
+      position relative
+      box-shadow inset 0 -1px rgba(0,0,0,.21)
+      overflow hidden
+      &:first-child
+        border-radius 5px 5px 0 0
+      &:last-child
+        border-radius 0 0 5px 5px
+        box-shadow none
+      &:only-child
+        border-radius 5px
+        box-shadow none
+  .newTopic + .topics 
+    article
+      &:first-child
+        border-radius 0
+      &:last-child
+        border-radius 0 0 5px 5px
+        box-shadow none
   .notification
     height 49px
     margin-top -76px
@@ -207,6 +218,7 @@
     .avatar
       width 50px
       transition 500ms
+      cursor pointer
     &.log
       height 25px
       padding-top 5px
@@ -261,7 +273,7 @@
         display block
         color rgba(0,0,0,.34)
   .name
-    font-weight bold
+    color gray
     overflow hidden
     white-space nowrap
     text-overflow ellipsis    
@@ -276,6 +288,8 @@
     left 13px
     position absolute
     border-radius 3px
+  p
+    color black
   section.answer
     position relative
     overflow hidden
@@ -336,7 +350,7 @@
     word-wrap break-word
   section.newTopic
     padding 13px 13px 12px 51px
-    background linear-gradient(top, white, #F2F2F2)
+    background linear-gradient(top, white, #eee)
     border-bottom 1px solid rgba(0,0,0,.13)
     border-radius 5px 5px 0 0
     display block
@@ -548,6 +562,8 @@
     opacity 0.55
   &.hidden .infoToggle
     margin-left -224px
+    .editmode &
+      margin-left -1px
   > .holder
     width 222px
     padding 8px 21px
@@ -559,6 +575,9 @@
   &.hidden > .holder
     margin-left -252px
     opacity 0
+    .editmode &
+      margin-left 0
+      opacity 1
   .meta
     table
       margin 13px 0
