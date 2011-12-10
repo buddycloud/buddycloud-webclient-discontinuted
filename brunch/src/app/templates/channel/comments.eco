@@ -8,7 +8,7 @@
   <% if @user?.hasRightToPost: %>
   <section class="answer" id="<%= @model.parent.get 'id' %>-answer">
     <img class="avatar" src="<%= app.users.current.avatar %>" />
-    <textarea name="comment-text" placeholder="post a comment..."></textarea>
+    <textarea name="comment-text" placeholder="add comment (use CTRL enter to add automatically)"></textarea>
     <div class="controls">
       <!-- No Location functionality implemented yet:
       <div class="button small checkbox">
