@@ -39,7 +39,6 @@ class exports.CommentsView extends BaseView
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'
-                    text.keyup()
                 else
                     console.error "postError", error
                     @show_comment_error error
