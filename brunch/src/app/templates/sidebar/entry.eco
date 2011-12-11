@@ -13,7 +13,7 @@
       <span class="status"><%= @channel?.metadata?.status?.value or "" %></span>
     </div>
     <% if @isSelected(): %>
-      <div class="active_channel_indicator"><div>
+      <div class="active_channel_indicator"><div></div></div>
     <% end %>
   </div>
 </div>
