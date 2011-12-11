@@ -26,8 +26,12 @@
   text-indent -9999px
   background url(../../public/images/poweredby.png)
   position absolute
+  display none
   header.small #poweredby
     top 0
+    
+.avatar
+  border-radius 3px
 
 #content
   margin-left 234px
@@ -65,86 +69,96 @@
 
 .channelView
   transition 250ms
-  &.personal
-    > header
-        height 58px
-      nav
-        top 8px
+  .banner
+    height 100%
+    width 100%
+    background-size cover
+    background-position center center
+    position fixed
+    box-shadow 1px 0 rgba(255,255,255,.34) inset
   > header
-    margin 21px 13px 0
-    width 500px
-    height 40px
+    margin 40px 13px 0 13px
+    padding 13px 8px 0 
+    width 484px
+    height 58px
+    background rgba(0,0,0,.75)
+    border-radius 5px 5px 0 0
     position relative
-    &.small
-      height 40px
-      nav
-        top 0
-    h2, .status, .location
-      margin-left 8px
-      width 247px
-      white-space nowrap
-      overflow hidden
-      text-overflow ellipsis
-      display block
-    h2
-      margin-bottom 2px
-      line-height 28px
-    .status
-      font-size 12px
-      color #808080 // rgba(0, 0, 0, 0.55)
+    box horizontal left stretch
+    .avatar
+      width 50px
+      margin 0 13px 0 5px
+    .titleBar
+      box-flex 1
+      h2, .status, .location
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        text-shadow 0 1px 2px black
+        display block
+      h2
+        color white
+        margin-bottom 2px
+        line-height 28px
+      .status
+        font-size 12px
+        color rgba(255,255,255,.67)
     .location
       display none
       .previous
         text-decoration line-through
-    nav
-      right 0
-      top 0
-      position absolute
-      > div
-        margin-left 5px
-      &.inChannel
-        .channel
-          display none
-      &.inMessages
-        .messages
-          display none
-      .tab  
-        height 29px
-        padding 1px 1px 0
-        margin-right -1px
-        vertical-align bottom
-        overflow hidden
-        position relative
-        display inline-block
-        .holder
-          padding 5px 13px 6px
-          font-size 12px
-          color rgba(0, 0, 0, 0.76)
-          text-shadow 0 1px rgba(255, 255, 255, 0.55)
-          background linear-gradient(top, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08))
-          border-radius 3px 3px 0 0
-          box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
-          display block
-          position relative
-          cursor pointer
-        &.newMessage
-          .holder
-            padding-right 33px
-          .counter
-            right 8px
-            top 5px
-        &.active .holder
-          background white
-          z-index 3
-          cursor default
     + .topic
       border-radius 3px 3px 0 0
+  nav
+    margin-top 10px
+    > div
+      margin-left 5px
+    &.inChannel
+      .channel
+        display none
+    &.inMessages
+      .messages
+        display none
+    .button
+      width 75px
+      padding 0
+      text-align center
+    .tab  
+      height 29px
+      padding 1px 1px 0
+      margin-right -1px
+      vertical-align bottom
+      overflow hidden
+      position relative
+      display inline-block
+      .holder
+        padding 5px 13px 6px
+        font-size 12px
+        color rgba(0, 0, 0, 0.76)
+        text-shadow 0 1px rgba(255, 255, 255, 0.55)
+        background linear-gradient(top, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08))
+        border-radius 3px 3px 0 0
+        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
+        display block
+        position relative
+        cursor pointer
+      &.newMessage
+        .holder
+          padding-right 33px
+        .counter
+          right 8px
+          top 5px
+      &.active .holder
+        background white
+        z-index 3
+        cursor default
   
   
 .stream  
   margin 0 0 13px 13px
   width 500px
-  border-radius 5px
+  border-radius 0 0 5px 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
   float left
   position relative
@@ -287,7 +301,6 @@
   .avatar
     left 13px
     position absolute
-    border-radius 3px
   p
     color black
   section.answer
@@ -352,7 +365,7 @@
     padding 13px 13px 12px 51px
     background linear-gradient(top, white, #eee)
     border-bottom 1px solid rgba(0,0,0,.13)
-    border-radius 5px 5px 0 0
+    border-radius 0
     display block
     overflow hidden
     position relative
@@ -379,7 +392,7 @@
       transition 250ms
     &.write textarea
       height 89px
-      margin-bottom 29px
+      margin-bottom 33px
       color black
   .controls
     bottom 13px
@@ -525,50 +538,46 @@
       background linear-gradient(top, rgba(0,0,0,.05), rgba(0,0,0,.13))
 
 .channelDetails
-  width 264px
+  width 304px
   font-size 12px
-  color rgba(0,0,0,.55)
-  float left
-  position relative
+  color white
+  text-shadow 0 1px 1px black
+  position absolute
+  left 513px
+  top 64px
+  overflow hidden
   .infoToggle
-    width 220px
+    width 259px
     height 26px
     margin-left -1px
-    margin-top 13px
     padding 0 13px 0 21px
     font-weight bold
     line-height 26px
-    border 1px solid rgba(0, 0, 0, 0.21)
     border-bottom-color rgba(0,0,0,.34)
     border-radius 0 14px 14px 0
-    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
+    background rgba(0,0,0,.75)
+    box-shadow 0 1px rgba(0,0,0,.05)
     transition 500ms
     cursor pointer
-    &:hover
-      .icon
-        opacity 1
     h4
-      color rgba(0,0,0,.67)
+      color white
+      text-shadow 0 1px 2px black
       display inline
     .icon
-      margin-top 6px
-      width 9px
-      height 15px
-      background url("../../public/icons/info.png")
-      opacity 0.67
+      font-weight bold
+      font-size 16px
+      line-height 24px
       display block
       float right
-  &.hidden .infoToggle .icon
-    opacity 0.55
   &.hidden .infoToggle
-    margin-left -224px
+    margin-left -264px
     .editmode &
       margin-left -1px
   > .holder
     width 222px
     padding 8px 21px
     font-size 12px
-    color rgba(0,0,0,.55)
+    background rgba(0,0,0,.75)
     float left
     position relative
     transition 500ms
@@ -635,9 +644,8 @@
       padding-top 3px
       line-height 19px
       text-align center
-      background linear-gradient(top, rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.03))
-      border-bottom 1px solid rgba(0, 0, 0, 0.03)
-      box-shadow 0 1px rgba(0, 0, 0, 0.03) inset, 0 1px rgba(255,255,255,.55)
+      background linear-gradient(top, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.08))
+      box-shadow 0 1px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255,255,255,.13)
       clear left
       cursor pointer
       &:hover
@@ -650,6 +658,7 @@
   margin-bottom 13px
   position relative
   overflow hidden
+  display none
   &:after
     margin-top 0
     margin-left 2px
