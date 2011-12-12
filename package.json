@@ -10,7 +10,6 @@
 ,   "update":  "./node_modules/.bin/brunch build"
   }
 , "dependencies": {
-    "brunch": "0.8.1"
 ,   "eco": "1.1.0-rc-1"
 ,   "express": "2.4.6"
 ,   "jsconfig": "0.1.1"
