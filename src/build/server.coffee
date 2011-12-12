@@ -1,30 +1,39 @@
 path = require 'path'
-port = 3000
+config = require 'jsconfig'
+express = require 'express'
+{ createReadStream } = require 'fs'
+cwd = path.join(__dirname, "..", "..")
 
-express = require("express")
-server = express.createServer()
+config.defaults path.join(cwd, "config.js")
 
-buildPath = path.join(__dirname, '..', 'build')
+config.cli
+    host: ['host', ['b', "build server listen address", 'host']]
+    port: ['port', ['p', "build server listen port",  'number']]
 
+config.load (args, opts) ->
 
-server.configure ->
-    server.set 'views', buildPath
-    server.use express.static buildPath
+    server = express.createServer()
 
-index_html = require('fs').readFileSync(path.join(buildPath, "index.html"))
+    buildPath = path.join(cwd, "assets")
 
-index = (req, res) ->
-  res.header('Content-Type', 'text/html')
-  res.end(index_html)
+    server.configure ->
+        server.set 'views', buildPath
+        server.use express.static buildPath
 
+    index_html = require('fs').readFileSync(path.join(buildPath, "index.html"))
 
-server.get('/',            index)
-server.get('/welcome',     index)
-server.get('/more',        index)
-server.get('/login',       index)
-server.get('/register',    index)
-server.get('/:id@:domain', index)
+    index = (req, res) ->
+        res.header 'Content-Type', 'text/html'
+        createReadStream(index_html).pipe(res)
 
 
-console.log("starting server on port " + port)
-server.listen(parseInt(port, 10))
+    server.get '/',            index
+    server.get '/welcome',     index
+    server.get '/more',        index
+    server.get '/login',       index
+    server.get '/register',    index
+    server.get '/:id@:domain', index
+
+
+    server.listen config.port, config.host
+    console.log "build server listening on %s:%s ...", config.host, config.port
