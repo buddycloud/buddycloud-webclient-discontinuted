@@ -23,6 +23,7 @@
 ,   "formatdate": "0.1.2"
 ,   "es5-shim": "1.2.10"
 ,   "store": "1.1.1"
+,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
   }
 , "_dependencies_missing_from_npm": {
     "jQuery.fn.autoResize":    "5025b4a5c3ed60d7218827eb19e8c0c4e641aabe",
