@@ -6,15 +6,15 @@
 , "repository": { "type": "git", "url": "git://github.com/buddycloud/channel-webclient.git" }
 , "engines": { "node": ">= 0.4.8" }
 , "scripts": {
-    "install": "./node_modules/.bin/brunch build"
-,   "update":  "./node_modules/.bin/brunch build"
+    "install": "#./node_modules/.bin/coffee"
+,   "update":  "#./node_modules/.bin/coffee"
   }
 , "dependencies": {
-,   "eco": "1.1.0-rc-1"
+    "eco": "1.1.0-rc-1"
 ,   "express": "2.4.6"
 ,   "jsconfig": "0.1.1"
 ,   "nib": "0.3.1"
-,   "shimify": "1.2.10"
+,   "shimify": "0.0.0"
 ,   "jqueryify": "0.0.2"
 ,   "underscore": "1.2.3"
 ,   "backbone-browserify": "0.5.3"
