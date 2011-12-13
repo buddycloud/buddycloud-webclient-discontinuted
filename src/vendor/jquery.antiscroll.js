@@ -1,1 +1,1 @@
-../../../external/antiscroll/antiscroll.js
+../../external/antiscroll/antiscroll.js

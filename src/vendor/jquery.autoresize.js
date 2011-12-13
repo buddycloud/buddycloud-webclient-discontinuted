@@ -1,1 +1,1 @@
-../../../external/jquery-autoResize/jquery.autoresize.js
+../../external/jquery-autoResize/jquery.autoresize.js
