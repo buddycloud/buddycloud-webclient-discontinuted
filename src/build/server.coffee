@@ -36,6 +36,9 @@ config.load (args, opts) ->
                 extensions:
                     '.eco': (source) ->
                         "module.exports = #{eco.precompile source}"
+                    'modernizr.js': (source) ->
+                        # modernizr needs the full global window namespace
+                        "!function(){#{source}}.call(window)"
 
         stylePath = path.join(cwd, "src", "styles")
         server.use stylus.middleware
