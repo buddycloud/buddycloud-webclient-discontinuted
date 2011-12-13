@@ -1,6 +1,6 @@
 
 require 'es5-shim'
-require './vendor/consoleDummy'
+require './vendor/ConsoleDummy'
 require './vendor/document-redraw'
 
 window.Strophe = require 'Strophe.js'

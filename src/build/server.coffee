@@ -22,7 +22,8 @@ config.load (args, opts) ->
         javascript = browserify
                 mount  : '/web/js/app.js'
                 require: [path.join(cwd, "src", "main")]
-                watch  : true
+                verbose: yes
+                watch  : yes
                 cache  : off
                 fastmatch: on
 
