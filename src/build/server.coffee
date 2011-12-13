@@ -1,6 +1,7 @@
 path = require 'path'
 config = require 'jsconfig'
 express = require 'express'
+browserify = require 'browserify'
 { createReadStream } = require 'fs'
 cwd = path.join(__dirname, "..", "..")
 
@@ -18,9 +19,17 @@ config.load (args, opts) ->
 
     server.configure ->
         server.set 'views', buildPath
+        javascript = browserify
+                mount  : '/web/js/app.js'
+                require: [path.join(cwd, "src", "main")]
+                watch  : true
+                cache  : off
+                fastmatch: on
+
+        server.use javascript
         server.use express.static buildPath
 
-    index_html = require('fs').readFileSync(path.join(buildPath, "index.html"))
+    index_html = path.join(buildPath, "index.html")
 
     index = (req, res) ->
         res.header 'Content-Type', 'text/html'
