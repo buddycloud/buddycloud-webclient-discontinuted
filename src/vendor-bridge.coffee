@@ -3,7 +3,7 @@ require './vendor/ConsoleDummy'
 require './vendor/document-redraw'
 
 ## Strophe.js
-window.Strophe = require 'Strophe.js'
+require 'Strophe.js'
 # plugins
 require "./vendor/strophe.disco.js"
 require "./vendor/strophe.roster.js"

@@ -39,6 +39,10 @@ config.load (args, opts) ->
                     'modernizr.js': (source) ->
                         # modernizr needs the full global window namespace
                         "!function(){#{source}}.call(window)"
+                    'strophe.js': (source) ->
+                        # expose MD5 lib because we need that for gravatar too
+                        source += ";window.MD5=MD5"
+                        source
 
         stylePath = path.join(cwd, "src", "styles")
         server.use stylus.middleware
