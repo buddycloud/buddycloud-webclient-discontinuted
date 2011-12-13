@@ -74,6 +74,9 @@ config.load (args, opts) ->
     server.get '/register',    index
     server.get '/:id@:domain', index
 
+    server.get '/web/js/store.js', (req, res) ->
+        res.header 'Content-Type', 'text/javascript'
+        createReadStream(require.resolve 'store').pipe(res)
 
     server.listen config.port, config.host
     console.log "build server listening on %s:%s ...", config.host, config.port
