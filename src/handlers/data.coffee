@@ -1,4 +1,4 @@
-{ User } = require 'models/user'
+{ User } = require '../models/user'
 
 
 class exports.DataHandler extends Backbone.EventHandler

@@ -1,5 +1,5 @@
-{ Collection } = require 'collections/base'
-{ Post } = require 'models/post'
+{ Collection } = require './base'
+{ Post } = require '../models/post'
 
 class exports.Posts extends Collection
     model: Post

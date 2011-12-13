@@ -1,4 +1,4 @@
-{ Model } = require 'models/base'
+{ Model } = require '../base'
 
 class exports.Metadata extends Model
     type:'unspecified' # should be overriden by extending classes

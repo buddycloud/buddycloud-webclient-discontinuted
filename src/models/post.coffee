@@ -1,4 +1,4 @@
-{ Model } = require 'models/base'
+{ Model } = require './base'
 
 class exports.Post extends Model
 

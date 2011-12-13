@@ -1,4 +1,4 @@
-{ Node } = require 'models/node/base'
+{ Node } = require './base'
 
 class exports.GeoNode extends Node
 

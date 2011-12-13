@@ -1,4 +1,4 @@
-{ Metadata } = require 'models/metadata/base'
+{ Metadata } = require './base'
 
 class exports.UserMetadata extends Metadata
     type: 'user'

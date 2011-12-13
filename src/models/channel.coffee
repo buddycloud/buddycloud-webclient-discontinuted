@@ -1,6 +1,6 @@
-{ Model } = require 'models/base'
-{ NodeStore } = require 'collections/node'
-{ gravatar } = require 'util'
+{ Model } = require './base'
+{ NodeStore } = require '../collections/node'
+{ gravatar } = require '../util'
 
 ##
 # Attribute id: Jabber-Id

@@ -1,5 +1,5 @@
-{ AuthenticationView } = require 'views/authentication/base'
-{ EventHandler, getBrowserPrefix } = require 'util'
+{ AuthenticationView } = require './base'
+{ EventHandler, getBrowserPrefix } = require '../../util'
 
 LSlpk = '__localpasswd__' # localStorage local password key
 

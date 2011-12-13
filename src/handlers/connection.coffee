@@ -1,5 +1,5 @@
-{ DataHandler } = require 'handlers/data'
-{ Connector } = require 'handlers/connector'
+{ DataHandler } = require './data'
+{ Connector } = require './connector'
 
 class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->

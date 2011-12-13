@@ -1,4 +1,4 @@
-{ RequestHandler } = require 'handlers/request'
+{ RequestHandler } = require './request'
 
 class exports.Connector extends Backbone.EventHandler
 

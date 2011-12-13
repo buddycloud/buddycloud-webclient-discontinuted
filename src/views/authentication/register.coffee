@@ -1,5 +1,5 @@
-{ AuthenticationView } = require 'views/authentication/base'
-{ EventHandler } = require 'util'
+{ AuthenticationView } = require './base'
+{ EventHandler } = require '../../util'
 
 
 class exports.RegisterView extends AuthenticationView

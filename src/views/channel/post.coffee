@@ -1,9 +1,9 @@
-{ BaseView } = require 'views/base'
-{ EventHandler, throttle_callback } = require 'util'
+{ BaseView } = require '../base'
+{ EventHandler, throttle_callback } = require '../../util'
 
 
 class exports.PostView extends BaseView
-    template: require 'templates/channel/post'
+    template: require '../../templates/channel/post.eco'
 
     initialize: ({@parent, @type}) =>
         super

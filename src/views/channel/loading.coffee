@@ -1,6 +1,6 @@
 
 class exports.LoadingChannelView extends Backbone.View
-    template: require 'templates/channel/loading'
+    template: require '../../templates/channel/loading.eco'
 
     initialize: ->
         @bind 'hide', @hide

@@ -1,9 +1,9 @@
-{ BaseView } = require 'views/base'
-{ transitionendEvent, EventHandler } = require 'util'
+{ BaseView } = require '../base'
+{ transitionendEvent, EventHandler } = require '../../util'
 
 
 class exports.ChannelEntry extends BaseView
-    template: require 'templates/sidebar/entry'
+    template: require '../../templates/sidebar/entry.eco'
 
     initialize: ->
         super

@@ -1,6 +1,6 @@
-{ Collection } = require 'collections/base'
-{ Channel } = require 'models/channel'
-{ nodeid_to_user } = require 'util'
+{ Collection } = require './base'
+{ Channel } = require '../models/channel'
+{ nodeid_to_user } = require '../util'
 
 
 ##

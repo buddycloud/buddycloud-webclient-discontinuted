@@ -1,13 +1,13 @@
-{ ChannelOverView } = require 'views/sidebar/more'
-{ ChannelEntry } = require 'views/sidebar/entry'
-{ Searchbar } = require 'views/sidebar/search'
+{ ChannelOverView } = require './more'
+{ ChannelEntry } = require './entry'
+{ Searchbar } = require './search'
 
 # The sidebar shows all channels the user is:
 # * subscribed to
 # * viewed recently
 class exports.Sidebar extends Backbone.View
-    tutorial: require 'templates/sidebar/tutorial'
-    template: require 'templates/sidebar/show'
+    tutorial: require '../../templates/sidebar/tutorial.eco'
+    template: require '../../templates/sidebar/show.eco'
 
     initialize: ({@parent}) ->
         # default's not visible due to nice animation

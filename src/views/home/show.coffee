@@ -1,9 +1,9 @@
-{ ChannelView } = require 'views/channel/show'
-{ Channels } = require 'collections/channel'
-{ Sidebar } = require 'views/sidebar/show'
+{ ChannelView } = require '../channel/show'
+{ Channels } = require '../../collections/channel'
+{ Sidebar } = require '../sidebar/show'
 
 class exports.HomeView extends Backbone.View
-    template: require 'templates/home/show'
+    template: require '../../templates/home/show.eco'
 
     initialize: ->
         @el = $(@template())

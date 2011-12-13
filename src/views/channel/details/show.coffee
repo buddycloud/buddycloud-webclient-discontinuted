@@ -1,10 +1,10 @@
-{ GeoDetail } = require 'views/channel/details/geo'
-{ UserList } = require 'views/channel/details/list'
-{ BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ GeoDetail } = require './geo'
+{ UserList } = require './list'
+{ BaseView } = require '../../base'
+{ EventHandler } = require '../../../util'
 
 class exports.ChannelDetails extends BaseView
-    template: require 'templates/channel/details/show'
+    template: require '../../../templates/channel/details/show.eco'
 
     ##
     # @parent: ChannelView

@@ -1,11 +1,11 @@
-{ UserAdmin } = require 'views/channel/details/admin/user'
-{ BaseView } = require('views/base')
-{ EventHandler, compare_by_id, throttle_callback } = require 'util'
+{ UserAdmin } = require './admin/user'
+{ BaseView } = require '../../base'
+{ EventHandler, compare_by_id, throttle_callback } = require '../../../util'
 
 # this shows a list of user avatars
 
 class exports.UserList extends BaseView
-    template: require 'templates/channel/details/list'
+    template: require '../../../templates/channel/details/list.eco'
 
     initialize: ({@parent, @title}) ->
         super

@@ -1,5 +1,5 @@
-{ Posts } = require 'collections/post'
-{ Node } = require 'models/node/base'
+{ Posts } = require '../../collections/post'
+{ Node } = require './base'
 
 class exports.StatusNode extends Node
 

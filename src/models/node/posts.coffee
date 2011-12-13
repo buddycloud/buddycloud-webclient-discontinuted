@@ -1,5 +1,5 @@
-{ TopicPosts } = require 'collections/topicpost'
-{ Node } = require 'models/node/base'
+{ TopicPosts } = require '../../collections/topicpost'
+{ Node } = require './base'
 
 class exports.PostsNode extends Node
 

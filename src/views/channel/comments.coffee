@@ -1,9 +1,9 @@
-{ BaseView } = require 'views/base'
-{ PostView } = require 'views/channel/post'
-{ EventHandler } = require 'util'
+{ BaseView } = require '../base'
+{ PostView } = require './post'
+{ EventHandler } = require '../../util'
 
 class exports.CommentsView extends BaseView
-    template: require 'templates/channel/comments'
+    template: require '../../templates/channel/comments.eco'
 
     initialize: ({@parent}) ->
         super

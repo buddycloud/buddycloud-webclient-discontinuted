@@ -1,7 +1,7 @@
-{ Model } = require 'models/base'
-{ UserMetadata } = require 'models/metadata/user'
-{ UserChannels } = require 'collections/channel'
-{ gravatar } = require 'util'
+{ Model } = require './base'
+{ UserMetadata } = require './metadata/user'
+{ UserChannels } = require '../collections/channel'
+{ gravatar } = require '../util'
 
 class exports.User extends Model
 

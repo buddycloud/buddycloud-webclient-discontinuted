@@ -1,4 +1,4 @@
-{ EventHandler } = require 'util'
+{ EventHandler } = require '../../util'
 
 
 class exports.AuthenticationView extends Backbone.View

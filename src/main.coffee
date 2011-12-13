@@ -11,11 +11,11 @@ window.app =
         "none"
         "outcast" ]
 
-
-{ Router } = require 'controllers/router'
-{ ConnectionHandler } = require 'handlers/connection'
-{ ChannelStore } = require 'collections/channel'
-{ UserStore } = require 'collections/user'
+require './vendor-bridge'
+{ Router } = require './controllers/router'
+{ ConnectionHandler } = require './handlers/connection'
+{ ChannelStore } = require './collections/channel'
+{ UserStore } = require './collections/user'
 
 
 # app bootstrapping on document ready
@@ -25,7 +25,7 @@ $(document).ready ->
     if typeof config is 'undefined'
         $('#index')
             .addClass('broken')
-            .html(do require 'templates/welcome/configerror')
+            .html(do require './templates/welcome/configerror.eco')
         return
 
     ### could be used to switch console output ###

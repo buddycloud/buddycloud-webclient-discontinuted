@@ -1,9 +1,9 @@
 # views
-{ LoadingChannelView } = require 'views/channel/loading'
-{ RegisterView } = require 'views/authentication/register'
-{ WelcomeView } = require 'views/welcome/show'
-{ LoginView } = require 'views/authentication/login'
-{ HomeView } = require 'views/home/show'
+{ LoadingChannelView } = require '../views/channel/loading'
+{ RegisterView } = require '../views/authentication/register'
+{ WelcomeView } = require '../views/welcome/show'
+{ LoginView } = require '../views/authentication/login'
+{ HomeView } = require '../views/home/show'
 
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:3000/welcome

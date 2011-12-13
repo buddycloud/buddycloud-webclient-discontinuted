@@ -1,5 +1,5 @@
-{ Posts } = require 'collections/post'
-{ Post } = require 'models/post'
+{ Posts } = require '../collections/post'
+{ Post } = require './post'
 
 ##
 # Is "opener" along with additional "comments"

@@ -1,9 +1,9 @@
-{ TopicPostView } = require 'views/channel/topicpost'
-{ throttle_callback } = require 'util'
+{ TopicPostView } = require './topicpost'
+{ throttle_callback } = require '../../util'
 
 class exports.PostsView extends Backbone.View
-    tutorial: require 'templates/channel/tutorial'
-    empty:    require 'templates/channel/empty'
+    tutorial: require '../../templates/channel/tutorial.eco'
+    empty:    require '../../templates/channel/empty.eco'
 
     # @parent is ChannelView
     # @el will be passed by @parent

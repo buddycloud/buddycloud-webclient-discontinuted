@@ -1,9 +1,9 @@
-{ BaseView } = require('views/base')
+{ BaseView } = require '../../base'
 
 # this is the specific view for the geo node
 
 class exports.GeoDetail extends BaseView
-    template: require 'templates/channel/details/geo'
+    template: require '../../../templates/channel/details/geo.eco'
 
     initialize: ->
         super

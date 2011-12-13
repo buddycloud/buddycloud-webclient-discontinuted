@@ -1,7 +1,7 @@
-{ BaseView } = require 'views/base'
+{ BaseView } = require '../../..//base'
 
 class exports.UserAdmin extends BaseView
-    template: require 'templates/channel/details/admin/user'
+    template: require '../../../../templates/channel/details/admin/user.eco'
 
     initialize: ({@number}) ->
         super

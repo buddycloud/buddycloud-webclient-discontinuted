@@ -1,7 +1,7 @@
-{ Model } = require 'models/base'
-{ NodeMetadata } = require 'models/metadata/node'
-{ Users } = require 'collections/user'
-{ Posts } = require 'collections/post'
+{ Model } = require '../base'
+{ NodeMetadata } = require '../metadata/node'
+{ Users } = require '../../collections/user'
+{ Posts } = require '../../collections/post'
 
 ##
 # Attributes:

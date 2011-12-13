@@ -1,5 +1,5 @@
-{ Collection } = require 'collections/base'
-{ TopicPost } = require 'models/topicpost'
+{ Collection } = require './base'
+{ TopicPost } = require '../models/topicpost'
 
 class exports.TopicPosts extends Collection
     model: TopicPost

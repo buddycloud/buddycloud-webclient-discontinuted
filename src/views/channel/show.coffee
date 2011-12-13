@@ -1,12 +1,12 @@
-{ ChannelDetails } = require 'views/channel/details/show'
-{ PostsView } = require 'views/channel/posts'
-{ ErrorNotificationView } = require 'views/channel/error_notification'
-{ BaseView } = require 'views/base'
-{ EventHandler, throttle_callback } = require 'util'
+{ ChannelDetails } = require './details/show'
+{ PostsView } = require './posts'
+{ ErrorNotificationView } = require './error_notification'
+{ BaseView } = require '../base'
+{ EventHandler, throttle_callback } = require '../../util'
 
 # The channel shows channel content
 class exports.ChannelView extends BaseView
-    template: require 'templates/channel/show'
+    template: require '../../templates/channel/show.eco'
 
     initialize: ->
         super

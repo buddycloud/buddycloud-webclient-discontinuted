@@ -1,5 +1,5 @@
-{ Collection } = require 'collections/base'
-{ User } = require 'models/user'
+{ Collection } = require './base'
+{ User } = require '../models/user'
 
 class exports.Users extends Collection
     model: User

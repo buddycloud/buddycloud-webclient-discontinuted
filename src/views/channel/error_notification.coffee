@@ -1,8 +1,8 @@
-{ BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ BaseView } = require '../base'
+{ EventHandler } = require '../../util'
 
 class exports.ErrorNotificationView extends BaseView
-    template: require 'templates/channel/error_notification'
+    template: require '../../templates/channel/error_notification.eco'
 
     initialize: ({@error}) ->
         super

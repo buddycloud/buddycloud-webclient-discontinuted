@@ -1,8 +1,8 @@
-{ BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ BaseView } = require '../base'
+{ EventHandler } = require '../../util'
 
 class exports.Searchbar extends BaseView
-    template: require 'templates/sidebar/search'
+    template: require '../../templates/sidebar/search.eco'
 
     initialize: ({@channels}) ->
         super
