@@ -1,5 +1,7 @@
 eco = require 'eco'
+nib = require 'nib'
 path = require 'path'
+stylus = require 'stylus'
 config = require 'jsconfig'
 express = require 'express'
 browserify = require 'browserify'
@@ -19,7 +21,7 @@ config.load (args, opts) ->
     buildPath = path.join(cwd, "assets")
 
     server.configure ->
-        server.set 'views', buildPath
+
         javascript = browserify
                 mount  : '/web/js/app.js'
                 verbose: no
@@ -34,6 +36,19 @@ config.load (args, opts) ->
                 extensions:
                     '.eco': (source) ->
                         "module.exports = #{eco.precompile source}"
+
+        stylePath = path.join(cwd, "src", "styles")
+        server.use stylus.middleware
+            dest : path.join(buildPath, "web", "css")
+            src  : stylePath
+            paths: [stylePath]
+            debug: yes
+            compile: (css, filename) ->
+                style = stylus css,
+                    filename: filename
+                    compress: config.css.compress
+                    warn: config.css.warn
+                style.use nib()
 
         server.use javascript
         server.use express.static buildPath
