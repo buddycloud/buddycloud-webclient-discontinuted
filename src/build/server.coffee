@@ -21,11 +21,15 @@ config.load (args, opts) ->
         server.set 'views', buildPath
         javascript = browserify
                 mount  : '/web/js/app.js'
-                require: [path.join(cwd, "src", "main")]
-                verbose: yes
+                verbose: no
                 watch  : yes
                 cache  : off
                 fastmatch: on
+                require: [
+                    jquery  :'jquery-browserify'
+                    backbone:'backbone-browserify'
+                    path.join(cwd, "src", "main")
+                ]
 
         server.use javascript
         server.use express.static buildPath
