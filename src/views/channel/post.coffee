@@ -1,6 +1,6 @@
+formatdate = require 'formatdate'
 { BaseView } = require '../base'
 { EventHandler, throttle_callback } = require '../../util'
-
 
 class exports.PostView extends BaseView
     template: require '../../templates/channel/post.eco'

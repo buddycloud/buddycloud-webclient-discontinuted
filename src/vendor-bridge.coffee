@@ -39,5 +39,4 @@ require "./vendor/backbone-extensions.js"
 
 ## helpers
 
-require 'formatdate'
 require './vendor/modernizr'

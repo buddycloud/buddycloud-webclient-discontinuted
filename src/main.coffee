@@ -16,7 +16,7 @@ require './vendor-bridge'
 { ConnectionHandler } = require './handlers/connection'
 { ChannelStore } = require './collections/channel'
 { UserStore } = require './collections/user'
-
+formatdate = require 'formatdate'
 
 # app bootstrapping on document ready
 $(document).ready ->
