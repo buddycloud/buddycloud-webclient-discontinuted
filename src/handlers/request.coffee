@@ -1,3 +1,4 @@
+S4 = Store.S4
 # TODO depends on client type and connection
 #   (is it mobile, or small data capacity?)
 MAX_REQUESTS = 64

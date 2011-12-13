@@ -20,6 +20,9 @@ window.Store = function(name) {
   this.records = (store && store.split(",")) || [];
 };
 
+Store.S4 = S4;
+Store.guid = guid;
+
 _.extend(Store.prototype, {
 
   // Save the current state of the **Store** to *localStorage*.
