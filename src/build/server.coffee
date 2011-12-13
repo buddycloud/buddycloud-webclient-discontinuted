@@ -1,3 +1,4 @@
+eco = require 'eco'
 path = require 'path'
 config = require 'jsconfig'
 express = require 'express'
@@ -30,6 +31,8 @@ config.load (args, opts) ->
                     backbone:'backbone-browserify'
                     path.join(cwd, "src", "main")
                 ]
+        javascript.register '.eco', (source) ->
+            "module.exports = #{eco.precompile source}"
 
         server.use javascript
         server.use express.static buildPath
