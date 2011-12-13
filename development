@@ -1,17 +1,2 @@
 #!/bin/sh
-for arg in $@; do
-    case $arg in
-        '-v' | '--version') brunchversion=1 ;;
-        '-h' | '--help') help=1 ;;
-    esac
-done
-if [ ! $brunchversion ] && [ ! $help ]; then
-    # start simple http server
-    node ./brunch/server/main.js &
-    # copy localStorage fallback
-    cp ./node_modules/store/store+json2.min.js ./brunch/build/web/js/store.js
-fi
-
-
-# start brunch in watch mode (rebuilt everything when file changes)
-./node_modules/.bin/brunch watch $@
+exec ./node_modules/.bin/coffee ./src/build/server.coffee $@
