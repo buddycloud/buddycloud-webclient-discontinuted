@@ -13,6 +13,7 @@ config.defaults path.join(cwd, "config.js")
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
+    build:['build',[off, "build and pack everything together" ]]
 
 config.load (args, opts) ->
 
@@ -27,7 +28,7 @@ config.load (args, opts) ->
                 verbose: no
                 watch  : yes
                 cache  : off
-                fastmatch: on
+                fastmatch: not config.build
                 require: [
                     jquery  :'jquery-browserify'
                     backbone:'backbone-browserify'
@@ -44,6 +45,10 @@ config.load (args, opts) ->
                         source += ";window.MD5=MD5"
                         source
 
+        if config.build
+            # minification
+            javascript.register 'post', require 'uglify-js'
+
         stylePath = path.join(cwd, "src", "styles")
         server.use stylus.middleware
             dest : path.join(buildPath, "web", "css")
@@ -53,7 +58,7 @@ config.load (args, opts) ->
             compile: (css, filename) ->
                 style = stylus css,
                     filename: filename
-                    compress: config.css.compress
+                    compress: config.build or config.css.compress
                     warn: config.css.warn
                 style.use nib()
 
@@ -79,4 +84,7 @@ config.load (args, opts) ->
         createReadStream(require.resolve 'store/store+json2.min').pipe(res)
 
     server.listen config.port, config.host
-    console.log "build server listening on %s:%s ...", config.host, config.port
+    if config.build
+        require './packaging' # this puts everything in a tarball
+    else
+        console.log "build server listening on %s:%s …",config.host,config.port

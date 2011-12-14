@@ -12,8 +12,10 @@
 , "dependencies": {
     "eco": "1.1.0-rc-1"
 ,   "coffee-script": "1.1.3"
+,   "tar": "0.1.9"
 ,   "express": "2.5.2"
 ,   "jsconfig": "0.1.1"
+,   "uglify-js": "1.2.0"
 ,   "stylus": "0.20.0"
 ,   "nib": "0.3.1"
 ,   "shimify": "0.0.0"
