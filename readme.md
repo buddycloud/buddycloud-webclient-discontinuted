@@ -1,4 +1,5 @@
-This is the buddycloud webclient. It can simply be dropped into a web-enabled directory and should work!
+This is the buddycloud webclient. It can simply be dropped into a web-enabled directory and should work.
+The webclient is tested in current versions of Chrome, Safari and Firefox. Interfaces glitches might occur in older browser versions and non-listed browsers.
 
 # Install
 
