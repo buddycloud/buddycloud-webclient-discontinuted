@@ -6,8 +6,20 @@ config = require 'jsconfig'
 express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
-cwd = path.join(__dirname, "..", "..")
 
+wrap_prefix = (prefix, middleware) ->
+    return (req, res, next) ->
+        if req.url.indexOf(prefix) is 0
+            old_url = req.url
+            req.url = req.url[prefix.length..]
+            middleware req, res, ->
+                req.url = old_url
+                next(arguments...)
+        else
+            next()
+
+
+cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "config.js")
 
 config.cli
@@ -50,7 +62,7 @@ config.load (args, opts) ->
             javascript.register 'post', require 'uglify-js'
 
         stylePath = path.join(cwd, "src", "styles")
-        server.use stylus.middleware
+        server.use wrap_prefix "/web/css", stylus.middleware
             dest : path.join(buildPath, "web", "css")
             src  : stylePath
             paths: [stylePath]
