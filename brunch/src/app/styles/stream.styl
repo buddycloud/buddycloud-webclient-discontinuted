@@ -163,9 +163,14 @@
   float left
   position relative
   z-index 2
-  transform-style preserve-3d
-  perspective 1000
-  .topics 
+
+  /*
+   * one of those two lines causing a horrible rerender bug in webkit browsers
+   */
+  //transform-style preserve-3d
+  //perspective 1000
+
+  .topics
     article
       padding 13px
       background white
