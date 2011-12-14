@@ -4,6 +4,7 @@
 .DS_Store
 public/.DS_Store
 brunch/build/web/css/main.css
+brunch/build/web/js/store.js
 brunch/build/web/js/app.js
 node_modules/*
 buddycloud.tmproj

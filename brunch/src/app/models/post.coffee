@@ -10,8 +10,8 @@ class exports.Post extends Model
         content:
             type: undefined
             value: undefined
-        published: new Date().toISOString()
-        updated: new Date().toISOString()
+        published: new Date(0).toISOString()
+        updated: new Date(0).toISOString()
 
     initialize: ->
         result = super
@@ -22,3 +22,6 @@ class exports.Post extends Model
     update_attributes: =>
         if (jid = @get('author')?.jid)
             @author = app.users.get_or_create id: jid
+
+    get_last_update: =>
+        @get('updated') or @get('published') or "#{(new Date 0).toISOString()}"

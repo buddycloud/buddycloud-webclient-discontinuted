@@ -8,6 +8,7 @@
 class exports.Channel extends Model
     initialize: ->
         @id = @get 'id'
+        @last_touched = new Date
         @nodes = new NodeStore channel:this
         @avatar = gravatar @id, s:50, d:'retro'
         @nodes.fetch()
@@ -17,7 +18,10 @@ class exports.Channel extends Model
         ["posts", "status", "subscriptions",
          "geo/previous", "geo/current", "geo/next"].forEach (type) =>
             nodeid = "/user/#{@id}/#{type}"
-            @nodes.get_or_create {id:nodeid, nodeid}
+            node = @nodes.get_or_create {id:nodeid, nodeid}
+            node.bind 'change:unread', =>
+                app.debug "channel got unread"
+                @trigger 'change:node:unread'
 
     push_post: (nodeid, post) ->
         @trigger 'post', nodeid, post
@@ -27,8 +31,34 @@ class exports.Channel extends Model
         # subscription.subscription is either subscribed, unsubscribed or pending
         @trigger 'subscription', subscription
 
+    push_affiliation: (affiliation) ->
+        @trigger 'affiliation', affiliation
+
     push_metadata: (nodeid, metadata) ->
         @trigger 'metadata', nodeid, metadata
 
     push_node_error: (nodeid, error) ->
         @trigger 'node:error', nodeid, error
+
+    set_loading: (@isLoading) =>
+        if @isLoading
+            @trigger 'loading:start'
+        else
+            @trigger 'loading:stop'
+
+    count_unread: ->
+        last_view = @get('last_view') or (new Date 0).toISOString()
+        count = 0
+        for post in (@nodes.get('posts')?.posts.models or [])
+            if post.get_last_update() > last_view
+                count++
+            else break
+        @trigger 'bubble'
+        count
+
+    mark_read: ->
+        last_view = @get('last_view') or (new Date 0).toISOString()
+        last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
+        if last_update and last_update > last_view
+            last_view = last_update
+        @save { last_view }

@@ -1,6 +1,6 @@
 { UserAdmin } = require 'views/channel/details/admin/user'
 { BaseView } = require('views/base')
-{ EventHandler, compare_by_id } = require 'util'
+{ EventHandler, compare_by_id, throttle_callback } = require 'util'
 
 # this shows a list of user avatars
 
@@ -9,8 +9,9 @@ class exports.UserList extends BaseView
 
     initialize: ({@parent, @title}) ->
         super
-        @model.bind 'add', @render
-        @model.bind 'remove', @render
+        render_callback = throttle_callback(50, @render)
+        @model.bind 'add', render_callback
+        @model.bind 'remove', render_callback
 
     events:
         'click .list a': 'clickUser'
@@ -27,6 +28,8 @@ class exports.UserList extends BaseView
                 user
             else
                 app.users.get user.get('id')
+        @users = @users.filter (user) ->
+            user?.has 'jid'
         @users = @users.sort compare_by_id
 
     clickUser: EventHandler (ev) =>

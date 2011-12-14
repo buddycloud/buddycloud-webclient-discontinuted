@@ -10,6 +10,12 @@ class exports.TopicPosts extends Collection
     initialize: ->
         @parent.bind 'post', (post) =>
             @get_or_create post
+        @bind 'add', (post) =>
+            # Hook 'change' as Backbone Collections only sort on 'add'
+            post.bind 'change', =>
+                @sort(silent: true)
+            post.bind 'change:unread', =>
+                @trigger 'change:unread'
 
     get_or_create: (post) ->
         if post.in_reply_to
@@ -19,9 +25,4 @@ class exports.TopicPosts extends Collection
             super
 
     comparator: (post) ->
-        latest = new Date(post.get 'published').getTime()
-        post.comments.forEach (comment) ->
-            published = new Date(post.get 'published').getTime()
-            if published > latest
-                published = latest
-        - latest
+        - new Date(post.get_last_update()).getTime()

@@ -6,6 +6,13 @@ dependencies:
   - jquery.npm-hack.js
   - jquery.js
   - jquery.copycss.js
+  - jquery.textsaver.js
+  - jquery.mousewheel.js
+  - jquery.antiscroll.js
+  - jquery.inputevent.js
+  - jquery.autoresize.js
+  - jquery.autoresize+input.js
+  - jquery.animate-enhanced.js
   - jquery.autosuggestion.js
   - transform.js
   - backbone-master.js

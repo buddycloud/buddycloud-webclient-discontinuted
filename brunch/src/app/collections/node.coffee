@@ -31,7 +31,10 @@ class exports.Nodes extends Collection
         newAttrs = _.clone(attrs)
         newAttrs.nodeid = attrs.nodeid or attrs.id
         newAttrs.id = nodeid_to_type(attrs.id or attrs.nodeid) or attrs.id or attrs.nodeid
-        # this is what a empty node looks like
+        unless newAttrs.nodeid and newAttrs.nodeid.indexOf("/") >= 0
+            # look at parent @channel to construct full nodeid
+            newAttrs.nodeid = "/user/#{@channel.get 'id'}/#{newAttrs.id}"
+        # this is what an empty node looks like
         super newAttrs, options
 
 
@@ -48,6 +51,9 @@ class exports.NodeStore extends exports.Nodes
         @channel.bind 'subscription', (subscription) =>
             node = @get_or_create nodeid: subscription.node
             node.push_subscription subscription
+        @channel.bind 'affiliation', (affiliation) =>
+            node = @get_or_create nodeid: affiliation.node
+            node.push_affiliation affiliation
         @channel.bind 'post', (nodeid, post) =>
             node = @get_or_create {nodeid}
             node.push_post post

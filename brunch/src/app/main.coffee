@@ -1,5 +1,6 @@
 window.app =
-    version: '0.0.0-30'
+    version: '0.0.0-43'
+    localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}
     affiliations: [ # all possible pubsub affiliations
@@ -20,8 +21,15 @@ window.app =
 # app bootstrapping on document ready
 $(document).ready ->
 
+    # show error message when config isnt loaded
+    if typeof config is 'undefined'
+        $('#index')
+            .addClass('broken')
+            .html(do require 'templates/welcome/configerror')
+        return
+
     ### could be used to switch console output ###
-    app.debug_mode = on
+    app.debug_mode = config.debug ? on
     app.debug = ->
         console.log "DEBUG:", arguments if app.debug_mode
     app.error = ->
@@ -36,9 +44,9 @@ $(document).ready ->
 
         # when domain used an older webclient version before, we clear localStorage
         version = localStorage.getItem('__version__')
-        if not version? or app.version > version
+        unless app.localStorageVersion is version
             localStorage.clear()
-            localStorage.setItem('__version__', app.version)
+            localStorage.setItem('__version__', app.localStorageVersion)
 
         # caches
         app.channels = new ChannelStore
@@ -65,9 +73,11 @@ $(document).ready ->
         #else
         #  # prefilled password detected, sign in the user automatically
         #  $('#login_form').trigger "submit"
-        formatdate.options.max.unit = 9 # centrury
+        formatdate.options.max.unit = 9 # century
         formatdate.options.max.amount = 20 # 2000 years
         formatdate.hook 'html'
 
-
-    app.initialize()
+    Modernizr.load
+        test:Modernizr.localStorage
+        yep:'web/js/store.js'
+        complete:app.initialize

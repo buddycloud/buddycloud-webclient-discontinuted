@@ -9,7 +9,7 @@ class exports.RegisterView extends AuthenticationView
 
         passwd = $('#home_register_new_password')
         confirm = $('#home_register_new_confirm')
-        confirm.keyup =>
+        confirm.input ->
             if passwd.val() is confirm.val()
                 unless confirm.hasClass 'match'
                     confirm.removeClass 'missmatch'
@@ -58,16 +58,15 @@ class exports.RegisterView extends AuthenticationView
         ["regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) =>
             event = () =>
                 app.handler.connection.unbind type, event
-                if type is "sbmtfail" and app.handler.connection.isRegistered()
+                @reset()
+                if type is "regifail" and app.handler.connection.isRegistered()
                     @register_success()
                 else
-                    @reset()
                     @error(type)
             app.handler.connection.bind type, event
 
     register_success: =>
         $('#register_waiting').html $('#login_waiting').html()
-        @reset()
 
     login_success: =>
         $('#home_register_submit').removeAttr "disabled"
@@ -75,5 +74,7 @@ class exports.RegisterView extends AuthenticationView
 
     reset: =>
         super
+        app.handler.connection.unbind "registered", @register_success
+        app.handler.connection.unbind "connected",  @login_success
         $('#home_register_submit').prop "disabled", false
         $('#register_waiting').css "visibility","hidden"

@@ -88,9 +88,12 @@ Strophe.addConnectionPlugin('roster',
             this.items = items || [];
         }
         var iq = $iq({type: 'get',  'id' : this._connection.getUniqueId('roster')}).c('query', attrs);
-        this._connection.sendIQ(iq,
-                                this._onReceiveRosterSuccess.bind(this).prependArg(userCallback),
-                                this._onReceiveRosterError.bind(this).prependArg(userCallback));
+	var that = this;
+        this._connection.sendIQ(iq, function success(stanza) {
+	    that._onReceiveRosterSuccess(userCallback, stanza);
+	}, function error(stanza) {
+	    that._onReceiveRosterError(userCallback, stanza);
+	});
     },
     /** Function: registerCallback
      * register callback on roster (presence and iq)
@@ -185,6 +188,22 @@ Strophe.addConnectionPlugin('roster',
             iq.c('group').t(newGroups[i]).up();
         }
         this._connection.sendIQ(iq, call_back, call_back);
+    },
+    delete: function(jid, call_back)
+    {
+        var item = this.findItem(jid);
+        if (!item)
+	    this.items.push({ jid: jid, subscription: 'remove' });
+
+	var that = this;
+	this.update(jid, null, [], function() {
+	    /* TODO: detect error */
+	    that.items = that.items.filter(function(item) {
+		return item.jid !== jid;
+	    });
+	    if (call_back)
+		call_back();
+	});
     },
     /** PrivateFunction: _onReceiveRosterSuccess
      *

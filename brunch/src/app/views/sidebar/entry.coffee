@@ -1,6 +1,5 @@
 { BaseView } = require 'views/base'
-{ transitionendEvent, getBrowserPrefix, EventHandler } = require 'util'
-prefix = getBrowserPrefix()
+{ transitionendEvent, EventHandler } = require 'util'
 
 
 class exports.ChannelEntry extends BaseView
@@ -10,6 +9,12 @@ class exports.ChannelEntry extends BaseView
         super
         @model.bind 'change', @render
         @model.bind 'change:node:metadata', @render
+        # Update unread counter:
+        @model.bind 'post', @render
+        @model.bind 'bubble', @bubble
+        bubble = @bubble # FIXME
+        @bubble = (args...) =>
+            setTimeout ( -> bubble args... ), 200
 
     events:
         "click": "click_entry"
@@ -23,43 +28,66 @@ class exports.ChannelEntry extends BaseView
             @parent.parent.setCurrentChannel @model
 
     isPersonal : (a, b) =>
-        (@channel?.metadata?.owner?.value is app.users.current.get('jid')) and (a ? true) or (b ? false)
+        (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
 
     isSelected : (a, b) =>
         (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
+
+    isFollowed : (a, b) =>
+        app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
 
     update_attributes: ->
         @channel = @model.toJSON yes
         if (status = @model.nodes.get 'status')
             @status = status.toJSON yes
+        @unread_posts_count = @model.count_unread()
 
-    bubble: =>
-        return # FIXME turned off because it doesnt work right
-        offset = @el.position().top
-        # the channel has an offset of 0 - it should stay where it is. so stop
-        return off if offset is 0 or @el.hasClass 'bubbleUp'
-        channels = $('#channels')
-        distance = 20 - offset # TODO add searchbar height
-        # enable transitions
-        channels.removeClass 'curtainsDown'
-        # undock => sets z-index
-        @el.addClass 'bubbleUp'
-        #  bind the transitionend to the reset function which resets the DOM after the animation
-        @el.one transitionendEvent, @reset_bubble
-        # enable transitions again and start to move the channels above the moved channel to close the gap
-        channels.addClass 'makePlace'
-        # animate the channel to bubble up
-        @el.css "#{prefix}transform", "translateY(#{distance}px)"
+    bubble: (duration = 500) =>
+        return # FIXME totally buggy
+        @parent._movingChannels ?= 0
 
+        # relative offset + absolute offset
+        offset = @el.position().top + @parent.el.scrollTop()
 
-    reset_bubble: (ev) =>
-        channels = $('#channels')
-        # disable transitions
-        channels.addClass 'curtainsDown'
-        # extract the bubbling channel from the DOM, remove the classes, reset the transformation and add it at the top
-        #@$.detach()
-        @el.removeClass 'undock bubbleUp'
-        @el.css "#{prefix}transform", ""
-        #@$.insertAfter personal_channel
-        channels.removeClass 'makePlace'
+        # don't bubble if the channel is..
+        #  - on top
+        #  - bubbling
+        return off if offset is 0 or @el.hasClass('bubbleUp')
+
+        # sets z-index so that the element moves on top of all the others
+        @el.addClass('bubbleUp')
+        # create a gap where the channel starts off
+        @el.before $('<div>')
+            .height(@el.height())
+            .animate {height:0},
+                duration: duration
+                complete: ->
+                    $(this).remove()
+
+        # detach the bubbling channel from the DOM
+        # and insert it at the top
+        @el.detach().css(top:offset)
+        @parent.el.prepend @el
+
+        # wrap a growing holder around it
+        @el.wrap $('<div>')
+            .css(position:'relative')
+            .height(0)
+        # bubble the channel
+        increase = => @parent._movingChannels += 1
+        decrease = => @parent._movingChannels -= 1
+        @el.animate({top:0},
+            duration: duration
+            complete: ->
+                decrease()
+                $(this)
+                    .removeClass('bubbleUp')
+                    .css(top:'', 'z-index':'')
+                    .unwrap()
+        ).css('z-index', increase() + 1)
+
+        # let the holder grow
+        @el.parent()
+            .animate({height:@el.height()}, duration)
+            .css(overflow:'visible')
 

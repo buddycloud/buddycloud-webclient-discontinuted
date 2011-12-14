@@ -6,17 +6,22 @@
 # * subscribed to
 # * viewed recently
 class exports.Sidebar extends Backbone.View
+    tutorial: require 'templates/sidebar/tutorial'
     template: require 'templates/sidebar/show'
 
     initialize: ({@parent}) ->
         # default's not visible due to nice animation
         $('body').append @template()
-        @el = $('#channels > .scrollArea')
+        @el = $('#channels > .scrollHolder')
+        @channelsel = $('#channels')
         @hidden = yes
+
+        $(window).resize =>
+            @channelsel.antiscroll()
 
         @search = new Searchbar parent:this, channels:@parent.channels
         @search.bind 'filter', @render
-        @el.append @search.el
+        @search.el.insertBefore @channelsel
 
         # sidebar entries
         @current = undefined
@@ -25,6 +30,7 @@ class exports.Sidebar extends Backbone.View
         @parent.channels.forEach        @new_channel_entry
         @parent.channels.bind 'add',    @new_channel_entry
         @parent.channels.bind 'remove', @remove_channel_entry
+        @parent.channels.bind 'change', @render
 
         unless app.views.overview?
             app.views.overview = new ChannelOverView
@@ -36,9 +42,16 @@ class exports.Sidebar extends Backbone.View
             entry = new ChannelEntry model:channel, parent:this
             @views[channel.cid] = entry
             @current ?= entry
-            @el.append entry.el
+            if entry.isPersonal()
+                entry.el.insertBefore @search.el
+            else
+                @el.append entry.el
         entry.render()
-        entry
+
+        @$('.tutorial').remove()
+        @channelsel.antiscroll()
+
+        return entry
 
     remove_channel_entry: (channel) =>
         { el } = @views[channel.cid]
@@ -62,12 +75,14 @@ class exports.Sidebar extends Backbone.View
             @current.el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.render()
-        @current?.bubble()
         old?.render()
+
+    bubble: (channel) =>
+        @views[channel.cid]?.bubble()
 
     # sliding in animation
     moveIn: (t = 200) ->
-        @el.animate(left:"0px", t)
+        @el.animate(left:"0", t)
         @overview.show(t)
         @hidden = no
 
@@ -84,12 +99,23 @@ class exports.Sidebar extends Backbone.View
             view.el.css opacity:0.5
             views[cid] = view
 
-        @parent.channels.filter(@search.filter).forEach (channel) =>
+        channels = @parent.channels.filter(@search.filter)
+        channels.forEach (channel) =>
             unless (view = @views[channel.cid])
                 view = @new_channel_entry channel
             view.el.css opacity:1
-            @el.append view.el
+            if view.isPersonal()
+                view.el.insertBefore @search.el
+            else
+                @el.append view.el
             delete views[channel.cid]
 
         for cid, view of views
-            @el.append view.el
+            if view.isPersonal()
+                view.el.insertBefore @search.el
+            else
+                @el.append view.el
+
+        @$('.tutorial').remove()
+        if channels.length < 2
+            @el.append @tutorial()

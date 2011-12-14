@@ -17,6 +17,8 @@ class exports.Channels extends Collection
         super
         @bind 'add', (channel, channels, opts) =>
             @trigger "add:#{channel.get 'id'}", channel, channels, opts
+            channel.bind 'post:change', (post) =>
+                @touch channel, date:post.get_last_update()
         @bind 'remove', (channel, channels, opts) =>
             @trigger "remove:#{channel.get 'id'}", channel, channels, opts
 
@@ -35,6 +37,11 @@ class exports.Channels extends Collection
             else
                 # nothing to compare with, channel must be empty, so we can ignore it
                 no
+
+    touch: (channel, opts = {}) =>
+        channel.last_touched = opts.date or new Date
+        @sort(silent:true)
+        @trigger 'change' unless opts.silent
 
 
 # used in models/user
@@ -79,18 +86,16 @@ class exports.UserChannels extends exports.Channels
         @parent.set channel_ids: @map((channel) -> channel.get 'id')
         channel
 
+    ##
+    # From when do we need to catch up?
+    #
+    # Probably since newest post viewed
     get_last_timestamp: ->
         timestamp = null
         @each (channel) ->
-            channel.nodes.each (node) ->
-                node.posts.each (post) ->
-                    openerTimestamp = post.get('updated')
-                    if openerTimestamp > timestamp
-                        timestamp = openerTimestamp
-                    post.comments?.each (comment) ->
-                        commentTimestamp = comment.get('updated')
-                        if commentTimestamp > timestamp
-                            timestamp = commentTimestamp
+            last_view = channel.get 'last_view'
+            if not timestamp or last_view > timestamp
+                timestamp = last_view
         timestamp
 
 # global channel collection store

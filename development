@@ -8,6 +8,8 @@ done
 if [ ! $brunchversion ] && [ ! $help ]; then
     # start simple http server
     node ./brunch/server/main.js &
+    # copy localStorage fallback
+    cp ./node_modules/store/store+json2.min.js ./brunch/build/web/js/store.js
 fi
 
 

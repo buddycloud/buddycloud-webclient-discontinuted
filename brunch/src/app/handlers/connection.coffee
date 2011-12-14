@@ -4,13 +4,22 @@
 class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->
         @connected = false
+        @connector = new Connector(this) # before datahandler
+        app.handler.data = new DataHandler(@connector)
+
+        @last_login = {}
+
+        # for debug purposes only
+        @bind "all", (status) -> app.debug "connection_event", status
+
+    # intialize strophe connection
+    setup: (callback) ->
+        # Set up connection
         @connection = new Strophe.Connection(config.bosh_service)
         @connection.addHandler (stanza) ->
             app.debug "IN", Strophe.serialize stanza
             true
-        @connector = new Connector(this, @connection) # before datahandler
-        app.handler.data = new DataHandler(@connector)
-
+        @connector.setConnection @connection
         # debugging
         if app.debug_mode
             send = @connection.send
@@ -18,25 +27,48 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 app.debug "OUT", Strophe.serialize stanza
                 send.apply @connection, arguments
 
+        # workaround for development
+        if window.location.hostname is "localhost"
+            return callback()
 
-        # for debug purposes only
-        @bind "all", (status) -> app.debug "connection_event", status
+        # check if the bosh service is reachable
+        jQuery.ajax
+            type:'POST'
+            contentType:"text/xml"
+            data:'<body rid="-1" xmlns="http://jabber.org/protocol/httpbind"/>'
+            url:config.bosh_service
+            processData:off
+            success: callback
+            error: =>
+                @trigger 'nobosh'
+
+    reconnect: () =>
+        {jid, password} = @last_login ? {}
+        @connect jid, password
 
     # connect the current user with his jid and pw
     connect: (jid, password) ->
+        if jid isnt @last_login.jid or password isnt @last_login.password
+            # We're not confident anymore whether thid jid/pw pair
+            # actually authenticates.
+            @last_login.connected = false
+        @last_login.jid = jid
+        @last_login.password = password
+
         unless jid
             jid = config.anon_domain
             @user = app.users.get_or_create id: "anony@mous"
         else
             if jid.indexOf("@") < 0
                 jid = "#{jid}@#{config.domain}"
+            jid = jid.toLowerCase()
             @user = app.users.get_or_create id: jid
         app.debug "CONNECT", jid, @user
-        @connection.connect jid, password, @connection_event
+        @setup => @connection.connect jid, password, @connection_event
 
     reset: () ->
         app.debug "RESET", @user
-        @connection.disconnect()
+        @connection?.disconnect()
 
     # make sure we allways have a channel
     createChannel: (done) =>
@@ -64,14 +96,14 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         @connection.buddycloud.discover domain, success, error
 
     register: (username, password, email) ->
+        username = username.toLowerCase()
         if (m = username.match(/^(.+)@(.+)$/))
             username = m[1]
             domain = m[2]
         else
             domain = config.domain
         @user = app.users.get_or_create id: "#{username}@#{domain}"
-        @connection.register.connect domain, (status, moar...) =>
-
+        @setup => @connection.register.connect domain, (status) =>
             if status is Strophe.Status.REGISTERING
                 @trigger 'registering'
 
@@ -102,8 +134,11 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
             else @connection_event.apply(this, arguments)
 
+    wasConnected: ->
+        @last_login?.connected
+
     isRegistered: ->
-        @connection.register.registered
+        @connection?.register?.registered
 
     # forwards all events of the connection
     connection_event: (status) =>
@@ -126,6 +161,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         else if status is Strophe.Status.CONNECTED
             @connected = true
+            @last_login.connected = true
             @discover_channel_server =>
                 @trigger 'connected'
 

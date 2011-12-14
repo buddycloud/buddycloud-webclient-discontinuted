@@ -204,6 +204,7 @@ Strophe.addConnectionPlugin('buddycloud', {
                     console.error("Cannot parse post", postEl, e.stack || e);
                 }
         }
+	this._applyRSM(el, posts);
         callback(posts);
     },
 
@@ -278,6 +279,16 @@ Strophe.addConnectionPlugin('buddycloud', {
         return parsers;
     },
 
+    _applyRSM: function(el, target) {
+	var rsmEl;
+	if ((rsmEl = el.getElementsByTagNameNS(Strophe.NS.RSM, 'set')[0])) {
+	    target.rsm = {};
+	    var lastEl = rsmEl.getElementsByTagName('last')[0];
+	    if (lastEl)
+		target.rsm.last = lastEl.textContent;
+	}
+    },
+
     getMetadata: function (jid, node, succ, err, timeout) {
         var self = this, conn = this._connection;
         if (typeof node === 'function') {
@@ -305,31 +316,32 @@ Strophe.addConnectionPlugin('buddycloud', {
             }, self._errorcode(err), timeout);
     },
 
+    /**
+     * Attention:
+     * 
+     * subscriptions may contain extraneous `rsm' key that must be
+     * filtered from the user ids.
+     */
     getSubscribers: function(node, success, error) {
+        var that = this;
         this._connection.pubsub.getNodeSubscriptions(node, function(stanza) {
-            var i, pubsubs, pubsub;
-            pubsubs = stanza.getElementsByTagNameNS(
+            var pubsub, subscribers = {};
+            pubsub = stanza.getElementsByTagNameNS(
                 Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
-            if (pubsubs) {
-                var j, subscribers = {};
-                for(i = 0; i < pubsubs.length; i++) {
-                    pubsub = pubsubs[i];
-                    var subscriptions, subscription;
-                    subscriptions = pubsub.getElementsByTagNameNS(
-                        Strophe.NS.PUBSUB_OWNER, 'subscriptions');
-                    if (subscriptions) {
-                        for(i = 0; i < subscriptions.length; i++) {
-                            subscription = subscriptions[i];
-                            if (subscription) {
-                                subscribers[subscription.getAttribute('jid')] =
-                                    subscription.getAttribute('subscription') ||
-                                    "subscribed";
-                            }
-                        }
-                    }
+            if (pubsub)
+                Strophe.forEachChild(pubsub, 'subscriptions',
+                    function(subscriptions) {
+                        Strophe.forEachChild(subscriptions, 'subscription',
+                            function(subscription) {
+                                var jid = subscription.getAttribute('jid');
+                                if (jid)
+                                    subscribers[jid] =
+                                        subscription.getAttribute('subscription') ||
+                                        "subscribed";
+                        });
+                });
 
-                }
-            }
+            that._applyRSM(stanza, subscribers);
             return success(subscribers);
         }, this._errorcode(error));
     },
@@ -342,14 +354,14 @@ Strophe.addConnectionPlugin('buddycloud', {
         var conn = this._connection;
         var queryAttrs = { xmlns: Strophe.NS.MAM };
         if (start)
-            queryAttrs.start = start.toISOString();
+            queryAttrs.start = start.toISOString ? start.toISOString() : start;
         if (end)
-            queryAttrs.end = end.toISOString();
+            queryAttrs.end = end.toISOString ? end.toISOString() : end;
         var iq = $iq({ from: conn.jid,
                        to: this.channels.jid,
                        type: 'get' }).
             c('query', queryAttrs);
-        conn.sendIQ(iq, success, error);
+        conn.sendIQ(iq, success, this._errorcode(error));
     },
 
     /**

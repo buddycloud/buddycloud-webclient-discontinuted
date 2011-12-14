@@ -6,14 +6,16 @@
 
     -->
   <% if @user?.hasRightToPost: %>
-  <section class="answer">
+  <section class="answer" id="<%= @model.parent.get 'id' %>-answer">
     <img class="avatar" src="<%= app.users.current.avatar %>" />
-    <textarea placeholder="post a comment..."></textarea>
+    <textarea name="comment-text" placeholder="add comment (use CTRL enter to add automatically)"></textarea>
     <div class="controls">
+      <!-- No Location functionality implemented yet:
       <div class="button small checkbox">
         <input type="checkbox" id="shouldShareLocation<%= @random?.number %>" />
         <label for="shouldShareLocation<%= @random?.number %>">Share Location: Home</label>
-      </div>
+      </div>  
+      -->
       <div class="button small prominent createComment">Post</div>
     </div>
   </section>

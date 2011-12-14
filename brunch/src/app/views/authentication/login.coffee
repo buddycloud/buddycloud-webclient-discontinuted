@@ -1,17 +1,53 @@
 { AuthenticationView } = require 'views/authentication/base'
-{ EventHandler } = require 'util'
+{ EventHandler, getBrowserPrefix } = require 'util'
 
+LSlpk = '__localpasswd__' # localStorage local password key
 
 class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        $('#home_login_jid').autoSuggestion
+        input = $('#home_login_jid')
+        input.autoSuggestion
             suffix: (val) ->
                 if val is "" or val.indexOf("@") isnt -1
                     ""
                 else
                     "@#{config.domain}"
+
+        ##
+        # webkit only saves input content when submit was successful
+        # this includes a full pagereload, which is not suitable
+        # firefox does it well and asks the user if he wants to save the passwd
+        if getBrowserPrefix() is "-webkit-"
+            # get elements from login form (index.html)
+            warning = $('label[for="store_local"] > div')
+            checkbox = $('#store_local')
+            passwdinput = $('#home_login_pwd')
+            userinput = input.parent().find('#auto-suggestion-'+input.prop 'id')
+
+            # show checkbox only in webkit
+            $('label[for="store_local"]').show()
+
+            if localStorage.getItem(LSlpk) is "true"
+                passwdinput.textSaver()
+                # only track what is before the @
+                userinput.textSaver()
+                # letz the user choose if he really wants it to be saved in the localstorage
+                checkbox.prop 'checked', yes
+                warning.show()
+            #bind checkbox
+            checkbox.change ->
+                if checkbox.is ':checked'
+                    passwdinput.textSaver()
+                    userinput.textSaver()
+                    localStorage.setItem(LSlpk, yes)
+                    warning.show()
+                else
+                    passwdinput.data('textSaver')?.destroy()
+                    userinput.data('textSaver')?.destroy()
+                    localStorage.setItem(LSlpk, no)
+                    warning.hide()
 
         @el.find('form').live 'submit', EventHandler (ev) =>
             ev.stopPropagation()
@@ -42,4 +78,5 @@ class exports.LoginView extends AuthenticationView
 
     reset: =>
         super
+        app.handler.connection.unbind "connected", @reset
         $('#home_login_submit').prop "disabled", false

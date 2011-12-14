@@ -2,27 +2,38 @@
 
 class exports.Connector extends Backbone.EventHandler
 
-    constructor: (@handler, @connection) ->
+    ##
+    # @handler: ConnectionHandler
+    constructor: (@handler) ->
+        @work_queue = []
         @handler.bind 'connecting', => @trigger 'connection:start'
         @handler.bind 'connected',  => @trigger 'connection:established'
+        @handler.bind 'disconnected',  => @trigger 'connection:end'
         @request = new RequestHandler
         app.handler.request = @request.handler
+
+    setConnection: (@connection) =>
         @connection.buddycloud.addNotificationListener @on_notification
 
-    replayNotifications: =>
-        @connection.buddycloud.replayNotifications()
+    replayNotifications: (start, callback) =>
+        @connection.buddycloud.replayNotifications start, null, =>
+            callback? null
+        , (error) =>
+            callback? new Error("Cannot replay notifications")
 
-    publish: (nodeid, item, success, error) =>
+    publish: (nodeid, item, callback) =>
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
                 app.debug "publish", stanza
-                success? stanza
-                done()
-            , (e) =>
-                app.error "publish", nodeid, e
-                error? e
-                done()
+                @work_enqueue ->
+                    done()
+                    callback? null
+            , (error) =>
+                app.error "publish", nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? error
 
     subscribe: (nodeid, callback) =>
         @request (done) =>
@@ -34,11 +45,14 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'subscribed' # FIXME
-                callback? stanza
-                done()
+                @work_enqueue ->
+                    done()
+                    callback? null
             , =>
                 app.error "subscribe", nodeid
-                done()
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot subscribe")
 
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
@@ -49,11 +63,14 @@ class exports.Connector extends Backbone.EventHandler
                     jid: userJid
                     node: nodeid
                     subscription: 'unsubscribed'
-                callback? stanza
-                done()
+                @work_enqueue ->
+                    done()
+                    callback? null
             , =>
                 app.error "unsubscribe", nodeid
-                done()
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot unsubscribe")
 
 #     start_fetch_node_posts: (nodeid) =>
 #         success = (posts) =>
@@ -63,7 +80,7 @@ class exports.Connector extends Backbone.EventHandler
 #             app.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
-    get_node_posts: (nodeid, callback) =>
+    get_node_posts: (nodeid, rsmAfter, callback) =>
         @request (done) =>
             success = (posts) =>
                 for post in posts
@@ -72,47 +89,58 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
-                callback? posts
-                done()
-            error = (e) =>
+                if posts.rsm
+                    @trigger 'posts:rsm:last', nodeid, posts.rsm.last
+                @work_enqueue ->
+                    done()
+                    callback? null, posts
+            error = (error) =>
                 app.error "get_node_posts", nodeid, arguments
-                @trigger 'node:error', nodeid, e
-                callback? []
-                done()
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
-                nodeid, success, error, @connection.timeout)
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>
             success = (metadata) =>
                 @trigger 'metadata', nodeid, metadata
-                callback? metadata
-                done()
-            error = (e) =>
+                @work_enqueue ->
+                    done()
+                    callback? null, metadata
+            error = (error) =>
                 app.error "get_node_metadata", nodeid, arguments
-                @trigger 'node:error', nodeid, e
-                callback?()
-                done()
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot get metadata")
             @connection.buddycloud.getMetadata(
                 nodeid, success, error, @connection.timeout)
 
     # this fetches all subscriptions to a specific node
-    get_node_subscriptions: (nodeid, callback) =>
+    get_node_subscriptions: (nodeid, rsmAfter, callback) =>
         @request (done) =>
             success = (subscribers) =>
                 for own user, subscription of subscribers
-                    @trigger 'subscription:node',
-                        jid: jid
-                        node: nodeid
-                        subscription: subscription
-                    callback? subscribers
+                    unless user is 'rsm'
+                        @trigger 'subscription',
+                            jid: user
+                            node: nodeid
+                            subscription: subscription
+                if subscribers.rsm
+                    @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
+                @work_enqueue ->
                     done()
-            error = (e) =>
-                @trigger 'node:error', nodeid, e
-                callback?()
-                done()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
-                nodeid, success, error, @connection.timeout)
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
     ##
     # notification with type subscription/affiliation already is
@@ -130,3 +158,38 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'metadata', notification.node, notification.config
             else
                 app.debug "Cannot handle notification for #{notification.type}"
+
+    get_roster: (callback) =>
+        @connection.roster.get (items) =>
+            @work_enqueue ->
+                callback? items
+
+    remove_from_roster: (jid) =>
+        @connection.roster.delete jid
+
+    ##
+    # Overwrite Backbone.EventHandler::trigger to be called delayed
+    # by @work_work_queue()
+    trigger: ->
+        args = arguments
+        @work_enqueue =>
+            Backbone.EventHandler::trigger.apply this, args
+
+    work_enqueue: (cb) ->
+        @work_queue.push cb
+        @work_work_queue()
+
+    ##
+    # Triggers events in-order with a 1ms timer in between to ensure
+    # GUI responsiveness
+    work_work_queue: ->
+        unless @work_queue_timeout
+            @work_queue_timeout = setTimeout =>
+                delete @work_queue_timeout
+
+                fun = @work_queue.shift()
+                if fun?
+                    # Actual trigger:
+                    fun()
+                    @work_work_queue()
+            , 1

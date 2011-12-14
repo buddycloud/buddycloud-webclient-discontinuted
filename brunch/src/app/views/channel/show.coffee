@@ -1,7 +1,8 @@
 { ChannelDetails } = require 'views/channel/details/show'
 { PostsView } = require 'views/channel/posts'
+{ ErrorNotificationView } = require 'views/channel/error_notification'
 { BaseView } = require 'views/base'
-{ EventHandler } = require 'util'
+{ EventHandler, throttle_callback } = require 'util'
 
 # The channel shows channel content
 class exports.ChannelView extends BaseView
@@ -15,10 +16,23 @@ class exports.ChannelView extends BaseView
 
         @details = new ChannelDetails model:@model, parent:this
 
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
-        app.users.current.channels.bind "add:#{@model.get 'id'}", @render
-        app.users.current.channels.bind "remove:#{@model.get 'id'}", @render
+        render_callback = throttle_callback(50, @render)
+        @model.bind 'change', render_callback
+        @model.bind 'change:node:metadata', render_callback
+        app.users.current.channels.bind "add:#{@model.get 'id'}", render_callback
+        app.users.current.channels.bind "remove:#{@model.get 'id'}", render_callback
+
+        # New post, visible? Mark read.
+        @model.bind 'post', =>
+            unless @hidden
+                @model.mark_read()
+
+        # Show progress spinner throbber loader
+        @model.bind 'loading:start', @render
+        @model.bind 'loading:stop', @render
+        app.handler.data.bind 'loading:start', @render
+        app.handler.data.bind 'loading:stop', @render
+
         # create posts node view when it arrives from xmpp or instant when its already cached
         init_posts = =>
             @model.nodes.unbind "add", init_posts
@@ -27,11 +41,11 @@ class exports.ChannelView extends BaseView
                     model: postsnode
                     parent: this
                     el: @el.find('.topics')
-                do @postsview.render
                 # To display posts node errors:
-                postsnode.bind 'change', =>
-                    console.log "postsnode change", arguments...
-                    @render()
+                postsnode.bind 'error', @set_error
+                @set_error postsnode.error
+
+                do @postsview.render
                 do @render
             else
                 @model.nodes.bind "add", init_posts
@@ -41,8 +55,18 @@ class exports.ChannelView extends BaseView
         @hidden = false
         @el.show()
 
-        unless app.users.current.channels.get(@model.get 'id')?
+        @model.mark_read()
+        # Not subscribed? Refresh!
+        unless app.users.current.isFollowing(@model)
             app.handler.data.refresh_channel(@model.get 'id')
+
+        # when scrolled to the bottom, cause loading of more posts via
+        # RSM because we are showing too few of them.
+        #
+        # example: so far only retrieved comments to an older post
+        # which are all hidden, because that parent post is on a
+        # further RSM page.
+        @on_scroll()
 
     hide: =>
         @hidden = true
@@ -53,6 +77,7 @@ class exports.ChannelView extends BaseView
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
         'click #createNewTopic': 'clickPost'
+        'scroll': 'on_scroll'
 
     clickPost: EventHandler (ev) ->
         if @isPosting
@@ -68,7 +93,7 @@ class exports.ChannelView extends BaseView
                 author:
                     name: app.users.current.get 'jid'
             node = @model.nodes.get('posts')
-            app.handler.data.publish node, post, =>
+            app.handler.data.publish node, post, (error) =>
                 # TODO: make sure prematurely added post
                 # correlates to incoming notification
                 # (in comments.coffee too)
@@ -78,57 +103,104 @@ class exports.ChannelView extends BaseView
                 # Re-enable form
                 text.removeAttr "disabled"
                 @isPosting = false
-                # Reset form
-                @el.find('.newTopic, .answer').removeClass 'write'
-                text.val ""
-            , (e) =>
-                console.error "postError", e
-                # Re-enable form
-                text.removeAttr "disabled"
-                @isPosting = false
-                # Show error
-                @$('.newTopic .controls').prepend('<p class="postError"></p>')
-                @$('.newTopic .postError').text(e.text or e.condition)
+                unless error
+                    # Reset form
+                    @el.find('.newTopic').removeClass 'write'
+                    text.val ""
+                    # clear localStorage
+                    text.trigger 'txtinput'
+                else
+                    console.error "postError", error
+                    @show_post_error error
+
+    # error display in .newTopic .controls
+    show_post_error: (error) =>
+        p = $('<p class="postError"></p>')
+        @$('.newTopic .controls').prepend(p)
+        p.text(error.text or error.condition)
+
+    set_error: (error) =>
+        if error
+            unless @error_notification
+                @error_notification = new ErrorNotificationView({ error })
+            else
+                @error_notification.error = error
+        else
+            delete @error_notification
+        @render()
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
 
         self = @$('.newTopic, .answer').has(ev.target)
-        unless self.hasClass 'write'
+        self = $(ev.target) unless self.length
+        text = self.find('textarea')
+
+        unless self.hasClass 'write' or text.val() is ""
             self.addClass 'write'
-            $(document).one 'click', ->
+
+            $(document).click on_click = ->
                 # minimize the textarea only if the textarea is empty
-                if self.find('textarea').val() is ""
+                if text.val() is ""
                     self.removeClass 'write'
+                    $(document).unbind 'click', on_click
 
     clickFollow: EventHandler (ev) ->
-        app.handler.data.subscribeUser @model.get('id')
+        @$('.follow').remove()
+        @set_error null
+
+        app.handler.data.subscribe_user @model.get('id'), (error) =>
+            if error
+                @set_error error
+            @render()
 
     clickUnfollow: EventHandler (ev) ->
-        app.handler.data.unsubscribeUser @model.get('id')
+        @$('.unfollow').remove()
+        @set_error null
+
+        app.handler.data.unsubscribe_user @model.get('id'), (error) =>
+            if error
+                @set_error error
+            @render()
+
+    # InfiniteScrolling™ when reaching the bottom
+    on_scroll: ->
+        if @el.scrollTop() >= @$('.stream').innerHeight() - @el.outerHeight() * 1.1
+            @on_scroll_bottom()
+
+    on_scroll_bottom: ->
+        @postsview?.on_scroll_bottom()
 
     render: =>
+        scrollTop = @el.scrollTop();
         @update_attributes()
         super
+
+        if @model
+            text = @$('.newTopic textarea')
+            text.textSaver()
+            text.autoResize
+                extraSpace:0
+                animate:off
+            @$('.newTopic').click() unless text.val() is ""
 
         if @hidden
             @el.hide()
         do @details.render
         @el.append @details.el
 
+        if @error_notification
+            @error_notification.render()
+            @$('.stream').prepend @error_notification.el
         if @postsview
             # TODO: save form content?
-            @el.find('.topics').replaceWith @postsview.el
-            do @postsview.render
-
-        setTimeout =>
-            @$('.notification').addClass 'visible'
-        , 1
+            @$('.topics').replaceWith @postsview.el
+            @postsview.render()
+        @el.scrollTop(scrollTop);
 
     update_attributes: ->
         if (postsNode = @model.nodes.get 'posts')
-            @error = postsNode.error
-            console.warn "ChannelView.update_attributes", @error
+            # @error is also set by clickFollow() & clickUnfollow()
             @postsNode = postsNode.toJSON yes
         if (geo = @model.nodes.get 'geo')
             @geo = geo.toJSON yes
@@ -138,6 +210,8 @@ class exports.ChannelView extends BaseView
         isAnonymous = app.users.current.get('id') is 'anony@mous'
         # TODO: pending may require special handling
         @user =
+            isCurrent: @model.get('id') is app.users.current.get('id')
             followingThisChannel: followingThisChannel
             hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
             isAnonymous: isAnonymous
+        @isLoading = @model.isLoading or app.handler.data.isLoading

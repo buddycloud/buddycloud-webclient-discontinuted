@@ -26,18 +26,23 @@
   text-indent -9999px
   background url(../../public/images/poweredby.png)
   position absolute
+  display none
   header.small #poweredby
     top 0
+    
+.avatar
+  border-radius 3px
 
 #content
-  min-height 100%
+  margin-left 234px
+  min-width 790px
+  height 100%
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
   background #eee url("../../public/images/logo.png") no-repeat center center
+  box-shadow -1px 0 black, -2px 0 rgba(0, 0, 0, 0.21)
   position relative
-  box-shadow 0 0 8px black
   z-index 1
-  box-flex 1
   &.overlapping
     min-height 100%
     position absolute
@@ -63,107 +68,130 @@
   //overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
-  padding 13px
-  position relative
-  z-index 1
-  &.personal
-    > header
-        height 58px
-      nav
-        top 8px
+  transition 250ms
+  .banner
+    height 100%
+    width 100%
+    background-size cover
+    background-position left top
+    position fixed
+    box-shadow 1px 0 rgba(255,255,255,.34) inset
   > header
-    width 500px
-    height 40px
-    margin-top 8px
+    margin 40px 13px 0 13px
+    padding 13px 8px 0 
+    width 484px
+    height 58px
+    background rgba(0,0,0,.75)
+    border-radius 5px 5px 0 0
     position relative
-    &.small
-      height 40px
-      nav
-        top 0
-    h2, .status, .location
-      margin-left 8px
-      width 305px
-      white-space nowrap
-      overflow hidden
-      text-overflow ellipsis
-      display block
-    h2
-      line-height 30px
-    .status
-      font-size 12px
-      color #808080 // rgba(0, 0, 0, 0.55)
+    box horizontal left stretch
+    .avatar
+      width 50px
+      margin 0 13px 0 5px
+    .titleBar
+      box-flex 1
+      h2, .status, .location
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        text-shadow 0 1px 2px black
+        display block
+      h2
+        color white
+        margin-bottom 2px
+        line-height 28px
+      .status
+        font-size 12px
+        color rgba(255,255,255,.67)
     .location
       display none
       .previous
         text-decoration line-through
-    nav
-      right 0
-      top 0
-      position absolute
-      > div
-        margin-left 5px
-      &.inChannel
-        .channel
-          display none
-      &.inMessages
-        .messages
-          display none
-      .tab  
-        height 29px
-        padding 1px 1px 0
-        margin-right -1px
-        vertical-align bottom
-        overflow hidden
-        position relative
-        display inline-block
-        .holder
-          padding 5px 13px 6px
-          font-size 12px
-          color rgba(0, 0, 0, 0.76)
-          text-shadow 0 1px rgba(255, 255, 255, 0.55)
-          background linear-gradient(top, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08))
-          border-radius 3px 3px 0 0
-          box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
-          display block
-          position relative
-          cursor pointer
-        &.newMessage
-          .holder
-            padding-right 33px
-          .counter
-            right 8px
-            top 5px
-        &.active .holder
-          background white
-          z-index 3
-          cursor default
     + .topic
       border-radius 3px 3px 0 0
+  nav
+    margin-top 10px
+    > div
+      margin-left 5px
+    &.inChannel
+      .channel
+        display none
+    &.inMessages
+      .messages
+        display none
+    .button
+      width 75px
+      padding 0
+      text-align center
+    .tab  
+      height 29px
+      padding 1px 1px 0
+      margin-right -1px
+      vertical-align bottom
+      overflow hidden
+      position relative
+      display inline-block
+      .holder
+        padding 5px 13px 6px
+        font-size 12px
+        color rgba(0, 0, 0, 0.76)
+        text-shadow 0 1px rgba(255, 255, 255, 0.55)
+        background linear-gradient(top, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08))
+        border-radius 3px 3px 0 0
+        box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
+        display block
+        position relative
+        cursor pointer
+      &.newMessage
+        .holder
+          padding-right 33px
+        .counter
+          right 10px
+          top 4px
+      &.active .holder
+        background white
+        z-index 3
+        cursor default
   
   
 .stream  
+  margin 0 0 13px 13px
   width 500px
-  border-radius 5px
+  border-radius 0 0 5px 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
   float left
   position relative
   z-index 2
-  transform-style preserve-3d
-  perspective 1000
-  article
-    padding 13px
-    background white
-    position relative
-    box-shadow inset 0 -1px rgba(0,0,0,.21)
-    overflow hidden
-    &:first-child
-      border-radius 5px 5px 0 0
-    &:last-child
-      border-radius 0 0 5px 5px
-      box-shadow none
-    &:only-child
-      border-radius 5px
-      box-shadow none
+
+  /*
+   * one of those two lines causing a horrible rerender bug in webkit browsers
+   */
+  //transform-style preserve-3d
+  //perspective 1000
+
+  .topics
+    article
+      padding 13px
+      background white
+      position relative
+      box-shadow inset 0 -1px rgba(0,0,0,.21)
+      overflow hidden
+      &:first-child
+        border-radius 5px 5px 0 0
+      &:last-child
+        border-radius 0 0 5px 5px
+        box-shadow none
+      &:only-child
+        border-radius 5px
+        box-shadow none
+  .newTopic + .topics 
+    article
+      &:first-child
+        border-radius 0
+      &:last-child
+        border-radius 0 0 5px 5px
+        box-shadow none
   .notification
     height 49px
     margin-top -76px
@@ -209,6 +237,7 @@
     .avatar
       width 50px
       transition 500ms
+      cursor pointer
     &.log
       height 25px
       padding-top 5px
@@ -263,7 +292,7 @@
         display block
         color rgba(0,0,0,.34)
   .name
-    font-weight bold
+    color gray
     overflow hidden
     white-space nowrap
     text-overflow ellipsis    
@@ -277,7 +306,8 @@
   .avatar
     left 13px
     position absolute
-    border-radius 3px
+  p
+    color black
   section.answer
     position relative
     overflow hidden
@@ -287,6 +317,7 @@
       height 18px
       width 386px
       font 12px/18px sans-serif
+      color gray
       border 1px solid rgba(0,0,0,.21)
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
       position relative
@@ -306,6 +337,7 @@
       textarea
         margin-bottom 27px
         height 37px
+        color black
         resize vertical
       .controls
         display block
@@ -332,12 +364,13 @@
       width 40px
       border-radius 2px
   .postcontent
-    white-space: pre-wrap
+    white-space pre-wrap
+    word-wrap break-word
   section.newTopic
     padding 13px 13px 12px 51px
-    background linear-gradient(top, white, #F2F2F2)
+    background linear-gradient(top, white, #eee)
     border-bottom 1px solid rgba(0,0,0,.13)
-    border-radius 5px 5px 0 0
+    border-radius 0
     display block
     overflow hidden
     position relative
@@ -356,6 +389,7 @@
       margin 0
       border 1px solid rgba(0, 0, 0, 0.13)
       font 13px/19.5px sans-serif
+      color gray
       display block
       float right
       position relative
@@ -363,7 +397,8 @@
       transition 250ms
     &.write textarea
       height 89px
-      margin-bottom 29px
+      margin-bottom 33px
+      color black
   .controls
     bottom 13px
     right 13px
@@ -436,7 +471,16 @@
       vertical-align top
       background url(../../public/images/spinner_white.gif) no-repeat
       display inline-block
-        
+  .topic.tutorial
+    .arrow
+      float left
+      padding-left 7px
+      font-size 42px
+      color admin_highlight
+      text-shadow black 0 0 2px
+  .empty.topic p
+    text-align center
+
 .conversation
   article
     min-height 40px
@@ -499,54 +543,54 @@
       background linear-gradient(top, rgba(0,0,0,.05), rgba(0,0,0,.13))
 
 .channelDetails
-  width 264px
+  width 304px
   font-size 12px
-  color rgba(0,0,0,.55)
-  float left
-  position relative
+  color white
+  text-shadow 0 1px 1px black
+  position absolute
+  left 513px
+  top 64px
+  overflow hidden
   .infoToggle
-    width 220px
+    width 259px
     height 26px
     margin-left -1px
-    margin-top 13px
     padding 0 13px 0 21px
     font-weight bold
     line-height 26px
-    border 1px solid rgba(0, 0, 0, 0.21)
     border-bottom-color rgba(0,0,0,.34)
     border-radius 0 14px 14px 0
-    box-shadow 0 1px 0 rgba(255, 255, 255, 0.89) inset, 0 1px rgba(0,0,0,.05)
+    background rgba(0,0,0,.75)
     transition 500ms
     cursor pointer
-    &:hover
-      .icon
-        opacity 1
     h4
-      color rgba(0,0,0,.67)
+      color white
+      text-shadow 0 1px 2px black
       display inline
     .icon
-      margin-top 6px
-      width 9px
-      height 15px
-      background url("../../public/icons/info.png")
-      opacity 0.67
+      font-weight bold
+      font-size 16px
+      line-height 24px
       display block
       float right
-  &.hidden .infoToggle .icon
-    opacity 0.55
   &.hidden .infoToggle
-    margin-left -224px
+    margin-left -264px
+    .editmode &
+      margin-left -1px
   > .holder
     width 222px
     padding 8px 21px
     font-size 12px
-    color rgba(0,0,0,.55)
+    background rgba(0,0,0,.75)
     float left
     position relative
     transition 500ms
   &.hidden > .holder
     margin-left -252px
     opacity 0
+    .editmode &
+      margin-left 0
+      opacity 1
   .meta
     table
       margin 13px 0
@@ -604,9 +648,8 @@
       padding-top 3px
       line-height 19px
       text-align center
-      background linear-gradient(top, rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.03))
-      border-bottom 1px solid rgba(0, 0, 0, 0.03)
-      box-shadow 0 1px rgba(0, 0, 0, 0.03) inset, 0 1px rgba(255,255,255,.55)
+      background linear-gradient(top, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.08))
+      box-shadow 0 1px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255,255,255,.13)
       clear left
       cursor pointer
       &:hover
@@ -619,6 +662,7 @@
   margin-bottom 13px
   position relative
   overflow hidden
+  display none
   &:after
     margin-top 0
     margin-left 2px

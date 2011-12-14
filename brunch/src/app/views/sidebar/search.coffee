@@ -6,14 +6,18 @@ class exports.Searchbar extends BaseView
 
     initialize: ({@channels}) ->
         super
+        @$('input[type="search"]').input @on_input
 
     events:
-        'keyup .search input': 'on_key'
-        'search .search input': 'on_search'
+        'search input[type="search"]': 'on_search'
 
-    on_key: (ev) ->
+    render: ->
+        super
+        @$('input[type="search"]').input @on_input
+
+    on_input: (ev) =>
         code = ev.keyCode or ev.which # bloody browsers
-        input = @$('.search input')
+        input = @$('input[type="search"]')
         search = input.val()
         if ev.type is 'keydown'
             if 31 < code < 127 or code > 159
@@ -22,8 +26,8 @@ class exports.Searchbar extends BaseView
         @trigger 'filter', search
 
     on_search: EventHandler ->
-        input = @$('.search input')
-        search = input.val()
+        input = @$('input[type="search"]')
+        search = input.val()?.toLowerCase() or ""
 
         is_jid = /[^\/]+@[^\/]/.test(search)
         channels = @channels.filter(@filter)

@@ -18,6 +18,7 @@ class exports.Router extends Backbone.Router
 
         # bootstrapping after login or registration
         app.handler.connection.bind "connected", @on_connected
+        app.handler.connection.bind "disconnected", @on_disconnected
 
         Backbone.history.start pushState:on
 
@@ -37,6 +38,24 @@ class exports.Router extends Backbone.Router
         # in anonymous direct browsing route, navigate above doesn't
         # trigger an URL change event at all
         @loadingchannel jid
+
+    on_disconnected: =>
+        return unless app.views.index? # we are still on the welcome site
+        $('#sidebar').remove()
+        app.views.index.el.remove()
+        delete app.views.index
+
+        # Last login succeeded? Reconnect!
+        if app.handler.connection.wasConnected()
+            setTimeout ( ->
+                # Discard all the channel views
+                do app.handler.connection.reconnect
+            ), 1000
+            # Wait for on_connected...
+            app.views.loadingchannel ?= new LoadingChannelView
+            @setView app.views.loadingchannel
+
+        else @navigate 'login'
 
     # routes
 
@@ -60,6 +79,7 @@ class exports.Router extends Backbone.Router
 
     loadingchannel: (id, domain) ->
         jid = if domain then "#{id}@#{domain}" else id
+        jid = jid.toLowerCase()
         app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected

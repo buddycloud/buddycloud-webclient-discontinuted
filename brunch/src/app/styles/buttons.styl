@@ -16,6 +16,7 @@ input[type=submit].button
   display inline-block
   position relative
   cursor pointer
+  transition 500ms
     
   &.active, &.active:hover
     color white
@@ -68,9 +69,20 @@ input[type=submit].button
     box-shadow 0 1px rgba(255, 255, 255, 0.21) inset, 0 1px rgba(0,0,0,.05)
     &:hover
       background rgba(0,0,0,1)
+      
+  &.danger
+    color white
+    text-shadow 0 1px #600
+    background red
+    &:hover
+      background red
+      
+  &.translucid,
+  &.translucid:hover
+    background none
     
   &.checkbox
-    padding-left 1px
+    padding-left 2px
     
   &.dark
     background-color rgba(0,0,0,.13)

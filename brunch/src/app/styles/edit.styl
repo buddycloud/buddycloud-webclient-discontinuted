@@ -1,0 +1,73 @@
+.editBar
+  top 0
+  left 234px
+  width 234px
+  height 100%
+  background rgba(255,255,255,.55)
+  transition 400ms
+  box-shadow -1px 0 rgba(0,0,0,.21) inset
+  position absolute
+  box-sizing border-box
+  overflow-y auto
+  box vertical start stretch
+  .editmode &
+    left 0
+  h2
+    margin 13px 13px 0
+  .edits
+    margin 0 13px 13px
+    box-flex 1
+    nav
+      margin 10px 0 34px
+      .button
+        float right
+        margin-left 5px
+    .contenteditable 
+      padding 5px
+      margin-bottom 5px
+      input[type=checkbox]
+        margin 3px 5px
+      input[type=email]
+        margin-top 3px
+        font-size 16px
+        width 100%
+        box-sizing border-box
+  .dangerZone
+    padding 0 13px
+    &:before,
+    &:after
+      height 21px
+      margin 13px -13px
+      content ""
+      background -webkit-repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+      background -moz-repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+      background -o-repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+      background -ms-repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+      background repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+      box-shadow 0 0 0 1px #700, 0 2px rgba(0,0,0,.08),0 0 0 1px rgba(255,255,255,.89) inset
+      display block
+    p
+      margin-bottom 13px
+      color rgba(0,0,0,.55)
+    .button
+      margin-bottom 2px
+
+[contenteditable="true"],
+.contenteditable
+  color black !important
+  background #fe0 !important
+  border-radius 2px
+  text-shadow none !important
+  transition background 400ms
+  &::selection
+    background black
+    color white
+    text-shadow none
+    
+.editmode
+  #sidebar
+    left -234px
+  .stream
+    p
+      color gray
+      transition 400ms

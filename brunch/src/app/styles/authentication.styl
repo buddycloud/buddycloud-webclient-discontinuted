@@ -2,6 +2,13 @@
   transform-style preserve-3d
   perspective 1000
 
+label[for="store_local"]
+  display none
+  & > div
+    display none
+    font-weight bold
+    color red
+
 .centerBox
   z-index 23
   width 566px
@@ -31,6 +38,13 @@
   #index
     .content
       box-shadow 0 -1px rgba(0, 0, 0, 0.13), 0 -2px rgba(0, 0, 0, 0.08), 0 -3px rgba(0, 0, 0, 0.05)
+    &.broken
+      color white
+      background red
+      font-size 1.5em
+      box vertical center center
+      a
+        color light_highlight
   .navigation
     bottom 0
     width 550px
@@ -56,18 +70,17 @@
       width 233px
       padding 0
       margin 0 auto
-    .fail
-      color red // TODO
-      display none
   #login
     form
       margin-top 109px
+      &.hasError
+        margin-top 83px
   #register
     #register_check
       margin-top 111px
       margin-left -267px // width + 34 gap
     #register_login
-      margin-top 93px      
+      margin-top 93px
     #register_account
       margin-top 38px
     .match
@@ -94,3 +107,15 @@
   &.registerPicked
     #register
       display block
+
+.error
+  margin 8px 0
+  padding 8px
+  background rgba(admin_highlight, .13)
+  border 1px solid darken(admin_highlight, 10)
+  color darken(admin_highlight, 10)
+  text-shadow 0 1px white
+  border-radius 5px
+  display none
+  & > div
+    display none
