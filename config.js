@@ -7,6 +7,7 @@ module.exports = {
     // stylus
     css: {
         compress: true,
+        force: true, // When __true__ styles will always re-compile
         warn: true,
     },
 

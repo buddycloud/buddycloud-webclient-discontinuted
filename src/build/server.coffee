@@ -59,6 +59,7 @@ config.load (args, opts) ->
                 style = stylus css,
                     filename: filename
                     compress: config.build or config.css.compress
+                    force: config.css.force
                     warn: config.css.warn
                 style.use nib()
 
