@@ -6,8 +6,8 @@
 # * subscribed to
 # * viewed recently
 class exports.Sidebar extends Backbone.View
-    tutorial: require '../../templates/sidebar/tutorial.eco'
-    template: require '../../templates/sidebar/show.eco'
+    tutorial: (->)#require '../../templates/sidebar/tutorial.eco'
+    template: require '../../templates/sidebar'
 
     initialize: ({@parent}) ->
         # default's not visible due to nice animation
