@@ -7,7 +7,7 @@ express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
-snippets = ["channels"]
+snippets = ["sidebar"]
 
 wrap_prefix = (prefix, middleware) ->
     return (req, res, next) ->
