@@ -1,4 +1,3 @@
-eco = require 'eco'
 nib = require 'nib'
 path = require 'path'
 stylus = require 'stylus'
