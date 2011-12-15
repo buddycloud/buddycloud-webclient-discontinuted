@@ -6,6 +6,8 @@ config = require 'jsconfig'
 express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
+{ Compiler } = require 'dt-compiler'
+snippets = ["channels"]
 
 wrap_prefix = (prefix, middleware) ->
     return (req, res, next) ->
@@ -22,6 +24,9 @@ wrap_prefix = (prefix, middleware) ->
 cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "config.js")
 
+buildPath = path.join(cwd, "assets")
+designPath = path.join(cwd, "src", "_design")
+
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
@@ -29,9 +34,34 @@ config.cli
 
 config.load (args, opts) ->
 
-    server = express.createServer()
+    pending = 0
+    done = ->
+        console.log "fin", pending
+        start_server(args, opts) unless --pending
 
-    buildPath = path.join(cwd, "assets")
+    sources = {}
+    for name in snippets
+        snippet = require("../templates/#{name}") # FIXME howto update that on fs change?
+        (sources[snippet.src] ?= []).push
+            select: snippet.select
+            snippet:name
+
+    for filename, selectors of sources
+        design = new Compiler
+        design.load(path.join(buildPath, filename))
+        for selector in selectors
+            pending++
+            console.log "+", filename, selector.snippet
+            design.build
+                select: selector.select
+                watch:  yes
+                done:   done
+                dest:   path.join(designPath, "#{selector.snippet}.js")
+    0
+
+start_server = (args, opts) ->
+
+    server = express.createServer()
 
     server.configure ->
 
@@ -47,8 +77,6 @@ config.load (args, opts) ->
                     path.join(cwd, "src", "main")
                 ]
                 extensions:
-                    '.eco': (source) ->
-                        "module.exports = #{eco.precompile source}"
                     'modernizr.js': (source) ->
                         # modernizr needs the full global window namespace
                         "!function(){#{source}}.call(window)"
