@@ -40,7 +40,8 @@ config.load (args, opts) ->
 
     sources = {}
     for name in snippets
-        snippet = require("../templates/#{name}") # FIXME howto update that on fs change?
+        # reloaded by node-dev on fs change
+        snippet = require("../templates/#{name}")
         (sources[snippet.src] ?= []).push
             select: snippet.select
             snippet:name

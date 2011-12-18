@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ./node_modules/.bin/coffee ./src/build/server.coffee $@
+exec ./node_modules/.bin/node-dev ./src/build/server.coffee $@
