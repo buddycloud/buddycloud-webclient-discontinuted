@@ -69,8 +69,7 @@ start_server = (args, opts) ->
                 mount  : '/web/js/app.js'
                 verbose: no
                 watch  : yes
-                cache  : off
-                fastmatch: not config.build
+                cache  : on
                 require: [
                     jquery  :'jquery-browserify'
                     backbone:'backbone-browserify'
