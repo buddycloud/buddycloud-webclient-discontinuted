@@ -2,7 +2,7 @@
 
 
 class exports.WelcomeView extends Backbone.View
-    template: require '../../templates/welcome/show.eco'
+    template: require '../../templates/welcome/show'
 
     initialize: ->
         @el = $('.centerBox')
