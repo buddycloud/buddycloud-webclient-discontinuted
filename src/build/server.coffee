@@ -30,6 +30,7 @@ config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
     build:['build',[off, "build and pack everything together" ]]
+    dev:  [off, "enable build server code reload"]
 
 config.load (args, opts) ->
 
