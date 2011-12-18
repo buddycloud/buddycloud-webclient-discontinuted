@@ -25,7 +25,7 @@ $(document).ready ->
     if typeof config is 'undefined'
         $('#index')
             .addClass('broken')
-            .html(do require './templates/welcome/configerror.eco')
+            .html(do require './templates/welcome/configerror')
         return
 
     ### could be used to switch console output ###
