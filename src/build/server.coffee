@@ -76,6 +76,11 @@ start_server = (args, opts) ->
                     path.join(cwd, "src", "main")
                 ]
                 extensions:
+                    '.html': (source) ->
+                        source = source
+                            .replace(/'/g, "\\'") # don't let html escape itself
+                            .replace(/\n/g, "\\n'+\n'") # new lines
+                        "module.exports=function(){return '#{source}'}"
                     'modernizr.js': (source) ->
                         # modernizr needs the full global window namespace
                         "!function(){#{source}}.call(window)"
