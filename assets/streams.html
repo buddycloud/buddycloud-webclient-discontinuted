@@ -11,7 +11,7 @@
   <script>require('./vendor-bridge');</script>
 </head>
 <body>
-  <div class="editBar">
+  <div id="editbar">
       <h2>Edit Mode</h2>
       <!--
         we could place a history of all changes here
@@ -822,9 +822,9 @@
       stopEditMode(false);
     }
   });
-  $('.editBar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
-  $('.editBar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
-  
+  $('#editbar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
+  $('#editbar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
+
   function startEditMode(){
     for(var i = 0, l = editableElements.length; i < l; i++){
       var el = editableElements[i];
