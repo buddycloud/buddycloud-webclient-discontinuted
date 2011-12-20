@@ -22,7 +22,7 @@ class exports.RequestHandler extends Backbone.EventHandler
 
     start: (task, id) =>
         triggered = no
-        app.debug "[#{id}] start task", {task}
+        app.debug "[#{id}] start task"
         task =>
             @running-- unless triggered
             app.debug "[#{id}] task done. (#{@running} left)"

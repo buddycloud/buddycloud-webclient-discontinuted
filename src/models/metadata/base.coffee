@@ -7,6 +7,5 @@ class exports.Metadata extends Model
         @localStorage = new Store "metadata-#{@type}-#{@id}"
         @fetch()
         @bind 'change',(args...) =>
-            app.debug "EV metadata change", @id, arguments
             args.unshift "change:#{@type}:metadata"
             @parent.trigger.apply @parent, args

@@ -209,7 +209,6 @@ class exports.DataHandler extends Backbone.EventHandler
     on_subscription: (subscription) =>
         # FIXME delete all unsubscripted subscriptions from local cache
         return unless /\/user\/([^\/]+@[^\/]+)\//.test subscription.node
-        app.debug "GOT user subscription", subscription
 
         user = app.users.get_or_create id: subscription.jid
         user.push_subscription subscription
