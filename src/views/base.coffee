@@ -1,17 +1,17 @@
+{ Template } = require 'dynamictemplate'
+
 class exports.BaseView extends Backbone.View
-    template: ->
-        "<div>"
+    template: -> new Template # empty.
 
-    initialize: ({@parent}) ->
-        @el = $(@template this)
-        @el.attr id: @cid
+    initialize: ({@parent} = {}) ->
 
-        @delegateEvents()
-
-    render: ->
-        oldEl = @el
-        @el = $(@template this)
-        @el.attr id: @cid
-        oldEl?.replaceWith @el
-
-        @delegateEvents()
+    render: (callback) ->
+#         oldEl = @el
+#         console.log @el
+        tpl = @template(this)
+        tpl.ready =>
+            @el = tpl.jquery
+            #@el.attr id: @cid FIXME ?
+#             $(oldEl).replaceWith @el
+            @delegateEvents()
+            callback?.call(this)
