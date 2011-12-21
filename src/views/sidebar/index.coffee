@@ -28,12 +28,12 @@ class exports.Sidebar extends BaseView
 
     # sliding in animation
     moveIn: (t = 200) ->
-        @el.animate?(left:"0", t)
+        @el.animate(left:"0", t)
 #         @overview.show(t)
         @hidden = no
 
     # sliding out animation
     moveOut: (t = 200) ->
-        @el.animate?(left:"-#{@el.width?()}px", t)
+        @el.animate(left:"-#{@el.width?()}px", t)
 #         @overview.hide(t)
         @hidden = yes
