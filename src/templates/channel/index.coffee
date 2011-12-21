@@ -37,7 +37,11 @@ module.exports = design (view) ->
 #                     @$div class:'messages button', ->
 #                         @$span class:'counter', ->
 #                             @text "?"
-                    @$div class:'follow button prominent', "Follow" # FIXME required dummy
+                    @$div class:'follow button prominent', ->
+                        if app.users.isAnonymous(app.users.current)
+                            @text "Login"#  FIXME +"or Register to Follow"
+                        else
+                            @text "Follow"
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
