@@ -3,7 +3,7 @@
 .DS_Store
 public/.DS_Store
 assets/web/css/main.css
-src/_design/*.js
+src/_design/
 node_modules/*
 buddycloud.tmproj
 build.tar.gz
