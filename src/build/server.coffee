@@ -6,7 +6,7 @@ express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
-snippets = ["sidebar"]
+snippets = ["main", "channel/index", "sidebar/index", "sidebar/search"]
 
 wrap_prefix = (prefix, middleware) ->
     return (req, res, next) ->
