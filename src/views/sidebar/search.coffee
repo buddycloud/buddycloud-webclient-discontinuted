@@ -2,18 +2,20 @@
 { EventHandler } = require '../../util'
 
 class exports.Searchbar extends BaseView
-    template: require '../../templates/sidebar/search.eco'
+    template: require '../../templates/sidebar/search'
 
     initialize: ({@channels}) ->
         super
-        @$('input[type="search"]').input @on_input
 
     events:
         'search input[type="search"]': 'on_search'
 
-    render: ->
-        super
-        @$('input[type="search"]').input @on_input
+    render: (callback) ->
+        super ->
+            console.log "searchbar", @el
+            @parent.trigger 'subview:searchbar', @el
+            @$('input[type="search"]').input @on_input
+            callback?.call(this)
 
     on_input: (ev) =>
         code = ev.keyCode or ev.which # bloody browsers
