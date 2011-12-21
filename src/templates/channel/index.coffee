@@ -26,6 +26,8 @@ module.exports = design (view) ->
                 @$nav ->
                     @$div class:'messages button', ->
                         @remove() # FIXME
+                    @$div class:'edit button', ->
+                        @remove() if app.users.isAnonymous(app.users.current)
                     ###<% unless @user?.isCurrent: %>
                     <div class="button unfollow">Unfollow</div>
                         <% end %>
