@@ -57,7 +57,7 @@ config.load (args, opts) ->
                 select: selector.select
                 watch:  yes
                 done:   done
-                dest:   path.join(designPath, "#{selector.snippet}.js")
+                dest:   path.join(designPath, selector.snippet) + ".js"
     0
 
 start_server = (args, opts) ->
