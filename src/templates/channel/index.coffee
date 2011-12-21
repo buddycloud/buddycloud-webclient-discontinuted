@@ -24,6 +24,8 @@ module.exports = design (view) ->
                     @$span class:'status', ->
                         @text "-"
                 @$nav ->
+                    @$div class:'messages button', ->
+                        @remove() # FIXME
                     ###<% unless @user?.isCurrent: %>
                     <div class="button unfollow">Unfollow</div>
                         <% end %>
