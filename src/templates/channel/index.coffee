@@ -33,7 +33,7 @@ module.exports = design (view) ->
 #                     @$div class:'messages button', ->
 #                         @$span class:'counter', ->
 #                             @text "?"
-                    @$div class:'follow button', "Follow" # FIXME required dummy
+                    @$div class:'follow button prominent', "Follow" # FIXME required dummy
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
