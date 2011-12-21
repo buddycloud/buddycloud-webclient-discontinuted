@@ -74,7 +74,7 @@ start_server = (args, opts) ->
                 require: [
                     jquery  :'jquery-browserify'
                     backbone:'backbone-browserify'
-                    path.join(cwd, "src", "main")
+                    path.join(cwd, "src", "init")
                 ]
                 extensions:
                     '.html': (source) ->
