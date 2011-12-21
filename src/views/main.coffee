@@ -24,7 +24,21 @@ class exports.MainView extends BaseView
 
         # special because normaly parents add their children views to the dom
         @render =>
-            @channels.bind 'add', @new_channel_view
+            app.users.current.channels.bind 'add', (channel) =>
+                @channels.get_or_create channel
+            app.users.current.channels.forEach (channel) =>
+                @channels.get_or_create channel
+
+            @channels.bind 'remove', @remove_channel_view
+            # FIXME: let the ChannelView be created on-demand, they're
+            # rendering much too often during startup. mrflix supposedly says
+            #@channels.bind 'add',    @new_channel_view
+            # if we already found a view in the cache
+            #@current?.el.show()
+
+            channel = app.users.current.channels.get(app.users.target.get('id'))
+            if channel?
+                @setCurrentChannel channel
 
     render: (callback) ->
         super ->
