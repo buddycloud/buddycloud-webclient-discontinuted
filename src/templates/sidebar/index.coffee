@@ -16,6 +16,7 @@ module.exports = design (view) ->
         @$div id:'sidebar', ->
             @$div ->
                 @$div class:'personal channel', ->
+                    return @remove() if app.users.isAnonymous(app.users.current)
                     #@text "loading personal channel …"
                     view.bind 'subview:personalchannel', (tag) =>
                         #@text "", force:yes
