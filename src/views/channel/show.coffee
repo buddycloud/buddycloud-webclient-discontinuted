@@ -158,6 +158,7 @@ class exports.ChannelView extends BaseView
                 new_previews[url] = @newpost_url_previews[url]
             else
                 div = $("<div/>")
+                $('.newTopic').append("<br>")
                 $('.newTopic').append(div)
                 new_previews[url] = div
                 @load_url_preview url, div
@@ -166,13 +167,13 @@ class exports.ChannelView extends BaseView
 
     # TODO: make url configurable
     load_url_preview: (url, container) ->
-        jQuery.ajax
-            url: "http://api.embed.ly/1/oembed?url=#{encodeURIComponent url}"
-            dataType: 'json'
-            error: (jqXHR, textStatus, errorThrown) =>
-                console.warn "embed error", textStatus, errorThrown
-            success: (data) =>
-                console.warn "embed", url, data
+        app.handler.data.connector.fetch_embed_html url, 390, (err, html) ->
+            if err
+                console.warn "embed error", err
+            else
+                console.warn "embed", url, html
+                # TODO: filter HTML for security!
+                container.append $(html)
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').remove()

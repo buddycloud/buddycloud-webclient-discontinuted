@@ -193,3 +193,8 @@ class exports.Connector extends Backbone.EventHandler
                     fun()
                     @work_work_queue()
             , 1
+
+    fetch_embed_html: (url, maxwidth, cb) ->
+        @connection.oembed.fetch { url, maxwidth }, (err, result) ->
+            cb err, result?.html
+
