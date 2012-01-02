@@ -7,3 +7,5 @@ before_script:
 script: "./development --build"
 after_script:
   - "tar tvfz build.tar.gz"
+notifications:
+  email: false
