@@ -107,6 +107,7 @@ module.exports = (baseUrl, tarPath) ->
                 buffering = new BufferingStream()
                 res.pipe(buffering)
                 buffering.on 'complete', (body) ->
+                    console.log body?.length, path
                     stream = new BufferedStream()
                     stream.props =
                         path: path

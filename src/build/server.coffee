@@ -37,7 +37,7 @@ config.load (args, opts) ->
 
         javascript = browserify
                 mount  : '/web/js/app.js'
-                verbose: no
+                verbose: yes
                 watch  : yes
                 cache  : off
                 fastmatch: not config.build
