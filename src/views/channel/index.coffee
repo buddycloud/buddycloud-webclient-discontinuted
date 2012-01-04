@@ -1,4 +1,5 @@
 { BaseView } = require '../base'
+{ PostsView } = require './posts'
 { EventHandler } = require '../../util'
 
 
@@ -15,15 +16,16 @@ class exports.ChannelView extends BaseView
     initialize: () ->
         super
 
+        do @init_posts
 #         @model.bind 'change', render_callback
 #         @model.bind 'change:node:metadata', render_callback
 #         app.users.current.channels.bind "add:#{@model.get 'id'}", render_callback
 #         app.users.current.channels.bind "remove:#{@model.get 'id'}", render_callback
 #
-#         # New post, visible? Mark read.
-#         @model.bind 'post', =>
-#             unless @hidden
-#                 @model.mark_read()
+        # New post, visible? Mark read.
+        @model.bind 'post', =>
+            unless @hidden
+                @model.mark_read()
 #
 #         # Show progress spinner throbber loader
 #         @model.bind 'loading:start', @on_loading_start
@@ -33,11 +35,12 @@ class exports.ChannelView extends BaseView
 
     render: (callback) ->
         super ->
+            @rendered = yes
             if @model
                 text = @$('.newTopic textarea')
                 text.textSaver()
                 text.autoResize
-                    extraSpace:20
+                    extraSpace:0
                     animate:off
                 @$('.newTopic').click() unless text.val() is ""
 
@@ -45,26 +48,36 @@ class exports.ChannelView extends BaseView
                 @el.show()
                 @on_scroll()
 
-            return callback?.call(this) unless @details?
-            @details.render =>
-
-                callback.call(this)
+            pending = 0
+            if @details?
+                pending++
+                @details.render =>
+                    @trigger 'subview:details', @details.el
+                    callback?.call(this) unless --pending
+            if @postsview?
+                pending++
+                @postsview.render =>
+                    @trigger 'subview:topics', @postsview.el
+                    @on_scroll() unless @hidden
+                    callback?.call(this) unless --pending
+            unless pending
+                callback?.call(this)
 
     # create posts node view when it arrives from xmpp or instant when its already cached
     init_posts: =>
         @model.nodes.unbind "add", @init_posts
         if (postsnode = @model.nodes.get 'posts')
-            if (title = postnode.metadata.get('title')?.value)
+            if (title = postsnode.metadata.get('title')?.value)
                 @trigger('view:title', title)
-#             @postsview = new PostsView
-#                 model: postsnode
-#                 parent: this
+            @postsview = new PostsView
+                model: postsnode
+                parent: this
             # To display posts node errors:
-#             postsnode.bind 'error', @set_error
-#             @set_error postsnode.error
-
-#             do @postsview.render
-#             do @render FIXME
+            postsnode.bind 'error', @set_error
+            @set_error postsnode.error
+            if @rendered
+                @postsview.render =>
+                    @trigger 'subview:topics', @postsview.el
         else
             @model.nodes.bind "add", @init_posts
 

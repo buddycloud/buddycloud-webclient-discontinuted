@@ -54,8 +54,8 @@ module.exports = design (view) ->
                         #    label for shouldShareLocation
                         # @$div id:'createNewTopic'
                 @$section class:'topics', ->
-                    view.bind 'view:topic', (tag) =>
-                        @attach tag
+                    view.bind 'subview:topics', (tag) =>
+                        @_jquery?.replaceWith(tag._jquery ? tag)
                 @$p class:'loader'
 
 
