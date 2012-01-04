@@ -37,7 +37,7 @@ config.load (args, opts) ->
 
         javascript = browserify
                 mount  : '/web/js/app.js'
-                verbose: no
+                verbose: yes
                 watch  : yes
                 cache  : off
                 fastmatch: not config.build
@@ -98,6 +98,7 @@ config.load (args, opts) ->
 
     server.listen config.port, config.host
     if config.build
-        require './packaging' # this puts everything in a tarball
+        # this puts everything in a tarball
+        require('./packaging')("http://#{config.host or 'localhost'}:#{config.port}", "build.tar.gz")
     else
         console.log "build server listening on %s:%s …",config.host,config.port
