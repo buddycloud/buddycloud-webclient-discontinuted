@@ -1,24 +1,24 @@
 formatdate = require 'formatdate'
 { BaseView } = require '../base'
-{ EventHandler, throttle_callback } = require '../../util'
+{ EventHandler } = require '../../util'
 
 class exports.PostView extends BaseView
-    template: require '../../templates/channel/post.eco'
+    template: require '../../templates/channel/post'
 
-    initialize: ({@parent, @type}) =>
+    initialize: ({@type}) ->
         super
-        @model.bind 'change', throttle_callback(50, @render)
+#         @model.bind 'change', throttle_callback(50, @render) FIXME
 
-    render: =>
-        @post = @model.toJSON() # data
-        @author = @model.author # model
-        super
-        @$('.name').attr href: @author?.get('jid') or "?"
-        formatdate.hook @el, update: off
+    render: (callback) ->
+        super ->
+            @rendered = yes
+#         @$('.name').attr href: @author?.get('jid') or "?"
+            formatdate.hook @el, update: off
+            callback?.call(this)
 
     events:
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'
 
     clickAuthor: EventHandler ->
-        app.router.navigate @author.get('jid'), true
+        app.router.navigate @get('author')?.get('jid'), true
