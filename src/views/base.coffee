@@ -2,9 +2,9 @@
 
 class exports.BaseView extends Backbone.View
     template: -> new Template # empty.
+    el: $('<div empty>') # so @el is always a jquery object
 
     initialize: ({@parent} = {}) ->
-        @el = $(@el) # so @el is always a jquery object
 
     render: (callback) ->
 #         oldEl = @el
