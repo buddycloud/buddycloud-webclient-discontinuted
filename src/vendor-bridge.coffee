@@ -12,7 +12,6 @@ require "./vendor/strophe.presence.js"
 require "./vendor/strophe.register.js"
 require "./vendor/strophe.dataforms.js"
 require "./vendor/strophe.buddycloud.js"
-require "./vendor/strophe.oembed.js"
 
 ## jQuery
 window.jQuery = window.$ = require 'jquery'

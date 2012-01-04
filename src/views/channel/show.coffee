@@ -167,13 +167,23 @@ class exports.ChannelView extends BaseView
 
     # TODO: make url configurable
     load_url_preview: (url, container) ->
-        app.handler.data.connector.fetch_embed_html url, 390, (err, html) ->
-            if err
-                console.warn "embed error", err
-            else
-                console.warn "embed", url, html
-                # TODO: filter HTML for security!
-                container.append $(html)
+        embedly_url = "http://api.embed.ly/1/oembed" +
+            "?url=#{encodeURIComponent url}" +
+            "&format=json" +
+            "&maxwidth=380"
+        embedly_key = "2c1bedbc2aa111e1acbf4040d3dc5c07"
+        if embedly_key
+            embedly_url += "&key=#{embedly_key}"
+        jQuery.ajax
+            url: embedly_url
+            dataType: 'json'
+            error: (jqXHR, textStatus, errorThrown) =>
+                console.warn "embed error", textStatus, errorThrown
+            success: (data) =>
+                console.warn "embed", url, data
+                if data.html?
+                    # TODO: filter HTML for security!
+                    container.html data.html
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').remove()
