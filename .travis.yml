@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 0.6
+before_script:
+  - "npm i ."
+  - "git submodule update --init"
+script: "./development --build"
+after_script:
+  - "tar tvfz build.tar.gz"
+notifications:
+  email: false
