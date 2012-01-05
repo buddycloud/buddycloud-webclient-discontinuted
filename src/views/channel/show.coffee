@@ -51,8 +51,6 @@ class exports.ChannelView extends BaseView
                 @model.nodes.bind "add", init_posts
         do init_posts
 
-        @newpost_url_previews = {}
-
     show: =>
         @hidden = false
         @el.show()
@@ -78,7 +76,6 @@ class exports.ChannelView extends BaseView
         'click .follow': 'clickFollow'
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
-        'input .newTopic textarea': 'changeNewTopic'
         'click #createNewTopic': 'clickPost'
         'scroll': 'on_scroll'
 
@@ -147,43 +144,6 @@ class exports.ChannelView extends BaseView
                 if text.val() is ""
                     self.removeClass 'write'
                     $(document).unbind 'click', on_click
-
-    # TODO: only after 1 sec of inactivity
-    changeNewTopic: EventHandler (ev) ->
-        text = $('.newTopic textarea').val()
-        urls = text.match /(http:\/\/[^\s]+)/g
-        new_previews = {}
-        for url in urls
-            if @newpost_url_previews.hasOwnProperty url
-                new_previews[url] = @newpost_url_previews[url]
-            else
-                div = $("<div/>")
-                $('.newTopic').append("<br>")
-                $('.newTopic').append(div)
-                new_previews[url] = div
-                @load_url_preview url, div
-            delete @newpost_url_previews[url]
-        @newpost_url_previews = new_previews
-
-    # TODO: make url configurable
-    load_url_preview: (url, container) ->
-        embedly_url = "http://api.embed.ly/1/oembed" +
-            "?url=#{encodeURIComponent url}" +
-            "&format=json" +
-            "&maxwidth=380"
-        embedly_key = "2c1bedbc2aa111e1acbf4040d3dc5c07"
-        if embedly_key
-            embedly_url += "&key=#{embedly_key}"
-        jQuery.ajax
-            url: embedly_url
-            dataType: 'json'
-            error: (jqXHR, textStatus, errorThrown) =>
-                console.warn "embed error", textStatus, errorThrown
-            success: (data) =>
-                console.warn "embed", url, data
-                if data.html?
-                    # TODO: filter HTML for security!
-                    container.html data.html
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').remove()
