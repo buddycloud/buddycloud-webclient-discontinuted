@@ -1,3 +1,4 @@
+require 'colors'
 nib = require 'nib'
 path = require 'path'
 stylus = require 'stylus'
@@ -40,7 +41,7 @@ config.load (args, opts) ->
 
     pending = 0
     done = ->
-        console.log "fin", pending
+#         console.log "fin", pending
         start_server(args, opts) unless --pending
 
     sources = {}
@@ -54,9 +55,10 @@ config.load (args, opts) ->
     for filename, selectors of sources
         design = new Compiler
         design.load(path.join(buildPath, filename))
+        console.log "loading #{filename} …".yellow
         for selector in selectors
             pending++
-            console.log "+", filename, selector.snippet
+            console.log "* compiling #{selector.snippet}".bold.black
             design.build
                 select: selector.select
                 watch:  yes
@@ -137,4 +139,5 @@ start_server = (args, opts) ->
     if config.build
         require './packaging' # this puts everything in a tarball
     else
-        console.log "build server listening on %s:%s …",config.host,config.port
+        console.log "build server listening on %s:%s …".magenta,
+            config.host, config.port
