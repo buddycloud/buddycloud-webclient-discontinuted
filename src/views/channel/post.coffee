@@ -47,9 +47,8 @@ class exports.PostView extends BaseView
             "&format=json" +
             "&maxwidth=400"
         # Set one for debugging embedly on localhost:
-        embedly_key = ""
-        if embedly_key
-            embedly_url += "&key=#{embedly_key}"
+        if config.embedly_key
+            embedly_url += "&key=#{config.embedly_key}"
         jQuery.ajax
             url: embedly_url
             dataType: 'json'
