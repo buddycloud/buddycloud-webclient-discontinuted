@@ -15,4 +15,4 @@ class exports.BaseView extends Backbone.View
             #@el.attr id: @cid FIXME ?
 #             $(oldEl).replaceWith @el
             @delegateEvents()
-            callback?.call(this)
+            callback?.call?(this)
