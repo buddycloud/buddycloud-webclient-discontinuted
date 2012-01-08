@@ -1,12 +1,8 @@
 *swp
 .tmproj
 .DS_Store
-.DS_Store
 public/.DS_Store
-brunch/build/web/css/main.css
-brunch/build/web/js/store.js
-brunch/build/web/js/app.js
+assets/web/css/main.css
 node_modules/*
 buddycloud.tmproj
 build.tar.gz
-brunch/src/app/styles/main.styl
