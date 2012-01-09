@@ -47,6 +47,9 @@ class exports.ChannelView extends BaseView
                     animate:off
                 @$('.newTopic').click() unless text.val() is ""
 
+            process.nextTick => # FIXME this should be used at all at this point
+                @trigger 'view:title', @model.get('id') # FIXME use metadata
+
             unless @hidden
                 @el.show()
                 @on_scroll()
