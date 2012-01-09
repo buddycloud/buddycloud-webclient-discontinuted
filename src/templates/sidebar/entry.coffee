@@ -30,7 +30,18 @@ module.exports = design (view) ->
                     $.removeClass('selected')
 
             avatar = @div class:'avatar', ->
-                @$span class:'counter', (do channel.count_unread) # channelpost class should autofill
+                unread_counter = @$span class:'counter'
+                update_unread = ->
+                    unread = channel.count_unread()
+                    unread_counter.text "#{unread}"
+                    if unread > 0
+                        unread_counter._jquery.show()
+                    else
+                        unread_counter._jquery.hide()
+
+                view.bind 'update:unread_counter', update_unread
+                do update_unread
+
             @$div class:'info', ->
                 owner = @span class:'owner'
                 domain = owner.span class:'domain'

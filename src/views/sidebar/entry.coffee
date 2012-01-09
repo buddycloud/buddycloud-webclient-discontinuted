@@ -1,5 +1,5 @@
 { BaseView } = require '../base'
-{ transitionendEvent, EventHandler } = require '../../util'
+{ transitionendEvent, EventHandler, throttle_callback } = require '../../util'
 
 
 class exports.ChannelEntry extends BaseView
@@ -14,6 +14,9 @@ class exports.ChannelEntry extends BaseView
         bubble = @bubble # FIXME
         @bubble = (args...) =>
             setTimeout ( -> bubble args... ), 200
+
+        @model.bind 'post', throttle_callback 50, =>
+            @trigger 'update:unread_counter'
 
     events:
         "click": "click_entry"
