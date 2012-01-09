@@ -2,7 +2,9 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select "div.channelView", "article.topic, div.channelDetails"
+            el = @select "div.channelView", "article.topic, div.channelDetails"
+            el.find('h2, span:not(.loader)').text("")
+            return el
 
 
 { Template } = require 'dynamictemplate'
