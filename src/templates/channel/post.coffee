@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            el = @select "article.topic:eq(0) section.opener" , "p *"
+            el = @select "article.topic:first section.opener" , "p *"
             el.find('p, span').text("")
             return el
 
@@ -28,7 +28,6 @@ module.exports = design (view) ->
                 name.text(author?.get('name') or
                           author?.get('jid') or
                           "???")
-                console.error "UP AUTHOR",view.type, author, author?.avatar, avatar?._jquery
             view.model.bind 'change:author', update_author
             do update_author
             # this saves us some jquery roundtripes when updating
