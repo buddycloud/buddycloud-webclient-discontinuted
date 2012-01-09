@@ -132,7 +132,9 @@ start_server = (args, opts) ->
     server.listen config.port, config.host
     if config.build
         # this puts everything in a tarball
-        require('./packaging')("http://#{config.host or 'localhost'}:#{config.port}", "build.tar.gz")
+        pack = require './packaging'
+        url = "http://#{config.host}:#{config.port}"
+        pack url, "build.tar.gz"
     else
         console.log "build server listening on %s:%s …".magenta,
             config.host, config.port
