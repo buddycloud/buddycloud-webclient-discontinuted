@@ -29,13 +29,24 @@ module.exports = design (view) ->
                 else
                     $.removeClass('selected')
 
-            @$div class:'avatar', ->
-                @attr style:"background-image:url(#{channel.avatar})"
+            avatar = @div class:'avatar', ->
                 @$span class:'counter', (do channel.count_unread) # channelpost class should autofill
             @$div class:'info', ->
-                @$span class:'owner', ->
-                    jid = channel.get('jid')?.split('@') or []
-                    @text "#{jid[0]}"
-                    @$span class:'domain', "#{jid[1]}"
+                owner = @span class:'owner'
+                domain = owner.span class:'domain'
                 @$span class:'status', (channel.nodes.get('status')?.last() or "")
+
+                update = ->
+                    avatar.attr style:"background-image:url(#{channel.avatar})"
+
+                    jid = channel.get('id')?.split('@') or []
+                    owner.text   "#{jid[0]}"
+                    domain.text "@#{jid[1]}"
+
+                channel.bind('change', update)
+                do update
+
+                avatar.end()
+                domain.end()
+                owner.end()
 
