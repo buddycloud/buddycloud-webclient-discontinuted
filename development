@@ -1,2 +1,12 @@
 #!/bin/sh
-exec ./node_modules/.bin/coffee ./src/build/server.coffee $@
+for arg in $@; do
+    case $arg in
+        '--dev') dev=1 ;;
+        '--help') help=1 ;;
+    esac
+done
+if [ $dev ] && [ ! $help ]; then
+    exec ./node_modules/.bin/node-dev ./src/build/server.coffee $@
+else
+    exec ./node_modules/.bin/coffee ./src/build/server.coffee $@
+fi

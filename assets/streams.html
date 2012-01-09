@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
   <script src="web/js/app.js"></script>
-  <!--<script>require('main');</script>-->
+  <!--<script>require('init');</script>-->
   <script>require('./vendor-bridge');</script>
 </head>
 <body>
-  <div class="editBar">
+  <div id="editbar">
       <h2>Edit Mode</h2>
       <!--
         we could place a history of all changes here
@@ -276,7 +276,7 @@
               <section class="comments">
                 <section class="answer">
                   <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="post a comment..."></textarea>
+                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
                   <div class="controls">
                     <div class="button small checkbox">
                       <input type="checkbox" id="shouldShareLocation123" />
@@ -299,7 +299,7 @@
               <section class="comments">
                 <section class="answer">
                   <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="post a comment..."></textarea>
+                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
                   <div class="controls">
                     <div class="button small checkbox">
                       <input type="checkbox" id="shouldShareLocation124" />
@@ -354,7 +354,7 @@
                 </section>
                 <section class="answer">
                   <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="post a comment..."></textarea>
+                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
                   <div class="controls">
                     <div class="button small checkbox">
                       <input type="checkbox" id="shouldShareLocation125" />
@@ -822,9 +822,9 @@
       stopEditMode(false);
     }
   });
-  $('.editBar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
-  $('.editBar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
-  
+  $('#editbar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
+  $('#editbar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
+
   function startEditMode(){
     for(var i = 0, l = editableElements.length; i < l; i++){
       var el = editableElements[i];
