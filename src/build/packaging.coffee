@@ -3,6 +3,7 @@ tar = require 'tar'
 zlib = require 'zlib'
 http = require 'http'
 url = require 'url'
+PostBuffer = require 'bufferstream/postbuffer'
 {Stream} = require('stream')
 {Buffer} = require('buffer')
 config = require 'jsconfig'
@@ -32,46 +33,13 @@ onError = (e) ->
     process.exit 1
 
 
-# Consumes entire document and emits 'complete' afterwards
-class BufferingStream extends Stream
-    constructor: ->
-        super
-
-        @buffers = []
-        @length = 0
-        @writable = yes
-
-    write: (data) ->
-        if data?
-            @buffers.push data
-            @length += data.length
-        return true
-
-    end: (data) ->
-        if data?
-            @write data
-        buffer = new Buffer(@length)
-        offset = 0
-        for b in @buffers
-            b.copy buffer, offset
-            offset += b.length
-        @emit 'complete', buffer
-
 # Emit a whole document at once
 class BufferedStream extends Stream
-    constructor: ->
-        super
-
     run: (body) ->
         @emit 'data', body
         process.nextTick =>
             @emit 'end'
 
-    # Stub
-    pause: ->
-
-    # Stub
-    resume: ->
 
 module.exports = (baseUrl, tarPath) ->
     tarPack = new tar.Pack(noProprietary: yes)
@@ -107,9 +75,9 @@ module.exports = (baseUrl, tarPath) ->
                 # No Content-Length means we cannot pipe(). tar.Pack
                 # needs to know a file's size beforehand though, so we
                 # need to buffer the HTTP body.
-                buffering = new BufferingStream()
-                res.pipe(buffering)
-                buffering.on 'complete', (body) ->
+#                 buffering = new BufferingStream()
+#                 res.pipe(buffering)
+                new PostBuffer(res).onEnd (body) ->
                     console.log "","#{body?.length}".green,".".bold.black
                     stream = new BufferedStream()
                     stream.props =
