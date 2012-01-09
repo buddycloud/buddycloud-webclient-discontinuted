@@ -75,13 +75,13 @@ class BufferedStream extends Stream
 
 module.exports = (baseUrl, tarPath) ->
     tarPack = new tar.Pack(noProprietary: yes)
-    tarPack.
-        on('error', onError).
-        pipe(zlib.Gzip()).
-        on('error', onError).
-        pipe(fs.createWriteStream(tarPath)).
-        on('error', onError).
-        on 'close', ->
+    tarPack
+        .on('error', onError)
+        .pipe(zlib.Gzip())
+        .on('error', onError)
+        .pipe(fs.createWriteStream(tarPath))
+        .on('error', onError)
+        .on 'close', ->
             console.log "Built #{tarPath}".bold.green
             process.exit 0
 
