@@ -7,22 +7,14 @@ express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
+{ wrap_prefix } = require './util'
+
+
 snippets = ["main"
     "channel/index", "channel/posts", "channel/post"
     "channel/topicpost", "channel/comments"
     "sidebar/index", "sidebar/search", "sidebar/entry"
 ]
-
-wrap_prefix = (prefix, middleware) ->
-    return (req, res, next) ->
-        if req.url.indexOf(prefix) is 0
-            old_url = req.url
-            req.url = req.url[prefix.length..]
-            middleware req, res, ->
-                req.url = old_url
-                next(arguments...)
-        else
-            next()
 
 
 cwd = path.join(__dirname, "..", "..")

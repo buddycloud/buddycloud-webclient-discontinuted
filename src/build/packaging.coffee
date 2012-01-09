@@ -1,24 +1,16 @@
-fs = require 'fs'
 tar = require 'tar'
 zlib = require 'zlib'
 http = require 'http'
 url = require 'url'
-PostBuffer = require 'bufferstream/postbuffer'
-{Stream} = require('stream')
-{Buffer} = require('buffer')
 config = require 'jsconfig'
+PostBuffer = require 'bufferstream/postbuffer'
+{ spiderDir, BufferedStream } = require './util'
+{ createWriteStream } = require 'fs'
 
-spiderDir = (root, path) ->
-    results = []
-    for f in fs.readdirSync("#{root}/#{path}")
-        path2 = "#{path}/#{f}"
-        fn = "#{root}/#{path2}"
-        stats = fs.statSync fn
-        if stats.isDirectory()
-            results.push spiderDir(root, path2)...
-        else if stats.isFile()
-            results.push path2
-    results
+onError = (e) ->
+    console.error "#{e.stack or e.message or e}".red
+    process.exit 1
+
 
 entries = [
     ""
@@ -28,17 +20,6 @@ entries = [
     "web/css/main.css"
 ].concat spiderDir("assets", "web/fonts"), spiderDir("assets", "public")
 
-onError = (e) ->
-    console.error "#{e.stack or e.message or e}".red
-    process.exit 1
-
-
-# Emit a whole document at once
-class BufferedStream extends Stream
-    run: (body) ->
-        @emit 'data', body
-        process.nextTick =>
-            @emit 'end'
 
 
 module.exports = (baseUrl, tarPath) ->
@@ -47,7 +28,7 @@ module.exports = (baseUrl, tarPath) ->
         .on('error', onError)
         .pipe(zlib.Gzip())
         .on('error', onError)
-        .pipe(fs.createWriteStream(tarPath))
+        .pipe(createWriteStream(tarPath))
         .on('error', onError)
         .on 'close', ->
             console.log "Built #{tarPath}".bold.green
@@ -79,7 +60,7 @@ module.exports = (baseUrl, tarPath) ->
 #                 res.pipe(buffering)
                 new PostBuffer(res).onEnd (body) ->
                     console.log "","#{body?.length}".green,".".bold.black
-                    stream = new BufferedStream()
+                    stream = new BufferedStream
                     stream.props =
                         path: path
                         mode: 0755
