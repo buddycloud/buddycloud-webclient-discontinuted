@@ -20,7 +20,9 @@ class exports.MainView extends BaseView
             b = new Date(channel.nodes.get('posts')?.posts.at(0)?.get_last_update() or 0)
             a.getTime() - b.getTime()
 
-        @sidebar = new Sidebar parent:this
+        @sidebar = new Sidebar
+            parent:this
+            model: @channels
 
         # special because normaly parents add their children views to the dom
         @render =>

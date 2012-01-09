@@ -17,14 +17,95 @@ class exports.Sidebar extends BaseView
             parent:this
 #         @search.bind 'filter', @render
 
+        @channelsel = null
+        @hidden = yes
+
+        $(window).resize =>
+            @channelsel?.parent().antiscroll()
+
+        # sidebar entries
+        @current = undefined
+        @views = {} # this contains the channel entry views
+        @timeouts = {} # this contains the channelview remove timeouts
+        @rendered = no
+#         @model.forEach        @new_channel_entry
+        @model.bind 'add',    @new_channel_entry
+        @model.bind 'remove', @remove_channel_entry
+
+#         unless app.views.overview?
+#             app.views.overview = new ChannelOverView
+#         @overview = app.views.overview
+
     render: (callback) ->
         super ->
+            console.error "render sidebar"
+            return if @rendered
+            @rendered = yes
             # goes straight to MainView::template
-            console.log "sidebar", @el
-            @parent.trigger 'subview:sidebar', @el
+            console.error "sidebar", @el
+            # add this view to the dom before searchbar is ready rendered
+            @parent.trigger "subview:sidebar", @el
+            @channelsel = $('#channels > .scrollHolder')
+            console.error "channelsel", @channelsel
             @search.render(callback)
+            console.error "model", @model.length, @model
+            @model.forEach (entry) =>
+                @new_channel_entry(entry, force:yes)
+#         @$('.tutorial').remove()
+#         if channels.length < 2
+#             @el.append @tutorial()
 
-    setCurrentEntry: (channel) => # FIXME
+    new_channel_entry: (channel, {force} = {}) =>
+        render = force ? no
+        old = @current
+        entry = @views[channel?.cid]
+        unless entry
+            entry = new ChannelEntry
+                model:channel
+                parent:this
+            @views[channel.cid] = entry
+            @current ?= entry
+            render = yes
+        if @rendered and render
+            entry?.render =>
+                if @channelsel?
+                    if entry.isPersonal()
+                        @trigger('subview:personalchannel', entry.el)
+#                         entry.el.insertBefore @channelsel
+                    else
+                        @trigger('subview:entry', entry.el)
+#                         @channelsel.append entry.el
+
+                    @channelsel.parent().antiscroll()
+                @$('.tutorial').remove()
+        @current?.trigger('update:highlight')
+        old?.trigger('update:highlight')
+
+        return entry
+
+    remove_channel_entry: (channel, time = 5000) =>
+        { el } = @views[channel.cid]
+        el.animate {opacity:0}, duration:time
+        if @timeouts[channel.cid]?
+            clearTimeout @timeouts[channel.cid]
+        @timeouts[channel.cid] = setTimeout ( =>
+            @views[channel.cid].el.remove()
+            delete @timeouts[channel.cid]
+            delete @views[channel.cid]
+        ), time
+
+    setCurrentEntry: (channel) =>
+        old = @current
+        unless (@current = @views[channel.cid])
+            @current = @new_channel_entry channel
+        if @timeouts[@current.model.cid]?
+            clearTimeout @timeouts[@current.model.cid]
+            @current.el.clearQueue()
+            @current.el.css opacity:1
+            delete @timeouts[@current.model.cid]
+        @current?.trigger('update:highlight')
+        old?.trigger('update:highlight')
+
 
     # sliding in animation
     moveIn: (t = 200) ->

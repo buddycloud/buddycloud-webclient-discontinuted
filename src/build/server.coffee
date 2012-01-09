@@ -10,7 +10,7 @@ browserify = require 'browserify'
 snippets = ["main"
     "channel/index", "channel/posts", "channel/post"
     "channel/topicpost", "channel/comments"
-    "sidebar/index", "sidebar/search"
+    "sidebar/index", "sidebar/search", "sidebar/entry"
 ]
 
 wrap_prefix = (prefix, middleware) ->
