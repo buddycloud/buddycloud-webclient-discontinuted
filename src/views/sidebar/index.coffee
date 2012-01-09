@@ -38,17 +38,13 @@ class exports.Sidebar extends BaseView
 
     render: (callback) ->
         super ->
-            console.error "render sidebar"
             return if @rendered
             @rendered = yes
             # goes straight to MainView::template
-            console.error "sidebar", @el
             # add this view to the dom before searchbar is ready rendered
             @parent.trigger "subview:sidebar", @el
             @channelsel = $('#channels > .scrollHolder')
-            console.error "channelsel", @channelsel
             @search.render(callback)
-            console.error "model", @model.length, @model
             @model.forEach (entry) =>
                 @new_channel_entry(entry, force:yes)
 #         @$('.tutorial').remove()
