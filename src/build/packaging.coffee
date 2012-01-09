@@ -28,7 +28,7 @@ entries = [
 ].concat spiderDir("assets", "web/fonts"), spiderDir("assets", "public")
 
 onError = (e) ->
-    console.error e.stack or e.message or e
+    console.error "#{e.stack or e.message or e}".red
     process.exit 1
 
 
@@ -82,7 +82,7 @@ module.exports = (baseUrl, tarPath) ->
         pipe(fs.createWriteStream(tarPath)).
         on('error', onError).
         on 'close', ->
-            console.log "Built #{tarPath}"
+            console.log "Built #{tarPath}".bold.green
             process.exit 0
 
     idle = yes
@@ -93,6 +93,9 @@ module.exports = (baseUrl, tarPath) ->
 
         entry = entries.shift()
         if entry?
+            msg = "GET".cyan+" "+"/#{entry}".magenta+" "+"…".bold.black
+            process.stdout.write msg
+
             u = url.parse("#{baseUrl}/#{entry}")
             req = http.get
                 host: u.hostname
@@ -107,7 +110,7 @@ module.exports = (baseUrl, tarPath) ->
                 buffering = new BufferingStream()
                 res.pipe(buffering)
                 buffering.on 'complete', (body) ->
-                    console.log body?.length, path
+                    console.log "","#{body?.length}".green,".".bold.black
                     stream = new BufferedStream()
                     stream.props =
                         path: path
