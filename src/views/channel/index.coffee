@@ -16,6 +16,9 @@ class exports.ChannelView extends BaseView
     initialize: () ->
         super
 
+        @bind 'show', @show
+        @bind 'hide', @hide
+
         do @init_posts
 #         @model.bind 'change', render_callback
 #         @model.bind 'change:node:metadata', render_callback

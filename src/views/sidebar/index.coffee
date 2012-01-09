@@ -89,7 +89,7 @@ class exports.Sidebar extends BaseView
         if @timeouts[channel.cid]?
             clearTimeout @timeouts[channel.cid]
         @timeouts[channel.cid] = setTimeout ( =>
-            @views[channel.cid].el.remove()
+            @views[channel.cid].el?.remove?()
             delete @timeouts[channel.cid]
             delete @views[channel.cid]
         ), time

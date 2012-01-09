@@ -59,7 +59,7 @@ class exports.MainView extends BaseView
         @current?.trigger 'hide'
 
     setCurrentChannel: (channel) =>
-        @current?.trigger 'hide'
+        old = @current
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
         if oldChannel and not app.users.current.isFollowing(oldChannel)
@@ -85,6 +85,7 @@ class exports.MainView extends BaseView
 
         @sidebar.setCurrentEntry channel
         @current.trigger 'show'
+        old?.trigger 'hide' unless old is @current
 
     new_channel_view: (channel) =>
         channel = @channels.get_or_create channel, silent:yes
@@ -98,5 +99,6 @@ class exports.MainView extends BaseView
         view
 
     remove_channel_view: (channel) =>
-        delete @timeouts[channel.cid]
+        @views[channel.cid]?.el?.remove?()
         delete @views[channel.cid]
+        delete @timeouts[channel.cid]
