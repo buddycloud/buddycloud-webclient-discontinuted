@@ -20,11 +20,10 @@ module.exports = design (view) ->
                     @attr src:"#{view.model.avatar}"
                 @$div class:'titleBar', ->
                     @$h2 class:'title', ->
-                        @text "", force:yes
                         view.bind 'view:title', (text) =>
                             @text "#{text}"
                     @$span class:'status', ->
-                        @text "-"
+                        @text "status of a public personal channel" # FIXME
                 @$nav ->
                     @$div class:'messages button', ->
                         @remove() # FIXME
