@@ -41,48 +41,45 @@ module.exports = (baseUrl, tarPath) ->
         idle = no
 
         entry = entries.shift()
-        if entry?
-            msg = "GET".cyan+" "+"/#{entry}".magenta+" "+"…".bold.black
-            process.stdout.write msg
+        unless entry?
+            return tarPack.end()
 
-            u = url.parse("#{baseUrl}/#{entry}")
-            req = http.get
-                host: u.hostname
-                port: u.port
-                path: u.path
-            path = if u.path == "/" then "/index.html" else u.path
-            path = path.replace /^\/+/, ""
-            req.on 'response', (res) ->
-                # No Content-Length means we cannot pipe(). tar.Pack
-                # needs to know a file's size beforehand though, so we
-                # need to buffer the HTTP body.
-#                 buffering = new BufferingStream()
-#                 res.pipe(buffering)
-                new PostBuffer(res).onEnd (body) ->
-                    console.log "","#{body?.length}".green,".".bold.black
-                    stream = new BufferedStream
-                    stream.props =
-                        path: path
-                        mode: 0755
-                        size: body.length
-                        uid: 1000
-                        gid: 1000
-                        uname: 'www'
-                        gname: 'nogroup'
-                    stream.root = path: "."
-                    stream.path = path
-                    flushed = tarPack.add stream
-                    stream.run body
 
-                    idle = yes
-                    if flushed
-                        process.nextTick pushNextEntry
-                    else
-                        # Waiting for data to be flushed, continue
-                        # on 'drain'
-            req.on 'error', onError
-        else
-            tarPack.end()
+        msg = "GET".cyan+" "+"/#{entry}".magenta+" "+"…".bold.black
+        process.stdout.write msg
+
+        u = url.parse("#{baseUrl}/#{entry}")
+        req = http.get
+            host: u.hostname
+            port: u.port
+            path: u.path
+        path = if u.path == "/" then "/index.html" else u.path
+        path = path.replace /^\/+/, ""
+        req.on 'response', (res) ->
+            # No Content-Length means we cannot pipe(). tar.Pack
+            # needs to know a file's size beforehand though, so we
+            # need to buffer the HTTP body.
+            new PostBuffer(res).onEnd (body) ->
+                console.log "","#{body?.length}".green,".".bold.black
+                stream = new BufferedStream
+                stream.props =
+                    path: path
+                    mode: 0755
+                    size: body.length
+                    uid: 1000
+                    gid: 1000
+                    uname: 'www'
+                    gname: 'nogroup'
+                stream.root = path: "."
+                stream.path = path
+                flushed = tarPack.add stream
+                stream.run body
+
+                idle = yes
+                if flushed
+                    process.nextTick pushNextEntry
+                # else - Waiting for data to be flushed, continue
+        req.on 'error', onError
 
     tarPack.on 'drain', pushNextEntry
     pushNextEntry()
