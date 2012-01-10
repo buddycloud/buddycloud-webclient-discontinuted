@@ -34,11 +34,19 @@ class exports.PostsView extends BaseView
             @insert_post_view view
 
     insert_post_view: (view) =>
+        # Look for the next older post
         i = @model.posts.indexOf(view.model)
-        olderPost = @views[@model.posts.at(i + 1)?.cid]
+        olderPost = null
+        while not olderPost and (++i) < @model.posts.length
+            olderPost = @views[@model.posts.at(i)?.cid]
+            # Only if it had been rendered
+            unless olderPost.rendered
+                olderPost = null
         if olderPost
+            # There's an older post, insert before
             view.el.insertBefore olderPost.el
         else
+            # No older, this at bottom
             @el.append view.el
 
     render: (callback) ->
