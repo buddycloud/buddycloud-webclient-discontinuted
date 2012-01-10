@@ -38,21 +38,16 @@ class exports.Sidebar extends BaseView
 
     render: (callback) ->
         super ->
-            return if @rendered
-            @rendered = yes
             # goes straight to MainView::template
             # add this view to the dom before searchbar is ready rendered
             @parent.trigger "subview:sidebar", @el
             @channelsel = $('#channels > .scrollHolder')
             @search.render(callback)
-            @model.forEach (entry) =>
-                @new_channel_entry(entry, force:yes)
 #         @$('.tutorial').remove()
 #         if channels.length < 2
 #             @el.append @tutorial()
 
-    new_channel_entry: (channel, {force} = {}) =>
-        render = force ? no
+    new_channel_entry: (channel) =>
         old = @current
         entry = @views[channel?.cid]
         unless entry
@@ -61,19 +56,16 @@ class exports.Sidebar extends BaseView
                 parent:this
             @views[channel.cid] = entry
             @current ?= entry
-            render = yes
-        if @rendered and render
             entry?.render =>
-                if @channelsel?
-                    if entry.isPersonal()
-                        @trigger('subview:personalchannel', entry.el)
-#                         entry.el.insertBefore @channelsel
-                    else
-                        @trigger('subview:entry', entry.el)
-#                         @channelsel.append entry.el
+                @ready =>
+                    if @channelsel?
+                        if entry.isPersonal()
+                            @trigger('subview:personalchannel', entry.el)
+                        else
+                            @trigger('subview:entry', entry.el)
 
-                    @channelsel.parent().antiscroll()
-                @$('.tutorial').remove()
+                        @channelsel.parent().antiscroll()
+                    @$('.tutorial').remove()
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 
