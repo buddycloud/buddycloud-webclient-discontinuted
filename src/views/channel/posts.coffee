@@ -24,9 +24,8 @@ class exports.PostsView extends BaseView
         view = @views[post.cid] ?= new TopicPostView
             model:post
             parent:this
-        if @rendered
-            view.render =>
-                @insert_post_view view
+        view.render =>
+            @insert_post_view view
 
         post.bind 'change', =>
             return unless view.rendered
@@ -34,35 +33,15 @@ class exports.PostsView extends BaseView
             @insert_post_view view
 
     insert_post_view: (view) =>
-        # Look for the next older post
         i = @model.posts.indexOf(view.model)
-        olderPost = null
-        while not olderPost and (++i) < @model.posts.length
-            olderPost = @views[@model.posts.at(i)?.cid]
-            # Only if it had been rendered
-            unless olderPost.rendered
-                olderPost = null
+        olderPost = @views[@model.posts.at(i + 1)?.cid]
         if olderPost
-            # There's an older post, insert before
-            view.el.insertBefore olderPost.el
+            olderPost.ready ->
+                olderPost.el.after view.el
         else
-            # No older, this at bottom
-            @el.append view.el
+            @ready =>
+                @el.prepend view.el
 
-    render: (callback) ->
-        super ->
-            console.log "posts", @el
-            @rendered = yes
-            cids = Object.keys(@views)
-            repeat = =>
-                if (cid = cids.shift())
-                    view = @views[cid]
-                    view.render =>
-                        @insert_post_view view
-                        do repeat
-                else
-                    callback?.call(this)
-            do repeat
 #
 #         @$('.tutorial, .empty').remove()
 #         if not @parent.isLoading and count is 0

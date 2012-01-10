@@ -99,6 +99,5 @@ class exports.MainView extends BaseView
         view
 
     remove_channel_view: (channel) =>
-        @views[channel.cid]?.el?.remove?()
         delete @views[channel.cid]
         delete @timeouts[channel.cid]

@@ -53,9 +53,8 @@ class exports.CommentsView extends BaseView
             type:'comment'
             model:comment
             parent:this
-        if @rendered
-            view.render =>
-                @insert_comment_view view
+        view.render =>
+            @insert_comment_view view
 
         comment.bind 'change', =>
             return unless view.rendered
@@ -66,10 +65,11 @@ class exports.CommentsView extends BaseView
         i = @model.indexOf(view.model)
         olderComment = @views[@model.at(i + 1)?.cid]
         if olderComment
-            olderComment.el.after view.el
+            olderComment.ready ->
+                olderComment.el.after view.el
         else
-            @el.prepend view.el
-#         view.render() FIXME
+            @ready =>
+                @el.prepend view.el
 
     render: (callback) ->
         super ->
@@ -84,17 +84,7 @@ class exports.CommentsView extends BaseView
 
                 @$('.answer').click() unless text.val() is ""
 
-            pending = 0
-            @model.forEach (comment) =>
-                entry = @views[comment.cid]
-                if entry
-                    pending++
-                    entry.render =>
-                        @insert_comment_view entry
-                        callback?.call(this) unless --pending
-                else
-                    console.warn "Comment without view", comment
-            callback?.call(this) unless pending
+            callback?.call(this)
 
 #     update_attributes: ->
 #         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
