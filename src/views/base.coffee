@@ -5,14 +5,21 @@ class exports.BaseView extends Backbone.View
     el: $('<div empty>') # so @el is always a jquery object
 
     initialize: ({@parent} = {}) ->
+        @rendered = no
 
     render: (callback) ->
-#         oldEl = @el
-#         console.log @el
         tpl = @template(this)
         tpl.ready =>
+            @rendered = yes
             @el = tpl.jquery
-            #@el.attr id: @cid FIXME ?
-#             $(oldEl).replaceWith @el
             @delegateEvents()
             callback?.call?(this)
+            # invoke delayed callbackes from ready
+            if @_waiting?
+                cb?() for cb in @_waiting
+                delete @_waiting
+
+    ready: (callback) ->
+        return callback?() if @rendered
+        @_waiting ?= []
+        @_waiting.push callback
