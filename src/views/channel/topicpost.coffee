@@ -31,7 +31,6 @@ class exports.TopicPostView extends BaseView
     render: (callback) ->
         super ->
             pending = 2
-            @rendered = yes
             @opener.render =>
                 @trigger 'subview:opener', @opener.el
                 callback?.call(this) unless --pending

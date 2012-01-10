@@ -38,7 +38,6 @@ class exports.ChannelView extends BaseView
 
     render: (callback) ->
         super ->
-            @rendered = yes
             if @model
                 text = @$('.newTopic textarea')
                 text.textSaver()
@@ -54,20 +53,15 @@ class exports.ChannelView extends BaseView
                 @el.show()
                 @on_scroll()
 
-            pending = 0
-            if @details?
-                pending++
-                @details.render =>
-                    @trigger 'subview:details', @details.el
-                    callback?.call(this) unless --pending
-            if @postsview?
-                pending++
-                @postsview.render =>
-                    @trigger 'subview:topics', @postsview.el
-                    @on_scroll() unless @hidden
-                    callback?.call(this) unless --pending
-            unless pending
-                callback?.call(this)
+            callback?.call(this)
+
+#             pending = 0 # FIXME add details
+#             if @details?
+#                 pending++
+#                 @details.render =>
+#                     @trigger 'subview:details', @details.el
+#                     callback?.call(this) unless --pending
+#             unless pending
 
     # create posts node view when it arrives from xmpp or instant when its already cached
     init_posts: =>
@@ -81,9 +75,10 @@ class exports.ChannelView extends BaseView
             # To display posts node errors:
             postsnode.bind 'error', @set_error
             @set_error postsnode.error
-            if @rendered
-                @postsview.render =>
+            @postsview.render =>
+                @ready =>
                     @trigger 'subview:topics', @postsview.el
+                    @on_scroll() unless @hidden
         else
             @model.nodes.bind "add", @init_posts
 
