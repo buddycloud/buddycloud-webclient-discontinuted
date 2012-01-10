@@ -30,6 +30,9 @@ class exports.ChannelEntry extends BaseView
             app.debug "ChannelEntry.click_entry", @, @model
             @parent.parent.setCurrentChannel @model
 
+            # setCurrentChannel() invoked mark_read(), update counter:
+            @trigger 'update:unread_counter'
+
     isPersonal : (a, b) =>
         (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
 
