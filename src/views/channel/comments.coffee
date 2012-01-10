@@ -62,8 +62,14 @@ class exports.CommentsView extends BaseView
             @insert_comment_view view
 
     insert_comment_view: (view) =>
+        # Look for the next older comment
         i = @model.indexOf(view.model)
-        olderComment = @views[@model.at(i + 1)?.cid]
+        olderComment = null
+        while not olderComment and (++i) < @model.length
+            olderComment = @views[@model.at(i)?.cid]
+            # Only if it had been rendered
+            unless olderComment.rendered
+                olderComment = null
         if olderComment
             olderComment.ready ->
                 olderComment.el.after view.el
