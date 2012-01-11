@@ -37,10 +37,10 @@ class exports.PostsView extends BaseView
         olderPost = @views[@model.posts.at(i + 1)?.cid]
         if olderPost
             olderPost.ready ->
-                olderPost.el.after view.el
+                olderPost.el.before view.el
         else
             @ready =>
-                @el.prepend view.el
+                @el.append view.el
 
 #
 #         @$('.tutorial, .empty').remove()
