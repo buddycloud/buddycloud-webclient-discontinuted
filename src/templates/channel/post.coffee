@@ -19,7 +19,11 @@ module.exports = design (view) ->
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 @$span class:'time', ->
-                    # FIXME set formatdate stuff in streams.html
+                    update_time = =>
+                        @text view.model.get('updated') or view.model.get('published')
+                    view.model.bind 'change:updated', update_time
+                    view.model.bind 'change:published', update_time
+                    update_time()
             name = @span class:'name'
 
             update_author = ->
@@ -30,7 +34,7 @@ module.exports = design (view) ->
                           "???")
             view.model.bind 'change:author', update_author
             do update_author
-            # this saves us some jquery roundtripes when updating
+            # this saves us some jquery roundtrips when updating
             # the tags for the first time
             avatar.end()
             name.end()
