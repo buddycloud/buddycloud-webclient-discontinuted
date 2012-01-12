@@ -13,7 +13,6 @@ class exports.PostView extends BaseView
         super ->
             @rendered = yes
 #         @$('.name').attr href: @author?.get('jid') or "?"
-            formatdate.hook @el, update: off
             @render_previews()
             callback?.call(this)
 

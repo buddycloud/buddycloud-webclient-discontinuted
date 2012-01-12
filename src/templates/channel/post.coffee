@@ -9,18 +9,25 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
+formatdate = require 'formatdate'
 design = require '../../_design/channel/post'
 
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
+        view.model.bind 'all', (a...) ->
+            console.log "view model", view.model.get('id'), "a:", a...
         @$section ->
             @attr class:"#{view.type}"
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 @$span class:'time', ->
                     update_time = =>
-                        @text view.model.get('updated') or view.model.get('published')
+                        # FIXME: single tick bug
+                        setTimeout =>
+                            @text view.model.get('updated') or view.model.get('published')
+                            formatdate.hook(@_jquery, update: off) if @_jquery?
+                        , 1
                     view.model.bind 'change:updated', update_time
                     view.model.bind 'change:published', update_time
                     update_time()
@@ -28,10 +35,16 @@ module.exports = design (view) ->
 
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)
+                console.log "update_author", author, view.model
                 avatar.attr src:"#{author?.avatar or " "}"
-                name.text(author?.get('name') or
-                          author?.get('jid') or
-                          "???")
+                unless author?.get('name') or author?.get('jid')
+                    console.warn "Questionable author", view.model.get('author'), view.model.attributes?.author, author, view.model
+                # FIXME: single tick bug
+                setTimeout ->
+                    name.text(author?.get('name') or
+                              author?.get('jid') or
+                              "???")
+                , 1
             view.model.bind 'change:author', update_author
             do update_author
             # this saves us some jquery roundtrips when updating
