@@ -65,8 +65,19 @@ render_previews = ->
     return unless urls?
 
     for url in urls
-        load_url_preview url, (html) =>
-            @$div()._jquery.html html
+        do (url) =>
+            load_url_preview url, (data) =>
+                console.log "embed", url, data
+                if data.html?
+                    @$div()._jquery.html data.html
+                else if data.type is 'photo' and data.url?
+                    @$img
+                        src: data.url
+                        style: "max-width: 100%"
+                else if data.thumbnail_url
+                    @$img
+                        src: data.thumbnail_url
+                        style: "max-width: 100%"
 
 # TODO: make url configurable
 # TODO: filter HTML for XSS
@@ -83,11 +94,4 @@ load_url_preview = (url, callback) ->
         dataType: 'json'
         error: (jqXHR, textStatus, errorThrown) =>
             console.error "embed error", textStatus, errorThrown
-        success: (data) =>
-            console.warn "embed", url, data
-            if data.html?
-                callback data.html
-            else if data.type is 'photo' and data.url?
-                img = $('<img style="max-width: 100%;">')
-                img.attr 'src', data.url
-                callback img.toString()
+        success: callback
