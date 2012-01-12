@@ -43,6 +43,8 @@ module.exports = design (view) ->
                             @text "Login"#  FIXME +"or Register to Follow"
                         else
                             @text "Follow"
+                    @$div class:'unfollow button prominent', ->
+                        @text "Unfollow"
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
                     @attr 'id', "#{view.model.get 'id'}-topicpost"

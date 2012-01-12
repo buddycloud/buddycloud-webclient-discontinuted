@@ -49,6 +49,20 @@ class exports.ChannelView extends BaseView
             process.nextTick => # FIXME this should be used at all at this point
                 @trigger 'view:title', @model.get('id') # FIXME use metadata
 
+            update_follow_unfollow = =>
+                if app.users.current.get('id') is @model.get('id')
+                    @$('.follow').hide()
+                    @$('.unfollow').hide()
+                else if app.users.current.isFollowing @model
+                    @$('.follow').hide()
+                    @$('.unfollow').show()
+                else
+                    @$('.follow').show()
+                    @$('.unfollow').hide()
+            app.users.current.channels.bind 'add', update_follow_unfollow
+            app.users.current.channels.bind 'remove', update_follow_unfollow
+            update_follow_unfollow()
+
             unless @hidden
                 @el.show()
                 @on_scroll()
@@ -154,7 +168,7 @@ class exports.ChannelView extends BaseView
                     @show_post_error error
 
     clickFollow: EventHandler (ev) ->
-        @$('.follow').remove()
+        @$('.follow').hide()
         @set_error null
 
         app.handler.data.subscribe_user @model.get('id'), (error) =>
@@ -163,7 +177,7 @@ class exports.ChannelView extends BaseView
 #             @render() FIXME
 
     clickUnfollow: EventHandler (ev) ->
-        @$('.unfollow').remove()
+        @$('.unfollow').hide()
         @set_error null
 
         app.handler.data.unsubscribe_user @model.get('id'), (error) =>
