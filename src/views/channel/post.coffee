@@ -21,7 +21,7 @@ class exports.PostView extends BaseView
         'click .avatar': 'clickAuthor'
 
     clickAuthor: EventHandler ->
-        app.router.navigate @get('author')?.get('jid'), true
+        app.router.navigate @model.get('author')?.jid, true
 
     render_previews: ->
         urls = @model.get('content')?.value?.match /(http:\/\/[^\s]+)/g
