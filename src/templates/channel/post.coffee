@@ -33,10 +33,7 @@ module.exports = design (view) ->
 
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)
-                console.log "update_author", author, view.model
                 avatar.attr src:"#{author?.avatar or " "}"
-                unless author?.get('name') or author?.get('jid')
-                    console.warn "Questionable author", view.model.get('author'), view.model.attributes?.author, author, view.model
                 # FIXME: single tick bug
                 setTimeout ->
                     name.text(author?.get('name') or
