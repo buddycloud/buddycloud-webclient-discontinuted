@@ -44,6 +44,7 @@ module.exports = design (view) ->
 
             @$div class:'info', ->
                 owner = @span class:'owner'
+                username = owner.span()
                 domain = owner.span class:'domain'
                 @$span class:'status', (channel.nodes.get('status')?.last() or "")
 
@@ -51,13 +52,14 @@ module.exports = design (view) ->
                     avatar.attr style:"background-image:url(#{channel.avatar})"
 
                     jid = channel.get('id')?.split('@') or []
-                    owner.text   "#{jid[0]}"
+                    username.text   "#{jid[0]}"
                     domain.text "@#{jid[1]}"
 
                 channel.bind('change', update)
                 do update
 
                 avatar.end()
+                username.end()
                 domain.end()
                 owner.end()
 
