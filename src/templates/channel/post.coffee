@@ -15,8 +15,6 @@ design = require '../../_design/channel/post'
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
-        view.model.bind 'all', (a...) ->
-            console.log "view model", view.model.get('id'), "a:", a...
         @$section ->
             @attr class:"#{view.type}"
             avatar = @img class:'avatar'
