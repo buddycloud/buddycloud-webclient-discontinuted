@@ -53,7 +53,41 @@ module.exports = design (view) ->
             @$span class:'location', ->
                 @remove() # FIXME not implemented yet :(
             @$p ->
-                settext = =>
+                update_text = =>
                     @text(view.model.get('content')?.value or "")
-                view.model.bind 'change:content', settext
-                do settext
+                    render_previews.apply(this)
+                view.model.bind 'change:content', update_text
+                update_text()
+
+
+render_previews = ->
+    urls = @text?().match /(http:\/\/[^\s]+)/g
+    return unless urls?
+
+    for url in urls
+        load_url_preview url, (html) =>
+            @$div()._jquery.html html
+
+# TODO: make url configurable
+# TODO: filter HTML for XSS
+load_url_preview = (url, callback) ->
+    embedly_url = "http://api.embed.ly/1/oembed" +
+        "?url=#{encodeURIComponent url}" +
+        "&format=json" +
+        "&maxwidth=400"
+    # Set one for debugging embedly on localhost:
+    if config.embedly_key
+        embedly_url += "&key=#{config.embedly_key}"
+    jQuery.ajax
+        url: embedly_url
+        dataType: 'json'
+        error: (jqXHR, textStatus, errorThrown) =>
+            console.error "embed error", textStatus, errorThrown
+        success: (data) =>
+            console.warn "embed", url, data
+            if data.html?
+                callback data.html
+            else if data.type is 'photo' and data.url?
+                img = $('<img style="max-width: 100%;">')
+                img.attr 'src', data.url
+                callback img.toString()
