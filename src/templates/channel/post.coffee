@@ -55,40 +55,28 @@ module.exports = design (view) ->
             @$p ->
                 update_text = =>
                     @text(view.model.get('content')?.value or "")
-                    render_previews.apply(this)
+                    render_previews.call(this, view)
                 view.model.bind 'change:content', update_text
                 update_text()
 
 
-render_previews = ->
+render_previews =  (view) ->
     urls = @text?().match /(http:\/\/[^\s]+)/g
     return unless urls?
     (urls ? []).forEach (url) =>
         div = @div()
 
-        # TODO: make url configurable
-        # TODO: filter HTML for XSS
-        embedly_url = "http://api.embed.ly/1/oembed" +
-            "?url=#{encodeURIComponent url}" +
-            "&format=json" +
-            "&maxwidth=400"
-        # Set one for debugging embedly on localhost:
-        if config.embedly_key
-            embedly_url += "&key=#{config.embedly_key}"
-
-        jQuery.ajax
-            url: embedly_url
-            dataType: 'json'
-
-            error: (jqXHR, textStatus, errorThrown) =>
-                app.error "embed error", textStatus, errorThrown
-                div.end()
-
-            success: (data) =>
+    for url in urls
+        do (url) =>
+            view.load_url_preview url, (data) =>
                 if data.html?
-                    div.raw data.html
-
+                    @$div ->
+                        @raw data.html
                 else if data.type is 'photo' and data.url?
-                    div.$img style:"max-width: 100%;", src:data.url
-
-                div.end()
+                    @$img
+                        src: data.url
+                        style: "max-width: 100%"
+                else if data.thumbnail_url
+                    @$img
+                        src: data.thumbnail_url
+                        style: "max-width: 100%"
