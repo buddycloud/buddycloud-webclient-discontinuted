@@ -75,7 +75,7 @@ $(document).ready ->
         #  $('#login_form').trigger "submit"
         formatdate.options.max.unit = 9 # century
         formatdate.options.max.amount = 20 # 2000 years
-        formatdate.hook 'html'
+        formatdate.hook '.time'
 
     Modernizr.load
         test:Modernizr.localStorage

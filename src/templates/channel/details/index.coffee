@@ -36,6 +36,6 @@ module.exports = design (view) ->
                         description.text metadata.description?.value
                         accessModel.text metadata.access_model?.value
                         creationDate.text metadata.creation_date?.value
-                        formatdate.hook creationDate._jquery, update: off
+                        creationDate._jquery.formatdate(update:off)
                     view.metadata.bind 'change', update_metadata
                     update_metadata()
