@@ -22,7 +22,9 @@ module.exports = design (view) ->
                     update_time = =>
                         # FIXME: single tick bug
                         setTimeout =>
-                            @text view.model.get('updated') or view.model.get('published')
+                            date = view.model.get('updated') or
+                                   view.model.get('published')
+                            @attr "data-date":date
                             @_jquery?.formatdate update:off
                         , 1
                     view.model.bind 'change:updated', update_time

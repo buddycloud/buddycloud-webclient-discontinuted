@@ -34,8 +34,10 @@ module.exports = design (view) ->
                         metadata = view.metadata.toJSON()
                         description.text metadata.description?.value
                         accessModel.text metadata.access_model?.value
-                        creationDate.text metadata.creation_date?.value
-                        creationDate._jquery.formatdate(update:off)
+                        date = metadata.creation_date?.value
+                        if date?
+                            creationDate.attr "data-date":date
+                            creationDate._jquery.formatdate(update:off)
                     view.metadata.bind 'change', update_metadata
                     update_metadata()
 
