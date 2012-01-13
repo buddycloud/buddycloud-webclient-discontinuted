@@ -60,6 +60,8 @@ module.exports = design (view) ->
                     view.bind 'subview:topics', (tag) =>
                         @_jquery?.replaceWith(tag._jquery ? tag)
                 @$p class:'loader'
-
+            @$div class:'channelDetails', ->
+                view.bind 'subview:details', (tag) =>
+                    @_jquery?.replaceWith(tag._jquery ? tag)
 
 

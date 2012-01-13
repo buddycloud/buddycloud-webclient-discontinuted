@@ -1,5 +1,6 @@
 { BaseView } = require '../base'
 { PostsView } = require './posts'
+{ ChannelDetailsView } = require './details/index'
 { EventHandler } = require '../../util'
 
 
@@ -36,6 +37,10 @@ class exports.ChannelView extends BaseView
 #         app.handler.data.bind 'loading:start', @on_loading_start
 #         app.handler.data.bind 'loading:stop', @on_loading_stop
 
+        @details = new ChannelDetailsView
+            model: @model
+            parent: this
+
     render: (callback) ->
         super ->
             if @model
@@ -62,6 +67,9 @@ class exports.ChannelView extends BaseView
             app.users.current.channels.bind 'add', update_follow_unfollow
             app.users.current.channels.bind 'remove', update_follow_unfollow
             update_follow_unfollow()
+
+            @details.render =>
+                @trigger 'subview:details', @details.el
 
             unless @hidden
                 @el.show()
