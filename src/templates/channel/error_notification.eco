@@ -1,6 +1,0 @@
-<article class="notification visible">
-  <section>
-    <span class="name"><%= @error.condition %></span>
-    <p><%= @error.text %></p>
-  </section>
-</article>
