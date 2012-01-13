@@ -23,14 +23,27 @@ module.exports = design (view) ->
                     update_count = =>
                         @text view.model.length
                     update_count()
-            list = @div class: 'list'
+            list = @$div class: 'list'
             add_follower = (user) ->
-                img = list.$img
+                userid = user.get 'id'
+                imgBefore = null
+                list._jquery.find(".avatar").each ->
+                    existingImg = $(this)
+                    existingId = existingImg.data('userid')
+                    if existingId < userid and
+                       (not imgBefore or existingId > imgBefore.data('userid'))
+                        imgBefore = existingImg
+                img = $('<img>')
+                img.attr
                     class:'avatar'
                     src: "#{user?.avatar}",
                     title: user.get('id')
                     'data-userid': user.get('id')
-                img._jquery.click EventHandler ->
+                if imgBefore
+                    img.insertAfter imgBefore
+                else
+                    list._jquery.prepend img
+                img.click EventHandler ->
                     app.router.navigate user.get('id'), true
             rm_follower = (userid) ->
                 list._jquery.find('img').each ->
@@ -47,7 +60,6 @@ module.exports = design (view) ->
             view.model.bind 'remove', (user) ->
                 rm_follower user.get('id')
                 update_count()
-            list.end()
 
             @$div class: 'showAll', ->
                 view.bind 'show:all', =>
