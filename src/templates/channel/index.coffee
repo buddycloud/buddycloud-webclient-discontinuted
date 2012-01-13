@@ -60,7 +60,13 @@ module.exports = design (view) ->
                 @$section class:'topics', ->
                     view.bind 'subview:topics', (tag) =>
                         @_jquery?.replaceWith(tag._jquery ? tag)
-                @$p class:'loader'
+                @$p class:'loader', ->
+                    spinner = @$span class:'spinner'
+                    spinner._jquery.hide()
+                    view.model.bind 'loading:start', ->
+                        spinner._jquery.show()
+                    view.model.bind 'loading:stop', ->
+                        spinner._jquery.hide()
             @$div class:'channelDetails', ->
                 view.bind 'subview:details', (tag) =>
                     @_jquery?.replaceWith(tag._jquery ? tag)
