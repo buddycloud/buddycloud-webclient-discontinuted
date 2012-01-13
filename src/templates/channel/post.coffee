@@ -52,21 +52,23 @@ module.exports = design (view) ->
             @$p ->
                 update_text = =>
                     @text(view.model.get('content')?.value or "")
-                    render_previews.apply(this)
+                    render_previews.call(this, view)
                 view.model.bind 'change:content', update_text
                 update_text()
 
 
-render_previews = ->
+render_previews =  (view) ->
     urls = @text?().match /(http:\/\/[^\s]+)/g
     return unless urls?
+    (urls ? []).forEach (url) =>
+        div = @div()
 
     for url in urls
         do (url) =>
-            load_url_preview url, (data) =>
-                console.log "embed", url, data
+            view.load_url_preview url, (data) =>
                 if data.html?
-                    @$div()._jquery.html data.html
+                    @$div ->
+                        @raw data.html
                 else if data.type is 'photo' and data.url?
                     @$img
                         src: data.url
@@ -75,20 +77,3 @@ render_previews = ->
                     @$img
                         src: data.thumbnail_url
                         style: "max-width: 100%"
-
-# TODO: make url configurable
-# TODO: filter HTML for XSS
-load_url_preview = (url, callback) ->
-    embedly_url = "http://api.embed.ly/1/oembed" +
-        "?url=#{encodeURIComponent url}" +
-        "&format=json" +
-        "&maxwidth=400"
-    # Set one for debugging embedly on localhost:
-    if config.embedly_key
-        embedly_url += "&key=#{config.embedly_key}"
-    jQuery.ajax
-        url: embedly_url
-        dataType: 'json'
-        error: (jqXHR, textStatus, errorThrown) =>
-            console.error "embed error", textStatus, errorThrown
-        success: callback

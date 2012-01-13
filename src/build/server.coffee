@@ -33,6 +33,8 @@ config.cli
 
 config.load (args, opts) ->
 
+    config.port++ if config.build
+
     pending = 0
     done = ->
 #         console.log "fin", pending
