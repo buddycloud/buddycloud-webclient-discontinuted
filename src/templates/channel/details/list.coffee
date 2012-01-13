@@ -10,6 +10,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/list'
+{ EventHandler } = require '../../../util'
 
 
 module.exports = design (view) ->
@@ -24,11 +25,13 @@ module.exports = design (view) ->
                     update_count()
             list = @div class: 'list'
             add_follower = (user) ->
-                list.$img
+                img = list.$img
                     class:'avatar'
                     src: "#{user?.avatar}",
                     title: user.get('id')
                     'data-userid': user.get('id')
+                img._jquery.click EventHandler ->
+                    app.router.navigate user.get('id'), true
             rm_follower = (userid) ->
                 list._jquery.find('img').each ->
                     img = $(this)

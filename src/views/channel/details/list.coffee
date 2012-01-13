@@ -10,7 +10,6 @@ class exports.ChannelDetailsList extends BaseView
     events:
         'click .showAll': 'showAll'
 
-    showAll: =>
+    showAll: EventHandler ->
         @trigger 'show:all'
         @load_more()
-
