@@ -53,6 +53,18 @@ class exports.PostsView extends BaseView
 #         # Still scrolled to bottom? Try cause loading more.
 #         app.views.index?.on_scroll?()
 
+    on_scroll: (peepholeTop, peepholeBottom) =>
+        for own cid, view of @views
+            content = view.model.get('content')?.value
+            unless content?
+                { top: viewTop } = view.el.position()
+                viewBottom = viewTop + view.el.outerHeight()
+                if peepholeBottom >= viewTop
+                    @load_more()
+
+        if peepholeTop >= $('.stream').innerHeight() - peepholeBottom * 1.05
+            @on_scroll_bottom()
+
     on_scroll_bottom: =>
         @load_more()
 
@@ -62,3 +74,5 @@ class exports.PostsView extends BaseView
             @model.collection.channel.set_loading true
             app.handler.data.get_more_node_posts @model, =>
                 @model.collection.channel.set_loading false
+                # Should we be loading even more?
+                @parent.on_scroll()

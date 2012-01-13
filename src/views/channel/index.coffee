@@ -195,11 +195,9 @@ class exports.ChannelView extends BaseView
 
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: ->
-        if @el.scrollTop() >= @$('.stream').innerHeight() - @el.outerHeight() * 1.1
-            @on_scroll_bottom()
-
-    on_scroll_bottom: ->
-        @postsview?.on_scroll_bottom()
+        peepholeTop = @el.scrollTop()
+        peepholeBottom = peepholeTop + @el.outerHeight()
+        @postsview?.on_scroll(peepholeTop, peepholeBottom)
 
     set_error: (error) =>
 #         if error
