@@ -13,7 +13,16 @@ class exports.CommentsView extends BaseView
         @model.bind 'add', @add_comment
 
     events:
+        'keydown .answer textarea': 'hitEnterOnComment'
         'click .createComment': 'createComment'
+
+    hitEnterOnComment: (ev) ->
+        code = ev.keyCode or ev.which
+        if code is 13 and ev.ctrlKey # CTRL + Enter
+            ev?.preventDefault?()
+            @createComment(ev)
+            return false
+        return true
 
     createComment: EventHandler ->
         if @isPosting

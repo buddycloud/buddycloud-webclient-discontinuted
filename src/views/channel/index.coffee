@@ -11,6 +11,7 @@ class exports.ChannelView extends BaseView
         'click .follow': 'clickFollow'
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
+        'keydown .newTopic textarea': 'hitEnterOnPost'
         'click #createNewTopic': 'clickPost'
         'scroll': 'on_scroll'
 
@@ -140,6 +141,14 @@ class exports.ChannelView extends BaseView
                 if text.val() is ""
                     self.removeClass 'write'
                     $(document).unbind 'click', on_click
+
+    hitEnterOnPost: (ev) ->
+        code = ev.keyCode or ev.which
+        if code is 13 and ev.ctrlKey # CTRL + Enter
+            ev?.preventDefault?()
+            @clickPost(ev)
+            return false
+        return true
 
     clickPost: EventHandler (ev) ->
         if @isPosting
