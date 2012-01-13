@@ -1,5 +1,6 @@
 { BaseView } = require '../../base'
 { EventHandler } = require '../../../util'
+{ ChannelDetailsList } = require './list'
 
 class exports.ChannelDetailsView extends BaseView
     template: require '../../../templates/channel/details/index'
@@ -9,6 +10,9 @@ class exports.ChannelDetailsView extends BaseView
 
         node = @model.nodes.get_or_create id: 'posts'
         @metadata = node.metadata
+
+        @followers = new ChannelDetailsList title: "followers"
+        @following = new ChannelDetailsList title: "following"
 
     events:
         "click .infoToggle": "click_toggle"
@@ -40,6 +44,10 @@ class exports.ChannelDetailsView extends BaseView
 
     render: (callback) ->
         super =>
+            @followers.render =>
+                @trigger 'subview:followers', @followers.el
+            @following.render =>
+                @trigger 'subview:following', @following.el
             callback?.call(this)
 
     _render: ->

@@ -14,7 +14,7 @@ browserify = require 'browserify'
 snippets = ["main"
     "channel/index", "channel/posts", "channel/post"
     "channel/topicpost", "channel/comments"
-    "channel/details/index"
+    "channel/details/index", "channel/details/list"
     "sidebar/index", "sidebar/search", "sidebar/entry"
 ]
 
