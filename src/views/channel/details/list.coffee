@@ -4,5 +4,13 @@
 class exports.ChannelDetailsList extends BaseView
     template: require '../../../templates/channel/details/list'
 
-    initialize: ({@title}) ->
+    initialize: ({@title, @load_more}) ->
         super
+
+    events:
+        'click .showAll': 'showAll'
+
+    showAll: =>
+        @trigger 'show:all'
+        @load_more()
+
