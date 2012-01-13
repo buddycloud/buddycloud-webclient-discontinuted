@@ -47,6 +47,7 @@ module.exports = design (view) ->
                         @text "Unfollow"
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
+                    return @remove() if app.users.isAnonymous(app.users.current)
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
