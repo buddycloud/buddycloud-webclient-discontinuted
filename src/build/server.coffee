@@ -1,5 +1,4 @@
 require 'colors'
-eco = require 'eco'
 nib = require 'nib'
 path = require 'path'
 stylus = require 'stylus'
@@ -91,7 +90,6 @@ start_server = (args, opts) ->
                         # expose MD5 lib because we need that for gravatar too
                         source += ";window.MD5=MD5"
                         source
-                    '.eco': (source) -> "module.exports=#{require('eco').precompile source}"
 
         if config.build
             # minification
