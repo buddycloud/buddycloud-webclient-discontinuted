@@ -9,7 +9,6 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
-formatdate = require 'formatdate'
 design = require '../../_design/channel/post'
 
 

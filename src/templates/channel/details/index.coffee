@@ -3,13 +3,12 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select ".channelDetails:first", ".location, .channelList"
-            el.find('.data').text("")
+            el.find('.data, .time').text("")
             el
 
 
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
-formatdate = require 'formatdate'
 design = require '../../../_design/channel/details/index'
 
 
