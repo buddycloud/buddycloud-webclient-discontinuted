@@ -1,4 +1,3 @@
-formatdate = require 'formatdate'
 { BaseView } = require '../base'
 { EventHandler } = require '../../util'
 
