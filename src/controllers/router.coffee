@@ -40,7 +40,8 @@ class exports.Router extends Backbone.Router
         @loadingchannel jid
 
     on_disconnected: =>
-        return unless app.views.index? # we are still on the welcome site
+         # we are still on the welcome site
+        return unless app.views.index?.constructor is MainView
         $('#sidebar').remove()
         app.views.index.el.remove()
         delete app.views.index
