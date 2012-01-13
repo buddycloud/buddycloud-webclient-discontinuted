@@ -59,7 +59,7 @@ module.exports = design (view) ->
 
 
 render_previews =  (view) ->
-    urls = @text?().match /(http:\/\/[^\s]+)/g
+    urls = @text?().match /(https?:\/\/[^\s]+)/g
     return unless urls?
     (urls ? []).forEach (url) =>
         div = @div()
