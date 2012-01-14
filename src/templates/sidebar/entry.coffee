@@ -37,7 +37,7 @@ module.exports = design (view) ->
                     if unread > 0
                         unread_counter._jquery.show()
                     else
-                        unread_counter._jquery.hide()
+                        unread_counter.hide()
 
                 view.bind 'update:unread_counter', update_unread
                 do update_unread

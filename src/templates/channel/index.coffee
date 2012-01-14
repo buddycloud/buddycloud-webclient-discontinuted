@@ -61,11 +61,11 @@ module.exports = design (view) ->
                     view.bind('subview:topics', @replace)
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
-                    spinner._jquery.hide()
+                    spinner.hide()
                     view.model.bind 'loading:start', ->
                         spinner._jquery.show()
                     view.model.bind 'loading:stop', ->
-                        spinner._jquery.hide()
+                        spinner.hide()
             @$div class:'channelDetails', ->
                 view.bind('subview:details', @replace)
 
