@@ -41,7 +41,5 @@ module.exports = design (view) ->
                     view.metadata.bind 'change', update_metadata
                     update_metadata()
 
-                view.bind 'subview:followers', (tag) =>
-                    @_jquery?.append(tag._jquery ? tag)
-                view.bind 'subview:following', (tag) =>
-                    @_jquery?.append(tag._jquery ? tag)
+                view.bind('subview:followers', @add)
+                view.bind('subview:following', @add)

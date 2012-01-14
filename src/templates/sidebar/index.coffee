@@ -28,8 +28,4 @@ module.exports = design (view) ->
                 @$div id:'channels', ->
                     @$div -># antiscroll
                         # channel ...
-                        view.bind 'subview:entry', (tag) =>
-                            @_jquery?.append(tag._jquery ? tag)
-#             @once 'end', =>
-#                 # FIXME is this really wise to write this here?
-#                 view.parent.trigger 'subview:add', this
+                        view.bind('subview:entry', @add)

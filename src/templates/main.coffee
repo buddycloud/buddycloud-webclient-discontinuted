@@ -30,10 +30,9 @@ module.exports = design (view) ->
             view.bind 'subview:content', (tag) =>
                 @text("", force:yes) if loading
                 loading = no
-#                 @attach(tag)
+
                 console.log "content", tag
-                @_jquery?.append(tag._jquery ? tag)
-#                 @emit 'jquery:replace', tag
+                @add(tag)
 
 
 
