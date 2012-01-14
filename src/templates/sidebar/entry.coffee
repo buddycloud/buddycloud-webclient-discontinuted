@@ -35,7 +35,7 @@ module.exports = design (view) ->
                     unread = channel.count_unread()
                     unread_counter.text "#{unread}"
                     if unread > 0
-                        unread_counter._jquery.show()
+                        unread_counter.show()
                     else
                         unread_counter.hide()
 

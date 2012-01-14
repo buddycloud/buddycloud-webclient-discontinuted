@@ -63,7 +63,7 @@ module.exports = design (view) ->
                     spinner = @$span class:'spinner'
                     spinner.hide()
                     view.model.bind 'loading:start', ->
-                        spinner._jquery.show()
+                        spinner.show()
                     view.model.bind 'loading:stop', ->
                         spinner.hide()
             @$div class:'channelDetails', ->
