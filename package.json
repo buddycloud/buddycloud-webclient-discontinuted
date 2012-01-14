@@ -32,9 +32,9 @@
 ,   "jquery-textsaver": "0.1.4"
 ,   "formatdate": "0.2.0"
 ,   "store": "1.1.1"
-,   "dynamictemplate": "0.4.1"
-,   "dt-compiler": "0.1.0"
-,   "dt-jquery": "0.1.1"
+,   "dynamictemplate": "0.4.2"
+,   "dt-compiler": "0.1.1"
+,   "dt-jquery": "0.2.1"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
   }
 , "_dependencies_missing_from_npm": {
