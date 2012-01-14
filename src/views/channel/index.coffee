@@ -52,8 +52,7 @@ class exports.ChannelView extends BaseView
                     animate:off
                 @$('.newTopic').click() unless text.val() is ""
 
-            process.nextTick => # FIXME this should be used at all at this point
-                @trigger 'view:title', @model.get('id') # FIXME use metadata
+            @trigger 'view:title', @model.get('id') # FIXME use metadata
 
             update_follow_unfollow = =>
                 if app.users.current.get('id') is @model.get('id')

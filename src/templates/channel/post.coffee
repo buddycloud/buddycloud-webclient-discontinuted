@@ -18,29 +18,23 @@ module.exports = design (view) ->
             @attr class:"#{view.type}"
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
-                @$span class:'time', ->
-                    update_time = =>
-                        # FIXME: single tick bug
-                        setTimeout =>
-                            date = view.model.get('updated') or
-                                   view.model.get('published')
-                            @attr "data-date":date
-                            @_jquery?.formatdate update:off
-                        , 1
-                    view.model.bind 'change:updated', update_time
-                    view.model.bind 'change:published', update_time
-                    update_time()
+                time = @$span class:'time'
+                update_time = ->
+                    date = view.model.get('updated') or
+                        view.model.get('published')
+                    time.attr "data-date":date
+                    time._jquery?.formatdate update:off
+                view.model.bind 'change:updated', update_time
+                view.model.bind 'change:published', update_time
+                update_time()
             name = @span class:'name'
 
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)
                 avatar.attr src:"#{author?.avatar or " "}"
-                # FIXME: single tick bug
-                setTimeout ->
-                    name.text(author?.get('name') or
-                              author?.get('jid') or
-                              "???")
-                , 1
+                name.text(author?.get('name') or
+                            author?.get('jid') or
+                            "???")
             view.model.bind 'change:author', update_author
             do update_author
             # this saves us some jquery roundtrips when updating
