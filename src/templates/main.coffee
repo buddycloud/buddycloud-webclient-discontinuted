@@ -14,15 +14,11 @@ module.exports = design (view) ->
 
         @$div id:'editbar', ->
             @text "loading editbar …"
-            view.bind 'subview:editbar', (tag) =>
-                @_jquery?.replaceWith(tag._jquery ? tag)
-#                 @emit 'jquery:replace', tag
+            view.bind('subview:editbar', @replace)
 
         @$div id:'sidebar', ->
             @text "loading sidebar …"
-            view.bind 'subview:sidebar', (tag) =>
-                @_jquery?.replaceWith(tag._jquery ? tag)
-#                 @emit 'jquery:replace', tag
+            view.bind('subview:sidebar', @replace)
 
         @$div id:'content', ->
             loading = yes

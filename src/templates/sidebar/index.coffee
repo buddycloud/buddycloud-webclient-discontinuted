@@ -17,14 +17,10 @@ module.exports = design (view) ->
                 @$div class:'personal channel', ->
                     @remove() if app.users.isAnonymous(app.users.current)
                     #@text "loading personal channel …"
-                    view.bind 'subview:personalchannel', (tag) =>
-                        @_jquery?.replaceWith(tag._jquery ? tag)
-#                         @emit 'jquery:replace', tag
+                    view.bind('subview:personalchannel', @replace)
                 @$div class:'search', ->
                     @text "loading searchbar …"
-                    view.bind 'subview:searchbar', (tag) =>
-                        @_jquery?.replaceWith(tag._jquery ? tag)
-#                         @emit 'jquery:replace', tag
+                    view.bind('subview:searchbar', @replace)
                 @$div id:'channels', ->
                     @$div -># antiscroll
                         # channel ...

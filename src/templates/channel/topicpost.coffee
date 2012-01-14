@@ -14,8 +14,6 @@ module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$article class:'topic', ->
             @$section class:'opener', ->
-                view.bind 'subview:opener', (tag) =>
-                    @_jquery?.replaceWith(tag._jquery ? tag)
+                view.bind('subview:opener', @replace)
             @$section class:'comments', ->
-                view.bind 'subview:comments', (tag) =>
-                    @_jquery?.replaceWith(tag._jquery ? tag)
+                view.bind('subview:comments', @replace)

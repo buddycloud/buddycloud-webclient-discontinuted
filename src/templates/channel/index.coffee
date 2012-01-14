@@ -58,8 +58,7 @@ module.exports = design (view) ->
                         #    label for shouldShareLocation
                         # @$div id:'createNewTopic'
                 @$section class:'topics', ->
-                    view.bind 'subview:topics', (tag) =>
-                        @_jquery?.replaceWith(tag._jquery ? tag)
+                    view.bind('subview:topics', @replace)
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
                     spinner._jquery.hide()
@@ -68,7 +67,6 @@ module.exports = design (view) ->
                     view.model.bind 'loading:stop', ->
                         spinner._jquery.hide()
             @$div class:'channelDetails', ->
-                view.bind 'subview:details', (tag) =>
-                    @_jquery?.replaceWith(tag._jquery ? tag)
+                view.bind('subview:details', @replace)
 
 
