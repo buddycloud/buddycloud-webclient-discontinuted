@@ -8,6 +8,7 @@ browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
 { wrap_prefix } = require './util'
+require('events').EventEmitter::_maxListeners = 999
 
 
 snippets = ["main"
