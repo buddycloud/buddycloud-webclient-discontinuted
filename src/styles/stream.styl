@@ -19,14 +19,13 @@
 
 #poweredby
   left 521px
-  top 8px
+  top 15px
   margin-top 2px
   width 76px
   height 26px
   text-indent -9999px
   background url(../../public/images/poweredby.png)
   position absolute
-  display none
   header.small #poweredby
     top 0
     
@@ -78,10 +77,9 @@
     box-shadow 1px 0 rgba(255,255,255,.34) inset
   > header
     margin 13px 13px 0 13px
-    padding 13px 8px 0 
+    padding 5px 8px 0 
     width 484px
     height 58px
-    background linear-gradient(top, rgba(0,2,2,.75), rgba(0,2,2,.83))
     border-radius 5px 5px 0 0
     position relative
     box horizontal left stretch
@@ -94,16 +92,17 @@
         width 100%
         white-space nowrap
         overflow hidden
+        text-shadow 0 1px 1px white
         text-overflow ellipsis
-        text-shadow 0 1px 2px black
         display block
       h2
-        color white
+        color #1b1b1b
+        font-weight normal
         margin-bottom 2px
         line-height 28px
       .status
         font-size 12px
-        color rgba(255,255,255,.67)
+        color #6e6e6e
     .location
       display none
       .previous
@@ -158,7 +157,7 @@
 .stream  
   margin 0 0 13px 13px
   width 500px
-  border-radius 0 0 5px 5px
+  border-radius 5px 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
   float left
   position relative
@@ -370,7 +369,7 @@
     padding 13px 13px 12px 51px
     background linear-gradient(top, white, #eee)
     border-bottom 1px solid rgba(0,0,0,.13)
-    border-radius 0
+    border-radius 5px 5px 0 0
     display block
     overflow hidden
     position relative
@@ -545,11 +544,11 @@
 .channelDetails
   width 304px
   font-size 12px
-  color white
-  text-shadow 0 1px 1px black
+  color gray
+  text-shadow 0 1px 1px white
   position absolute
   left 513px
-  top 37px
+  top 96px
   overflow hidden
   .infoToggle
     width 259px
@@ -558,21 +557,24 @@
     padding 0 13px 0 21px
     font-weight bold
     line-height 26px
-    border-bottom-color rgba(0,0,0,.34)
+    border 1px solid rgba(0,0,0,.13)
+    border-bottom-color rgba(0,0,0,.21)
     border-radius 0 14px 14px 0
-    background rgba(0,0,0,.75)
+    box-shadow 0 1px rgba(255,255,255,.89) inset, 0 1px rgba(0,0,0,.05)
     transition 500ms
     cursor pointer
     h4
-      color white
-      text-shadow 0 1px 2px black
+      color gray
+      text-shadow 0 1px 2px white
       display inline
     .icon
-      font-weight bold
-      font-size 16px
-      line-height 24px
+      width 16px
+      height 16px
+      margin 5px -5px 0 0
+      background url(../../public/icons/info.png) no-repeat
       display block
       float right
+      opacity 0.55
   &.hidden .infoToggle
     margin-left -264px
     .editmode &
@@ -581,7 +583,6 @@
     width 222px
     padding 8px 21px
     font-size 12px
-    background rgba(0,0,0,.75)
     float left
     position relative
     transition 500ms
@@ -648,8 +649,8 @@
       padding-top 3px
       line-height 19px
       text-align center
-      background linear-gradient(top, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.08))
-      box-shadow 0 1px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255,255,255,.13)
+      background linear-gradient(top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.03))
+      box-shadow 0 1px rgba(0, 0, 0, 0.08) inset, 0 1px rgba(255,255,255,.13)
       clear left
       cursor pointer
       &:hover
