@@ -31,8 +31,8 @@ class exports.AuthenticationView extends Backbone.View
             top : "#{curr_pos.top}px"
             left: "#{curr_pos.left}px"
         ).animate({top:"#{curr_pos.top + 50}px"}, 200)
-         .animate top:"-800px", =>
-            @remove()
+         .animate top:"-800px", ->
+            $(this).hide()
 
     error: (type) =>
         app.handler.connection.reset()
@@ -44,7 +44,7 @@ class exports.AuthenticationView extends Backbone.View
         ).animate({left:"#{curr_pos.left + 10}"},50)
          .animate({left:"#{curr_pos.left - 10}"},50)
          .animate({left:"#{curr_pos.left + 10}"},50)
-         .animate {left:"#{curr_pos.left - 10}"},50, =>
+         .animate({left:"#{curr_pos.left - 10}"},50)
         @el.find("form").addClass('hasError')
         par = @el.find("##{type}").show().parent()
         do par.show if par.hasClass('error')

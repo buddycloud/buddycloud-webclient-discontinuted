@@ -1,4 +1,4 @@
-eco = require 'eco'
+require 'colors'
 nib = require 'nib'
 path = require 'path'
 stylus = require 'stylus'
@@ -6,32 +6,64 @@ config = require 'jsconfig'
 express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
+{ Compiler } = require 'dt-compiler'
+{ wrap_prefix } = require './util'
 
-wrap_prefix = (prefix, middleware) ->
-    return (req, res, next) ->
-        if req.url.indexOf(prefix) is 0
-            old_url = req.url
-            req.url = req.url[prefix.length..]
-            middleware req, res, ->
-                req.url = old_url
-                next(arguments...)
-        else
-            next()
+
+snippets = ["main"
+    "channel/index", "channel/posts", "channel/post"
+    "channel/topicpost", "channel/comments"
+    "channel/details/index", "channel/details/list"
+    "sidebar/index", "sidebar/search", "sidebar/entry"
+]
 
 
 cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "config.js")
 
+buildPath = path.join(cwd, "assets")
+designPath = path.join(cwd, "src", "_design")
+
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
     build:['build',[off, "build and pack everything together" ]]
+    dev:  [off, "enable build server code reload"]
 
 config.load (args, opts) ->
 
-    server = express.createServer()
+    config.port++ if config.build
 
-    buildPath = path.join(cwd, "assets")
+    pending = 0
+    done = ->
+#         console.log "fin", pending
+        start_server(args, opts) unless --pending
+
+    sources = {}
+    for name in snippets
+        # reloaded by node-dev on fs change
+        snippet = require("../templates/#{name}")
+        (sources[snippet.src] ?= []).push
+            select: snippet.select
+            snippet:name
+
+    for filename, selectors of sources
+        design = new Compiler
+        design.load(path.join(buildPath, filename))
+        console.log "loading #{filename} …".yellow
+        for selector in selectors
+            pending++
+            console.log "* compiling #{selector.snippet}".bold.black
+            design.build
+                select: selector.select
+                watch:  yes
+                done:   done
+                dest:   path.join(designPath, selector.snippet) + ".js"
+    0
+
+start_server = (args, opts) ->
+
+    server = express.createServer()
 
     server.configure ->
 
@@ -39,16 +71,19 @@ config.load (args, opts) ->
                 mount  : '/web/js/app.js'
                 verbose: yes
                 watch  : yes
-                cache  : off
-                fastmatch: not config.build
+                cache  : on
+                debug  : not config.build
                 require: [
                     jquery  :'jquery-browserify'
                     backbone:'backbone-browserify'
-                    path.join(cwd, "src", "main")
+                    path.join(cwd, "src", "init")
                 ]
                 extensions:
-                    '.eco': (source) ->
-                        "module.exports = #{eco.precompile source}"
+                    '.html': (source) ->
+                        source = source
+                            .replace(/'/g, "\\'") # don't let html escape itself
+                            .replace(/\n/g, "\\n'+\n'") # new lines
+                        "module.exports=function(){return '#{source}'}"
                     'modernizr.js': (source) ->
                         # modernizr needs the full global window namespace
                         "!function(){#{source}}.call(window)"
@@ -99,6 +134,9 @@ config.load (args, opts) ->
     server.listen config.port, config.host
     if config.build
         # this puts everything in a tarball
-        require('./packaging')("http://#{config.host or 'localhost'}:#{config.port}", "build.tar.gz")
+        pack = require './packaging'
+        url = "http://#{config.host}:#{config.port}"
+        pack url, "build.tar.gz"
     else
-        console.log "build server listening on %s:%s …",config.host,config.port
+        console.log "build server listening on %s:%s …".magenta,
+            config.host, config.port

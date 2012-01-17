@@ -3,3 +3,6 @@
 
 class exports.StatusNode extends Node
 
+    last: () ->
+        # FIXME
+

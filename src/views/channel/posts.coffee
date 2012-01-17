@@ -1,17 +1,18 @@
+{ BaseView } = require '../base'
 { TopicPostView } = require './topicpost'
-{ throttle_callback } = require '../../util'
 
-class exports.PostsView extends Backbone.View
-    tutorial: require '../../templates/channel/tutorial.eco'
-    empty:    require '../../templates/channel/empty.eco'
+class exports.PostsView extends BaseView
+    template: require '../../templates/channel/posts'
+#     tutorial: require '../../templates/channel/tutorial.eco'
+#     empty:    require '../../templates/channel/empty.eco'
 
     # @parent is ChannelView
     # @el will be passed by @parent
     # @model is a PostsNode
-    initialize: ({@parent, @el}) ->
-        @el.attr id:@cid
+    initialize: ->
+        super
         @views = {}
-        @model.bind 'change', throttle_callback(50, @render)
+#         @model.bind 'change', throttle_callback(50, @render)
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
@@ -20,10 +21,14 @@ class exports.PostsView extends Backbone.View
     # currently only TopicPosts are supported
     add_post: (post) =>
         @$('.tutorial, .empty').remove()
-        view = @views[post.cid] ?= new TopicPostView model:post, parent:this
-        @insert_post_view view
+        view = @views[post.cid] ?= new TopicPostView
+            model:post
+            parent:this
+        view.render =>
+            @insert_post_view view
 
         post.bind 'change', =>
+            return unless view.rendered
             view.el.detach()
             @insert_post_view view
 
@@ -31,26 +36,34 @@ class exports.PostsView extends Backbone.View
         i = @model.posts.indexOf(view.model)
         olderPost = @views[@model.posts.at(i + 1)?.cid]
         if olderPost
-            view.el.insertBefore olderPost.el
+            olderPost.ready ->
+                olderPost.el.before view.el
         else
-            @el.append view.el
-        view.render()
+            @ready =>
+                @el.append view.el
 
-    render: =>
-        count = 0
-        for cid, view of @views
-            view.render()
-            count++
+#
+#         @$('.tutorial, .empty').remove()
+#         if not @parent.isLoading and count is 0
+#             if app.users.current.get('id') is @parent.model.get('id') # FIXME show tutorial for all users which have write access
+#                 @el.append @tutorial()
+#             else
+#                 @el.append @empty()
+#
+#         # Still scrolled to bottom? Try cause loading more.
+#         app.views.index?.on_scroll?()
 
-        @$('.tutorial, .empty').remove()
-        if not @parent.isLoading and count is 0
-            if app.users.current.get('id') is @parent.model.get('id') # FIXME show tutorial for all users which have write access
-                @el.append @tutorial()
-            else
-                @el.append @empty()
+    on_scroll: (peepholeTop, peepholeBottom) =>
+        for own cid, view of @views
+            content = view.model.get('content')?.value
+            unless content?
+                { top: viewTop } = view.el.position()
+                viewBottom = viewTop + view.el.outerHeight()
+                if peepholeBottom >= viewTop
+                    @load_more()
 
-        # Still scrolled to bottom? Try cause loading more.
-        app.views.index?.on_scroll?()
+        if peepholeTop >= $('.stream').innerHeight() - peepholeBottom * 1.05
+            @on_scroll_bottom()
 
     on_scroll_bottom: =>
         @load_more()
@@ -61,3 +74,5 @@ class exports.PostsView extends Backbone.View
             @model.collection.channel.set_loading true
             app.handler.data.get_more_node_posts @model, =>
                 @model.collection.channel.set_loading false
+                # Should we be loading even more?
+                @parent.on_scroll()

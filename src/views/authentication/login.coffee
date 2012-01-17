@@ -64,17 +64,15 @@ class exports.LoginView extends AuthenticationView
     start_connection: (jid, password) ->
         @unbind 'hide', @hide
         @bind 'hide', @go_away
-        # pretend we get a connection immediately
-        app.handler.connection.connect jid, password
-        app.handler.connection.bind "connected", @reset
-        # TODO: find out which is the correct fail callback and remove it on success
-
         ["authfail", "connfail", "disconnected"].forEach (type) =>
             event = () =>
                 app.handler.connection.unbind type, event
                 @reset()
                 @error(type)
             app.handler.connection.bind type, event
+        # pretend we get a connection immediately
+        app.handler.connection.bind "connected", @reset
+        app.handler.connection.connect jid, password
 
     reset: =>
         super

@@ -1,5 +1,5 @@
 window.app =
-    version: '0.0.0-43'
+    version: '0.0.0-44'
     localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}
@@ -25,7 +25,7 @@ $(document).ready ->
     if typeof config is 'undefined'
         $('#index')
             .addClass('broken')
-            .html(do require './templates/welcome/configerror.eco')
+            .html(do require './templates/welcome/configerror')
         return
 
     ### could be used to switch console output ###
@@ -75,7 +75,7 @@ $(document).ready ->
         #  $('#login_form').trigger "submit"
         formatdate.options.max.unit = 9 # century
         formatdate.options.max.amount = 20 # 2000 years
-        formatdate.hook 'html'
+        formatdate.hook '.time'
 
     Modernizr.load
         test:Modernizr.localStorage

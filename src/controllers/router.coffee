@@ -3,7 +3,7 @@
 { RegisterView } = require '../views/authentication/register'
 { WelcomeView } = require '../views/welcome/show'
 { LoginView } = require '../views/authentication/login'
-{ HomeView } = require '../views/home/show'
+{ MainView } = require '../views/main'
 
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:3000/welcome
@@ -33,14 +33,15 @@ class exports.Router extends Backbone.Router
     on_connected: =>
         app.users.target ?= app.users.current
         jid = app.users.target.get('jid')
-        app.views.index = new HomeView
+        app.views.index = new MainView
         @navigate jid
         # in anonymous direct browsing route, navigate above doesn't
         # trigger an URL change event at all
         @loadingchannel jid
 
     on_disconnected: =>
-        return unless app.views.index? # we are still on the welcome site
+         # we are still on the welcome site
+        return unless app.views.index?.constructor is MainView
         $('#sidebar').remove()
         app.views.index.el.remove()
         delete app.views.index
@@ -61,7 +62,7 @@ class exports.Router extends Backbone.Router
 
     index: ->
         if app.handler.connection.connected
-            app.views.index ?= new HomeView
+            app.views.index ?= new MainView
         else
             app.views.index ?= new WelcomeView
         @setView app.views.index

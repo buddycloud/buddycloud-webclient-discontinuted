@@ -84,13 +84,16 @@ Strophe.addConnectionPlugin('register', {
      *      number of connections the server will hold at one time.  This
      *      should almost always be set to 1 (the default).
      */
-    connect: function (domain, callback, wait, hold) {
+    connect: function (domain, callback, wait, hold, router) {
+        var that = this._connection;
         this.instructions = "";
         this.fields = {};
-        this._connection.domain = domain;
-        this._connection.connect(null, null, callback, wait, hold,
-                                 /* authentication */ false,
-                                 this._register_cb.bind(this));
+
+        that.domain = domain;
+        that.do_authentication = false;
+        that._connect_callback = this._register_cb.bind(this);
+
+        that.connect(null, null, callback, wait, hold, router);
     },
 
     /** PrivateFunction: _register_cb

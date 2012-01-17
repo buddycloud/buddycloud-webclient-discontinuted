@@ -1,47 +1,22 @@
-formatdate = require 'formatdate'
 { BaseView } = require '../base'
-{ EventHandler, throttle_callback } = require '../../util'
+{ EventHandler } = require '../../util'
 
 class exports.PostView extends BaseView
-    template: require '../../templates/channel/post.eco'
+    template: require '../../templates/channel/post'
 
-    initialize: ({@parent, @type}) =>
+    initialize: ({@type}) ->
         super
-        @model.bind 'change', throttle_callback(50, @render)
-        @previews = {}
-
-    render: =>
-        @post = @model.toJSON() # data
-        @author = @model.author # model
-        super
-        @$('.name').attr href: @author?.get('jid') or "?"
-        formatdate.hook @el, update: off
-        @render_previews()
 
     events:
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'
 
     clickAuthor: EventHandler ->
-        app.router.navigate @author.get('jid'), true
-
-    render_previews: ->
-        urls = @model.get('content')?.value?.match /(http:\/\/[^\s]+)/g
-        return unless urls?
-
-        for url in urls
-            # is new?
-            unless urls.hasOwnProperty url
-                div = $('<div></div>')
-                urls[url] = div
-                @load_url_preview url, div
-            else
-                console.log "reuse", div
-            # render
-            @el.append urls[url]
+        app.router.navigate @model.get('author')?.jid, true
 
     # TODO: make url configurable
-    load_url_preview: (url, container) ->
+    # TODO: filter HTML for XSS
+    load_url_preview: (url, callback) ->
         embedly_url = "http://api.embed.ly/1/oembed" +
             "?url=#{encodeURIComponent url}" +
             "&format=json" +
@@ -54,13 +29,5 @@ class exports.PostView extends BaseView
             dataType: 'json'
             error: (jqXHR, textStatus, errorThrown) =>
                 console.error "embed error", textStatus, errorThrown
-            success: (data) =>
-                console.warn "embed", url, data
-                if data.html?
-                    # TODO: filter HTML for security!
-                    container.html data.html
-                else if data.type is 'photo' and data.url?
-                    img = $('<img style="max-width: 100%;">')
-                    img.attr 'src', data.url
-                    container.append img
+            success: callback
 

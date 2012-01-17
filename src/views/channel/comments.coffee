@@ -3,17 +3,26 @@
 { EventHandler } = require '../../util'
 
 class exports.CommentsView extends BaseView
-    template: require '../../templates/channel/comments.eco'
+    template: require '../../templates/channel/comments'
 
-    initialize: ({@parent}) ->
+    initialize: ->
         super
         @views = {}
-        @model.bind 'change', @render
+#         @model.bind 'change', @render
         @model.forEach @add_comment
         @model.bind 'add', @add_comment
 
     events:
+        'keydown .answer textarea': 'hitEnterOnComment'
         'click .createComment': 'createComment'
+
+    hitEnterOnComment: (ev) ->
+        code = ev.keyCode or ev.which
+        if code is 13 and ev.ctrlKey # CTRL + Enter
+            ev?.preventDefault?()
+            @createComment(ev)
+            return false
+        return true
 
     createComment: EventHandler ->
         if @isPosting
@@ -53,42 +62,45 @@ class exports.CommentsView extends BaseView
             type:'comment'
             model:comment
             parent:this
-        @insert_comment_view view
+        view.render =>
+            @insert_comment_view view
 
         comment.bind 'change', =>
+            return unless view.rendered
             view.el.detach()
             @insert_comment_view view
 
     insert_comment_view: (view) =>
+        # Look for the next older comment
         i = @model.indexOf(view.model)
-        olderComment = @views[@model.at(i + 1)?.cid]
+        olderComment = null
+        while not olderComment and (++i) < @model.length
+            olderComment = @views[@model.at(i)?.cid]
+            # Only if it had been rendered
+            unless olderComment.rendered
+                olderComment = null
         if olderComment
-            olderComment.el.after view.el
+            olderComment.ready ->
+                olderComment.el.after view.el
         else
-            @el.prepend view.el
-        view.render()
+            @ready =>
+                @el.prepend view.el
 
-    render: =>
-        @update_attributes()
-        super
+    render: (callback) ->
+        super ->
+            @rendered = yes
 
-        if @model
-            text = @$('.answer textarea')
-            text.textSaver()
-            text.autoResize
-                extraSpace:0
-                animate:off
+            if @model
+                text = @$('.answer textarea')
+                text.textSaver()
+                text.autoResize
+                    extraSpace:0
+                    animate:off
 
-            @$('.answer').click() unless text.val() is ""
+                @$('.answer').click() unless text.val() is ""
 
-        @model.forEach (comment) =>
-            entry = @views[comment.cid]
-            if entry
-                entry.render()
-                @el.prepend entry.el
-            else
-                console.warn "Comment without view", comment
+            callback?.call(this)
 
-    update_attributes: ->
-        @user = @parent.parent.parent.user # topicpostview.postsview.channelview
+#     update_attributes: ->
+#         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
 

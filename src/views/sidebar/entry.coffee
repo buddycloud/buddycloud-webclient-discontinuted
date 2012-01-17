@@ -1,31 +1,37 @@
 { BaseView } = require '../base'
-{ transitionendEvent, EventHandler } = require '../../util'
+{ transitionendEvent, EventHandler, throttle_callback } = require '../../util'
 
 
 class exports.ChannelEntry extends BaseView
-    template: require '../../templates/sidebar/entry.eco'
+    template: require '../../templates/sidebar/entry'
 
     initialize: ->
         super
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
+#         @model.bind 'change:node:metadata', @render
         # Update unread counter:
-        @model.bind 'post', @render
+#         @model.bind 'post', @render
         @model.bind 'bubble', @bubble
         bubble = @bubble # FIXME
         @bubble = (args...) =>
             setTimeout ( -> bubble args... ), 200
 
+        @model.bind 'post', throttle_callback 50, =>
+            @trigger 'update:unread_counter'
+
     events:
         "click": "click_entry"
 
-    render: =>
-        @update_attributes()
-        super
+    render: (callback) =>
+        super ->
+            @trigger 'update:highlight'
+            callback()
 
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model
             @parent.parent.setCurrentChannel @model
+
+            # setCurrentChannel() invoked mark_read(), update counter:
+            @trigger 'update:unread_counter'
 
     isPersonal : (a, b) =>
         (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
@@ -33,14 +39,9 @@ class exports.ChannelEntry extends BaseView
     isSelected : (a, b) =>
         (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
 
+
     isFollowed : (a, b) =>
         app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
-
-    update_attributes: ->
-        @channel = @model.toJSON yes
-        if (status = @model.nodes.get 'status')
-            @status = status.toJSON yes
-        @unread_posts_count = @model.count_unread()
 
     bubble: (duration = 500) =>
         return # FIXME totally buggy
