@@ -38,12 +38,12 @@ module.exports = design (view) ->
 #                     @$div class:'messages button', ->
 #                         @$span class:'counter', ->
 #                             @text "?"
-                    follow = @$div class:'follow button prominent', ->
+                    follow = @$div class:'follow button', ->
                         if app.users.isAnonymous(app.users.current)
                             @text "Login"#  FIXME +"or Register to Follow"
                         else
                             @text "Follow"
-                    unfollow = @$div class:'unfollow button prominent', ->
+                    unfollow = @$div class:'unfollow button', ->
                         @text "Unfollow"
 
                     update_follow_unfollow = ->
