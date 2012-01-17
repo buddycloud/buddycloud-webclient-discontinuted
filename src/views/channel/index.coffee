@@ -54,20 +54,6 @@ class exports.ChannelView extends BaseView
 
             @trigger 'view:title', @model.get('id') # FIXME use metadata
 
-            update_follow_unfollow = =>
-                if app.users.current.get('id') is @model.get('id')
-                    @$('.follow').hide()
-                    @$('.unfollow').hide()
-                else if app.users.current.isFollowing @model
-                    @$('.follow').hide()
-                    @$('.unfollow').show()
-                else
-                    @$('.follow').show()
-                    @$('.unfollow').hide()
-            app.users.current.channels.bind 'add', update_follow_unfollow
-            app.users.current.channels.bind 'remove', update_follow_unfollow
-            update_follow_unfollow()
-
             @details.render =>
                 @trigger 'subview:details', @details.el
 

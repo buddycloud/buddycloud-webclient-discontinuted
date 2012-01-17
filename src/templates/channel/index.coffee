@@ -38,13 +38,29 @@ module.exports = design (view) ->
 #                     @$div class:'messages button', ->
 #                         @$span class:'counter', ->
 #                             @text "?"
-                    @$div class:'follow button prominent', ->
+                    follow = @$div class:'follow button prominent', ->
                         if app.users.isAnonymous(app.users.current)
                             @text "Login"#  FIXME +"or Register to Follow"
                         else
                             @text "Follow"
-                    @$div class:'unfollow button prominent', ->
+                    unfollow = @$div class:'unfollow button prominent', ->
                         @text "Unfollow"
+
+                    update_follow_unfollow = ->
+                        if app.users.current.get('id') is view.model.get('id')
+                            follow.hide()
+                            unfollow.hide()
+                        else if app.users.current.isFollowing view.model
+                            follow.hide()
+                            unfollow.show()
+                        else
+                            follow.show()
+                            unfollow.hide()
+                    app.users.current.channels.bind 'add', update_follow_unfollow
+                    app.users.current.channels.bind 'remove', update_follow_unfollow
+                    update_follow_unfollow()
+
+
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
                     return @remove() if app.users.isAnonymous(app.users.current)
