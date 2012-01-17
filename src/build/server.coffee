@@ -72,6 +72,7 @@ start_server = (args, opts) ->
                 verbose: yes
                 watch  : yes
                 cache  : on
+                debug  : not config.build
                 require: [
                     jquery  :'jquery-browserify'
                     backbone:'backbone-browserify'
