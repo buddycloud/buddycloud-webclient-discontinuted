@@ -91,6 +91,8 @@ class exports.Connector extends Backbone.EventHandler
                             @trigger 'subscription', subscription
                 if posts.rsm
                     @trigger 'posts:rsm:last', nodeid, posts.rsm.last
+                if posts.count?
+                    @trigger 'posts:rsm:count', nodeid, posts.rsm.count
                 @work_enqueue ->
                     done()
                     callback? null, posts
@@ -131,6 +133,8 @@ class exports.Connector extends Backbone.EventHandler
                             subscription: subscription
                 if subscribers.rsm
                     @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
+                if subscribers.rsm?.count?
+                    @trigger 'subscribers:rsm:count', nodeid, subscribers.rsm.count
                 @work_enqueue ->
                     done()
                     callback? null

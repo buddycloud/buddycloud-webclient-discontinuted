@@ -18,6 +18,8 @@ class exports.ChannelDetailsView extends BaseView
             model: node.subscriptions
             parent: this
             load_more: @load_more_followers
+        node.bind 'subscribers:rsm:count', (rsm_count) =>
+            @followers.push_count rsm_count
         @following = new ChannelDetailsList
             title: "following"
             model: app.users.get_or_create(id: @model.get 'id').channels

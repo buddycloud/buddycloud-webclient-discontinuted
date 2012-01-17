@@ -30,6 +30,7 @@ class exports.PostsView extends BaseView
         post.bind 'change', =>
             return unless view.rendered
             view.el.detach()
+            console.warn "detached", view
             @insert_post_view view
 
     insert_post_view: (view) =>
@@ -38,9 +39,11 @@ class exports.PostsView extends BaseView
         if olderPost
             olderPost.ready ->
                 olderPost.el.before view.el
+                console.warn "befored", view
         else
             @ready =>
                 @el.append view.el
+                console.warn "appended", view
 
 #
 #         @$('.tutorial, .empty').remove()

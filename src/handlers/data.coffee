@@ -6,7 +6,9 @@ class exports.DataHandler extends Backbone.EventHandler
     constructor: (@connector) ->
         @connector.bind 'post', @on_node_post
         @connector.bind 'posts:rsm:last', @on_node_posts_rsm_last
+        @connector.bind 'posts:rsm:count', @on_node_posts_rsm_count
         @connector.bind 'subscribers:rsm:last', @on_node_subscribers_rsm_last
+        @connector.bind 'subscribers:rsm:count', @on_node_subscribers_rsm_count
         @connector.bind 'affiliation', @on_affiliation
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
@@ -148,6 +150,12 @@ class exports.DataHandler extends Backbone.EventHandler
         # Push info to retrieve next page
         node.push_posts_rsm_last rsmLast
 
+    on_node_posts_rsm_count: (nodeid, rsmCount) =>
+        channel = app.channels.get_or_create id:nodeid
+        node = channel.nodes.get_or_create id:nodeid
+        # Push info for stats
+        node.push_posts_rsm_count rsmCount
+
     on_node_error: (nodeid, error) =>
         channel = app.channels.get_or_create id:nodeid
         channel.push_node_error nodeid, error
@@ -223,6 +231,12 @@ class exports.DataHandler extends Backbone.EventHandler
         node = channel.nodes.get_or_create nodeid:nodeid
         # Push info to retrieve next page
         node.push_subscribers_rsm_last rsmLast
+
+    on_node_subscribers_rsm_count: (nodeid, rsmCount) =>
+        channel = app.channels.get_or_create id:nodeid
+        node = channel.nodes.get_or_create nodeid:nodeid
+        # Push info for stats
+        node.push_subscribers_rsm_count rsmCount
 
     on_metadata: (node, metadata) =>
         channel = app.channels.get_or_create id: node

@@ -68,6 +68,10 @@ class exports.Node extends Model
            rsm_last is @posts_rsm_last
         @posts_rsm_last = rsm_last
 
+    push_posts_rsm_count: (rsm_count) ->
+        @posts_rsm_count = rsm_count
+        @trigger 'posts:rsm:count', rsm_count
+
     # If we are subscribed, newer/updated posts will come in
     # through notifications. No need to poll again.
     # FIXME: clear on xmpp disconnect
@@ -90,6 +94,10 @@ class exports.Node extends Model
         @subscribers_end_reached = not rsm_last or
             rsm_last is @subscribers_rsm_last
         @subscribers_rsm_last = rsm_last
+
+    push_subscribers_rsm_count: (rsm_count) ->
+        @subscribers_rsm_count = rsm_count
+        @trigger 'subscribers:rsm:count', rsm_count
 
     can_load_more_subscribers: ->
         not @subscribers_end_reached
