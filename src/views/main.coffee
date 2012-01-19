@@ -69,9 +69,6 @@ class exports.MainView extends BaseView
                 @channels.remove oldChannel
             ), 15*60*1000 # 15 min
 
-        #@channels.touch channel, silent:true
-        #@sidebar.bubble channel
-
         unless (@current = @views[channel.cid])
             @current = @new_channel_view channel
         if @timeouts[@current.model.cid]?

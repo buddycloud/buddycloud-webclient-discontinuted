@@ -10,10 +10,9 @@ class exports.ChannelEntry extends BaseView
 #         @model.bind 'change:node:metadata', @render
         # Update unread counter:
 #         @model.bind 'post', @render
-        @model.bind 'bubble', @bubble
-        bubble = @bubble # FIXME
-        @bubble = (args...) =>
-            setTimeout ( -> bubble args... ), 200
+        @ready =>
+            @parent.ready =>
+                @model.bind 'bubble', @bubble
 
         @model.bind 'post', throttle_callback 50, =>
             @trigger 'update:unread_counter'
@@ -44,11 +43,11 @@ class exports.ChannelEntry extends BaseView
         app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
 
     bubble: (duration = 500) =>
-        return # FIXME totally buggy
         @parent._movingChannels ?= 0
+        channelsel = @parent.$('#channels > .scrollHolder') # FIXME y ?
 
         # relative offset + absolute offset
-        offset = @el.position().top + @parent.el.scrollTop()
+        offset = @el.position().top + channelsel.scrollTop()
 
         # don't bubble if the channel is..
         #  - on top
@@ -68,7 +67,7 @@ class exports.ChannelEntry extends BaseView
         # detach the bubbling channel from the DOM
         # and insert it at the top
         @el.detach().css(top:offset)
-        @parent.el.prepend @el
+        channelsel.prepend @el
 
         # wrap a growing holder around it
         @el.wrap $('<div>')
@@ -85,6 +84,7 @@ class exports.ChannelEntry extends BaseView
                     .removeClass('bubbleUp')
                     .css(top:'', 'z-index':'')
                     .unwrap()
+                channelsel.parent().antiscroll()
         ).css('z-index', increase() + 1)
 
         # let the holder grow
