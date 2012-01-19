@@ -27,7 +27,6 @@ class exports.Sidebar extends BaseView
         @current = undefined
         @views = {} # this contains the channel entry views
         @timeouts = {} # this contains the channelview remove timeouts
-        @rendered = no
 #         @model.forEach        @new_channel_entry
         @model.bind 'add',    @new_channel_entry
         @model.bind 'remove', @remove_channel_entry
