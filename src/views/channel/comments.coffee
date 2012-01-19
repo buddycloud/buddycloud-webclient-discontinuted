@@ -62,33 +62,32 @@ class exports.CommentsView extends BaseView
             type:'comment'
             model:comment
             parent:this
+        return if view.rendering
         view.render =>
-            @insert_comment_view view
+            @ready =>
+                @insert_comment_view view
 
-        comment.bind 'change', =>
-            return unless view.rendered
-            view.el.detach()
-            @insert_comment_view view
+#                 comment.bind 'change', =>
+#                     view.el.detach()
+#                     @insert_comment_view view
 
     insert_comment_view: (view) =>
-        # Look for the next older comment
         i = @model.indexOf(view.model)
-        olderComment = null
-        while not olderComment and (++i) < @model.length
-            olderComment = @views[@model.at(i)?.cid]
-            # Only if it had been rendered
-            unless olderComment.rendered
-                olderComment = null
-        if olderComment
-            olderComment.ready ->
-                olderComment.el.after view.el
+        olderComment = @views[@model.at(i + 1)?.cid]
+        if olderComment?.rendered
+            if olderComment.el.parent().length > 0
+                olderComment.el.before view.el
+            else
+                # wtf .. jquery's design is so b0rken m(
+                olderComment.el = olderComment.el.add olderComment.el
+        else if olderComment
+            olderComment.ready =>
+                @insert_post_view view
         else
-            @ready =>
-                @el.prepend view.el
+            @el.prepend view.el
 
     render: (callback) ->
         super ->
-            @rendered = yes
 
             if @model
                 text = @$('.answer textarea')
