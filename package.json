@@ -32,6 +32,7 @@
 ,   "jquery-textsaver": "0.1.4"
 ,   "formatdate": "0.2.0"
 ,   "store": "1.1.1"
+,   "async": "0.1.15"
 ,   "dynamictemplate": "0.4.2"
 ,   "dt-compiler": "0.1.1"
 ,   "dt-jquery": "0.2.1"

@@ -1,3 +1,4 @@
+{ parallel } = require 'async'
 { CommentsView } = require './comments'
 { PostView } = require './post'
 { BaseView } = require '../base'
@@ -32,18 +33,23 @@ class exports.TopicPostView extends BaseView
             @el.hide()
 
     render: (callback) ->
+        @rendering = yes
         super ->
-            pending = 2
-            @opener.render =>
-                @trigger 'subview:opener', @opener.el
-                callback?.call(this) unless --pending
-            @comments.render =>
-                @trigger 'subview:comments', @comments.el
-                callback?.call(this) unless --pending
+            @rendering = no
+            parallel [((n)->n())
+            ,(_..., next) =>
+                @opener.render =>
+                    @trigger 'subview:opener', @opener.el
+                    next()
+            ,(_..., next) =>
+                @comments.render =>
+                    @trigger 'subview:comments', @comments.el
+                    next()
+            ],(err) =>
+                callback?.call(this)
 
             if @hidden
                 @el.hide()
             else
                 @el.show()
 
-            callback?.call(this) unless pending
