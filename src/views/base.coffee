@@ -9,8 +9,12 @@ class exports.BaseView extends Backbone.View
 
     render: (callback) ->
         @render = -> throw new Error "ffffffffffffuuuuuuuuuuuuuu"
+        fail = =>
+            console.error @cid + " is breaking shit!"
+        timeout = setTimeout(fail, 5000)
         tpl = @template(this)
         tpl.ready =>
+            clearTimeout(timeout)
             @rendered = yes
             @el = tpl.jquery
             @delegateEvents()
