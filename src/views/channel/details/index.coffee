@@ -10,8 +10,6 @@ class exports.ChannelDetailsView extends BaseView
 
         node = @model.nodes.get_or_create id: 'posts'
         @metadata = node.metadata
-        unless node.metadata_synced
-            app.handler.data.get_node_metadata node.get('nodeid')
 
         @followers = new ChannelDetailsList
             title: "followers"

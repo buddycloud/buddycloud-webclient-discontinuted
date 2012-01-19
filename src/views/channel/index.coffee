@@ -43,6 +43,11 @@ class exports.ChannelView extends BaseView
             parent: this
 
     render: (callback) ->
+        node = @model.nodes.get_or_create id: 'posts'
+        @metadata = node.metadata
+        unless node.metadata_synced
+            app.handler.data.get_node_metadata node.get('nodeid')
+
         super ->
             if @model
                 text = @$('.newTopic textarea')
@@ -51,8 +56,6 @@ class exports.ChannelView extends BaseView
                     extraSpace:0
                     animate:off
                 @$('.newTopic').click() unless text.val() is ""
-
-            @trigger 'view:title', @model.get('id') # FIXME use metadata
 
             @details.render =>
                 @trigger 'subview:details', @details.el
@@ -75,8 +78,6 @@ class exports.ChannelView extends BaseView
     init_posts: =>
         @model.nodes.unbind "add", @init_posts
         if (postsnode = @model.nodes.get 'posts')
-            if (title = postsnode.metadata.get('title')?.value)
-                @trigger('view:title', title)
             @postsview = new PostsView
                 model: postsnode
                 parent: this

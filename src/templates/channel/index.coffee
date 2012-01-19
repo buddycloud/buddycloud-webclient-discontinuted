@@ -19,11 +19,14 @@ module.exports = design (view) ->
                 @$img class:'avatar', ->
                     @attr src:"#{view.model.avatar}"
                 @$div class:'titleBar', ->
-                    @$h2 class:'title', ->
-                        view.bind 'view:title', (text) =>
-                            @text "#{text}"
-                    @$span class:'status', ->
-                        @text "status of a public personal channel" # FIXME
+                    title = @$h2 class:'title'
+                    # FIXME: use .../status node post?
+                    status = @$span class:'status'
+                    update_metadata = ->
+                        title.text "#{view.metadata.get('title')?.value or view.model.get('id')}"
+                        status.text view.metadata.get('description')?.value or ""
+                    view.metadata.bind 'change', update_metadata
+                    update_metadata()
                 @$nav ->
                     @$div class:'messages button', ->
                         @remove() # FIXME
