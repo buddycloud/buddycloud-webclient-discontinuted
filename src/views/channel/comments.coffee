@@ -79,7 +79,7 @@ class exports.CommentsView extends BaseView
                 olderComment.el.after view.el
             else
                 # wtf .. jquery's design is so b0rken m(
-                olderComment.el = olderComment.el.add olderComment.el
+                olderComment.el = olderComment.el.add view.el
         else if olderComment
             olderComment.ready =>
                 @insert_comment_view view
