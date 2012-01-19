@@ -12,7 +12,7 @@
 
         // use the special oninput event
         var oninput;
-        this.el.input(oninput = function() {
+        this.el.bind('txtinput.autoResize', oninput = function() {
             setTimeout(function() { check(); }, 0);
         });
         oninput();
