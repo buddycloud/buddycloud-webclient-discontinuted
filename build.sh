@@ -1,5 +1,6 @@
 #!/bin/sh -e
 echo 'building self esteem ...'
+rm -f build.tar.gz
 ./node_modules/.bin/coffee ./src/build/server.coffee --build $@
 #./node_modules/.bin/brunch build --minify $@
 # copy localStorage fallback
