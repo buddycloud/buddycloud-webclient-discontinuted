@@ -32,36 +32,28 @@ module.exports = design (view) ->
                         @remove() # FIXME
                     @$div class:'edit button', ->
                         @remove() if app.users.isAnonymous(app.users.current)
-                    ###<% unless @user?.isCurrent: %>
-                    <div class="button unfollow">Unfollow</div>
-                        <% end %>
-                    <% else if not @user?.isAnonymous: %>
-                    <div class="button follow">Follow</div>
-                    <% end %>###
-#                     @$div class:'messages button', ->
-#                         @$span class:'counter', ->
-#                             @text "?"
-                    follow = @$div class:'follow button', ->
-                        if app.users.isAnonymous(app.users.current)
+                    if app.users.isAnonymous(app.users.current)
+                        @$div class:'login button', ->
                             @text "Login"#  FIXME +"or Register to Follow"
-                        else
+                    else
+                        follow = @$div class:'follow button', ->
                             @text "Follow"
-                    unfollow = @$div class:'unfollow button', ->
-                        @text "Unfollow"
+                        unfollow = @$div class:'unfollow button', ->
+                            @text "Unfollow"
 
-                    update_follow_unfollow = ->
-                        if app.users.current.get('id') is view.model.get('id')
-                            follow.hide()
-                            unfollow.hide()
-                        else if app.users.current.isFollowing view.model
-                            follow.hide()
-                            unfollow.show()
-                        else
-                            follow.show()
-                            unfollow.hide()
-                    app.users.current.channels.bind 'add', update_follow_unfollow
-                    app.users.current.channels.bind 'remove', update_follow_unfollow
-                    update_follow_unfollow()
+                        update_follow_unfollow = ->
+                            if app.users.current.get('id') is view.model.get('id')
+                                follow.hide()
+                                unfollow.hide()
+                            else if app.users.current.isFollowing view.model
+                                follow.hide()
+                                unfollow.show()
+                            else
+                                follow.show()
+                                unfollow.hide()
+                        app.users.current.channels.bind 'add', update_follow_unfollow
+                        app.users.current.channels.bind 'remove', update_follow_unfollow
+                        update_follow_unfollow()
 
 
             @$section class:'stream', ->

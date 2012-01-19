@@ -1,6 +1,7 @@
 { BaseView } = require '../base'
 { PostsView } = require './posts'
 { ChannelDetailsView } = require './details/index'
+{ OverlayLogin } = require '../authentication/overlay'
 { EventHandler } = require '../../util'
 
 
@@ -8,6 +9,7 @@ class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
 
     events:
+        'click .login': 'clickLogin'
         'click .follow': 'clickFollow'
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
@@ -169,6 +171,10 @@ class exports.ChannelView extends BaseView
                 else
                     console.error "postError", error
                     @show_post_error error
+
+    clickLogin: EventHandler (ev) ->
+        @overlay ?= new OverlayLogin()
+        @overlay.show()
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').hide()

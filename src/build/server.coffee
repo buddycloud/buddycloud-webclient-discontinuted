@@ -15,6 +15,7 @@ snippets = ["main"
     "channel/topicpost", "channel/comments"
     "channel/details/index", "channel/details/list"
     "sidebar/index", "sidebar/search", "sidebar/entry"
+    "authentication/overlay"
 ]
 
 
