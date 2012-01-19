@@ -76,7 +76,7 @@ class exports.CommentsView extends BaseView
         olderComment = @views[@model.at(i + 1)?.cid]
         if olderComment?.rendered
             if olderComment.el.parent().length > 0
-                olderComment.el.before view.el
+                olderComment.el.after view.el
             else
                 # wtf .. jquery's design is so b0rken m(
                 olderComment.el = olderComment.el.add olderComment.el
