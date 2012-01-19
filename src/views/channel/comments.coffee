@@ -82,7 +82,7 @@ class exports.CommentsView extends BaseView
                 olderComment.el = olderComment.el.add olderComment.el
         else if olderComment
             olderComment.ready =>
-                @insert_post_view view
+                @insert_comment_view view
         else
             @el.prepend view.el
 
