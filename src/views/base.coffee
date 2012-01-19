@@ -8,6 +8,7 @@ class exports.BaseView extends Backbone.View
         @rendered = no
 
     render: (callback) ->
+        @render = -> throw new Error "ffffffffffffuuuuuuuuuuuuuu"
         tpl = @template(this)
         tpl.ready =>
             @rendered = yes
