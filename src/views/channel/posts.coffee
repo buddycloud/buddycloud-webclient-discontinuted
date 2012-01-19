@@ -10,9 +10,8 @@ class exports.PostsView extends BaseView
     # @el will be passed by @parent
     # @model is a PostsNode
     initialize: ->
-        super
         @views = {}
-#         @model.bind 'change', throttle_callback(50, @render)
+        super
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
@@ -24,23 +23,32 @@ class exports.PostsView extends BaseView
         view = @views[post.cid] ?= new TopicPostView
             model:post
             parent:this
+        return if view.rendering
         view.render =>
-            @insert_post_view view
+            @ready =>
+                @insert_post_view view
 
-        post.bind 'change', =>
-            return unless view.rendered
-            view.el.detach()
-            @insert_post_view view
+#             post.bind 'change', =>
+#                     view.el.detach()
+#                 @insert_post_view view
 
     insert_post_view: (view) =>
         i = @model.posts.indexOf(view.model)
         olderPost = @views[@model.posts.at(i + 1)?.cid]
-        if olderPost
-            olderPost.ready ->
+        if olderPost?.rendered
+            if olderPost.el.parent().length > 0
                 olderPost.el.before view.el
+            else
+                # wtf .. jquery's design is so b0rken m(
+                dummy = $()
+                dummy = dummy.add olderPost.el
+                dummy = dummy.add view.el
+                olderPost.el = dummy
+        else if olderPost
+            olderPost.ready =>
+                @insert_post_view view
         else
-            @ready =>
-                @el.append view.el
+            @el.append view.el
 
 #
 #         @$('.tutorial, .empty').remove()
