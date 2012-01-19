@@ -41,8 +41,8 @@ class exports.PostsView extends BaseView
             else
                 # wtf .. jquery's design is so b0rken m(
                 dummy = $()
-                dummy = dummy.add olderPost.el
                 dummy = dummy.add view.el
+                dummy = dummy.add olderPost.el
                 olderPost.el = dummy
         else if olderPost
             olderPost.ready =>
