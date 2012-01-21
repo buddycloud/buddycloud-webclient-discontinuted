@@ -1,4 +1,4 @@
 #!/bin/sh
-exec git submodule update --init
-exec npm install .
+git submodule update --init
+npm install .
 
