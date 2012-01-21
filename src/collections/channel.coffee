@@ -43,6 +43,9 @@ class exports.Channels extends Collection
         @sort(silent:true)
         @trigger 'change' unless opts.silent
 
+    comparator: (channel) ->
+        return new Date(channel.get_last_update()).getTime()
+
 
 # used in models/user
 class exports.UserChannels extends exports.Channels

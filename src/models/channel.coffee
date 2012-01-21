@@ -40,6 +40,14 @@ class exports.Channel extends Model
     push_node_error: (nodeid, error) ->
         @trigger 'node:error', nodeid, error
 
+    get_last_update: ->
+        last_update = new Date(0).toISOString()
+        @nodes.each (node) ->
+            update = node.posts.get_last_update
+            if update > last_update
+                last_update = update
+        return last_update
+
     set_loading: (@isLoading) =>
         if @isLoading
             @trigger 'loading:start'

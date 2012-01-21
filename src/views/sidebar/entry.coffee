@@ -67,7 +67,15 @@ class exports.ChannelEntry extends BaseView
         # detach the bubbling channel from the DOM
         # and insert it at the top
         @el.detach().css(top:offset)
-        channelsel.prepend @el
+
+        i = @parent.model.indexOf(@model)
+        newerChannel = @parent.model.at(i - 1)
+        newerView = newerChannel and @parent.getChannelEntry(newerChannel.get('id'))
+        if newerView
+            newerView.ready =>
+                newerView.el.after @el
+        else
+            channelsel.prepend @el
 
         # wrap a growing holder around it
         @el.wrap $('<div>')

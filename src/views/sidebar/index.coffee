@@ -93,6 +93,11 @@ class exports.Sidebar extends BaseView
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 
+    getChannelEntry: (userid) =>
+        for own cid, view of @views
+            if userid is view.model.get('id')
+                return view
+        return
 
     # sliding in animation
     moveIn: (t = 200) ->
