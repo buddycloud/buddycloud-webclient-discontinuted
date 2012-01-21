@@ -8,24 +8,26 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../_design/main'
+{ load_indicate } = require './util'
+
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
 
         @$div id:'editbar', ->
-            @text "loading editbar …"
+            @once('replace', load_indicate(this).clear)
             view.bind('subview:editbar', @replace)
 
         @$div id:'sidebar', ->
-            @text "loading sidebar …"
+            @once('replace', load_indicate(this).clear)
             view.bind('subview:sidebar', @replace)
 
         @$div id:'content', ->
-            loading = yes
-            @text "loading content …"
+            indicator = load_indicate this
             view.bind 'subview:content', (tag) =>
-                @text("", force:yes) if loading
-                loading = no
+                if indicator?
+                    indicator.clear()
+                    delete indicator
 
                 console.log "content", tag
                 @add(tag)

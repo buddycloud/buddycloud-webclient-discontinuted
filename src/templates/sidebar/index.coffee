@@ -9,6 +9,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../_design/sidebar/index'
+{ load_indicate } = require '../util'
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
@@ -19,7 +20,7 @@ module.exports = design (view) ->
                     #@text "loading personal channel …"
                     view.bind('subview:personalchannel', @replace)
                 @$div class:'search', ->
-                    @text "loading searchbar …"
+                    @once('replace', load_indicate(this).clear)
                     view.bind('subview:searchbar', @replace)
                 @$div id:'channels', ->
                     @$div -># antiscroll

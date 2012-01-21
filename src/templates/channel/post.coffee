@@ -10,6 +10,10 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/post'
+{ load_indicate } = require '../util'
+
+
+
 
 
 module.exports = design (view) ->
@@ -45,9 +49,15 @@ module.exports = design (view) ->
             @$span class:'location', ->
                 @remove() # FIXME not implemented yet :(
             @$p ->
+                indicator = load_indicate this
                 update_text = =>
-                    @text(view.model.get('content')?.value or "")
-                    render_previews.call(this, view)
+                    content = view.model.get('content')?.value
+                    if content?.length
+                        @text(content)
+                        render_previews.call(this, view)
+                        if indicator?
+                            indicator?.clear()
+                            delete indicator
                 view.model.bind 'change:content', update_text
                 update_text()
 
