@@ -2,7 +2,7 @@
 { PostsView } = require './posts'
 { ChannelDetailsView } = require './details/index'
 { OverlayLogin } = require '../authentication/overlay'
-{ EventHandler } = require '../../util'
+{ EventHandler, throttle_callback } = require '../../util'
 
 
 class exports.ChannelView extends BaseView
@@ -195,11 +195,12 @@ class exports.ChannelView extends BaseView
 #             @render() FIXME
 
     # InfiniteScrolling™ when reaching the bottom
-    on_scroll: ->
+    on_scroll: throttle_callback(100, ->
         if this is @parent.current
             peepholeTop = @el.scrollTop()
             peepholeBottom = peepholeTop + @el.outerHeight()
             @postsview?.on_scroll(peepholeTop, peepholeBottom)
+    )
 
     set_error: (error) =>
 #         if error
