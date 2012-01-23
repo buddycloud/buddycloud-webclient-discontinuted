@@ -234,8 +234,10 @@ class exports.ChannelView extends BaseView
 
     clickEdit: EventHandler ->
         @$('.edit').hide()
-        editview = new ChannelEditView({ @parent, @model })
-        editview.render =>
-            @parent.trigger 'subview:editbar', editview.el
-        editview.bind 'end', =>
+        @editview ?= new ChannelEditView({ @parent, @model })
+        @editview.render =>
+            @parent.trigger 'subview:editbar', @editview.el
+        @editview.bind 'end', =>
             @$('.edit').show()
+            delete @editview
+            @parent.trigger 'subview:editbar', $('<div>')
