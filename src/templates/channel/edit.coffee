@@ -2,7 +2,8 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select "#editbar"
+            # FIXME: hide .dangerZone, delete channel will be implemented later
+            @select "#editbar", ".dangerZone"
 
 
 { Template } = require 'dynamictemplate'
