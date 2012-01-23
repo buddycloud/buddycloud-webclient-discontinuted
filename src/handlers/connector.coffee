@@ -142,6 +142,17 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.getSubscribers(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
+    set_node_metadata: (nodeid, metadata, callback) =>
+        @request (done) =>
+            success = =>
+                done()
+                callback? null
+            error = =>
+                done()
+                callback? new Error("Cannot set node config")
+            @connection.buddycloud.setMetadata(
+                nodeid, metadata, success, error)
+
     ##
     # notification with type subscription/affiliation already is
     # proper obj

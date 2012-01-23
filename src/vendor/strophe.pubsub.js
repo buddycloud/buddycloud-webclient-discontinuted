@@ -30,7 +30,7 @@
  */
 Strophe.Builder.prototype.form = function (ns, options)
 {
-    var aX = this.node.appendChild(Strophe.xmlElement('x', {"xmlns": "jabber:x:data", "type": "submit"}));
+    var aX = this.node.appendChild(Strophe.xmlElement('x', {"xmlns": Strophe.NS.DATA, "type": "submit"}));
     aX.appendChild(Strophe.xmlElement('field', {"var":"FORM_TYPE", "type": "hidden"}))
       .appendChild(Strophe.xmlElement('value'))
       .appendChild(Strophe.xmlTextNode(ns));
@@ -142,6 +142,7 @@ Extend connection object to have plugin name 'pubsub'.
         Strophe.addNamespace('ATOM', "http://www.w3.org/2005/Atom");
         Strophe.addNamespace('ATOM_THR', "http://purl.org/syndication/thread/1.0");
 	Strophe.addNamespace('RSM', "http://jabber.org/protocol/rsm");
+	Strophe.addNamespace('DATA', "jabber:x:data");
 
         if (conn.disco)
             conn.disco.addFeature(Strophe.NS.PUBSUB);
@@ -262,11 +263,35 @@ Extend connection object to have plugin name 'pubsub'.
      */
     getConfig: function (node, success, error) {
         var that = this._connection;
-        var iqid = that.getUniqueId("pubsubconfigurenode");
+        var iqid = that.getUniqueId("pubsubgetconfigurenode");
 
         var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
           .c('configure', {node:node});
+
+        that.sendIQ(iq.tree(), success, error);
+
+        return iqid;
+    },
+
+    setConfig: function(node, config, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsetconfigurenode");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
+          .c('pubsub', {xmlns:Strophe.NS.PUBSUB_OWNER})
+          .c('configure', {node:node})
+	  .c('x', {xmlns: Strophe.NS.DATA, type: 'submit'});
+	iq.c('field', {var: 'FORM_TYPE', type: 'hidden'})
+	  .c('value')
+	  .t(Strophe.NS.PUBSUB + "#node_config")
+	  .up().up();
+	for(var key in config)
+	    if (config.hasOwnProperty(key))
+		iq.c('field', {var: key})
+		    .c('value')
+		    .t(config[key])
+		    .up().up();
 
         that.sendIQ(iq.tree(), success, error);
 

@@ -44,6 +44,10 @@ class exports.DataHandler extends Backbone.EventHandler
         nodeid = node.get?('nodeid') or node
         @connector.get_node_metadata nodeid, callback
 
+    set_node_metadata: (node, metadata, callback) ->
+        nodeid = node.get?('nodeid') or node
+        @connector.set_node_metadata nodeid, metadata, callback
+
     get_node_subscriptions: (node, callback) ->
         nodeid = node.get?('nodeid') or node
         if typeof node is 'string'

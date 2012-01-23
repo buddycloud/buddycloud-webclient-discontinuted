@@ -316,6 +316,21 @@ Strophe.addConnectionPlugin('buddycloud', {
             }, self._errorcode(err), timeout);
     },
 
+    setMetadata: function(node, metadata, success, error) {
+	var config = {};
+	for(var key in metadata)
+	    if (metadata.hasOwnProperty(key)) {
+		var value = metadata[key];
+		switch(key) {
+		case 'title':
+		case 'description':
+		    config["pubsub#" + key] = value;
+		    break;
+		}
+	    }
+	this._connection.pubsub.setConfig(node, config, success, error);
+    },
+
     /**
      * Attention:
      * 
