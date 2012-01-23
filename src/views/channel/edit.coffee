@@ -25,8 +25,8 @@ class exports.ChannelEditView extends BaseView
         @$('.save, .cancel').fadeOut(200)
 
         # Retrieve values
-        title = $('header .title').text()
-        description = $('.meta .description .data').text()
+        title = @parent.$('header .title').text()
+        description = @parent.$('.meta .description .data').text()
 
         # Send to server
         node = @model.nodes.get_or_create id: 'posts'
@@ -51,13 +51,14 @@ class exports.ChannelEditView extends BaseView
         super ->
             unless $('html').hasClass('editmode')
                 $('html').addClass('editmode')
-                for el in editableElements
-                    if $(el).data('editmode') isnt 'boolean'
+                for sel in editableElements
+                    el = @parent.$(sel)
+                    if el.data('editmode') isnt 'boolean'
                         # store the current state
                         #localStorage[el] = $(el).text();
 
                         # add designMode & contenteditable
-                        $(el).
+                        el.
                             prop('contenteditable', yes).
                             input( ->
                                 text = $(this).text();
@@ -72,14 +73,16 @@ class exports.ChannelEditView extends BaseView
                                     return true
                             )
                 $(editableElements[0]).focus()
+
             cb?()
 
     end: =>
         if $('html').hasClass('editmode')
             $('html').removeClass('editmode')
-            for el in editableElements
-                if $(el).data('editmode') isnt 'boolean'
-                    $(el).
+            for sel in editableElements
+                el = @parent.$(sel)
+                if el.data('editmode') isnt 'boolean'
+                    el.
                         prop('contenteditable', no)
                     # TODO: rm input & keydown handlers
         @trigger 'end'
