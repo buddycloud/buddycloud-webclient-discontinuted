@@ -62,6 +62,7 @@ module.exports = (baseUrl, tarPath) ->
             new PostBuffer(res).onEnd (body) ->
                 console.log "","#{body?.length}".green,".".bold.black
                 stream = new BufferedStream
+                time = new Date().getTime() / 1000
                 stream.props =
                     path: path
                     mode: 0755
@@ -70,6 +71,9 @@ module.exports = (baseUrl, tarPath) ->
                     gid: 1000
                     uname: 'www'
                     gname: 'nogroup'
+                    mtime: time
+                    atime: time
+                    ctime: time
                 stream.root = path: "."
                 stream.path = path
                 flushed = tarPack.add stream
