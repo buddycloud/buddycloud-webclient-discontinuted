@@ -233,6 +233,9 @@ class exports.ChannelView extends BaseView
 #         @isLoading = @model.isLoading or app.handler.data.isLoading
 
     clickEdit: EventHandler ->
+        @$('.edit').hide()
         editview = new ChannelEditView({ @parent, @model })
         editview.render =>
             @parent.trigger 'subview:editbar', editview.el
+        editview.bind 'end', =>
+            @$('.edit').show()
