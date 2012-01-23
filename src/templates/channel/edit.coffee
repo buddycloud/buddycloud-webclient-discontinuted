@@ -12,4 +12,11 @@ design = require '../../_design/channel/edit'
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
-        @$div id:'editbar', ->
+        @$div id: 'editbar', ->
+            @$div class: 'edits', ->
+                @$nav class: 'clearfix', ->
+                    spinner = @$span class: 'spinner'
+                    view.bind 'loading:stop', ->
+                        spinner._jquery.hide()
+                    view.bind 'loading:start', ->
+                        spinner._jquery.show()

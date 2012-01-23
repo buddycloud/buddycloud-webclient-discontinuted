@@ -23,6 +23,7 @@ class exports.ChannelEditView extends BaseView
         # set_node_metadata() takes 1 round-trip, hide buttons in the
         # meanwhile:
         @$('.save, .cancel').fadeOut(200)
+        @trigger 'loading:start'
 
         # Retrieve values
         title = @parent.$('header .title').text()
@@ -74,6 +75,7 @@ class exports.ChannelEditView extends BaseView
                             )
                 $(editableElements[0]).focus()
 
+            @trigger 'loading:stop'
             cb?()
 
     end: =>
