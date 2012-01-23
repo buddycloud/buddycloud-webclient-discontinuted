@@ -1,6 +1,7 @@
 { BaseView } = require '../base'
 { PostsView } = require './posts'
 { ChannelDetailsView } = require './details/index'
+{ ChannelEditView } = require './edit'
 { OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback } = require '../../util'
 
@@ -16,6 +17,7 @@ class exports.ChannelView extends BaseView
         'keydown .newTopic textarea': 'hitEnterOnPost'
         'click #createNewTopic': 'clickPost'
         'scroll': 'on_scroll'
+        'click .edit': 'clickEdit'
 
     initialize: () ->
         super
@@ -229,3 +231,8 @@ class exports.ChannelView extends BaseView
 #             hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
 #             isAnonymous: isAnonymous
 #         @isLoading = @model.isLoading or app.handler.data.isLoading
+
+    clickEdit: EventHandler ->
+        editview = new ChannelEditView({ @parent, @model })
+        editview.render =>
+            @parent.trigger 'subview:editbar', editview.el
