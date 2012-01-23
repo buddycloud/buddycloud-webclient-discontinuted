@@ -1,21 +1,32 @@
 { BaseView } = require '../base'
-#{ EventHandler, throttle_callback } = require '../../util'
+{ EventHandler } = require '../../util'
+
+editableElements = [
+    'header .title'
+    'header .status'
+    '.meta .description'
+    '.meta .accessModel'
+    '.location .previous'
+    '.location .current'
+    '.location .next'
+]
 
 
 class exports.ChannelEditView extends BaseView
     template: require '../../templates/channel/edit'
 
+    events:
+        'click .save': 'clickSave'
+        'click .cancel': 'clickCancel'
+
+    clickSave: EventHandler ->
+        @end()
+
+    clickCancel: EventHandler ->
+        @end()
+
     render: (cb) ->
         super ->
-            editableElements = [
-                'header .title'
-                'header .status'
-                '.meta .description'
-                '.meta .accessModel'
-                '.location .previous'
-                '.location .current'
-                '.location .next'
-            ]
             unless $('html').hasClass('editmode')
                 $('html').addClass('editmode')
                 for el in editableElements
@@ -25,7 +36,7 @@ class exports.ChannelEditView extends BaseView
 
                         # add designMode & contenteditable
                         $(el).
-                            prop('contenteditable', true).
+                            prop('contenteditable', yes).
                             input( ->
                                 text = $(this).text();
                                 if text is ""
@@ -40,3 +51,13 @@ class exports.ChannelEditView extends BaseView
                             )
                 $(editableElements[0]).focus()
             cb?()
+
+    end: =>
+        if $('html').hasClass('editmode')
+            $('html').removeClass('editmode')
+            for el in editableElements
+                if $(el).data('editmode') isnt 'boolean'
+                    $(el).
+                        prop('contenteditable', no)
+                    # TODO: rm input & keydown handlers
+        @trigger 'end'
