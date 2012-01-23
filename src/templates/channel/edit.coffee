@@ -17,6 +17,6 @@ module.exports = design (view) ->
                 @$nav class: 'clearfix', ->
                     spinner = @$span class: 'spinner'
                     view.bind 'loading:stop', ->
-                        spinner._jquery.hide()
+                        spinner.hide()
                     view.bind 'loading:start', ->
-                        spinner._jquery.show()
+                        spinner.show()
