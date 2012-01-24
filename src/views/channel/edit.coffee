@@ -16,6 +16,7 @@ class exports.ChannelEditView extends BaseView
         @trigger 'loading:start'
 
         # Retrieve values
+        # FIXME: title text sometimes contains the title of the next channel too!
         title = @parent.$('header .title').text()
         status = @parent.$('header .status').text()
         description = @parent.$('.meta .description .data').text()
@@ -39,6 +40,7 @@ class exports.ChannelEditView extends BaseView
         app.handler.data.publish statusnode
         , { content: status, author: { name: app.users.current.get 'jid' } }
         , (error) =>
+            # TODO: undo on error
 
     clickCancel: EventHandler ->
         node = @model.nodes.get_or_create id: 'posts'
