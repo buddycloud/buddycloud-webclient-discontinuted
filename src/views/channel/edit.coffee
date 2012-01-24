@@ -84,6 +84,19 @@ class exports.ChannelEditView extends BaseView
                     attr('for', id).
                     text(text)
 
+                if id is 'accessModel'
+                    if text is 'open'
+                        el.find('input').prop 'checked', "checked"
+                    else
+                        el.find('input').removeProp 'checked'
+                    update = ->
+                        if el.find('input').prop('checked')
+                            el.find('label').text("open")
+                        else
+                            el.find('label').text("private")
+                    el.find('input').change update
+                    update()
+
     undoEditable: ->
         el = $(this)
         # TODO: rm input & keydown handlers
