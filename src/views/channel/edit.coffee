@@ -98,38 +98,37 @@ class exports.ChannelEditView extends BaseView
 
     makeEditable: ->
         el = $(this)
+
+        preventEmptyness = ->
+            text = $(this).text()
+            if text is ""
+                $(this).html("&nbsp;")
+
         switch el.data('editmode')
             when 'singleLine'
-                el.
-                    prop('contenteditable', yes).
-                    input( ->
-                        text = $(this).text();
-                        if text is ""
-                            $(this).html("&nbsp;")
-                    ).keydown((ev) ->
+                el
+                    .prop('contenteditable', yes)
+                    .input(preventEmptyness)
+                    .keydown((ev) ->
                         code = ev.keyCode or ev.which
-                        if $(this).data('editmode') is 'singleLine' && code == 13
+                        if $(this).data('editmode') is 'singleLine' and code is 13
                             ev.preventDefault()
                             return false
                         else
                             return true
                     )
             when 'multiLine'
-                el.
-                    prop('contenteditable', yes).
-                    input( ->
-                        text = $(this).text();
-                        if text is ""
-                            $(this).html("&nbsp;")
-                    )
+                el
+                    .prop('contenteditable', yes)
+                    .input(preventEmptyness)
             when 'boolean'
                 text = el.text()
                 # Last class becomes id
                 elClasses = el.prop('class').split(' ')
                 id = elClasses[elClasses.length - 1]
-                el.
-                    addClass('contenteditable').
-                    html('<input type="checkbox"><label></label>')
+                el
+                    .addClass('contenteditable')
+                    .html('<input type="checkbox"><label></label>')
                 el.find('input').attr('id', id)
                 el.find('label').
                     attr('for', id).
@@ -137,7 +136,7 @@ class exports.ChannelEditView extends BaseView
 
                 if id is 'accessModel'
                     if text is 'open'
-                        el.find('input').prop 'checked', "checked"
+                        el.find('input').prop('checked', yes)
                     update = ->
                         if el.find('input').prop('checked')
                             el.find('label').text("open")
