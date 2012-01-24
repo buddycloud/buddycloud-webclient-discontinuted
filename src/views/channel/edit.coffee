@@ -23,6 +23,7 @@ class exports.ChannelEditView extends BaseView
             @trigger 'update:el', @el
 
     hide: =>
+        @el.detach()
         @trigger 'update:el', $('<div id="editbar">')
 
     turn: (state) =>
