@@ -108,9 +108,7 @@ class exports.ChannelView extends BaseView
     # Retrieve status text and send to view
     update_status: =>
         if (statusnode = @model.nodes.get 'status')
-            post = statusnode.posts.at(0)
-            if post
-                @trigger 'status', post.get('content')?.value
+            @trigger 'status', statusnode.posts.at(0)?.get('content')?.value
 
     show: =>
         @hidden = false

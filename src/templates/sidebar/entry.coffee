@@ -46,7 +46,6 @@ module.exports = design (view) ->
                 owner = @span class:'owner'
                 username = owner.span()
                 domain = owner.span class:'domain'
-                @$span class:'status', (channel.nodes.get('status')?.last() or "")
 
                 update = ->
                     avatar.attr style:"background-image:url(#{channel.avatar})"
@@ -62,4 +61,10 @@ module.exports = design (view) ->
                 username.end()
                 domain.end()
                 owner.end()
+
+                status = @$span class:'status'
+                update_status = (text) ->
+                    status.text if text then "#{text}" else ""
+                view.bind 'update:status', update_status
+                update_status()
 
