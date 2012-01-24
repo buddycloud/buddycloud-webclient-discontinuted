@@ -15,8 +15,6 @@ module.exports = design (view) ->
         @$div id: 'editbar', ->
             @$div class: 'edits', ->
                 @$nav class: 'clearfix', ->
-                    spinner = @$span class: 'spinner'
-                    view.bind 'loading:stop', ->
-                        spinner.hide()
-                    view.bind 'loading:start', ->
-                        spinner.show()
+                    @$span class: 'spinner', ->
+                        view.bind('loading:stop',  @hide)
+                        view.bind('loading:start', @show)
