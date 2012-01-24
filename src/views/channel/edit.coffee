@@ -17,12 +17,15 @@ class exports.ChannelEditView extends BaseView
 
         # Retrieve values
         title = @parent.$('header .title').text()
+        status = @parent.$('header .status').text()
         description = @parent.$('.meta .description .data').text()
+        open = @parent.$('#accessModel').prop 'checked'
+        access_model = if open then 'open' else 'authorize'
 
         # Send to server
         node = @model.nodes.get_or_create id: 'posts'
-        console.warn "save", node.get('nodeid'), title, description
-        app.handler.data.set_node_metadata node, { title, description }
+        app.handler.data.set_node_metadata node
+        , { title, description, access_model }
         , (err) =>
             if err
                 # Undo values:
@@ -89,8 +92,6 @@ class exports.ChannelEditView extends BaseView
                 if id is 'accessModel'
                     if text is 'open'
                         el.find('input').prop 'checked', "checked"
-                    else
-                        el.find('input').removeProp 'checked'
                     update = ->
                         if el.find('input').prop('checked')
                             el.find('label').text("open")

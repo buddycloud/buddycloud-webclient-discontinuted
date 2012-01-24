@@ -33,7 +33,10 @@ module.exports = design (view) ->
                         owner.text view.model.get('id')
                         metadata = view.metadata.toJSON()
                         description.text metadata.description?.value
-                        accessModel.text metadata.access_model?.value
+                        if metadata.access_model?.value is 'open'
+                            accessModel.text "open"
+                        else
+                            accessModel.text "private"
                         date = metadata.creation_date?.value
                         if date?
                             creationDate.attr "data-date":date

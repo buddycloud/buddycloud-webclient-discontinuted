@@ -324,6 +324,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 		switch(key) {
 		case 'title':
 		case 'description':
+		case 'access_model':
 		    config["pubsub#" + key] = value;
 		    break;
 		}
