@@ -28,10 +28,11 @@ class exports.ChannelEditView extends BaseView
 
     turn: (state) =>
         @active = state
-        if state
+        if state is on
             @begin()
-        else
+        else if state is off
             @end()
+        else throw new Error "wtf is that?"
 
     toggle: =>
         @turn not @active
