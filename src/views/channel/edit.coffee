@@ -23,8 +23,9 @@ class exports.ChannelEditView extends BaseView
         access_model = if open then 'open' else 'authorize'
 
         # Send to server
-        node = @model.nodes.get_or_create id: 'posts'
-        app.handler.data.set_node_metadata node
+        # FIXME: access_model for all user nodes?
+        postsnode = @model.nodes.get_or_create id: 'posts'
+        app.handler.data.set_node_metadata postsnode
         , { title, description, access_model }
         , (err) =>
             if err
@@ -33,6 +34,11 @@ class exports.ChannelEditView extends BaseView
             else
                 # Committed fine:
                 @end()
+        # Update status
+        statusnode = @model.nodes.get_or_create id: 'status'
+        app.handler.data.publish statusnode
+        , { content: status, author: { name: app.users.current.get 'jid' } }
+        , (error) =>
 
     clickCancel: EventHandler ->
         node = @model.nodes.get_or_create id: 'posts'

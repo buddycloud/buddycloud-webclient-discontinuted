@@ -42,6 +42,8 @@ class exports.ChannelView extends BaseView
 #         app.handler.data.bind 'loading:start', @on_loading_start
 #         app.handler.data.bind 'loading:stop', @on_loading_stop
 
+        do @init_status
+
         @details = new ChannelDetailsView
             model: @model
             parent: this
@@ -94,6 +96,21 @@ class exports.ChannelView extends BaseView
                     @on_scroll() unless @hidden
         else
             @model.nodes.bind "add", @init_posts
+
+    init_status: =>
+        @model.nodes.unbind "add", @init_status
+        if (statusnode = @model.nodes.get 'status')
+            statusnode.bind 'post', @update_status
+            #@update_status()
+        else
+            @model.nodes.bind "add", @init_status
+
+    # Retrieve status text and send to view
+    update_status: =>
+        if (statusnode = @model.nodes.get 'status')
+            post = statusnode.posts.at(0)
+            if post
+                @trigger 'status', post.get('content')?.value
 
     show: =>
         @hidden = false
