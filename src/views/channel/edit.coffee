@@ -9,6 +9,52 @@ class exports.ChannelEditView extends BaseView
         'click .save': 'clickSave'
         'click .cancel': 'clickCancel'
 
+    initialize: ->
+        super
+        @active = no
+
+        @bind 'show', @show
+        @bind 'hide', @hide
+
+        do @render
+
+    show: =>
+        @ready =>
+            @trigger 'update:el', @el
+
+    hide: =>
+        @trigger 'update:el', $('<div id="editbar">')
+
+    turn: (state) =>
+        @active = state
+        if state is on
+            @begin()
+        else if state is off
+            @end()
+        else throw new Error "wtf is that?"
+
+    toggle: =>
+        @turn not @active
+
+    render: (callback) ->
+        super ->
+            @trigger 'loading:stop'
+            callback?.call(this)
+
+    begin: =>
+        unless $('html').hasClass('editmode')
+            $('html').addClass('editmode')
+            @parent.$('*').each @makeEditable
+            do @show()
+
+    end: =>
+        if $('html').hasClass('editmode')
+            $('html').removeClass('editmode')
+            @parent.$('*').each @undoEditable
+
+            do @hide
+        @trigger 'end'
+
     clickSave: EventHandler ->
         # set_node_metadata() takes 1 round-trip, hide buttons in the
         # meanwhile:
@@ -48,15 +94,6 @@ class exports.ChannelEditView extends BaseView
         node.metadata.trigger 'change'
 
         @end()
-
-    render: (cb) ->
-        super ->
-            unless $('html').hasClass('editmode')
-                $('html').addClass('editmode')
-                @parent.$('*').each @makeEditable
-
-            @trigger 'loading:stop'
-            cb?()
 
     makeEditable: ->
         el = $(this)
@@ -119,9 +156,3 @@ class exports.ChannelEditView extends BaseView
             when 'boolean'
                 el.removeClass('contenteditable')
 
-    end: =>
-        if $('html').hasClass('editmode')
-            $('html').removeClass('editmode')
-            @parent.$('*').each @undoEditable
-
-        @trigger 'end'
