@@ -1,16 +1,6 @@
 { BaseView } = require '../base'
 { EventHandler } = require '../../util'
 
-editableElements = [
-    'header .title'
-    #'header .status'
-    '.meta .description .data'
-    '.meta .accessModel'
-    '.location .previous'
-    '.location .current'
-    '.location .next'
-]
-
 
 class exports.ChannelEditView extends BaseView
     template: require '../../templates/channel/edit'
@@ -52,39 +42,60 @@ class exports.ChannelEditView extends BaseView
         super ->
             unless $('html').hasClass('editmode')
                 $('html').addClass('editmode')
-                for sel in editableElements
-                    el = @parent.$(sel)
-                    if el.data('editmode') isnt 'boolean'
-                        # store the current state
-                        #localStorage[el] = $(el).text();
-
-                        # add designMode & contenteditable
-                        el.
-                            prop('contenteditable', yes).
-                            input( ->
-                                text = $(this).text();
-                                if text is ""
-                                    $(this).html("&nbsp;")
-                            ).keydown((ev) ->
-                                code = ev.keyCode or ev.which
-                                if $(this).data('editmode') is 'singleLine' && code == 13
-                                    ev.preventDefault()
-                                    return false
-                                else
-                                    return true
-                            )
-                $(editableElements[0]).focus()
+                @parent.$('*').each @makeEditable
 
             @trigger 'loading:stop'
             cb?()
 
+    makeEditable: ->
+        el = $(this)
+        switch el.data('editmode')
+            when 'singleLine'
+                el.
+                    prop('contenteditable', yes).
+                    input( ->
+                        text = $(this).text();
+                        if text is ""
+                            $(this).html("&nbsp;")
+                    ).keydown((ev) ->
+                        code = ev.keyCode or ev.which
+                        if $(this).data('editmode') is 'singleLine' && code == 13
+                            ev.preventDefault()
+                            return false
+                        else
+                            return true
+                    )
+            when 'multiLine'
+                el.
+                    prop('contenteditable', yes).
+                    input( ->
+                        text = $(this).text();
+                        if text is ""
+                            $(this).html("&nbsp;")
+                    )
+            when 'boolean'
+                text = el.text()
+                # Last class becomes id
+                elClasses = el.prop('class').split(' ')
+                id = elClasses[elClasses.length - 1]
+                el.html('<input type="checkbox"><label></label>')
+                el.find('input').attr('id', id)
+                el.find('label').
+                    attr('for', id).
+                    text(text)
+
+    undoEditable: ->
+        el = $(this)
+        # TODO: rm input & keydown handlers
+        switch el.data('editmode')
+            when 'singleLine'
+                el.prop('contenteditable', no)
+            when 'multiLine'
+                el.prop('contenteditable', no)
+
     end: =>
         if $('html').hasClass('editmode')
             $('html').removeClass('editmode')
-            for sel in editableElements
-                el = @parent.$(sel)
-                if el.data('editmode') isnt 'boolean'
-                    el.
-                        prop('contenteditable', no)
-                    # TODO: rm input & keydown handlers
+            @parent.$('*').each @undoEditable
+
         @trigger 'end'
