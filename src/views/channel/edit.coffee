@@ -78,7 +78,9 @@ class exports.ChannelEditView extends BaseView
                 # Last class becomes id
                 elClasses = el.prop('class').split(' ')
                 id = elClasses[elClasses.length - 1]
-                el.html('<input type="checkbox"><label></label>')
+                el.
+                    addClass('contenteditable').
+                    html('<input type="checkbox"><label></label>')
                 el.find('input').attr('id', id)
                 el.find('label').
                     attr('for', id).
@@ -105,6 +107,8 @@ class exports.ChannelEditView extends BaseView
                 el.prop('contenteditable', no)
             when 'multiLine'
                 el.prop('contenteditable', no)
+            when 'boolean'
+                el.removeClass('contenteditable')
 
     end: =>
         if $('html').hasClass('editmode')
