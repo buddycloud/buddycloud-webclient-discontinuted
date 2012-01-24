@@ -25,24 +25,28 @@ class exports.ChannelView extends BaseView
         @bind 'show', @show
         @bind 'hide', @hide
 
-        do @init_posts
-#         @model.bind 'change', render_callback
-#         @model.bind 'change:node:metadata', render_callback
-#         app.users.current.channels.bind "add:#{@model.get 'id'}", render_callback
-#         app.users.current.channels.bind "remove:#{@model.get 'id'}", render_callback
+        postsnode = @model.nodes.get_or_create(id:'posts')
+        @postsview = new PostsView
+            model: postsnode
+            parent: this
+        # To display posts node errors:
+        postsnode.bind 'error', @set_error
+        @set_error postsnode.error
+        @postsview.render =>
+            @ready =>
+                @trigger 'subview:topics', @postsview.el
+                @on_scroll() unless @hidden
 #
         # New post, visible? Mark read.
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
-#
-#         # Show progress spinner throbber loader
-#         @model.bind 'loading:start', @on_loading_start
-#         @model.bind 'loading:stop', @on_loading_stop
-#         app.handler.data.bind 'loading:start', @on_loading_start
-#         app.handler.data.bind 'loading:stop', @on_loading_stop
 
-        do @init_status
+        # Retrieve status text and send to view
+        statusnode = @model.nodes.get_or_create(id:'status')
+        statusnode.bind 'post', =>
+            value = statusnode.posts.at(0)?.get('content')?.value
+            @trigger('status', value) if value?
 
         @details = new ChannelDetailsView
             model: @model
@@ -79,36 +83,6 @@ class exports.ChannelView extends BaseView
 #                     @trigger 'subview:details', @details.el
 #                     callback?.call(this) unless --pending
 #             unless pending
-
-    # create posts node view when it arrives from xmpp or instant when its already cached
-    init_posts: =>
-        @model.nodes.unbind "add", @init_posts
-        if (postsnode = @model.nodes.get 'posts')
-            @postsview = new PostsView
-                model: postsnode
-                parent: this
-            # To display posts node errors:
-            postsnode.bind 'error', @set_error
-            @set_error postsnode.error
-            @postsview.render =>
-                @ready =>
-                    @trigger 'subview:topics', @postsview.el
-                    @on_scroll() unless @hidden
-        else
-            @model.nodes.bind "add", @init_posts
-
-    init_status: =>
-        @model.nodes.unbind "add", @init_status
-        if (statusnode = @model.nodes.get 'status')
-            statusnode.bind 'post', @update_status
-            #@update_status()
-        else
-            @model.nodes.bind "add", @init_status
-
-    # Retrieve status text and send to view
-    update_status: =>
-        if (statusnode = @model.nodes.get 'status')
-            @trigger 'status', statusnode.posts.at(0)?.get('content')?.value
 
     show: =>
         @hidden = false
