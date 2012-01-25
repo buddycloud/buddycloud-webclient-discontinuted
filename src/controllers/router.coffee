@@ -22,6 +22,10 @@ class exports.Router extends Backbone.Router
 
         Backbone.history.start pushState:on
 
+    navigate: ->
+        # Avoid navigating while edit mode is on
+        unless app.views?.index?.current?.isEditing
+            super
 
     setView: (view) ->
         return unless view? # TODO access denied msg
