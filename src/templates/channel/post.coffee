@@ -69,7 +69,7 @@ render_previews =  (view) ->
     for url in urls
         do (url) =>
             view.load_url_preview url, (data) =>
-                if data.html?
+                if data.html? and (data.type is 'rich' or data.type is 'video')
                     @$div ->
                         @raw data.html
                 else if data.type is 'photo' and data.url?
