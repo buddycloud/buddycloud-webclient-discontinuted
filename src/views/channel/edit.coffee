@@ -145,9 +145,9 @@ class exports.ChannelEditView extends BaseView
                     .addClass('contenteditable')
                     .html('<input type="checkbox"><label></label>')
                 el.find('input').attr('id', id)
-                el.find('label').
-                    attr('for', id).
-                    text(text)
+                el.find('label')
+                    .attr('for', id)
+                    .text(text)
 
                 if id is 'accessModel'
                     if text is 'open'
