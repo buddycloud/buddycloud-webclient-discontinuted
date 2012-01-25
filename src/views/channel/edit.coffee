@@ -76,6 +76,7 @@ class exports.ChannelEditView extends BaseView
         app.handler.data.set_node_metadata postsnode
         , { title, description, access_model }
         , (err) =>
+            @$('.save, .cancel').show()
             @trigger 'loading:stop'
             if err
                 # Undo values:
