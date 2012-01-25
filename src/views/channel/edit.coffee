@@ -21,6 +21,7 @@ class exports.ChannelEditView extends BaseView
     show: =>
         @ready =>
             @trigger 'update:el', @el
+            @delegateEvents() # workaround to reconnect all dom events
 
     hide: =>
         @trigger 'update:el', $('<div id="editbar">')
