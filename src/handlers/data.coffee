@@ -1,4 +1,5 @@
 { User } = require '../models/user'
+async = require 'async'
 
 
 class exports.DataHandler extends Backbone.EventHandler
@@ -285,12 +286,7 @@ class exports.DataHandler extends Backbone.EventHandler
 ##
 # @param iter {Function} callback(node, callback)
 forEachUserNode = (user, iter, callback) ->
-    pending = 0
-    ["posts", "status", "subscriptions",
-     "geo/previous", "geo/current", "geo/next"].forEach (type) ->
-        nodeid = "/user/#{user}/#{type}"
-        pending++
-        iter nodeid, ->
-            pending--
-            if pending < 1
-                callback?()
+    nodes = ["posts", "status", "subscriptions",
+        "geo/previous", "geo/current", "geo/next"].map (type) ->
+            "/user/#{user}/#{type}"
+    async.forEach nodes, iter, callback
