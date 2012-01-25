@@ -286,7 +286,12 @@ class exports.DataHandler extends Backbone.EventHandler
 ##
 # @param iter {Function} callback(node, callback)
 forEachUserNode = (user, iter, callback) ->
-    nodes = ["posts", "status", "subscriptions",
-        "geo/previous", "geo/current", "geo/next"].map (type) ->
-            "/user/#{user}/#{type}"
+    nodes = "/user/#{user}/#{type}" for type in [
+        "posts",
+        "status",
+        "subscriptions",
+        "geo/previous",
+        "geo/current",
+        "geo/next",
+    ]
     async.forEach nodes, iter, callback
