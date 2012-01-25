@@ -46,14 +46,14 @@ class exports.ChannelEditView extends BaseView
         unless $('html').hasClass('editmode')
             $('html').addClass('editmode')
             @parent.$('*').each @makeEditable
-            do @show()
+            @show()
 
     end: =>
         if $('html').hasClass('editmode')
             $('html').removeClass('editmode')
             @parent.$('*').each @undoEditable
+            @hide()
 
-            do @hide
         @trigger 'end'
 
     clickSave: EventHandler ->
