@@ -81,7 +81,7 @@ class exports.ChannelEditView extends BaseView
                 @clickCancel()
             else
                 # Committed fine:
-                @end()
+                @turn off
         # Update status
         statusnode = @model.nodes.get_or_create id: 'status'
         app.handler.data.publish statusnode
@@ -94,7 +94,7 @@ class exports.ChannelEditView extends BaseView
         # Cause metadata re-render:
         node.metadata.trigger 'change'
 
-        @end()
+        @turn off
 
     makeEditable: ->
         el = $(this)
