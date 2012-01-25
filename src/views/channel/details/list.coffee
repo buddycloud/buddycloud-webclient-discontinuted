@@ -45,7 +45,7 @@ class exports.ChannelDetailsList extends BaseView
             @add_one()
 
     add_one: =>
-        hidden = @model.filter (user1) ->
+        hidden = @model.filter (user1) =>
             not @showing_users[user1.get('id')]
         if not @showing_all and hidden?[0]?
             @add_user hidden[0]
