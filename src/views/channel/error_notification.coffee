@@ -3,11 +3,8 @@
 class exports.ErrorNotificationView extends BaseView
     template: require '../../templates/channel/error_notification'
 
-    show: (error) =>
+    initialize: ({error}) ->
+        super
         @ready =>
-            @trigger 'error', error.message
-            @el.addClass 'visible'
-
-    hide: =>
-        @el?.removeClass 'visible'
+            @trigger('error', error.message ? error)
 

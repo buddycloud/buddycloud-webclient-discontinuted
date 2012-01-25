@@ -14,9 +14,12 @@ design = require '../../_design/channel/error_notification'
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
-        @$article class: 'notification', ->
+        notification = @$article class: 'notification', ->
             @$section ->
                 @$p ->
                     view.bind 'error', (text) =>
-                        console.error "render error", text
+                        notifclass = notification.attr('class')
+                        if notifclass.indexOf('visible') is -1
+                            notification.attr('class', "#{notifclass} visible")
+                        console.error "render error", text, @_jquery, notification._jquery
                         @text text ? ""

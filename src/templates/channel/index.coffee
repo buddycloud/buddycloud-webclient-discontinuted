@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            el = @select "div.channelView", "article.topic, div.channelDetails"
+            el = @select "div.channelView", "article.topic, div.channelDetails, .notification"
             el.find('h2, span:not(.loader)').text("")
             return el
 
@@ -60,10 +60,6 @@ module.exports = design (view) ->
 
 
             @$section class:'stream', ->
-                @$div class: 'notifications', ->
-                    view.bind 'subview:notification', (el) =>
-                        @add el
-
                 @$section class:'newTopic', ->
                     return @remove() if app.users.isAnonymous(app.users.current)
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
@@ -75,6 +71,10 @@ module.exports = design (view) ->
                         #    checkbox shouldShareLocation
                         #    label for shouldShareLocation
                         # @$div id:'createNewTopic'
+
+                @$div class: 'notifications', ->
+                    view.bind('subview:notification', @add)
+
                 @$section class:'topics', ->
                     view.bind('subview:topics', @replace)
                 @$p class:'loader', ->

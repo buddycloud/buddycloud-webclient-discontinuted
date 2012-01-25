@@ -32,7 +32,7 @@ class exports.ChannelView extends BaseView
             parent: this
         # To display posts node errors:
         postsnode.bind 'error', @set_error
-        @set_error postsnode.error
+        @set_error postsnode.error if postsnode.error
         @postsview.render =>
             @ready =>
                 @trigger 'subview:topics', @postsview.el
@@ -202,22 +202,20 @@ class exports.ChannelView extends BaseView
     )
 
     set_error: (error) =>
+        return unless error
         console.warn "set_error", error
-        unless @errorNotification
-            @errorNotification = new ErrorNotificationView(parent: this)
-            @errorNotification.render =>
-                @ready =>
-                    @trigger 'subview:notification', @errorNotification.el
-        if error
-            @errorNotification.show(error)
-        else
-            @errorNotification.hide()
+        view = new ErrorNotificationView
+            parent:this
+            error:error
+        @ready =>
+            view.render =>
+                @trigger('subview:notification', view.el)
 
     clickEdit: EventHandler ->
         unless @editview
             @editview = new ChannelEditView { parent: this, @model }
             @editview.bind 'update:el', (el) =>
-                @parent.trigger 'subview:editbar', el
+                @parent.trigger('subview:editbar', el)
         @editview.toggle()
 
     isEditing: =>
