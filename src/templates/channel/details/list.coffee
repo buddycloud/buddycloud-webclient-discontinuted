@@ -20,6 +20,9 @@ module.exports = design (view) ->
             @$h3 ->
                 @text "#{view.title} "
                 @$span class: 'count', ->
+                    @hide()
+                    view.bind 'show:all', @show
+
                     update_count = =>
                         @text view.model.length
                     update_count()
@@ -52,12 +55,10 @@ module.exports = design (view) ->
                         img.remove()
             # Iterates through node.subscriptions in "followers" case,
             # and over user.channels in "following" case:
-            view.model.forEach (user) ->
-                add_follower user
-            view.model.bind 'add', (user) ->
+            view.bind 'add', (user) ->
                 add_follower user
                 update_count()
-            view.model.bind 'remove', (user) ->
+            view.bind 'remove', (user) ->
                 rm_follower user.get('id')
                 update_count()
 

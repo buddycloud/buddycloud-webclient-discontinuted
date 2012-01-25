@@ -22,15 +22,15 @@ class exports.ChannelDetailsView extends BaseView
             parent: this
             load_more: @load_more_following
 
-    load_more_followers: =>
+    load_more_followers: (all) =>
         node = @model.nodes.get_or_create id: 'posts'
         nodeid = node.get 'nodeid'
         if node.can_load_more_subscribers()
             app.handler.data.get_more_node_subscriptions nodeid, (err) =>
-                unless err
+                if all and not err
                     @load_more_followers()
 
-    load_more_following: =>
+    load_more_following: (all) =>
         unless app.users.get(@model.get 'id').subscriptions_synced
             app.handler.data.get_user_subscriptions @model.get('id')
 
