@@ -223,7 +223,7 @@ class exports.ChannelView extends BaseView
 
     clickEdit: EventHandler ->
         unless @editview
-            @editview = new ChannelEditView { @parent, @model }
+            @editview = new ChannelEditView { parent: this, @model }
             @editview.bind 'update:el', (el) =>
                 @parent.trigger 'subview:editbar', el
         @editview.toggle()
