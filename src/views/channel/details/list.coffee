@@ -21,7 +21,6 @@ class exports.ChannelDetailsList extends BaseView
 
     add_user: (user) =>
         user_id = user.get('id')
-        console.warn "add_user", user_id, "count", @showing_count, @showing_all, @showing_users[user_id], not @showing_all and @showing_count < 8
         show = =>
             @trigger 'add', user
             @showing_count++
