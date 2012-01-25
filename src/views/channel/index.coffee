@@ -183,6 +183,7 @@ class exports.ChannelView extends BaseView
         app.handler.data.unsubscribe_user @model.get('id'), (error) =>
             if error
                 @set_error error
+            @$('.follow').show()
 #             @render() FIXME
 
     update_status: =>
