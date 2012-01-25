@@ -44,9 +44,7 @@ class exports.ChannelView extends BaseView
 
         # Retrieve status text and send to view
         statusnode = @model.nodes.get_or_create(id:'status')
-        statusnode.bind 'post', =>
-            value = statusnode.posts.at(0)?.get('content')?.value
-            @trigger('status', value) if value?
+        statusnode.bind 'post', @update_status
 
         @details = new ChannelDetailsView
             model: @model
@@ -66,6 +64,8 @@ class exports.ChannelView extends BaseView
                     extraSpace:0
                     animate:off
                 @$('.newTopic').click() unless text.val() is ""
+
+                @update_status()
 
             @details.render =>
                 @trigger 'subview:details', @details.el
@@ -184,6 +184,12 @@ class exports.ChannelView extends BaseView
             if error
                 @set_error error
 #             @render() FIXME
+
+    update_status: =>
+        statusnode = @model.nodes.get_or_create(id:'status')
+        value = statusnode.posts.at(0)?.get('content')?.value
+        console.warn @model.get('id'), statusnode, "update_status", value
+        @trigger('status', value) if value?
 
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: throttle_callback(100, ->

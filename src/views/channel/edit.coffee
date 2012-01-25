@@ -108,6 +108,7 @@ class exports.ChannelEditView extends BaseView
         node = @model.nodes.get_or_create id: 'posts'
         # Cause metadata re-render:
         node.metadata.trigger 'change'
+        @parent.update_status()
 
         @turn off
 
