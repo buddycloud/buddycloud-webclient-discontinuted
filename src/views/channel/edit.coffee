@@ -18,12 +18,24 @@ class exports.ChannelEditView extends BaseView
 
         do @render
 
-    show: =>
+    setTimeout: (time, callback) ->
+        clearTimeout(@timeout) if @timeout?
+        @timeout = setTimeout =>
+            delete @timeout
+            callback?.call(this)
+        ,time
+
+    show: (callback) =>
         @ready =>
+            return unless @active
             @trigger 'update:el', @el
-            @delegateEvents() # workaround to reconnect all dom events
+            @setTimeout 60, => # workaround for requestAnimationFrame
+                @delegateEvents() # workaround to reconnect all dom events
+                @el.show()
+                callback?.call(this)
 
     hide: =>
+        return if @active
         @trigger 'update:el', $('<div id="editbar">')
 
     turn: (state) =>
@@ -39,20 +51,21 @@ class exports.ChannelEditView extends BaseView
 
     render: (callback) ->
         super ->
+            @el.css left:"234px"
             @trigger 'loading:stop'
             callback?.call(this)
 
     begin: =>
-        unless $('html').hasClass('editmode')
+        @show =>
+            @el.css left:"0px"
             $('html').addClass('editmode')
             @parent.$('*').each @makeEditable
-            @show()
 
     end: =>
-        if $('html').hasClass('editmode')
-            $('html').removeClass('editmode')
-            @parent.$('*').each @undoEditable
-            @hide()
+        $('html').removeClass('editmode')
+        @parent.$('*').each @undoEditable
+        @el.css left:"234px"
+        @setTimeout(410, @hide)
 
         @trigger 'end'
 
