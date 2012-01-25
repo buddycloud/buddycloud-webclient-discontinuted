@@ -2,6 +2,7 @@
 { PostsView } = require './posts'
 { ChannelDetailsView } = require './details/index'
 { ChannelEditView } = require './edit'
+{ ErrorNotificationView } = require './error_notification'
 { OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback } = require '../../util'
 
@@ -201,32 +202,16 @@ class exports.ChannelView extends BaseView
     )
 
     set_error: (error) =>
-#         if error
-#             unless @error_notification
-#                 @error_notification = new ErrorNotificationView({ error })
-#             else
-#                 @error_notification.error = error
-#         else
-#             delete @error_notification
-#         @render() FIXME
-
-#     update_attributes: ->
-#         if (postsNode = @model.nodes.get 'posts')
-#             # @error is also set by clickFollow() & clickUnfollow()
-#             @postsNode = postsNode.toJSON yes
-#         if (geo = @model.nodes.get 'geo')
-#             @geo = geo.toJSON yes
-#         # Permissions:
-#         followingThisChannel = app.users.current.channels.get(postsNode?.get 'nodeid')?
-#         #affiliation = app.users.current.affiliations.get(@model.nodes.get('posts')?.get 'nodeid') or "none"
-#         isAnonymous = app.users.current.get('id') is 'anony@mous'
-#         # TODO: pending may require special handling
-#         @user =
-#             isCurrent: @model.get('id') is app.users.current.get('id')
-#             followingThisChannel: followingThisChannel
-#             hasRightToPost: not isAnonymous # affiliation in ["owner", "publisher", "moderator", "member"]
-#             isAnonymous: isAnonymous
-#         @isLoading = @model.isLoading or app.handler.data.isLoading
+        console.warn "set_error", error
+        unless @errorNotification
+            @errorNotification = new ErrorNotificationView(parent: this)
+            @errorNotification.render =>
+                @ready =>
+                    @trigger 'subview:notification', @errorNotification.el
+        if error
+            @errorNotification.show(error)
+        else
+            @errorNotification.hide()
 
     clickEdit: EventHandler ->
         unless @editview

@@ -60,6 +60,10 @@ module.exports = design (view) ->
 
 
             @$section class:'stream', ->
+                @$div class: 'notifications', ->
+                    view.bind 'subview:notification', (el) =>
+                        @add el
+
                 @$section class:'newTopic', ->
                     return @remove() if app.users.isAnonymous(app.users.current)
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
