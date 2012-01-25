@@ -1,5 +1,6 @@
 { BaseView } = require '../base'
 { EventHandler } = require '../../util'
+async = require 'async'
 
 
 class exports.ChannelEditView extends BaseView
@@ -87,42 +88,35 @@ class exports.ChannelEditView extends BaseView
         access_model = if open then 'open' else 'authorize'
 
         # Send to server
-        pending = 1
-        error = null
-        done = (err) =>
+        async.parallel [ (cb) =>
+            # Full metadata for posts node
+            postsnode = @model.nodes.get_or_create id: 'posts'
+            app.handler.data.set_node_metadata postsnode
+            , { title, description, access_model }
+            , cb
+        , (cb) =>
+            # Access model metadata for status node
+            statusnode = @model.nodes.get_or_create id: 'status'
+            app.handler.data.set_node_metadata statusnode
+            , { access_model }
+            , cb
+        , (cb) =>
+            # Update status
+            statusnode = @model.nodes.get_or_create id: 'status'
+            app.handler.data.publish statusnode
+            , { content: status, author: { name: app.users.current.get 'jid' } }
+            , cb
+        ], (err) =>
+            @$('.save, .cancel').show()
+            @trigger 'loading:stop'
             if err
-                error = err
-
-            pending--
-            if pending < 1
-                @$('.save, .cancel').show()
-                @trigger 'loading:stop'
-                if error
-                    # Undo values:
-                    @clickCancel()
-                    # Even if some operations were successful we're
-                    # going to get updates pushed afterwards
-                else
-                    # Committed fine:
-                    @turn off
-
-        # Full metadata for posts node
-        postsnode = @model.nodes.get_or_create id: 'posts'
-        app.handler.data.set_node_metadata postsnode
-        , { title, description, access_model }
-        , done
-        # Access model metadata for status node
-        statusnode = @model.nodes.get_or_create id: 'status'
-        app.handler.data.set_node_metadata statusnode
-        , { access_model }
-        , done
-        # Update status
-        app.handler.data.publish statusnode
-        , { content: status, author: { name: app.users.current.get 'jid' } }
-        , done
-
-        # pending=0 case
-        done()
+                # Undo values:
+                @clickCancel()
+                # Even if some operations were successful we're
+                # going to get updates pushed afterwards
+            else
+                # Committed fine:
+                @turn off
 
     clickCancel: EventHandler ->
         node = @model.nodes.get_or_create id: 'posts'
