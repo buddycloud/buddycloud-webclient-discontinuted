@@ -227,3 +227,6 @@ class exports.ChannelView extends BaseView
             @editview.bind 'update:el', (el) =>
                 @parent.trigger 'subview:editbar', el
         @editview.toggle()
+
+    isEditing: =>
+        @editview?.active

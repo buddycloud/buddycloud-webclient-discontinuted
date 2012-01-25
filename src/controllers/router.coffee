@@ -24,7 +24,7 @@ class exports.Router extends Backbone.Router
 
     navigate: ->
         # Avoid navigating while edit mode is on
-        unless app.views?.index?.current?.isEditing
+        unless app.views?.index?.current?.isEditing?()
             super
 
     setView: (view) ->
