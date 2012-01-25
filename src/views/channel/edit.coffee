@@ -76,33 +76,53 @@ class exports.ChannelEditView extends BaseView
         @trigger 'loading:start'
 
         # Retrieve values
+        console.warn "parent el", @parent.el
         # FIXME: title text sometimes contains the title of the next channel too!
         title = @parent.$('header .title').text()
+        console.warn "title", @parent.$('header .title'), title
         status = @parent.$('header .status').text()
         description = @parent.$('.meta .description .data').text()
+        console.warn "description", @parent.$('.meta .description .data'), description
         open = @parent.$('#accessModel').prop 'checked'
         access_model = if open then 'open' else 'authorize'
 
         # Send to server
-        # FIXME: access_model for all user nodes?
+        pending = 1
+        error = null
+        done = (err) =>
+            if err
+                error = err
+
+            pending--
+            if pending < 1
+                @$('.save, .cancel').show()
+                @trigger 'loading:stop'
+                if error
+                    # Undo values:
+                    @clickCancel()
+                    # Even if some operations were successful we're
+                    # going to get updates pushed afterwards
+                else
+                    # Committed fine:
+                    @turn off
+
+        # Full metadata for posts node
         postsnode = @model.nodes.get_or_create id: 'posts'
         app.handler.data.set_node_metadata postsnode
         , { title, description, access_model }
-        , (err) =>
-            @$('.save, .cancel').show()
-            @trigger 'loading:stop'
-            if err
-                # Undo values:
-                @clickCancel()
-            else
-                # Committed fine:
-                @turn off
-        # Update status
+        , done
+        # Access model metadata for status node
         statusnode = @model.nodes.get_or_create id: 'status'
+        app.handler.data.set_node_metadata statusnode
+        , { access_model }
+        , done
+        # Update status
         app.handler.data.publish statusnode
         , { content: status, author: { name: app.users.current.get 'jid' } }
-        , (error) =>
-            # TODO: undo on error
+        , done
+
+        # pending=0 case
+        done()
 
     clickCancel: EventHandler ->
         node = @model.nodes.get_or_create id: 'posts'
