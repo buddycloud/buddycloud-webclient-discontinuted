@@ -75,7 +75,7 @@ start_server = (args, opts) ->
                 cache  : on
                 debug  : not config.build
                 require: [
-                    jquery  :'jquery-browserify'
+                    jquery  :'br-jquery'
                     backbone:'backbone-browserify'
                     path.join(cwd, "src", "init")
                 ]
