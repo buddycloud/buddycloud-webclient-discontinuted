@@ -51,43 +51,36 @@ module.exports = design (view) ->
                 @remove() # FIXME not implemented yet :(
             @$p ->
                 indicator = load_indicate this
-                update_text = =>
+                # Don't load them twice:
+                previews_rendered = {}
+                update_text = (parts) =>
                     # Empty the <p/>
                     # FIXME: @dodo is this clean?
                     @text("")
 
-                    content = view.model.get('content')?.value
-                    # Scan for links (RegExps don't work across multiple lines)
-                    links = []
-                    while content and content.length > 0
-                        index = (s) ->
-                            i = content.indexOf s
-                            if i >= 0 then i else content.length
-                        next_link = Math.min(
-                            index("http://"),
-                            index("https://")
-                        )
-                        @$span content.slice(0, next_link)
+                    for part in parts
+                        switch part.type
+                            when 'text'
+                                @$span part.value
+                            when 'link'
+                                link = part.value
+                                @$a href: link, link
+                                unless previews_rendered[link]
+                                    previews_rendered[link] = yes
+                                    render_preview.call(@up(end: no), view, link)
+                            when 'user'
+                                userid = part.value
+                                @$a
+                                    class: 'userlink'
+                                    href: "/#{userid}"
+                                    'data-userid': userid
+                                , ->
+                                    @text userid
 
-                        content = content.slice(next_link)
-                        if (m = content.match(/^(\S+)/))
-                            link = m[1]
-                            links.push link
-                            @$a href: link, ->
-                                @text link
-                            content = content.slice(link.length)
-
-                    # FIXME: this <div> should be outside the <p>, but
-                    # it'll be rendered asynchronously. we would need
-                    # to notify...
-                    # TODO: remove them on update
-                    for link in links
-                        render_preview.call(@up(end: no), view, link)
                     if indicator?
                         indicator?.clear()
                         delete indicator
-                view.model.bind 'change:content', update_text
-                update_text()
+                view.bind 'update:content', update_text
 
 
 render_preview = (view, url) ->

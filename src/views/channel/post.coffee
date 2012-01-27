@@ -7,12 +7,54 @@ class exports.PostView extends BaseView
     initialize: ({@type}) ->
         super
 
+        @model.bind 'change:content', @change_content
+        @ready @change_content
+
+    change_content: =>
+        content = @model.get('content')?.value or ""
+        parts = []
+        for line in content.split(/\n/)
+            i = 0
+            while line.length > 0 and i < 30
+                i++
+                if (m = line.match(/^(.*?)(?:(https?\:\/\/\S+)|(\S+@[a-zA-Z0-9_\-\.]+))(.*)$/))
+                    if m[1]
+                        parts.push
+                            type: 'text'
+                            value: m[1]
+                    if m[2]
+                        parts.push
+                            type: 'link'
+                            value: m[2]
+                    if m[3]
+                        parts.push
+                            type: 'user'
+                            value: m[3]
+                    line = m[4] or ""
+                else
+                    parts.push
+                        type: 'text'
+                        value: line
+                    line = ""
+            # Restore line break
+            parts.push
+                type: 'text'
+                value: "\n"
+        @trigger 'update:content', parts
+
     events:
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'
+        'click .userlink': 'clickUserlink'
 
     clickAuthor: EventHandler ->
         app.router.navigate @model.get('author')?.jid, true
+
+    clickUserlink: EventHandler (ev) ->
+        el = ev.srcElement
+        userid = el and $(el).data('userid')
+        if userid
+            app.router.navigate userid, true
 
     # TODO: make url configurable
     # TODO: filter HTML for XSS
