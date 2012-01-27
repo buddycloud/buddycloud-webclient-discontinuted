@@ -80,7 +80,7 @@ update_text = do ->
 
                     userid = part.value
                     @$a
-                        class: 'userlink'
+                        class: 'internal userlink'
                         href: "/#{userid}"
                         'data-userid': userid
                     , ->
