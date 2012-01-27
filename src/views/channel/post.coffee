@@ -20,9 +20,7 @@ class exports.PostView extends BaseView
         content = @model.get('content')?.value or ""
         parts = []
         for line in content.split(/\n/)
-            i = 0
-            while line.length > 0 and i < 30
-                i++
+            while line.length > 0
                 if (m = line.match(/^(.*?)(?:(https?\:\/\/\S+)|(\S+@[a-zA-Z0-9_\-\.]+))(.*)$/))
                     if m[1]
                         parts.push
