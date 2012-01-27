@@ -30,9 +30,11 @@ class exports.AuthenticationView extends Backbone.View
         @box.css(
             top : "#{curr_pos.top}px"
             left: "#{curr_pos.left}px"
-        ).animate({top:"#{curr_pos.top + 50}px"}, 200)
-         .animate top:"-800px", ->
-            $(this).hide()
+        ).animate(top:"#{curr_pos.top + 50}px", 200)
+         .animate(top:"-800px", 200)
+        setTimeout =>
+            @box.hide()
+        ,410
 
     error: (type) =>
         app.handler.connection.reset()
