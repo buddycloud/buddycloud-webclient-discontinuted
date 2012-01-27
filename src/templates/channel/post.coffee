@@ -58,24 +58,27 @@ module.exports = design (view) ->
                     # FIXME: @dodo is this clean?
                     @text("")
 
-                    for part in parts
+                    # this doesnt work because stupid jquery cant append text
+                    repeat = =>
+                        return unless (part = parts.shift())?
                         switch part.type
                             when 'text'
-                                @text part.value, append: on
+                                @text(part.value, append:on)
+                                do repeat
                             when 'link'
                                 link = part.value
-                                @$a href: link, link
+                                @$a(href: link, link).once('end', repeat)
                                 unless previews_rendered[link]
                                     previews_rendered[link] = yes
-                                    render_preview.call(@up(end: no), view, link)
+                                    render_preview.call(@up(end:no), view, link)
                             when 'user'
                                 userid = part.value
-                                @$a
+                                attrs =
                                     class: 'userlink'
                                     href: "/#{userid}"
                                     'data-userid': userid
-                                , ->
-                                    @text userid
+                                @$a(attrs, userid).once('end', repeat)
+                    do repeat
 
                     if indicator?
                         indicator?.clear()
