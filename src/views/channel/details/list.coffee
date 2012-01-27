@@ -4,7 +4,7 @@
 class exports.ChannelDetailsList extends BaseView
     template: require '../../../templates/channel/details/list'
 
-    initialize: ({@title, @load_more}) ->
+    initialize: ({@title, @load_more, @ignore_users}) ->
         super
 
         @showing_all = no
@@ -21,12 +21,14 @@ class exports.ChannelDetailsList extends BaseView
 
     add_user: (user) =>
         user_id = user.get('id')
+
         show = =>
             @trigger 'add', user
             @showing_count++
             @showing_users[user_id] = yes
 
-        unless @showing_users[user_id]
+        unless @showing_users[user_id] or
+               (@ignore_users and @ignore_users.indexOf(user_id) >= 0)
             # Is not already shown
             if @showing_all
                 # Expanded by "show all"
