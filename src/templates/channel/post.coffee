@@ -13,9 +13,6 @@ design = require '../../_design/channel/post'
 { load_indicate } = require '../util'
 
 
-
-
-
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$section ->
@@ -50,47 +47,45 @@ module.exports = design (view) ->
             @$span class:'location', ->
                 @remove() # FIXME not implemented yet :(
             @$p ->
-                indicator = load_indicate this
-                # Don't load them twice:
-                previews_rendered = {}
-                update_text = (parts) =>
-                    # Empty the <p/>
-                    # FIXME: @dodo is this clean?
-                    @text("")
+                view.once('update:content', load_indicate(this).clear)
+                view.bind('update:content', update_text.bind(this, view))
 
-                    text = ""
-                    flush_text = =>
-                        if text and text.length > 0
-                            @$span text
-                            text = ""
-                    for part in parts
-                        switch part.type
-                            when 'text'
-                                text += part.value
-                            when 'link'
-                                flush_text()
 
-                                link = part.value
-                                @$a href: link, link
-                                unless previews_rendered[link]
-                                    previews_rendered[link] = yes
-                                    render_preview.call(@up(end: no), view, link)
-                            when 'user'
-                                flush_text()
+update_text = do ->
+    # Don't load them twice:
+    previews_rendered = {}
+    return (view, parts) ->
+        # Empty the <p/>
+        @text("")
 
-                                userid = part.value
-                                @$a
-                                    class: 'userlink'
-                                    href: "/#{userid}"
-                                    'data-userid': userid
-                                , ->
-                                    @text userid
+        text = ""
+        flush_text = =>
+            if text and text.length > 0
+                @$span text
+                text = ""
+        for part in parts
+            switch part.type
+                when 'text'
+                    text += part.value
+                when 'link'
                     flush_text()
 
-                    if indicator?
-                        indicator?.clear()
-                        delete indicator
-                view.bind 'update:content', update_text
+                    link = part.value
+                    @$a href: link, link
+                    unless previews_rendered[link]
+                        previews_rendered[link] = yes
+                        render_preview.call(@up(end: no), view, link)
+                when 'user'
+                    flush_text()
+
+                    userid = part.value
+                    @$a
+                        class: 'userlink'
+                        href: "/#{userid}"
+                        'data-userid': userid
+                    , ->
+                        @text userid
+        flush_text()
 
 
 render_preview = (view, url) ->
