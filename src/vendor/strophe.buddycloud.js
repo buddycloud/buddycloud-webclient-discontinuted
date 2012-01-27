@@ -325,6 +325,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 		case 'title':
 		case 'description':
 		case 'access_model':
+		case 'publish_model':
 		    config["pubsub#" + key] = value;
 		    break;
 		}
@@ -334,7 +335,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     /**
      * Attention:
-     * 
+     *
      * subscriptions may contain extraneous `rsm' key that must be
      * filtered from the user ids.
      */

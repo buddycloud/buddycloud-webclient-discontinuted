@@ -35,6 +35,10 @@ class exports.ChannelEditView extends BaseView
                 @el.show()
                 callback?.call(this)
 
+                publish_model = @model.nodes.get('posts').metadata.get('publish_model')?.value
+                @$('#allowPost').prop 'checked'
+                , (publish_model is 'subscribers' or publish_model is 'open')
+
     hide: =>
         return if @active
         @trigger 'update:el', $('<div id="editbar">')
@@ -84,15 +88,19 @@ class exports.ChannelEditView extends BaseView
         status = @parent.$('header .status').text()
         description = @parent.$('.meta .description .data').text()
         console.warn "description", @parent.$('.meta .description .data'), description
+        # FIXME: #accessModel and #allowPost selectors will break
+        # whenever multiple ChannelViews are rendered yet hidden.
         open = @parent.$('#accessModel').prop 'checked'
         access_model = if open then 'open' else 'authorize'
+        followers_can_post = @$('#allowPost').prop 'checked'
+        publish_model = if followers_can_post then 'subscribers' else 'publishers'
 
         # Send to server
         async.parallel [ (cb) =>
             # Full metadata for posts node
             postsnode = @model.nodes.get_or_create id: 'posts'
             app.handler.data.set_node_metadata postsnode
-            , { title, description, access_model }
+            , { title, description, access_model, publish_model }
             , cb
         , (cb) =>
             # Access model metadata for status node
@@ -103,6 +111,7 @@ class exports.ChannelEditView extends BaseView
         , (cb) =>
             # Update status
             statusnode = @model.nodes.get_or_create id: 'status'
+            # TODO: id=current to have only one post in status node
             app.handler.data.publish statusnode
             , { content: status, author: { name: app.users.current.get 'jid' } }
             , cb
