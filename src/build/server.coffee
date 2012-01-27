@@ -94,6 +94,7 @@ start_server = (args, opts) ->
                         source += ";window.MD5=MD5"
                         source
 
+        javascript.use(require('shimify'))
         if config.build
             # minification
             javascript.register 'post', require 'uglify-js'
