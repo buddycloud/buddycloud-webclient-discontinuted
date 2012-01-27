@@ -10,6 +10,12 @@ class exports.PostView extends BaseView
         @model.bind 'change:content', @change_content
         @ready @change_content
 
+    ##
+    # TODO
+    #
+    # Actually, posts should have embedded static links in XHTML in
+    # the ATOM entries. Scanning for them when displaying is just the
+    # short preliminary way for now.
     change_content: =>
         content = @model.get('content')?.value or ""
         parts = []
