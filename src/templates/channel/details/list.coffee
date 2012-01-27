@@ -24,7 +24,7 @@ module.exports = design (view) ->
                     view.bind 'show:all', @show
 
                     update_count = =>
-                        @text view.model.length
+                        @text view.showing_count
                     update_count()
             list = @$div class: 'list'
             add_follower = (user) ->

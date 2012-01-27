@@ -23,9 +23,9 @@ class exports.ChannelDetailsList extends BaseView
         user_id = user.get('id')
 
         show = =>
-            @trigger 'add', user
             @showing_count++
             @showing_users[user_id] = yes
+            @trigger 'add', user
 
         unless @showing_users[user_id] or
                (@ignore_users and @ignore_users.indexOf(user_id) >= 0)
@@ -39,9 +39,9 @@ class exports.ChannelDetailsList extends BaseView
     remove_user: (user) =>
         user_id = user.get('id')
         if @showing_users[user_id]
-            @trigger 'remove', user
             delete @showing_users[user_id]
             @showing_count--
+            @trigger 'remove', user
 
             # Fill spot that is left
             @add_one()
