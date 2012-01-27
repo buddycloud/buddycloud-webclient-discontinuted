@@ -58,17 +58,26 @@ module.exports = design (view) ->
                     # FIXME: @dodo is this clean?
                     @text("")
 
+                    text = ""
+                    flush_text = =>
+                        if text and text.length > 0
+                            @$span text
+                            text = ""
                     for part in parts
                         switch part.type
                             when 'text'
-                                @$span part.value
+                                text += part.value
                             when 'link'
+                                flush_text()
+
                                 link = part.value
                                 @$a href: link, link
                                 unless previews_rendered[link]
                                     previews_rendered[link] = yes
                                     render_preview.call(@up(end: no), view, link)
                             when 'user'
+                                flush_text()
+
                                 userid = part.value
                                 @$a
                                     class: 'userlink'
@@ -76,6 +85,7 @@ module.exports = design (view) ->
                                     'data-userid': userid
                                 , ->
                                     @text userid
+                    flush_text()
 
                     if indicator?
                         indicator?.clear()
