@@ -243,21 +243,18 @@ class exports.DataHandler extends Backbone.EventHandler
 
         forEachUserNode userid, (nodeid, callback2) =>
             node = channel.nodes.get_or_create nodeid:nodeid
-            # 2: get_node_posts + get_node_metadata
-            pending = 2
-            done = ->
-                pending--
-                if pending < 1
-                    callback2()
-
-            unless node.posts_synced
-                @get_node_posts nodeid, done
-            else
-                done()
-            unless node.metadata_synced
-                @get_node_metadata nodeid, done
-            else
-                done()
+            async.parallel [ (callback3) =>
+                console.warn "refresh_channel", nodeid, node.posts_synced
+                unless node.posts_synced
+                    @get_node_posts nodeid, callback3
+                else
+                    callback3()
+            , (callback3) =>
+                unless node.metadata_synced
+                    @get_node_metadata nodeid, callback3
+                else
+                    callback3()
+            ], callback2
         , =>
             channel.set_loading false
             callback?()
