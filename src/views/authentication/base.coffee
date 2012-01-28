@@ -8,8 +8,8 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'hide', @hide
         @box = $('.centerBox')
         @delegateEvents()
-        app.handler.connection.bind 'nobosh', =>
-            @error 'nobosh'
+        for type in ['nobosh', 'nochannelserver']
+            app.handler.connection.bind(type, @error.bind(this, type))
 
     events:
         "click .back.button": "click_back"
@@ -37,6 +37,7 @@ class exports.AuthenticationView extends Backbone.View
         ,410
 
     error: (type) =>
+        app.error "'#{type}' during authentication"
         app.handler.connection.reset()
         # wobble animation
         curr_pos = @box.position()

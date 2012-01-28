@@ -29,6 +29,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
         # workaround for development
         if window.location.hostname is "localhost"
+            # get around Access-Control-Allow-Origin restrictions
             return callback()
 
         # check if the bosh service is reachable
@@ -87,6 +88,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
             @createChannel done
         error = =>
             app.error "discover_channel_server error", arguments
+            @trigger 'nochannelserver'
             #done()
 
         domain = if @user.get('jid') is "anony@mous"
