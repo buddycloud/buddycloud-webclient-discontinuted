@@ -166,15 +166,17 @@ class exports.DataHandler extends Backbone.EventHandler
             # Replay starting one day before last view
             lastView = new Date(app.users.current.channels.get_last_timestamp())
             mamStart = new Date(lastView - 23 * 60 * 60 * 1000).toISOString()
-            pending = 2
-            done = =>
-                pending--
-                if pending < 1
-                    @set_loading false
-            @get_user_subscriptions app.users.current.get('id'), (error) =>
-                done()
+
+            async.parallel [ (cb) =>
+                @get_user_subscriptions app.users.current.get('id'), cb
+            , (cb) =>
                 @scan_roster_for_channels()
-            @connector.replayNotifications mamStart, done
+                # return immediately:
+                cb()
+            , (cb) =>
+                @connector.replayNotifications mamStart, cb
+            ], =>
+                @set_loading false
 
     on_connection_end: =>
         app.channels.each (channel) ->
