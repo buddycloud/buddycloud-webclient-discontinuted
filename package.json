@@ -35,7 +35,7 @@
 ,   "store": "1.1.1"
 ,   "async": "0.1.15"
 ,   "dynamictemplate": "0.4.2"
-,   "dt-compiler": "0.1.1"
+,   "dt-compiler": "0.1.2"
 ,   "dt-jquery": "0.2.4"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
   }
