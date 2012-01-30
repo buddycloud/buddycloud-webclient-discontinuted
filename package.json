@@ -24,6 +24,7 @@
 ,   "shimify": "0.0.0"
 ,   "jqueryify": "0.0.2"
 ,   "underscore": "1.3.0"
+,   "scopify": "0.2.1"
 ,   "browserify": "https://github.com/poelzi/node-browserify/tarball/master"
 ,   "backbone-browserify": "0.5.3"
 ,   "br-jquery": "0.0.1"

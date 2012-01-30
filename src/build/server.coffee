@@ -95,6 +95,8 @@ start_server = (args, opts) ->
                         source
 
         javascript.use(require('shimify'))
+        javascript.use(require('scopify').createScope require:'./init')
+
         if config.build
             # minification
             javascript.register 'post', require 'uglify-js'
