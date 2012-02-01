@@ -1,5 +1,4 @@
 fs = require 'fs'
-{ Stream } = require 'stream'
 
 
 spiderDir = (root, path) ->
@@ -13,19 +12,6 @@ spiderDir = (root, path) ->
         else if stats.isFile()
             results.push path2
     results
-
-
-## this is just need to please tar
-# Emit a whole document at once
-class BufferedStream extends Stream
-    run: (body) ->
-        @emit 'data', body
-        process.nextTick =>
-            @emit 'end'
-
-    resume: -> # stub
-    pause: -> # stub
-
 
 
 wrap_prefix = (prefix, middleware) ->
@@ -43,7 +29,6 @@ wrap_prefix = (prefix, middleware) ->
 # exports
 
 module.exports = {
-    BufferedStream
     spiderDir
     wrap_prefix
 }
