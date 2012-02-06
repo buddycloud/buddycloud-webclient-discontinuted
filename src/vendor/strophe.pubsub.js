@@ -400,6 +400,25 @@ Extend connection object to have plugin name 'pubsub'.
         return iqid;
     },
 
+    /**
+     * Delete items of a node
+     */
+    retract: function(node, itemIds, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubretractitems");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
+          .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
+          .c('retract', { node:node });
+	for(var i = 0; i < itemIds.length; i++) {
+	    iq.c('item', { id: itemIds[i] }).up();
+	}
+
+        that.sendIQ(iq.tree(), success, error);
+
+        return iqid;
+    },
+
     /*Function: items
     Used to retrieve the persistent items from the pubsub node.
 
