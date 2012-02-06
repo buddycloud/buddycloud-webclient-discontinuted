@@ -392,7 +392,7 @@ Extend connection object to have plugin name 'pubsub'.
 
         var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('publish', { node:node, jid:this.jid })
+          .c('publish', { node:node })
           .list('item', items);
 
         that.sendIQ(iq.tree(), success, error);
