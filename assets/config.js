@@ -16,5 +16,8 @@ window.config = {
     /* overall used domain for this webclient instance.
      * used for registration and login. */
     domain: "buddycloud.org",
+
+    topic_domain: "topics.buddycloud.org",
+
     embedly_key: "2c1bedbc2aa111e1acbf4040d3dc5c07"
 };

@@ -133,6 +133,11 @@ Strophe.addConnectionPlugin('buddycloud', {
         conn.sendIQ(register, success, error, timeout);
     },
 
+    createNode: function(node, metadata, success, error) {
+	var config = this._metadata_to_config(metadata);
+	this._connection.pubsub.createNode(node, config, success, error);
+    },
+
     subscribeNode: function (node, succ, err) {
         var conn = this._connection;
         conn.pubsub.subscribe(node, null, succ, err);
@@ -317,6 +322,11 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     setMetadata: function(node, metadata, success, error) {
+	var config = this._metadata_to_config(metadata);
+	this._connection.pubsub.setConfig(node, config, success, error);
+    },
+
+    _metadata_to_config: function(metadata) {
 	var config = {};
 	for(var key in metadata)
 	    if (metadata.hasOwnProperty(key)) {
@@ -330,7 +340,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 		    break;
 		}
 	    }
-	this._connection.pubsub.setConfig(node, config, success, error);
+	return config;
     },
 
     /**

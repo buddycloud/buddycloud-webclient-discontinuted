@@ -1,19 +1,22 @@
 { BaseView } = require '../base'
+{ EventHandler } = require '../../util'
 
-JID_INVALID = /[\s\"\&\'\/\:\<\>]/g
 
 class exports.CreateTopicChannelView extends BaseView
     template: require '../../templates/create_topic_channel/index'
 
     events:
-        'input #channel_name': 'on_change_channel_name'
-        'keyup #channel_name': 'on_change_channel_name'
+        'click #create_button': 'on_click_create'
 
-    on_change_channel_name: ->
-        console.warn "on_change_channel_name", arguments
-        input = $('#channel_name')
-        text = input.val().
-            toLocaleLowerCase().
-            replace(JID_INVALID, '')
-        if text isnt input.val()
-            input.val text
+    on_click_create: EventHandler ->
+        metadata =
+            title: $('#channel_name').val()
+            description: $('#channel_description').val()
+
+        @trigger 'loading:start'
+        app.handler.data.create_topic_channel metadata, (err, userid) =>
+            if err
+                @trigger 'loading:error', err.message
+                return
+
+            app.router.navigate "#{userid}", true

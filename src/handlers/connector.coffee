@@ -21,6 +21,17 @@ class exports.Connector extends Backbone.EventHandler
         , (error) =>
             callback? new Error("Cannot replay notifications")
 
+    createNode: (nodeid, metadata, callback) =>
+        @request (done) =>
+            success = =>
+                done()
+                callback?()
+            error = (error) =>
+                done()
+                callback?(error)
+            @connection.buddycloud.createNode(
+                nodeid, metadata, success, error)
+
     publish: (nodeid, item, callback) =>
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
