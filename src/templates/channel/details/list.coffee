@@ -21,10 +21,12 @@ module.exports = design (view) ->
                 @text "#{view.title} "
                 @$span class: 'count', ->
                     @hide()
-                    view.bind 'show:all', @show
 
                     update_count = =>
-                        @text view.showing_count
+                        @text "#{view.showing_count}"
+                    view.bind 'show:all', =>
+                        @show()
+                        update_count()
                     update_count()
             list = @$div class: 'list'
             add_follower = (user) ->
