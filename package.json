@@ -38,6 +38,7 @@
 ,   "dt-compiler": "0.1.4"
 ,   "dt-jquery": "0.2.4"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
+,   "notificon": "https://github.com/dodo/Notificon/tarball/master"
   }
 , "_dependencies_missing_from_npm": {
     "jQuery.fn.autoResize":    "5025b4a5c3ed60d7218827eb19e8c0c4e641aabe",

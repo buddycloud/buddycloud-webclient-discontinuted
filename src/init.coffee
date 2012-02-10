@@ -17,6 +17,7 @@ require './vendor-bridge'
 { ChannelStore } = require './collections/channel'
 { UserStore } = require './collections/user'
 formatdate = require 'formatdate'
+Notificon = require 'notificon'
 
 # app bootstrapping on document ready
 $(document).ready ->
@@ -39,6 +40,17 @@ $(document).ready ->
     Strophe.fatal = (msg) ->
         console.error "STROPHE:", msg if app.debug_mode
 
+    # show a nice unread counter in the favicon
+    total_number = 0
+    app.favicon = (number) ->
+        total = total_number + number ? 0
+        return if total is total_number or isNaN(total)
+        console.warn "notificon", total
+        Notificon total,
+            font:  "9px Helvetica"
+            stroke:"#F03D25"
+            color: "#ffffff"
+        total_number = total
 
     app.initialize = ->
 

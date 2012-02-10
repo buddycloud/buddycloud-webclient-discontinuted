@@ -70,6 +70,7 @@ start_server = (args, opts) ->
     server = express.createServer()
 
     server.configure ->
+        server.use express.favicon(path.join(buildPath, "favicon.ico"))
 
         javascript = browserify
                 mount  : '/web/js/app.js'

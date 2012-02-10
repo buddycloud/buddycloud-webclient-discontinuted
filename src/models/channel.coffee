@@ -7,6 +7,7 @@
 # Attribute jid: Jabber-Id
 class exports.Channel extends Model
     initialize: ->
+        @_unread_count = 0
         @id = @get 'id'
         @last_touched = new Date
         @nodes = new NodeStore channel:this
@@ -54,6 +55,8 @@ class exports.Channel extends Model
                 count++
             else break
         @trigger 'bubble'
+        app.favicon(count - @_unread_count) # only add new ones
+        @_unread_count = count
         count
 
     mark_read: ->
@@ -61,4 +64,6 @@ class exports.Channel extends Model
         last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
         if last_update and last_update > last_view
             last_view = last_update
+        app.favicon(@_unread_count * -1) # remove them
+        @_unread_count = 0
         @save { last_view }
