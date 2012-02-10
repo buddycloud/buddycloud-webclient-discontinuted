@@ -9,6 +9,9 @@
 class exports.Sidebar extends BaseView
     template: require '../../templates/sidebar/index'
 
+    events:
+        'click #create_topic_channel': 'on_create_topic_channel'
+
     initialize: () ->
         super
         @hidden = yes
@@ -93,6 +96,14 @@ class exports.Sidebar extends BaseView
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 
+
+    on_create_topic_channel: =>
+        console.log "on_create_topic_channel", arguments
+        old = @current
+        @current = null
+        old?.trigger('update:highlight')
+
+        @parent.on_create_topic_channel()
 
     # sliding in animation
     moveIn: (t = 200) ->

@@ -17,6 +17,7 @@ snippets = ["main"
     "channel/error_notification"
     "sidebar/index", "sidebar/search", "sidebar/entry"
     "authentication/overlay"
+    "create_topic_channel/index"
 ]
 
 

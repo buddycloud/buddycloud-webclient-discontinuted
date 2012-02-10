@@ -2,6 +2,7 @@
 { Channels } = require '../collections/channel'
 { Sidebar } = require './sidebar/index'
 { BaseView } = require './base'
+{ CreateTopicChannelView } = require './create_topic_channel/index'
 
 class exports.MainView extends BaseView
     template: require '../templates/main'
@@ -98,3 +99,9 @@ class exports.MainView extends BaseView
     remove_channel_view: (channel) =>
         delete @views[channel.cid]
         delete @timeouts[channel.cid]
+
+    on_create_topic_channel: =>
+        @current?.trigger 'hide'
+        @current = new CreateTopicChannelView(parent: this)
+        @current.render =>
+            @trigger 'subview:content', @current.el
