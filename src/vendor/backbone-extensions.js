@@ -11,7 +11,6 @@ var once = function(event, callback) {
 
 Backbone.Events.once = once;
 ["Collection", "Model", "View"].forEach(function (cls) {
-    console.log(cls)
     Backbone[cls].prototype.once = once;
 });
 
