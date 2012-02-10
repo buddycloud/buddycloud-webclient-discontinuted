@@ -46,7 +46,7 @@ $(document).ready ->
         total = total_number + number ? 0
         return if total is total_number or isNaN(total)
         console.warn "notificon", total
-        Notificon total,
+        Notificon total or "",
             font:  "9px Helvetica"
             stroke:"#F03D25"
             color: "#ffffff"
