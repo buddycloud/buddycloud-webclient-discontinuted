@@ -130,22 +130,22 @@ Strophe.addConnectionPlugin('buddycloud', {
         var register, conn = this._connection;
         register = $iq({from:conn.jid, to:this.channels.jid, type:'set'})
             .c('query', {xmlns: Strophe.NS.REGISTER});
-        conn.sendIQ(register, success, error, timeout);
+        conn.sendIQ(register, success, this._errorcode(error), timeout);
     },
 
     createNode: function(node, metadata, success, error) {
 	var config = this._metadata_to_config(metadata);
-	this._connection.pubsub.createNode(node, config, success, error);
+	this._connection.pubsub.createNode(node, config, success, this._errorcode(error));
     },
 
     subscribeNode: function (node, succ, err) {
         var conn = this._connection;
-        conn.pubsub.subscribe(node, null, succ, err);
+        conn.pubsub.subscribe(node, null, succ, this._errorcode(err));
     },
 
     unsubscribeNode: function (node, succ, err) {
         var conn = this._connection;
-        conn.pubsub.unsubscribe(node, null, null, succ, err);
+        conn.pubsub.unsubscribe(node, null, null, succ, this._errorcode(err));
     },
 
     getChannelPosts: function (node, succ, err, timeout) {
@@ -472,6 +472,10 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     // helper
 
+    /**
+     * Wraps a callback to convert stanza error XML to a
+     * Strophe.StanzaError object.
+     */
     _errorcode: function (callback) {
         return function (stanza) {
             if (!stanza)
