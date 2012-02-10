@@ -165,6 +165,12 @@ class exports.ChannelView extends BaseView
                     @show_post_error error
 
     clickLogin: EventHandler (ev) ->
+        # Just make this work for now
+        window.location = "/login"
+        return
+        # TODO: implement the overlay login below and graceful
+        # replacement of the Strophe session
+
         @overlay ?= new OverlayLogin()
         @overlay.show()
 
