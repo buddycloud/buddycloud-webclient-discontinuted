@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "private.html"
         select: () ->
-            @select "article.ghost.topic"
+            @select "article.ghost.topic, .private.notification"
 
 
 { Template } = require 'dynamictemplate'
