@@ -16,6 +16,24 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:established', @on_connection_established
         @connector.bind 'connection:end', @on_connection_end
 
+    ##
+    # Extracts and sanitizes userid part from title, then creates
+    # posts & status nodes.
+    create_topic_channel: (metadata, callback) ->
+        userid = metadata.title.
+            toLocaleLowerCase().
+            replace(/\s/g, "_").
+            replace(/[\"\&\'\/\:\<\>]/g, "")
+        if userid.indexOf("@") < 0 and config.topic_domain
+            userid = "#{userid}@#{config.topic_domain}"
+        @connector.createNode "/user/#{userid}/posts", metadata, (err) =>
+            if err
+                return callback(err)
+
+            @connector.createNode "/user/#{userid}/status", metadata, ->
+                # Don't care about status node result if posts worked
+                callback(null, userid)
+
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
         nodeid = node.get?('nodeid') or node
