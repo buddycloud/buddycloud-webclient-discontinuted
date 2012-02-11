@@ -31,5 +31,9 @@ module.exports = design (view) ->
                     view.bind 'loading:error', (e) =>
                         @text "#{e}"
                         @show()
+                @$div class: 'spinner', ->
+                    @hide()
+                    view.bind 'loading:start', @show
+                    view.bind 'loading:error', @hide
 
             view.bind 'hide', @remove
