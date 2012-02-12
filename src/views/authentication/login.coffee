@@ -1,5 +1,5 @@
 { AuthenticationView } = require './base'
-{ EventHandler, getBrowserPrefix } = require '../../util'
+{ EventHandler } = require '../../util'
 
 LSlpk = '__localpasswd__' # localStorage local password key
 
@@ -19,7 +19,7 @@ class exports.LoginView extends AuthenticationView
         # webkit only saves input content when submit was successful
         # this includes a full pagereload, which is not suitable
         # firefox does it well and asks the user if he wants to save the passwd
-        if getBrowserPrefix() is "-webkit-"
+        if Modernizr.prefixed('transition') is 'WebkitTransition'
             # get elements from login form (index.html)
             warning = $('label[for="store_local"] > div')
             checkbox = $('#store_local')
