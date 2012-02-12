@@ -14,6 +14,7 @@ onError = (e) ->
 entries = [
     "index.html"
     "config.js"
+    "favicon.ico"
     "web/js/app.js"
     "web/js/store.js"
     "web/css/main.css"
