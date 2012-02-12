@@ -36,7 +36,7 @@
 ,   "async": "0.1.15"
 ,   "dynamictemplate": "0.4.2"
 ,   "dt-compiler": "0.1.5"
-,   "dt-jquery": "0.2.4"
+,   "dt-jquery": "0.2.5"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
 ,   "notificon": "https://github.com/dodo/Notificon/tarball/master"
   }
