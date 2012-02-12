@@ -1,5 +1,5 @@
 { BaseView } = require '../base'
-{ EventHandler } = require '../../util'
+{ EventHandler, parse_post } = require '../../util'
 
 class exports.PostView extends BaseView
     template: require '../../templates/channel/post'
@@ -17,45 +17,7 @@ class exports.PostView extends BaseView
     # the ATOM entries. Scanning for them when displaying is just the
     # short preliminary way for now.
     change_content: =>
-        content = @model.get('content')?.value or ""
-        parts = []
-        for line in content.split(/\n/)
-            while line.length > 0
-                re = ///^
-                     (.*?)                       # Beginning of text
-                     (?:
-                       # Crazy regexp for matching URLs. Based on http://daringfireball.net/2010/07/improved_regex_for_matching_urls + changed some '(' to '(?:'.
-                       \b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))
-                       #' <-- fix syntax highlighting...
-                       |
-                       \b(\S+@[a-zA-Z0-9_\-\.]+)\b # JID (or e-mail address not starting with mailto:)
-                     )
-                     (.*)                        # End of text
-                     $///
-                if (m = line.match(re, "i"))
-                    if m[1]
-                        parts.push
-                            type: 'text'
-                            value: m[1]
-                    if m[2]
-                        parts.push
-                            type: 'link'
-                            value: m[2]
-                    if m[3]
-                        parts.push
-                            type: 'user'
-                            value: m[3]
-                    line = m[4] or ""
-                else
-                    parts.push
-                        type: 'text'
-                        value: line
-                    line = ""
-            # Restore line break
-            parts.push
-                type: 'text'
-                value: "\n"
-        @trigger 'update:content', parts
+        @trigger('update:content', parse_post(@model.get('content')?.value))
 
     events:
         'click .name': 'clickAuthor'
