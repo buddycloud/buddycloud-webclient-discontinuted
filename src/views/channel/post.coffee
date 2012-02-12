@@ -21,7 +21,18 @@ class exports.PostView extends BaseView
         parts = []
         for line in content.split(/\n/)
             while line.length > 0
-                if (m = line.match(/^(.*?)(?:(https?\:\/\/\S+)|(\S+@[a-zA-Z0-9_\-\.]+))(.*)$/))
+                re = ///^
+                     (.*?)                       # Beginning of text
+                     (?:
+                       # Crazy regexp for matching URLs. Based on http://daringfireball.net/2010/07/improved_regex_for_matching_urls + changed some '(' to '(?:'.
+                       \b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))
+                       #' <-- fix syntax highlighting...
+                       |
+                       \b(\S+@[a-zA-Z0-9_\-\.]+)\b # JID (or e-mail address not starting with mailto:)
+                     )
+                     (.*)                        # End of text
+                     $///
+                if (m = line.match(re, "i"))
                     if m[1]
                         parts.push
                             type: 'text'
@@ -76,4 +87,3 @@ class exports.PostView extends BaseView
             error: (jqXHR, textStatus, errorThrown) =>
                 console.error "embed error", textStatus, errorThrown
             success: callback
-
