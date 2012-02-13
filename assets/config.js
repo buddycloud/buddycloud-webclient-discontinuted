@@ -17,6 +17,8 @@ window.config = {
      * used for registration and login. */
     domain: "buddycloud.org",
 
+    /* Default domain to create topics under
+     * unless the user specifies …@domain as the name. */
     topic_domain: "topics.buddycloud.org",
 
     embedly_key: "2c1bedbc2aa111e1acbf4040d3dc5c07"
