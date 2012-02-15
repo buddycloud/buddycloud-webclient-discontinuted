@@ -65,6 +65,13 @@ class exports.DataHandler extends Backbone.EventHandler
 
         @get_subscriptions_queue.add node, callback
 
+    get_all_node_subscriptions: (nodeid, callback) =>
+        @get_node_subscriptions nodeid, (err, done) =>
+            if err or done
+                callback?()
+            else
+                @get_all_node_subscriptions nodeid, callback
+
     get_node_affiliations: (node, callback) ->
         if typeof node is 'string'
             channel = app.channels.get_or_create id:node

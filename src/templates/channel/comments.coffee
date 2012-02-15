@@ -15,7 +15,10 @@ module.exports = design (view) ->
         @$section class:'comments', ->
             #  <% if @user?.hasRightToPost: %> FIXME
             @$section class:'answer', ->
-                return @remove() if app.users.isAnonymous(app.users.current)
+                if app.users.current.canPost(view.parent.parent.parent.model)
+                    @show()
+                else
+                    @hide()
                 @$img class:'avatar', ->
                     @attr src:"#{app.users.current.avatar}"
                 # textarea
