@@ -8,6 +8,7 @@ class exports.ChannelDetailsList extends BaseView
     events:
         'click .showAll': 'showAll'
         'click .avatar': 'showUser'
+        'dblclick .avatar': 'clickUser'
 
     initialize: ({@title, @load_more, @ignore_users}) ->
         super
@@ -73,5 +74,8 @@ class exports.ChannelDetailsList extends BaseView
         user = app.users.get_or_create(id:el.data('userid')) # FIXME UGLY
         @info.set_user user, el
 
+    clickUser: EventHandler (ev) ->
+        userid = $(ev.target).data('userid') # FIXME UGLY
+        app.router.navigate userid, true if userid
 
 
