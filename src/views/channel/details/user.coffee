@@ -6,10 +6,17 @@ arrowpos = ['first', 'second', 'third', 'fourth']
 class exports.UserInfoView extends BaseView
     template: require '../../../templates/channel/details/user'
 
+    events:
+        'click .channelInfo h4': 'navigate'
+
     initialize: () ->
         @mode = 'show'
         super
         @render()
+
+    navigate: EventHandler ->
+        if @currentjid?
+            app.router.navigate @currentjid, true
 
     set_mode: (mode) ->
         @mode = mode
@@ -27,6 +34,7 @@ class exports.UserInfoView extends BaseView
             @el.detach()
             @set_mode 'show'
             @trigger 'user:update', user
+            @currentjid = user.get 'id'
             imgs = $("img", el.parent())
             # update arrow
             for cls in arrowpos
