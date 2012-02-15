@@ -10,13 +10,13 @@
 class exports.Node extends Model
     defaults:
         nodeid:undefined
+        affiliations:{}
 
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         # Subscribers:
         @subscriptions = new Users parent:this
-        @affiliations  = new Users parent:this
         @posts        ?= new Posts parent:this
 
     toJSON: (full) ->
@@ -39,12 +39,13 @@ class exports.Node extends Model
                     @subscriptions.remove user
 
     push_affiliation: (affiliation) ->
-        switch affiliation.affiliation
-            when 'outcast', 'none'
-                if (user = @affiliations.get subscription.jid)
-                    @affiliations.remove user
-            else # owner, moderator, publisher, member
-                @affiliations.get_or_create id: affiliation.jid
+        affiliations = @get 'affiliations'
+        if affiliation.affiliation is 'none'
+            delete affiliations[affiliation.jid]
+        else # owner, moderator, publisher, member, outcast
+            affiliations[affiliation.jid] = affiliation.affiliation
+        @save 'affiliations', affiliations
+        @trigger 'affiliation:update', affiliation
 
     push_post: (post) ->
         @trigger 'post', post
