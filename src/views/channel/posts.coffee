@@ -68,7 +68,6 @@ class exports.PostsView extends BaseView
                 { top: viewTop } = view.el.position()
                 viewBottom = viewTop + view.el.outerHeight()
                 if peepholeBottom >= viewTop
-                    console.warn "on_scroll", "peepholeBottom:", peepholeBottom, "viewTop:", viewTop, "model", view.model
                     return @load_more()
 
         if peepholeBottom >= @parent.$('.stream').innerHeight() - 100
