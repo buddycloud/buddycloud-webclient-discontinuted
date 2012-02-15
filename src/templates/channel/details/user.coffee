@@ -18,6 +18,7 @@ design = require '../../../_design/channel/details/user'
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
+        channel = view.parent.parent.model
         @$div class:'adminAction', ->
             # .arrow
             @$div class:'holder', ->
@@ -27,4 +28,4 @@ module.exports = design (view) ->
                         role = @$div class:'currentRole'
                         view.bind 'user:update', (user) ->
                             name.text "#{user.get('id')}"
-                            role.text "affililation" # FIXME
+                            role.text "#{user.getAffiliationFor channel.get 'id'} - #{channel.get 'id'}" # FIXME
