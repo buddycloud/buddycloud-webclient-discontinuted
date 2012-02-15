@@ -42,6 +42,8 @@ class exports.ChannelView extends BaseView
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
+        postsnode.bind 'affiliation:update', =>
+            @trigger 'update:affiliations'
 
         # Retrieve status text and send to view
         statusnode = @model.nodes.get_or_create(id:'status')
@@ -56,6 +58,8 @@ class exports.ChannelView extends BaseView
         @metadata = node.metadata
         unless node.metadata_synced
             app.handler.data.get_node_metadata node.get('nodeid')
+        unless app.users.isAnonymous(app.users.current)
+            app.handler.data.get_all_node_affiliations node.get('nodeid')
 
         super ->
             if @model
