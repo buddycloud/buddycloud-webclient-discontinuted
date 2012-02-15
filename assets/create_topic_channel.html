@@ -225,7 +225,7 @@
         <div class="access">
           <label for="channel_public_access">Public Access</label>
           <div>
-            <input type="checkbox" id="channel_public_access"/>
+            <input type="checkbox" id="channel_public_access" checked="checked"/>
           </div>
         </div>
         <div class="role">
@@ -242,6 +242,19 @@
               <span class="followerPlus">
                 can read and write your channel
               </span>
+            </span> 
+          </div>
+        </div>
+        <div class="publish">
+          <label for="channel_publish">Posting</label>
+          <div>
+            <select id="channel_publish">
+              <option value="open">Anyone</option>
+              <option value="subscribers" selected="selected">Followers</option>
+              <option value="moderators">Moderators</option>
+            </select>
+            <span class="hint followerSelected">
+	      can post
             </span> 
           </div>
         </div>

@@ -36,8 +36,7 @@ class exports.ChannelEditView extends BaseView
                 callback?.call(this)
 
                 publish_model = @model.nodes.get('posts').metadata.get('publish_model')?.value
-                @$('#allowPost').prop 'checked'
-                , (publish_model is 'subscribers' or publish_model is 'open')
+                @$('#channel_publish').val(publish_model)
 
     hide: =>
         return if @active
@@ -92,8 +91,7 @@ class exports.ChannelEditView extends BaseView
         # whenever multiple ChannelViews are rendered yet hidden.
         open = @parent.$('#accessModel').prop 'checked'
         access_model = if open then 'open' else 'authorize'
-        followers_can_post = @$('#allowPost').prop 'checked'
-        publish_model = if followers_can_post then 'subscribers' else 'publishers'
+        publish_model = @$('#channel_publish').val()
 
         # Send to server
         async.parallel [ (cb) =>

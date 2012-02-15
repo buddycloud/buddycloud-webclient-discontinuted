@@ -20,8 +20,12 @@
       -->
     <div class="edits">
       <div class="contenteditable">
-        <input id="allowPost" type="checkbox">
-        <label for="allowPost">Followers can post</label>
+	<select id="channel_publish">
+	  <option value="open">Anyone</option>
+	  <option value="subscribers">Followers</option>
+	  <option value="moderators">Moderators</option>
+	</select>
+        <label for="channel_publish">can post</label>
       </div>
       <!--div class="contenteditable">
         <label for="userEmail">Email</label>

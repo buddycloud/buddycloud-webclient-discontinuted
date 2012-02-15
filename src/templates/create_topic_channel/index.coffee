@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "create_topic_channel.html"
         select: () ->
-            @select "div.channelView", ".location.dual, .access, .role"
+            @select "div.channelView", ".location.dual, .role"
 
 
 { Template } = require 'dynamictemplate'
