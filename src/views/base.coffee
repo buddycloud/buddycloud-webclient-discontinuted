@@ -25,6 +25,8 @@ class exports.BaseView extends Backbone.View
                 delete @_waiting
 
     ready: (callback) ->
-        return callback?() if @rendered
+        return unless callback?
+        return callback() if @rendered
         @_waiting ?= []
         @_waiting.push callback
+
