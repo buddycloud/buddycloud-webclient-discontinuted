@@ -30,7 +30,7 @@ class exports.User extends Model
         subscription = node?.subscribers.get(@get 'id')?.get('subscription')
         subscription or 'none'
 
-    getAffilitionFor: (channel) ->
+    getAffiliationFor: (channel) ->
         node = app.channels.get(channel)?.nodes?.get_or_create('posts')
         affiliation = node?.affiliations.get(@get 'id')?.get('affiliation')
         affiliation or 'none'
@@ -38,7 +38,7 @@ class exports.User extends Model
     canPost: (channel) ->
         return no if app.users.isAnonymous this
 
-        affiliation = @getAffilitionFor(channel)
+        affiliation = @getAffiliationFor(channel)
         subscription = @getSubscriptionFor(channel)
         metadata = channel.nodes.get('posts')?.metadata
         publish_model = metadata?.get('publish_model')?.value
@@ -57,7 +57,7 @@ class exports.User extends Model
     canEdit: (channel) ->
         return no if app.users.isAnonymous this
 
-        @getAffilitionFor(channel) == 'owner'
+        @getAffiliationFor(channel) == 'owner'
 
 
 # Copied from server operations
