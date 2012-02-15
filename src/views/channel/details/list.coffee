@@ -1,8 +1,13 @@
 { BaseView } = require '../../base'
 { EventHandler } = require '../../../util'
+{ UserInfoView } = require './user'
 
 class exports.ChannelDetailsList extends BaseView
     template: require '../../../templates/channel/details/list'
+
+    events:
+        'click .showAll': 'showAll'
+        'click .avatar': 'showUser'
 
     initialize: ({@title, @load_more, @ignore_users}) ->
         super
@@ -10,6 +15,8 @@ class exports.ChannelDetailsList extends BaseView
         @showing_all = no
         @showing_count = 0
         @showing_users = {}
+
+        @info = new UserInfoView parent:this
 
         @ready =>
             @add_all()
@@ -55,11 +62,16 @@ class exports.ChannelDetailsList extends BaseView
     add_all: =>
         @model.each @add_user
 
-    events:
-        'click .showAll': 'showAll'
-
     showAll: EventHandler ->
         @showing_all = yes
         @add_all()
         @trigger 'show:all'
         @load_more(true)
+
+    showUser: EventHandler (ev) ->
+        el = $(ev.target)
+        user = app.users.get_or_create(id:el.data('userid')) # FIXME UGLY
+        @info.set_user user, el
+
+
+
