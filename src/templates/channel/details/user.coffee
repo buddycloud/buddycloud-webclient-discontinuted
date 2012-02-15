@@ -4,6 +4,9 @@ unless process.title is 'browser'
         select: () ->
             el = @select "section.channelList .adminAction"
             el.find('.channelInfo, .currentRole').text ""
+            el.removeClass('moderator')
+            el.removeClass('choosen')
+            el.removeClass('role')
             el
 
 
