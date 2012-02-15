@@ -10,14 +10,13 @@
 class exports.Node extends Model
     defaults:
         nodeid:undefined
+        subscriptions:{}
         affiliations:{}
 
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
-        # Subscribers:
-        @subscriptions = new Users parent:this
-        @posts        ?= new Posts parent:this
+        @posts   ?= new Posts parent:this
 
     toJSON: (full) ->
         result = super
@@ -31,12 +30,14 @@ class exports.Node extends Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
+        subscriptions = @get 'subscriptions'
         switch subscription.subscription
             when 'subscribed'
-                @subscriptions.get_or_create id: subscription.jid
+            subscriptions[subscription.jid] = subscription.subscription
             when 'unsubscribed', 'none'
-                if (user = @subscriptions.get subscription.jid)
-                    @subscriptions.remove user
+            delete subscriptions[subscription.jid]
+        @save 'subscriptions', subscriptions
+        @trigger 'subscription:update', subscription
 
     push_affiliation: (affiliation) ->
         affiliations = @get 'affiliations'
