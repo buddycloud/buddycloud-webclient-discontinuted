@@ -28,8 +28,8 @@ class exports.ChannelDetailsView extends BaseView
         node = @model.nodes.get_or_create id: 'posts'
         nodeid = node.get 'nodeid'
         if node.can_load_more_subscribers()
-            app.handler.data.get_more_node_subscriptions nodeid, (err) =>
-                if all and not err
+            app.handler.data.get_node_subscriptions nodeid, (err, subscriptions, done) =>
+                if all and not done
                     @load_more_followers()
 
     load_more_following: (all) =>

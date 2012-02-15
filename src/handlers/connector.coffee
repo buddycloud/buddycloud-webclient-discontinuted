@@ -100,8 +100,6 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
-                if posts.rsm
-                    @trigger 'posts:rsm:last', nodeid, posts.rsm.last
                 @work_enqueue ->
                     done()
                     callback? null, posts
@@ -140,11 +138,9 @@ class exports.Connector extends Backbone.EventHandler
                             jid: user
                             node: nodeid
                             subscription: subscription
-                if subscribers.rsm
-                    @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
                 @work_enqueue ->
                     done()
-                    callback? null
+                    callback? null, subscribers
             error = (error) =>
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->

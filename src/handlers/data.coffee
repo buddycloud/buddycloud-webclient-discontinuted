@@ -1,4 +1,5 @@
 { User } = require '../models/user'
+{ RSMQueue } = require './rsm_queue'
 async = require 'async'
 
 
@@ -15,6 +16,13 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
         @connector.bind 'connection:end', @on_connection_end
+
+        @get_posts_queue = new RSMQueue 'posts', (nodeid, rsm_after, callback) =>
+            @connector.get_node_posts nodeid, rsm_after, callback
+        @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsm_after, callback) =>
+            @connector.get_node_subscriptions nodeid, rsm_after, callback
+        @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsm_after, callback) =>
+            #@connector.get_node_affiliations nodeid, rsm_after, callback
 
     ##
     # Extracts and sanitizes userid part from title, then creates
@@ -36,28 +44,11 @@ class exports.DataHandler extends Backbone.EventHandler
 
     # TODO: @param node {Node model}
     get_node_posts: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
 
-        # Reset pagination
-        node.push_posts_rsm_last null
-
-        @connector.get_node_posts nodeid, null, (err, posts) =>
-            unless err
-                # Success retrieving first page?
-                node.on_posts_synced()
-            callback? err, posts
-
-    get_more_node_posts: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
-        if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
-
-        rsm_after = node.posts_rsm_last
-        @connector.get_node_posts nodeid, rsm_after, callback
+        @get_posts_queue.add node, callback
 
     get_node_metadata: (node, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -68,28 +59,11 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.set_node_metadata nodeid, metadata, callback
 
     get_node_subscriptions: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
 
-        # Reset pagination
-        node.push_subscribers_rsm_last null
-
-        @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
-            unless err
-                # Success retrieving first page?
-                node.on_subscribers_synced()
-            callback? err, subscribers
-
-    get_more_node_subscriptions: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
-        if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
-
-        rsm_after = node.subscribers_rsm_last
-        @connector.get_node_subscriptions nodeid, rsm_after, callback
+        @get_subscriptions_queue.add node, callback
 
     publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -163,13 +137,6 @@ class exports.DataHandler extends Backbone.EventHandler
             post.unread = true
         channel = app.channels.get_or_create id:nodeid
         channel.push_post nodeid, post
-
-    on_node_posts_rsm_last: (nodeid, rsmLast) =>
-        channel = app.channels.get_or_create id:nodeid
-        # FIXME: more indirection like above?
-        node = channel.nodes.get_or_create id:nodeid
-        # Push info to retrieve next page
-        node.push_posts_rsm_last rsmLast
 
     on_node_error: (nodeid, error) =>
         channel = app.channels.get_or_create id:nodeid

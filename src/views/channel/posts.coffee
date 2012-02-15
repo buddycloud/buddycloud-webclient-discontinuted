@@ -77,10 +77,9 @@ class exports.PostsView extends BaseView
         @load_more()
 
     load_more: =>
-        if @model.can_load_more_posts() and
-           not @model.collection.channel.isLoading
+        unless @model.collection.channel.isLoading
             @model.collection.channel.set_loading true
-            app.handler.data.get_more_node_posts @model, =>
+            app.handler.data.get_node_posts @model, =>
                 @model.collection.channel.set_loading false
                 # Should we be loading even more?
                 @parent.on_scroll()

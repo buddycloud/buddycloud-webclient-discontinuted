@@ -65,25 +65,6 @@ class exports.Node extends Model
             text: error.text
         @trigger 'error', error
 
-    push_posts_rsm_last: (rsm_last) ->
-        # No RSM support or
-        # same <last/> as previous page
-        @posts_end_reached = not rsm_last or
-           rsm_last is @posts_rsm_last
-        @posts_rsm_last = rsm_last
-
-    # If we are subscribed, newer/updated posts will come in
-    # through notifications. No need to poll again.
-    # FIXME: clear on xmpp disconnect
-    on_posts_synced: ->
-        if app.users.current.channels.get(@get 'nodeid')?
-            @posts_synced = yes
-        else
-            @posts_synced = no
-
-    can_load_more_posts: ->
-        not @posts_end_reached
-
     on_subscribers_synced: ->
         if app.users.current.channels.get(@get 'nodeid')?
             @subscribers_synced = yes

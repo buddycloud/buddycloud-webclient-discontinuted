@@ -206,8 +206,7 @@ class exports.ChannelView extends BaseView
         statusnode = @model.nodes.get_or_create(id:'status')
         # FIXME: when we're anonymous, refresh_channel() gets those
         # for us already!
-        if statusnode.can_load_more_posts()
-            app.handler.data.get_more_node_posts(statusnode)
+        app.handler.data.get_node_posts(statusnode)
 
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: throttle_callback(100, ->
