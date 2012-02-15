@@ -721,7 +721,7 @@
     overflow hidden
   .channelInfo
     padding 5px 8px
-    margin-bottom 1px
+    // margin-bottom 1px FIXME really necessary?
     background linear-gradient(top, #fafafa, #f7f7f7)
     box-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
   .action
@@ -748,6 +748,7 @@
       &.negative
         background url(../../public/icons/minus.png) no-repeat 2px center
   .actionRow
+    display none
     width 100%
     box horizontal justify center
     &.confirm
@@ -772,18 +773,22 @@
         padding 6px 5px 4px
         background linear-gradient(top, #f7f7f7, #ccc)
         box-shadow 0 2px white inset, 0 1px rgba(0, 0, 0, 0.05)
+  &.moderator
+   .actionRow
+     display block
   &.choosen
     .actionRow
       display none
-      &.confirm
-        box horizontal justify center
+  &.choosen.moderator
+    .actionRow.confirm
+      box horizontal justify center
     &.role
       .changeRole
         display block
     &.ban
       .banUser
         display block
-        
+
 .count
   font-size 14px
   line-height 27px
