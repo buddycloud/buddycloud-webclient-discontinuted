@@ -16,6 +16,7 @@ class exports.Node extends Model
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         @posts   ?= new Posts parent:this
+        # TODO: comparator by id
         @subscribers = new Collection()
         @affiliations = new Collection()
 

@@ -26,13 +26,18 @@ class exports.User extends Model
         @channels.get(channel.get 'id')?
 
     getSubscriptionFor: (channel) ->
-        node = app.channels.get(channel)?.nodes?.get_or_create('posts')
+        if typeof channel is 'string'
+            channel = app.channels.get(channel)
+        node = channel.nodes.get_or_create(id: 'posts')
         subscription = node?.subscribers.get(@get 'id')?.get('subscription')
         subscription or 'none'
 
     getAffiliationFor: (channel) ->
-        node = app.channels.get(channel)?.nodes?.get_or_create('posts')
+        if typeof channel is 'string'
+            channel = app.channels.get(channel)
+        node = channel.nodes.get_or_create(id: 'posts')
         affiliation = node?.affiliations.get(@get 'id')?.get('affiliation')
+        console.warn "getAffiliationFor", @get('id'), channel.get('id'), affiliation
         affiliation or 'none'
 
     canPost: (channel) ->
