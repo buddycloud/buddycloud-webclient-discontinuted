@@ -8,6 +8,8 @@
 # * id is only the tail for a channel (eg. posts)
 # * nodeid is the full node name (eg. /user/astro@spaceboyz.net/posts)
 class exports.Node extends Model
+    defaults:
+        nodeid:undefined
 
     initialize: ->
         nodeid = @get 'nodeid'
