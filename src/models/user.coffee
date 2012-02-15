@@ -25,7 +25,50 @@ class exports.User extends Model
     isFollowing: (channel) ->
         @channels.get(channel.get 'id')?
 
-    canEdit: (channel) ->
-        node = app.channels.get(channel)?.nodes?.get('posts')
+    getSubscriptionFor: (channel) ->
+        node = app.channels.get(channel)?.nodes?.get_or_create('posts')
+        subscription = node?.subscribers.get(@get 'id')?.get('subscription')
+        subscription or 'none'
+
+    getAffilitionFor: (channel) ->
+        node = app.channels.get(channel)?.nodes?.get_or_create('posts')
         affiliation = node?.affiliations.get(@get 'id')?.get('affiliation')
-        return affiliation == 'owner'
+        affiliation or 'none'
+
+    canPost: (channel) ->
+        return no if app.users.isAnonymous this
+
+        affiliation = @getAffilitionFor(channel)
+        subscription = @getSubscriptionFor(channel)
+        metadata = channel.nodes.get('posts')?.metadata
+        publish_model = metadata?.get('publish_model')?.value
+
+        console.warn "canPost", channel.get('id'), publish_model, affiliation
+        switch publish_model
+            when 'open'
+                return yes
+            when 'subscribers'
+                return subscription == 'subscribed'
+            when 'publishers'
+                return isAffiliationAtLeast affiliation, 'publisher'
+            else
+                return no
+
+    canEdit: (channel) ->
+        return no if app.users.isAnonymous this
+
+        @getAffilitionFor(channel) == 'owner'
+
+
+# Copied from server operations
+AFFILIATIONS = [
+    'outcast', 'none', 'member',
+    'publisher', 'moderator', 'owner'
+]
+isAffiliationAtLeast = (affiliation1, affiliation2) ->
+    i1 = AFFILIATIONS.indexOf(affiliation1)
+    i2 = AFFILIATIONS.indexOf(affiliation2)
+    if i2 < 0
+        false
+    else
+        i1 >= i2

@@ -36,11 +36,10 @@ module.exports = design (view) ->
                     @$div class:'edit button', ->
                         update_edit_button = =>
                             console.warn "update_edit_button", app.users.current.canEdit(view.model)
-                            if app.users.isAnonymous(app.users.current) or
-                               not app.users.current.canEdit(view.model)
-                                @hide()
-                            else
+                            if app.users.current.canEdit(view.model)
                                 @show()
+                            else
+                                @hide()
                         # TODO: hook this up in view
                         view.bind 'update:affiliations', update_edit_button
                         update_edit_button()
@@ -70,7 +69,14 @@ module.exports = design (view) ->
 
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
-                    return @remove() if app.users.isAnonymous(app.users.current)
+                    update_newTopic = =>
+                        if app.users.current.canPost(view.model)
+                            @show()
+                        else
+                            @hide()
+                    view.bind 'update:affiliations', update_newTopic
+                    view.bind 'update:metadata', update_newTopic
+                    update_newTopic()
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
