@@ -13,7 +13,7 @@ class exports.ChannelDetailsView extends BaseView
 
         @followers = new ChannelDetailsList
             title: "followers"
-            model: node.subscriptions
+            model: node.subscribers
             parent: this
             load_more: @load_more_followers
             ignore_users: [@model.get('id')]

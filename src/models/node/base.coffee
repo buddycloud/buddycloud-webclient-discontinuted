@@ -16,7 +16,7 @@ class exports.Node extends Model
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         @posts   ?= new Posts parent:this
-        @subscriptions = new Collection()
+        @subscribers = new Collection()
         @affiliations = new Collection()
 
     toJSON: (full) ->
@@ -32,8 +32,8 @@ class exports.Node extends Model
 
     push_subscription: (subscription) ->
         subscription.id ?= subscription.jid
-        subscription = @subscriptions.get_or_create subscription
-        @trigger 'subscription:update', subscription
+        subscription = @subscribers.get_or_create subscription
+        @trigger 'subscriber:update', subscription
 
     push_affiliation: (affiliation) ->
         affiliation.id ?= affiliation.jid
