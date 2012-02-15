@@ -30,8 +30,13 @@ class exports.UserInfoView extends BaseView
 
     set_user: (user, el) ->
         @ready =>
-            @_olduser?.removeClass('selected')
+            # prepare
             @el.detach()
+            @_olduser?.removeClass('selected')
+            # close when visible
+            if @_olduser?.data('userid') is user.get('id')
+                return delete @_olduser
+            # update
             @set_mode 'show'
             @trigger 'user:update', user
             @currentjid = user.get 'id'
