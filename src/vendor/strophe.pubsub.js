@@ -529,8 +529,9 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getAffiliations: function(node, success, error) {
+    getNodeAffiliations: function(options, success, error) {
         var that = this._connection;
+	var node = options.node || options;
         var iqid = that.getUniqueId("pubsubaffiliations");
 
         if (typeof node === 'function') {
@@ -546,6 +547,10 @@ Extend connection object to have plugin name 'pubsub'.
 
         var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', xmlns).c('affiliations', attrs);
+	if (options.rsmAfter)
+	    iq.up().
+		c('set', { xmlns: Strophe.NS.RSM }).
+		c('after').t(options.rsmAfter);
 
         that.sendIQ(iq.tree(), success, error);
 

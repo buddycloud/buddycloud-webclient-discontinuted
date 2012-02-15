@@ -22,7 +22,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsm_after, callback) =>
             @connector.get_node_subscriptions nodeid, rsm_after, callback
         @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsm_after, callback) =>
-            #@connector.get_node_affiliations nodeid, rsm_after, callback
+            @connector.get_node_affiliations nodeid, rsm_after, callback
 
     ##
     # Extracts and sanitizes userid part from title, then creates
@@ -64,6 +64,20 @@ class exports.DataHandler extends Backbone.EventHandler
             node = channel.nodes.get_or_create nodeid:node
 
         @get_subscriptions_queue.add node, callback
+
+    get_node_affiliations: (node, callback) ->
+        if typeof node is 'string'
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
+
+        @get_affiliations_queue.add node, callback
+
+    get_all_node_affiliations: (nodeid, callback) =>
+        @get_node_affiliations nodeid, (err, done) =>
+            if err or done
+                callback?()
+            else
+                @get_all_node_affiliations nodeid, callback
 
     publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node

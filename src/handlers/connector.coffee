@@ -149,6 +149,27 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.getSubscribers(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
+    get_node_affiliations: (nodeid, rsmAfter, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                console.warn "affiliations", nodeid, affiliations
+                for own user, affiliation of affiliations
+                    unless user is 'rsm'
+                        @trigger 'affiliation',
+                            jid: user
+                            node: nodeid
+                            affiliation: affiliation
+                @work_enqueue ->
+                    done()
+                    callback? null, affiliations
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot get affiliations")
+            @connection.buddycloud.getAffiliations(
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
+
     set_node_metadata: (nodeid, metadata, callback) =>
         @request (done) =>
             success = =>

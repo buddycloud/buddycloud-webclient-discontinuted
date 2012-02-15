@@ -373,6 +373,30 @@ Strophe.addConnectionPlugin('buddycloud', {
         }, this._errorcode(error));
     },
 
+    getAffiliations: function(node, success, error) {
+        var that = this;
+        this._connection.pubsub.getNodeAffiliations(node, function(stanza) {
+            var pubsub, affiliations = {};
+            pubsub = stanza.getElementsByTagNameNS(
+                Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
+            if (pubsub)
+                Strophe.forEachChild(pubsub, 'affiliations',
+                    function(affiliationsEl) {
+                        Strophe.forEachChild(affiliationsEl, 'affiliation',
+                            function(affiliation) {
+                                var jid = affiliation.getAttribute('jid');
+                                if (jid)
+                                    affiliations[jid] =
+                                        affiliation.getAttribute('affiliation') ||
+                                        "none";
+                        });
+                });
+
+            that._applyRSM(stanza, affiliations);
+            return success(affiliations);
+        }, this._errorcode(error));
+    },
+
     /**
      * @param start {Date} Optional
      * @param end {Date} Optional

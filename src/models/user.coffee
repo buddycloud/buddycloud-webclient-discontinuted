@@ -24,3 +24,8 @@ class exports.User extends Model
 
     isFollowing: (channel) ->
         @channels.get(channel.get 'id')?
+
+    canEdit: (channel) ->
+        node = app.channels.get(channel)?.nodes?.get('posts')
+        affiliation = node?.affiliations.get(@get 'id')?.get('affiliation')
+        return affiliation == 'owner'

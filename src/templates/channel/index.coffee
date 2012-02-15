@@ -34,7 +34,16 @@ module.exports = design (view) ->
                     @$div class:'messages button', ->
                         @remove() # FIXME
                     @$div class:'edit button', ->
-                        @remove() if app.users.isAnonymous(app.users.current)
+                        update_edit_button = =>
+                            console.warn "update_edit_button", app.users.current.canEdit(view.model)
+                            if app.users.isAnonymous(app.users.current) or
+                               not app.users.current.canEdit(view.model)
+                                @hide()
+                            else
+                                @show()
+                        # TODO: hook this up in view
+                        view.bind 'update:affiliations', update_edit_button
+                        update_edit_button()
                     if app.users.isAnonymous(app.users.current)
                         @$div class:'login button', ->
                             @text "Login"#  FIXME +"or Register to Follow"
