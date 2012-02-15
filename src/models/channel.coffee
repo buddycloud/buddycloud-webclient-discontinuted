@@ -11,7 +11,7 @@ class exports.Channel extends Model
         @id = @get 'id'
         @last_touched = new Date
         @nodes = new NodeStore channel:this
-        @avatar = gravatar @id, s:50, d:'retro'
+        @avatar = gravatar
         @nodes.fetch()
 
         # Auto-create the default set of nodes for that channel, so

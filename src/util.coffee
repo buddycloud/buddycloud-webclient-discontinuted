@@ -9,7 +9,8 @@ exports.transEndEventNames = transEndEventNames =
 exports.transitionendEvent = transEndEventNames[Modernizr.prefixed('transition')]
 
 
-exports.gravatar = (mail, opts) ->
+exports.gravatar = (mail) ->
+    opts = s:50, d:'retro'
     hash = MD5.hexdigest mail?.toLowerCase?() or ""
     "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
 

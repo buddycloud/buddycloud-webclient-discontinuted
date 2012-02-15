@@ -9,7 +9,7 @@ class exports.User extends Model
         # id and jid are the same
         @id = @get('jid') or @get('id')
         @save {jid: @id, @id}
-        @avatar = gravatar @id, s:50, d:'retro'
+        @avatar = gravatar @id
         # subscribed channels
         @channels = new UserChannels parent:this
         @metadata = new UserMetadata parent:this
