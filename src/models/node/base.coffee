@@ -2,6 +2,7 @@
 { NodeMetadata } = require '../metadata/node'
 { Users } = require '../../collections/user'
 { Posts } = require '../../collections/post'
+{ Collection } = require '../../collections/base'
 
 ##
 # Attributes:
@@ -10,13 +11,13 @@
 class exports.Node extends Model
     defaults:
         nodeid:undefined
-        subscriptions:{}
-        affiliations:{}
 
     initialize: ->
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         @posts   ?= new Posts parent:this
+        @subscriptions = new Collection()
+        @affiliations = new Collection()
 
     toJSON: (full) ->
         result = super
@@ -30,22 +31,13 @@ class exports.Node extends Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
-        subscriptions = @get 'subscriptions'
-        switch subscription.subscription
-            when 'subscribed'
-                subscriptions[subscription.jid] = subscription.subscription
-            when 'unsubscribed', 'none'
-                delete subscriptions[subscription.jid]
-        @save subscriptions: subscriptions
+        subscription.id ?= subscription.jid
+        subscription = @subscriptions.get_or_create subscription
         @trigger 'subscription:update', subscription
 
     push_affiliation: (affiliation) ->
-        affiliations = @get 'affiliations'
-        if affiliation.affiliation is 'none'
-            delete affiliations[affiliation.jid]
-        else # owner, moderator, publisher, member, outcast
-            affiliations[affiliation.jid] = affiliation.affiliation
-        @save affiliations: affiliations
+        affiliation.id ?= affiliation.jid
+        affiliation = @affiliations.get_or_create affiliation
         @trigger 'affiliation:update', affiliation
 
     push_post: (post) ->
