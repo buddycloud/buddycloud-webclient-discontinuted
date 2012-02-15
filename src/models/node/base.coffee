@@ -64,17 +64,3 @@ class exports.Node extends Model
             condition: error.condition
             text: error.text
         @trigger 'error', error
-
-    on_subscribers_synced: ->
-        if app.users.current.channels.get(@get 'nodeid')?
-            @subscribers_synced = yes
-        else
-            @subscribers_synced = no
-
-    push_subscribers_rsm_last: (rsm_last) ->
-        @subscribers_end_reached = not rsm_last or
-            rsm_last is @subscribers_rsm_last
-        @subscribers_rsm_last = rsm_last
-
-    can_load_more_subscribers: ->
-        not @subscribers_end_reached
