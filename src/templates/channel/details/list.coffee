@@ -10,7 +10,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/list'
-{ EventHandler } = require '../../../util'
+{ EventHandler, gravatar } = require '../../../util'
 
 
 module.exports = design (view) ->
@@ -31,11 +31,12 @@ module.exports = design (view) ->
             list = @$div class: 'list', ->
 
                 new_user = (user) =>
+                    uid = user.get('id')
                     img = @$img
                         class:'avatar'
-                        src:"#{user.avatar}"
-                        title: user.get('id')
-                        'data-userid': user.get('id') # FIXME UGLY
+                        src:"#{gravatar uid}"
+                        title:uid
+                        'data-userid': uid # FIXME UGLY
                     return remove:->
                         img.remove()
 
