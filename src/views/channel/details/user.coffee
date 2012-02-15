@@ -15,12 +15,14 @@ class exports.UserInfoView extends BaseView
             @_olduser?.removeClass('selected')
             @el.detach()
             @trigger 'user:update', user
-            @el.insertAfter el
+            imgs = $("img", el.parent())
             # update arrow
             for cls in arrowpos
                 @el.removeClass(cls)
-            idx = $("img", el.parent()).index(el)
+            idx = imgs.index(el)
             @el.addClass(arrowpos[idx%4]) if idx isnt -1
+            # add it to the dom
+            @el.insertAfter imgs.eq(idx - idx%4 + 3)
             # show it!
             @el.show()
             el.addClass('selected')
