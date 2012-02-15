@@ -33,10 +33,10 @@ class exports.Node extends Model
         subscriptions = @get 'subscriptions'
         switch subscription.subscription
             when 'subscribed'
-            subscriptions[subscription.jid] = subscription.subscription
+                subscriptions[subscription.jid] = subscription.subscription
             when 'unsubscribed', 'none'
-            delete subscriptions[subscription.jid]
-        @save 'subscriptions', subscriptions
+                delete subscriptions[subscription.jid]
+        @save subscriptions: subscriptions
         @trigger 'subscription:update', subscription
 
     push_affiliation: (affiliation) ->
@@ -45,7 +45,7 @@ class exports.Node extends Model
             delete affiliations[affiliation.jid]
         else # owner, moderator, publisher, member, outcast
             affiliations[affiliation.jid] = affiliation.affiliation
-        @save 'affiliations', affiliations
+        @save affiliations: affiliations
         @trigger 'affiliation:update', affiliation
 
     push_post: (post) ->
