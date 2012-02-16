@@ -47,9 +47,11 @@ class exports.ChannelView extends BaseView
         postsnode.metadata.bind 'change', =>
             @trigger 'update:metadata'
             # Special handling for a publish_model that is based on
-            # subscription state not affiliation:
+            # subscription state not affiliation: (actually we should
+            # have this data already because we fetch our own
+            # /subscriptions node first, do we?)
             if postsnode.metadata.get('publish_model')?.value is 'subscribers'
-                app.handler.data.get_all_node_subscriptions node.get('nodeid')
+                app.handler.data.get_all_node_subscriptions postsnode.get('nodeid')
 
         # Retrieve status text and send to view
         statusnode = @model.nodes.get_or_create(id:'status')
