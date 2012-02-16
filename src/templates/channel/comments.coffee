@@ -15,10 +15,15 @@ module.exports = design (view) ->
         @$section class:'comments', ->
             #  <% if @user?.hasRightToPost: %> FIXME
             @$section class:'answer', ->
-                if app.users.current.canPost(view.parent.parent.parent.model)
-                    @show()
-                else
-                    @hide()
+                update_answer = =>
+                    if app.users.current.canPost(view.parent.parent.parent.model)
+                        @show()
+                    else
+                        @hide()
+                view.parent.parent.parent.bind 'update:affiliations', update_answer
+                view.parent.parent.parent.bind 'update:metadata', update_answer
+                update_answer()
+
                 @$img class:'avatar', ->
                     @attr src:"#{app.users.current.avatar}"
                 # textarea
