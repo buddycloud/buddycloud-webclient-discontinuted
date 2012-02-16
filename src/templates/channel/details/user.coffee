@@ -15,6 +15,13 @@ jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/user'
 { EventHandler } = require '../../../util'
 
+userspeak =
+    'owner':    "Owner"
+    'moderator':"Moderator"
+    'publisher':"Follower+Post"
+    'member':   "Follower"
+    'outcast':  "Banned Follower"
+    'none':     "Total Stranger"
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
@@ -27,8 +34,9 @@ module.exports = design (view) ->
                         name = @$h4()
                         role = @$div class:'currentRole'
                         view.bind 'user:update', (user) ->
-                            name.text "#{user.get('id')}"
-                            role?.text "#{user.getAffiliationFor channel.get 'id'}"
+                            name.text "#{user.get 'id'}"
+                            affiliation = user.getAffiliationFor channel.get 'id'
+                            role?.text "#{userspeak[affiliation] or affiliation}"
                         if app.users.isAnonymous(app.users.current)
                             role.remove()
                             delete role
