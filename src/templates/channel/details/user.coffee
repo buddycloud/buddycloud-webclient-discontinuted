@@ -28,7 +28,7 @@ module.exports = design (view) ->
                         role = @$div class:'currentRole'
                         view.bind 'user:update', (user) ->
                             name.text "#{user.get('id')}"
-                            role?.text "#{user.getAffiliationFor channel.get 'id'} - #{channel.get 'id'}" # FIXME
+                            role?.text "#{user.getAffiliationFor channel.get 'id'}"
                         if app.users.isAnonymous(app.users.current)
                             role.remove()
                             delete role
