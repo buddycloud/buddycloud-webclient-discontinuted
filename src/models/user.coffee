@@ -37,7 +37,6 @@ class exports.User extends Model
             channel = app.channels.get(channel)
         node = channel.nodes.get_or_create(id: 'posts')
         affiliation = node?.affiliations.get(@get 'id')?.get('affiliation')
-        console.warn "getAffiliationFor", @get('id'), channel.get('id'), affiliation
         affiliation or 'none'
 
     canPost: (channel) ->
@@ -48,7 +47,6 @@ class exports.User extends Model
         metadata = channel.nodes.get('posts')?.metadata
         publish_model = metadata?.get('publish_model')?.value
 
-        console.warn "canPost", channel.get('id'), publish_model, affiliation
         switch publish_model
             when 'open'
                 return yes
