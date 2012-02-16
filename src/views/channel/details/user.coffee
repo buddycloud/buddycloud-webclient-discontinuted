@@ -47,10 +47,11 @@ class exports.UserInfoView extends BaseView
             idx = imgs.index(el)
             @el.addClass(arrowpos[idx%4]) if idx isnt -1
             # add it to the dom
-            if imgs.length < 4
+            row = idx - idx%4 + 3
+            if imgs.length < 4 or row > imgs.length - 1
                 @el.insertAfter imgs.last()
             else
-                @el.insertAfter imgs.eq(idx - idx%4 + 3)
+                @el.insertAfter imgs.eq(row)
             # show it!
             @el.show()
             el.addClass('selected')
