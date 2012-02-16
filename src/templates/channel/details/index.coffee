@@ -44,5 +44,18 @@ module.exports = design (view) ->
                     view.metadata.bind 'change', update_metadata
                     update_metadata()
 
-                view.bind('subview:followers', @add)
-                view.bind('subview:following', @add)
+                view.bind 'subview:followers', @add
+                view.bind 'subview:following', (el) =>
+                    @add el
+
+                    metadata = view.model.nodes.get_or_create(id: 'posts').metadata
+                    update_visibility = ->
+                        # FIXME: uses the jQuery `el'. the `@add()'
+                        # result didn't work.
+                        if metadata.get('channel_type')?.value is 'topic'
+                            # Topic channels don't follow anyone
+                            el.hide()
+                        else
+                            el.show()
+                    metadata.bind 'change', update_visibility
+                    update_visibility()
