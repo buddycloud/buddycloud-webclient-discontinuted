@@ -35,12 +35,10 @@ module.exports = design (view) ->
                         @remove() # FIXME
                     @$div class:'edit button', ->
                         update_edit_button = =>
-                            console.warn "update_edit_button", app.users.current.canEdit(view.model)
                             if app.users.current.canEdit(view.model)
                                 @show()
                             else
                                 @hide()
-                        # TODO: hook this up in view
                         view.bind 'update:affiliations', update_edit_button
                         update_edit_button()
                     if app.users.isAnonymous(app.users.current)
