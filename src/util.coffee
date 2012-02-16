@@ -58,6 +58,10 @@ URLS_REGEX = ///^
     (.*) # End of text
     $///
 exports.parse_post = (content = "") ->
+    # Trim leading & trailing whitespace:
+    if content.trim?
+        content = content.trim()
+
     parts = []
     for line in content.split(/\n/)
         while line.length > 0
