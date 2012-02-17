@@ -42,6 +42,9 @@ class exports.User extends Model
     canPost: (channel) ->
         return no if app.users.isAnonymous this
 
+        if typeof channel is 'string'
+            channel = app.channels.get(channel)
+
         affiliation = @getAffiliationFor(channel)
         subscription = @getSubscriptionFor(channel)
         metadata = channel.nodes.get('posts')?.metadata

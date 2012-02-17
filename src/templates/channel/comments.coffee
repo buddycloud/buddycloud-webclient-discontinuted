@@ -20,8 +20,7 @@ module.exports = design (view) ->
                         @show()
                     else
                         @hide()
-                view.parent.parent.parent.bind 'update:affiliations', update_answer
-                view.parent.parent.parent.bind 'update:metadata', update_answer
+                view.parent.parent.parent.bind 'update:permissions', update_answer
                 update_answer()
 
                 @$img class:'avatar', ->

@@ -42,10 +42,13 @@ class exports.ChannelView extends BaseView
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
+        postsnode.bind 'subscriber:update', =>
+            @trigger 'update:permissions'
         postsnode.bind 'affiliation:update', =>
-            @trigger 'update:affiliations'
+            @trigger 'update:permissions'
         postsnode.metadata.bind 'change', =>
             @trigger 'update:metadata'
+            @trigger 'update:permissions'
             # Special handling for a publish_model that is based on
             # subscription state not affiliation: (actually we should
             # have this data already because we fetch our own

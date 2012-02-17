@@ -72,8 +72,7 @@ module.exports = design (view) ->
                             @show()
                         else
                             @hide()
-                    view.bind 'update:affiliations', update_newTopic
-                    view.bind 'update:metadata', update_newTopic
+                    view.bind 'update:permissions', update_newTopic
                     update_newTopic()
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
