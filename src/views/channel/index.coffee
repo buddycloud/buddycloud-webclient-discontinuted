@@ -46,7 +46,9 @@ class exports.ChannelView extends BaseView
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
         postsnode.bind 'subscriber:update', trigger_update_permissions
-        postsnode.bind 'affiliation:update', trigger_update_permissions
+        postsnode.bind 'affiliation:update', =>
+            @trigger 'update:affiliations'
+            trigger_update_permissions()
         postsnode.metadata.bind 'change', =>
             @trigger 'update:metadata'
             trigger_update_permissions()
