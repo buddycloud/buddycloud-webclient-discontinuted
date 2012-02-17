@@ -1,6 +1,6 @@
 { "name": "channel-webclient"
 , "description": "buddycloud webclient"
-, "version": "0.0.0-55"
+, "version": "0.0.0-56"
 , "author": "?"
 , "homepage": "https://github.com/buddycloud/channel-webclient"
 , "repository": { "type": "git", "url": "git://github.com/buddycloud/channel-webclient.git" }
