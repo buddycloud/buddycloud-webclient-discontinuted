@@ -3,6 +3,7 @@
 { ChannelDetailsView } = require './details/index'
 { ChannelEditView } = require './edit'
 { ErrorNotificationView } = require './error_notification'
+{ FollowNotificationView } = require './follow_notification'
 { OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback } = require '../../util'
 
@@ -45,7 +46,9 @@ class exports.ChannelView extends BaseView
 
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
-        postsnode.bind 'subscriber:update', trigger_update_permissions
+        postsnode.bind 'subscriber:update', (subscriber) =>
+            @update_follow_notification subscriber.get('id')
+            trigger_update_permissions()
         postsnode.bind 'affiliation:update', =>
             @trigger 'update:affiliations'
             trigger_update_permissions()
@@ -66,6 +69,8 @@ class exports.ChannelView extends BaseView
         @details = new ChannelDetailsView
             model: @model
             parent: this
+
+        @follow_notification_views = {}
 
     render: (callback) ->
         node = @model.nodes.get_or_create id: 'posts'
@@ -253,3 +258,24 @@ class exports.ChannelView extends BaseView
 
     isEditing: =>
         @editview?.active
+
+    update_follow_notification: (jid) =>
+        subscription = app.channels.get(@model.get 'id')?.
+            nodes.get('posts')?.
+            subscribers.get(jid).get('subscription')
+
+        if subscription is 'pending' and
+           not @follow_notification_views.hasOwnProperty(jid)
+            # Add new view
+            view = new FollowNotificationView(parent: this)
+            @follow_notification_views[jid] = view
+            @ready =>
+                view.render =>
+                    console.warn "FollowNotificationView", view
+                    @trigger 'subview:notification', view.el
+
+        else if subscription isnt 'pending' and
+           @follow_notification_views.hasOwnProperty(jid)
+            # Remove old view (or update to current state)
+            view.el.remove()
+            delete @follow_notification_views[jid]
