@@ -19,6 +19,18 @@ class exports.PostView extends BaseView
     change_content: =>
         @trigger('update:content', parse_post(@model.get('content')?.value))
 
+        unless @model.get('content')?.value?
+            # Give post 4s to load, else go out and do it explicitly
+            # (topic opener could be very old)
+            setTimeout =>
+                unless @model.get('content')?.value?
+                    @load_post()
+            , 4000
+
+    load_post: =>
+        app.handler.data.get_node_posts_by_id @model.collection.parent.get('nodeid'),
+            [@model.get('id')]
+
     events:
         'click .name': 'clickAuthor'
         'click .avatar': 'clickAuthor'

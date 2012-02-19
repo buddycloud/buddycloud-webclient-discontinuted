@@ -18,7 +18,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:end', @on_connection_end
 
         @get_posts_queue = new RSMQueue 'posts', (nodeid, rsm_after, callback) =>
-            @connector.get_node_posts nodeid, rsm_after, callback
+            @connector.get_node_posts { nodeid, rsm_after }, callback
         @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsm_after, callback) =>
             @connector.get_node_subscriptions nodeid, rsm_after, callback
         @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsm_after, callback) =>
@@ -49,6 +49,11 @@ class exports.DataHandler extends Backbone.EventHandler
             node = channel.nodes.get_or_create nodeid:node
 
         @get_posts_queue.add node, callback
+
+    get_node_posts_by_id: (node, ids, callback) ->
+        nodeid = node.get?('nodeid') or node
+        console.warn "get_node_posts_by_id", node, ids
+        @connector.get_node_posts { nodeid, itemIds: ids }, callback
 
     get_node_metadata: (node, callback) ->
         nodeid = node.get?('nodeid') or node

@@ -148,9 +148,9 @@ Strophe.addConnectionPlugin('buddycloud', {
         conn.pubsub.unsubscribe(node, null, null, succ, this._errorcode(err));
     },
 
-    getChannelPosts: function (node, succ, err, timeout) {
+    getChannelPosts: function (options, succ, err, timeout) {
         var self = this, conn = this._connection;
-        conn.pubsub.items(node,
+        conn.pubsub.items(options,
             function  /*success*/ (stanza) {
                 if (succ) self._parsePost(stanza, succ);
             }, self._errorcode(err), timeout);
