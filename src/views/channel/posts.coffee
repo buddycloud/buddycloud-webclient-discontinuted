@@ -73,8 +73,8 @@ class exports.PostsView extends BaseView
                 if peepholeBottom >= viewTop
                     return @load_more()
 
-        if peepholeBottom >= @parent.$('.stream').innerHeight() - 100
-            @on_scroll_bottom()
+        if peepholeBottom >= @parent.$('.stream').innerHeight() - 10
+            @on_scroll_bottom
 
     on_scroll_bottom: =>
         @load_more()
