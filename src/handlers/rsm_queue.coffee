@@ -3,7 +3,6 @@ class exports.RSMQueue
         @queued = {}
 
     add: (node, cb) ->
-        console.warn "rsm_queue add", node
         id = node.get('nodeid') or node.get('id')
         if @queued.hasOwnProperty(id)
             @queued[id].push cb
