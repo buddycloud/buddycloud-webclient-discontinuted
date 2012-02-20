@@ -77,8 +77,7 @@ class exports.ChannelView extends BaseView
         @metadata = node.metadata
         unless node.metadata_synced
             app.handler.data.get_node_metadata node.get('nodeid')
-        unless app.users.isAnonymous(app.users.current)
-            app.handler.data.get_all_node_affiliations node.get('nodeid')
+        app.handler.data.get_all_node_affiliations node.get('nodeid')
 
         super ->
             if @model

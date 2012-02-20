@@ -3,7 +3,7 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select "div.channelView", "article.topic, div.channelDetails, .notification"
-            el.find('h2, span:not(.loader)').text("")
+            el.find('h2, span:not(.loader), #poweredby').text("")
             return el
 
 
@@ -15,7 +15,8 @@ module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$div class:'channelView', ->
             @$header ->
-                # powered by buddycloud
+                @$a -># powered by buddycloud
+                    @text "#{app.version}"
                 @$img class:'avatar', ->
                     @attr src:"#{view.model.avatar}"
                 @$div class:'titleBar', ->

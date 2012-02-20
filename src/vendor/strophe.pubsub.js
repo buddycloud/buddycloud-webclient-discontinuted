@@ -428,7 +428,13 @@ Extend connection object to have plugin name 'pubsub'.
 	var node = options.node || options;
         var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('items', {node:node}).up()
+          .c('items', {node:node});
+	if (options.itemIds) {
+	    for(var i = 0; i < options.itemIds.length; i++) {
+		iq.c('item', { id: options.itemIds[i] }).up();
+	    }
+	}
+	iq.up()
 	  .c('set', { xmlns: Strophe.NS.RSM })
 	  .c('max').t("40")
 	  .up();

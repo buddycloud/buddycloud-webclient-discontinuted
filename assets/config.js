@@ -17,7 +17,7 @@ window.config = {
 
     /* Default domain to create topics under
      * unless the user specifies …@domain as the name. */
-    topic_domain: "topics.example.com",
+    //topic_domain: "topics.example.com",
 
     /* Sign up for an embed.ly account to use OStatus */
     //embedly_key: "xxx"

@@ -91,7 +91,7 @@ class exports.Connector extends Backbone.EventHandler
 #             app.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
-    get_node_posts: (nodeid, rsmAfter, callback) =>
+    get_node_posts: ({nodeid, rsmAfter, itemIds}, callback) =>
         @request (done) =>
             success = (posts) =>
                 for post in posts
@@ -110,7 +110,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? new Error("Cannot get posts")
             @connection.buddycloud.getChannelPosts(
-                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
+                { node: nodeid, rsmAfter, itemIds }, success, error, @connection.timeout)
 
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>

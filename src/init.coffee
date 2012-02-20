@@ -1,5 +1,5 @@
 window.app =
-    version: '0.0.0-55'
+    version: '0.0.0-56'
     localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}

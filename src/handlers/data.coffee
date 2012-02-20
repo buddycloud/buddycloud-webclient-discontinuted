@@ -18,7 +18,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:end', @on_connection_end
 
         @get_posts_queue = new RSMQueue 'posts', (nodeid, rsm_after, callback) =>
-            @connector.get_node_posts nodeid, rsm_after, callback
+            @connector.get_node_posts { nodeid, rsm_after }, callback
         @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsm_after, callback) =>
             @connector.get_node_subscriptions nodeid, rsm_after, callback
         @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsm_after, callback) =>
@@ -49,6 +49,11 @@ class exports.DataHandler extends Backbone.EventHandler
             node = channel.nodes.get_or_create nodeid:node
 
         @get_posts_queue.add node, callback
+
+    get_node_posts_by_id: (node, ids, callback) ->
+        nodeid = node.get?('nodeid') or node
+        console.warn "get_node_posts_by_id", node, ids
+        @connector.get_node_posts { nodeid, itemIds: ids }, callback
 
     get_node_metadata: (node, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -130,26 +135,21 @@ class exports.DataHandler extends Backbone.EventHandler
             @connector.remove_from_roster user
             callback? if oneSuccess then null else oneError
 
+    ##
+    # @param callback(error, done)
     get_user_subscriptions: (jid, callback) =>
         nodeid = "/user/#{jid}/subscriptions"
 
         if jid isnt "anony@mous"
-            rsmAfter = null
-            step = =>
-                @connector.get_node_posts nodeid, rsmAfter, (err, posts) =>
-                    # TODO: synced?
-                    if not posts?.rsm?.after or posts?.rsm?.after is rsmAfter
-                        # Final page
-                        app.users.get(jid).subscriptions_synced = app.users.current.channels.get(nodeid)?
-                        callback? err
-                    else
-                        # Next page
-                        rsmAfter = posts.rsm.after
-                        step()
-            step()
+            @get_node_posts nodeid, callback
         else
             # anony@mous has no retrievable subscriptions
-            callback?()
+            callback?(null, true)
+
+    get_all_user_subscriptions: (jid, callback) =>
+        @get_all_user_subscriptions jid, (err, done) =>
+            unless err or done
+                @get_all_user_subscriptions jid, callback
 
     # event callbacks
 
@@ -174,7 +174,7 @@ class exports.DataHandler extends Backbone.EventHandler
             mamStart = new Date(lastView - 23 * 60 * 60 * 1000).toISOString()
 
             async.parallel [ (cb) =>
-                @get_user_subscriptions app.users.current.get('id'), cb
+                @get_all_user_subscriptions app.users.current.get('id'), cb
             , (cb) =>
                 @scan_roster_for_channels()
                 # return immediately:
