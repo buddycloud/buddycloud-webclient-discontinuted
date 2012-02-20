@@ -15,6 +15,9 @@ class exports.PostsView extends BaseView
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
+        @model.posts.bind 'unsync', =>
+            setTimeout @load_more, 50
+
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported

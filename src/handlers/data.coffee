@@ -135,6 +135,41 @@ class exports.DataHandler extends Backbone.EventHandler
             @connector.remove_from_roster user
             callback? if oneSuccess then null else oneError
 
+    grant_subscription: (subscription, callback) ->
+        newSubscriptions = {}
+        newSubscriptions[subscription.get('id')] = 'subscribed'
+
+        async.forEach @get_pending_user_subscriptions(subscription)
+        , (subscription1, cb) =>
+            @connector.set_node_subscriptions subscription1.get('node')
+            , newSubscriptions, cb
+        , callback
+
+    deny_subscription: (subscription, callback) ->
+        newSubscriptions = {}
+        newSubscriptions[subscription.get('id')] = 'none'
+
+        async.forEach @get_pending_user_subscriptions(subscription)
+        , (subscription1, cb) =>
+            @connector.set_node_subscriptions subscription1.get('node')
+            , newSubscriptions, cb
+        , callback
+
+
+    # Looks if there are other nodes in the same channel that this
+    # user has pending subscription to.
+    get_pending_user_subscriptions: (subscription) ->
+        pending_subscriptions = []
+
+        channel = app.channels.get(subscription.get('node'))
+        channel.nodes.each (node) ->
+            console.warn "channel.nodes.each", arguments
+            subscription1 = node.subscribers.get subscription.get('id')
+            if subscription1?.get('subscription') is 'pending'
+                pending_subscriptions.push subscription1
+
+        pending_subscriptions
+
     ##
     # @param callback(error, done)
     get_user_subscriptions: (jid, callback) =>

@@ -3,12 +3,19 @@ class exports.RSMQueue
         @queued = {}
 
     add: (node, cb) ->
+        console.warn "rsm_queue add", node
         id = node.get('nodeid') or node.get('id')
         if @queued.hasOwnProperty(id)
             @queued[id].push cb
 
         else
             rsm_info = node["#{@name}_rsm"]
+            unless rsm_info?
+                node["#{@name}_rsm"] = {}
+                node.bind 'unsync', =>
+                    # Reset RSM:
+                    delete node["#{@name}_rsm"]
+
             if rsm_info and rsm_info.end_reached
                 cb(null, [])
 

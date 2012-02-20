@@ -149,6 +149,21 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.getSubscribers(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
+    set_node_subscriptions: (nodeid, subscriptions, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                @work_enqueue ->
+                    done()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? error
+            @connection.pubsub.setNodeSubscriptions(nodeid, subscriptions
+            , success, error, @connection.timeout)
+
+
     get_node_affiliations: (nodeid, rsmAfter, callback) =>
         @request (done) =>
             success = (affiliations) =>

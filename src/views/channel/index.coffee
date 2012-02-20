@@ -44,17 +44,22 @@ class exports.ChannelView extends BaseView
             unless @hidden
                 @model.mark_read()
 
+        # Potentially expensive (filters all node affiliations)
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
+        show_follow_notifications_callback = throttle_callback 100, @show_follow_notifications
+
         postsnode.bind 'subscriber:update', (subscriber) =>
-            @update_follow_notification subscriber.get('id')
             trigger_update_permissions()
+            show_follow_notifications_callback()
         postsnode.bind 'affiliation:update', =>
             @trigger 'update:affiliations'
             trigger_update_permissions()
+            show_follow_notifications_callback()
         postsnode.metadata.bind 'change', =>
             @trigger 'update:metadata'
             trigger_update_permissions()
+            show_follow_notifications_callback()
             # Special handling for a publish_model that is based on
             # subscription state not affiliation: (actually we should
             # have this data already because we fetch our own
@@ -258,23 +263,31 @@ class exports.ChannelView extends BaseView
     isEditing: =>
         @editview?.active
 
-    update_follow_notification: (jid) =>
-        subscription = app.channels.get(@model.get 'id')?.
-            nodes.get('posts')?.
-            subscribers.get(jid).get('subscription')
+    show_follow_notifications: =>
+        if app.users.current.canEdit @model.get('id')
+            # User is owner and may approve follow notifications
+            postsnode = app.channels.get(@model.get 'id')?.
+                nodes.get_or_create(id: 'posts')
 
-        if subscription is 'pending' and
-           not @follow_notification_views.hasOwnProperty(jid)
-            # Add new view
-            view = new FollowNotificationView(parent: this)
-            @follow_notification_views[jid] = view
-            @ready =>
-                view.render =>
-                    console.warn "FollowNotificationView", view
-                    @trigger 'subview:notification', view.el
+            postsnode.subscribers.forEach (subscriber) =>
+                jid = subscriber.get 'id'
+                if subscriber.get('subscription') is 'pending' and
+                   not @follow_notification_views.hasOwnProperty(jid)
+                    # Add new view
+                    view = new FollowNotificationView(parent: this, model: subscriber)
+                    @follow_notification_views[jid] = view
+                    @ready =>
+                        view.render =>
+                            console.warn "FollowNotificationView", view
+                            @trigger 'subview:notification', view.el
 
-        else if subscription isnt 'pending' and
-           @follow_notification_views.hasOwnProperty(jid)
-            # Remove old view (or update to current state)
-            view.el.remove()
-            delete @follow_notification_views[jid]
+                else if @follow_notification_views.hasOwnProperty(jid)
+                    # Remove old view (or update to current state)
+                    @follow_notification_views[jid].remove()
+                    delete @follow_notification_views[jid]
+
+        else
+            # May (suddenly) not approve followers, remove all previous views:
+            for own userid, view of @follow_notification_views
+                view.remove()
+            @follow_notification_views = {}

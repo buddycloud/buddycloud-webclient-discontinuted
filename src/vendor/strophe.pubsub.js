@@ -499,6 +499,24 @@ Extend connection object to have plugin name 'pubsub'.
        return iqid;
     },
 
+    setNodeSubscriptions: function(node, subscriptions, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsubscriptions");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
+            .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
+            .c('subscriptions', {'node':node});
+	for(var jid in subscriptions)
+	    if (subscriptions.hasOwnProperty(jid))
+		iq.c('subscription', { jid: jid,
+				       subscription: subscriptions[jid] })
+		    .up();
+
+       that.sendIQ(iq.tree(), success, error);
+
+       return iqid;
+    },
+
     /** Function: getSubOptions
      *  Get subscription options form.
      *
