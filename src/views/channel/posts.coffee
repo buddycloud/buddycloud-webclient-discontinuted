@@ -16,7 +16,9 @@ class exports.PostsView extends BaseView
         @model.posts.bind 'add', @add_post
 
         @model.posts.bind 'unsync', =>
-            setTimeout @load_more, 50
+            setTimeout =>
+                app.handler.data.refresh_channel @model.collection.parent.get('id')
+            , 50
 
     ##
     # TODO add different post type switch here
