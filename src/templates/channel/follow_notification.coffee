@@ -25,6 +25,7 @@ module.exports = design (view) ->
                     @attr 'class', "#{notifclass} visible"
             view.bind 'invisible', =>
                 @attr 'class', @attr('class').replace('visible', "")
+                setTimeout(@remove, 2000) # wait for css animation
 
             view.bind 'granted', =>
                 @attr 'class', "#{@attr 'class'} log granted"

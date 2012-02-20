@@ -26,7 +26,3 @@ class exports.FollowNotificationView extends BaseView
 
     remove: =>
         @trigger 'invisible'
-        # Wait for CSS transition
-        setTimeout =>
-            @el.remove()
-        , 2000
