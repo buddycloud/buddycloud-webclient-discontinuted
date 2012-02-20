@@ -17,12 +17,12 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:established', @on_connection_established
         @connector.bind 'connection:end', @on_connection_end
 
-        @get_posts_queue = new RSMQueue 'posts', (nodeid, rsm_after, callback) =>
-            @connector.get_node_posts { nodeid, rsm_after }, callback
-        @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsm_after, callback) =>
-            @connector.get_node_subscriptions nodeid, rsm_after, callback
-        @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsm_after, callback) =>
-            @connector.get_node_affiliations nodeid, rsm_after, callback
+        @get_posts_queue = new RSMQueue 'posts', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_posts { nodeid, rsmAfter }, callback
+        @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_subscriptions nodeid, rsmAfter, callback
+        @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_affiliations nodeid, rsmAfter, callback
 
     ##
     # Extracts and sanitizes userid part from title, then creates
