@@ -36,7 +36,7 @@ module.exports = design (view) ->
                 @$img ->
                     @attr 'src', user.avatar
                 @$span class: 'name', ->
-                    @text view.model.get('id')
+                    @text "#{view.model.get 'id'} "
 
                 @$div class: 'controls', ->
                     @$div class: "button small positive light", ->
