@@ -16,3 +16,6 @@ class exports.ErrorNotificationView extends BaseView
         @ready =>
             @trigger('error', err)
 
+    remove: =>
+        @ready =>
+            @el.remove()

@@ -246,12 +246,15 @@ class exports.ChannelView extends BaseView
     set_error: (error) =>
         return unless error
         console.warn "set_error", error
-        view = new ErrorNotificationView
+        if @error_view?
+            @error_view.remove()
+
+        @error_view = new ErrorNotificationView
             parent:this
             error:error
         @ready =>
-            view.render =>
-                @trigger('subview:notification', view.el)
+            @error_view.render =>
+                @trigger('subview:notification', @error_view.el)
 
     clickEdit: EventHandler ->
         unless @editview
