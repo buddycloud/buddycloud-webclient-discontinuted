@@ -42,7 +42,8 @@ class exports.DataHandler extends Backbone.EventHandler
                 # Don't care about status node result if posts worked
                 callback(null, userid)
 
-    # TODO: @param node {Node model}
+    # @param node {Node model or nodeid}
+    # @param callback(err, done)
     get_node_posts: (node, callback) ->
         if typeof node is 'string'
             channel = app.channels.get_or_create id:node
