@@ -29,7 +29,7 @@ class exports.Channel extends Model
 
     # subscription.jid is already filtered for this channel id (user)
     push_subscription: (subscription) ->
-        # subscription.subscription is either subscribed, unsubscribed or pending
+        # subscription.subscription is either subscribed, none or pending
         @trigger 'subscription', subscription
 
     push_affiliation: (affiliation) ->

@@ -72,7 +72,7 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'unsubscribed'
+                    subscription: 'none'
                 @work_enqueue ->
                     done()
                     callback? null
