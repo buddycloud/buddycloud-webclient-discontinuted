@@ -4,6 +4,7 @@
 { ChannelEditView } = require './edit'
 { ErrorNotificationView } = require './error_notification'
 { FollowNotificationView } = require './follow_notification'
+{ PendingNotificationView } = require './pending_notification'
 { OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback } = require '../../util'
 
@@ -48,10 +49,12 @@ class exports.ChannelView extends BaseView
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
         show_follow_notifications_callback = throttle_callback 100, @show_follow_notifications
+        show_pending_notification_callback = throttle_callback 100, @show_pending_notification
 
         postsnode.bind 'subscriber:update', (subscriber) =>
             trigger_update_permissions()
             show_follow_notifications_callback()
+            show_pending_notification_callback()
         postsnode.bind 'affiliation:update', =>
             @trigger 'update:affiliations'
             trigger_update_permissions()
@@ -208,7 +211,6 @@ class exports.ChannelView extends BaseView
         app.handler.data.subscribe_user @model.get('id'), (error) =>
             if error
                 @set_error error
-#             @render() FIXME
 
     clickUnfollow: EventHandler (ev) ->
         @$('.unfollow').hide()
@@ -218,7 +220,6 @@ class exports.ChannelView extends BaseView
             if error
                 @set_error error
             @$('.follow').show()
-#             @render() FIXME
 
     update_status: =>
         statusnode = @model.nodes.get_or_create(id:'status')
@@ -294,3 +295,15 @@ class exports.ChannelView extends BaseView
             for own userid, view of @follow_notification_views
                 view.remove()
             @follow_notification_views = {}
+
+    show_pending_notification: =>
+        subscription = app.users.current.getSubscriptionFor @model
+        if subscription is 'pending' and
+           not @pending_notification?
+            @pending_notification = new PendingNotificationView(parent: this)
+            @pending_notification.render =>
+                @trigger 'subview:notification', @pending_notification.el
+        else if subscription isnt 'pending' and
+                @pending_notification?
+            @pending_notification.remove()
+            delete @pending_notification
