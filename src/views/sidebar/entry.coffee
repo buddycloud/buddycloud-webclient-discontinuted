@@ -16,6 +16,11 @@ class exports.ChannelEntry extends BaseView
 
         @model.bind 'post', throttle_callback 50, =>
             @trigger 'update:unread_counter'
+
+        postsnode = @model.nodes.get_or_create(id: 'posts')
+        postsnode.bind 'subscriber:update', throttle_callback 50, =>
+            @trigger 'update:notification_counter'
+
         statusnode = @model.nodes.get_or_create(id: 'status')
         statusnode.bind 'post', =>
             @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value

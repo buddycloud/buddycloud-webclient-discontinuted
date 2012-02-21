@@ -67,3 +67,17 @@ class exports.Channel extends Model
         app.favicon(@_unread_count * -1) # remove them
         @_unread_count = 0
         @save { last_view }
+
+    count_notifications: ->
+        if app.users.current.canEdit(this)
+            # Count users with pending subscription
+            postsnode = @nodes.get_or_create(id: 'posts')
+            postsnode.subscribers.reduce (count, subscription) ->
+                if subscription.get('subscription') is 'pending'
+                    count + 1
+                else
+                    count
+            , 0
+        else
+            # Isn't owner, no admin notifications
+            0
