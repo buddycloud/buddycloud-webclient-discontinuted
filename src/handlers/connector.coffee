@@ -49,16 +49,15 @@ class exports.Connector extends Backbone.EventHandler
     subscribe: (nodeid, callback) =>
         @request (done) =>
             # TODO: subscribe channel
-            @connection.buddycloud.subscribeNode nodeid, (stanza) =>
-                app.debug "subscribe", stanza
+            @connection.buddycloud.subscribeNode nodeid, (subscription) =>
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
                 @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'subscribed' # FIXME
+                    subscription: subscription
                 @work_enqueue ->
                     done()
-                    callback? null
+                    callback? null, subscription
             , =>
                 app.error "subscribe", nodeid
                 @work_enqueue ->

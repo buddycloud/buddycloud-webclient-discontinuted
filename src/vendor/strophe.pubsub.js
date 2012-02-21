@@ -349,7 +349,17 @@ Extend connection object to have plugin name 'pubsub'.
             iq.up().c('options').form(Strophe.NS.PUBSUB_SUBSCRIBE_OPTIONS, options);
         }
 
-        that.sendIQ(iq.tree(), success, error);
+        that.sendIQ(iq.tree(), function(stanza) {
+	    /* get returned subscription status */
+	    var subscription = 'subscribed';
+	    Strophe.forEachChild(stanza, 'pubsub', function(pubsubEl) {
+		Strophe.forEachChild(pubsubEl, 'subscription', function(subscriptionEl) {
+		    subscription = subscriptionEl.getAttribute('subscription');
+		});
+	    });
+	    if (success)
+		success(subscription);
+	}, error);
         return iqid;
     },
 
