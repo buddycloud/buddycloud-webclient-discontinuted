@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select ".notification:first", "article *"
+            @select ".notification:first", "section > *"
 
 
 { Template } = require 'dynamictemplate'
