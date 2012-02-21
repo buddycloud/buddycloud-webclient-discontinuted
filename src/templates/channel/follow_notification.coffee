@@ -41,3 +41,6 @@ module.exports = design (view) ->
                 @$div class: 'controls', ->
                     @$div class: "button small positive light", ->
                         @text "Grant #{view.model.get('id')} to join"
+
+                    # Don't let users click twice
+                    view.bind 'loading', @hide
