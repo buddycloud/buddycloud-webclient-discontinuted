@@ -15,7 +15,7 @@ class exports.PostsView extends BaseView
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
-        @model.posts.bind 'unsync', =>
+        @model.bind 'unsync', =>
             setTimeout =>
                 app.handler.data.refresh_channel @model.collection.parent.get('id')
             , 50
