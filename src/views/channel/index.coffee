@@ -69,6 +69,10 @@ class exports.ChannelView extends BaseView
             # /subscriptions node first, do we?)
             if postsnode.metadata.get('publish_model')?.value is 'subscribers'
                 app.handler.data.get_all_node_subscriptions postsnode.get('nodeid')
+        postsnode.bind 'unsync', =>
+            @set_error null
+            @parent.on_scroll()
+
 
         # Retrieve status text and send to view
         statusnode = @model.nodes.get_or_create(id:'status')
@@ -245,17 +249,19 @@ class exports.ChannelView extends BaseView
     )
 
     set_error: (error) =>
-        return unless error
         console.warn "set_error", error
+
         if @error_view?
             @error_view.remove()
+            delete @error_view
 
-        @error_view = new ErrorNotificationView
-            parent:this
-            error:error
-        @ready =>
-            @error_view.render =>
-                @trigger('subview:notification', @error_view.el)
+        if @error?
+            @error_view = new ErrorNotificationView
+                parent:this
+                error:error
+            @ready =>
+                @error_view.render =>
+                    @trigger('subview:notification', @error_view.el)
 
     clickEdit: EventHandler ->
         unless @editview
