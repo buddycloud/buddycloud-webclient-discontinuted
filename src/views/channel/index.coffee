@@ -105,6 +105,9 @@ class exports.ChannelView extends BaseView
             @details.render =>
                 @trigger 'subview:details', @details.el
 
+            @show_follow_notifications()
+            @show_pending_notification()
+
             unless @hidden
                 @el.show()
                 @on_scroll()
