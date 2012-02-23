@@ -71,7 +71,7 @@ class exports.ChannelView extends BaseView
                 app.handler.data.get_all_node_subscriptions postsnode.get('nodeid')
         postsnode.bind 'unsync', =>
             @set_error null
-            @parent.on_scroll()
+            @on_scroll()
 
 
         # Retrieve status text and send to view
