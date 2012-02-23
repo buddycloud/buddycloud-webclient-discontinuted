@@ -292,7 +292,8 @@ class exports.ChannelView extends BaseView
                             console.warn "FollowNotificationView", view
                             @trigger 'subview:notification', view.el
 
-                else if @follow_notification_views.hasOwnProperty(jid)
+                else if @follow_notification_views.hasOwnProperty(jid) and
+                        subscriber.get('subscription') isnt 'pending'
                     # Remove old view (or update to current state)
                     @follow_notification_views[jid].remove()
                     delete @follow_notification_views[jid]
