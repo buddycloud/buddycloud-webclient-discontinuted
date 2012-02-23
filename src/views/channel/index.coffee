@@ -249,13 +249,11 @@ class exports.ChannelView extends BaseView
     )
 
     set_error: (error) =>
-        console.warn "set_error", error
-
         if @error_view?
             @error_view.remove()
             delete @error_view
 
-        if @error?
+        if error?
             @error_view = new ErrorNotificationView
                 parent:this
                 error:error

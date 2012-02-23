@@ -17,7 +17,8 @@ class exports.PostsView extends BaseView
 
         @model.bind 'unsync', =>
             setTimeout =>
-                app.handler.data.refresh_channel @model.parent.get('id')
+                channel = app.channels.get @model.get('nodeid')
+                app.handler.data.refresh_channel channel.get('id')
             , 50
 
     ##

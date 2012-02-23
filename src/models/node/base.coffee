@@ -16,6 +16,8 @@ class exports.Node extends Model
         nodeid = @get 'nodeid'
         @metadata = new NodeMetadata parent:this, id:nodeid
         @posts   ?= new Posts parent:this
+        @posts.bind 'unsync', =>
+            @push_error null
         # TODO: comparator by id
         @subscribers = new Collection()
         @affiliations = new Collection()
@@ -62,7 +64,7 @@ class exports.Node extends Model
             @metadata_synced = no
 
     push_error: (error) ->
-        @error =
+        @error = error ?
             condition: error.condition
             text: error.text
         @trigger 'error', error
