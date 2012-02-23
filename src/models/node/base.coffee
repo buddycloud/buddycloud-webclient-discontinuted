@@ -34,16 +34,15 @@ class exports.Node extends Model
     update: -> # api function - every node should be updateable
 
     push_subscription: (subscription) ->
-        old_subscription = @subscribers.get(subscription.jid)
+        old_s = @subscribers.get(subscription.jid)?.get('subscription')
 
         subscription.id ?= subscription.jid
         subscription = @subscribers.get_or_create subscription
         @trigger 'subscriber:update', subscription
 
         s = subscription.get('subscription')
-        os = old_subscription?.get('subscription')
         # Transition from/to subscribed
-        if s isnt os and (s is 'subscribed' or os is 'subscribed')
+        if s isnt old_s and (s is 'subscribed' or old_s is 'subscribed')
             @trigger 'unsync'
 
     push_affiliation: (affiliation) ->
