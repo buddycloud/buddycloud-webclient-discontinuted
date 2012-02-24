@@ -5,6 +5,7 @@ unless process.title is 'browser'
             el = @select "section.channelList .adminAction"
             el.find('.channelInfo, .currentRole').text ""
             el.removeClass('moderator')
+            # FIXME everywhere: "chosen"?
             el.removeClass('choosen')
             el.removeClass('role')
             el
@@ -16,12 +17,12 @@ design = require '../../../_design/channel/details/user'
 { EventHandler } = require '../../../util'
 
 userspeak =
-    'owner':    "Owner"
+    'owner':    "Producer"
     'moderator':"Moderator"
     'publisher':"Follower+Post"
     'member':   "Follower"
     'outcast':  "Banned Follower"
-    'none':     "Total Stranger"
+    'none':     "Does not follow back"
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
@@ -41,3 +42,21 @@ module.exports = design (view) ->
                             role.remove()
                             delete role
 
+
+            update_role = =>
+                classes = @attr('class').split(/\s+/)
+                console.warn "update_role", view, app.users.current.canEdit channel
+                if app.users.current.canEdit channel
+                    modClass = (class_) ->
+                        if classes.indexOf(class_) < 0
+                            classes.push class_
+                else
+                    modClass = (class_) ->
+                        classes = classes.filter (class__) ->
+                            class_ isnt class__
+                modClass 'moderator'
+                modClass 'choosen'
+                modClass 'role'
+                @attr 'class', classes.join(" ")
+            view.parent.parent.parent.bind 'update:permissions', update_role
+            update_role()

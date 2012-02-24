@@ -63,6 +63,7 @@ class exports.User extends Model
     canEdit: (channel) ->
         return no if app.users.isAnonymous this
 
+        # TODO: moderator too for topic channels
         @getAffiliationFor(channel) == 'owner'
 
 
