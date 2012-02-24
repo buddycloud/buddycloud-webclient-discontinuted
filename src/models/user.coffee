@@ -63,8 +63,20 @@ class exports.User extends Model
     canEdit: (channel) ->
         return no if app.users.isAnonymous this
 
-        # TODO: moderator too for topic channels
         @getAffiliationFor(channel) == 'owner'
+
+    canModerate: (channel) ->
+        return no if app.users.isAnonymous this
+
+        postsnode = app.channels.get_or_create(@get 'id').
+            nodes.get_or_create(id: 'posts')
+        if @getAffiliationFor(channel) == 'moderator' and
+           postsnode.metadata.get('channel_type')?.value is 'topic'
+            yes
+        else if @getAffiliationFor(channel) == 'owner'
+            yes
+        else
+            no
 
 
 # Copied from server operations

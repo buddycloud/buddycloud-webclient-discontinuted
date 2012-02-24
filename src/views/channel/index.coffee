@@ -275,8 +275,8 @@ class exports.ChannelView extends BaseView
         @editview?.active
 
     show_follow_notifications: =>
-        if app.users.current.canEdit @model.get('id')
-            # User is owner and may approve follow notifications
+        if app.users.current.canModerate @model.get('id')
+            # User is owner/moderator and may approve follow notifications
             postsnode = app.channels.get(@model.get 'id')?.
                 nodes.get_or_create(id: 'posts')
 

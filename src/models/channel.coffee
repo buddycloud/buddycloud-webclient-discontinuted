@@ -69,7 +69,7 @@ class exports.Channel extends Model
         @save { last_view }
 
     count_notifications: ->
-        if app.users.current.canEdit(this)
+        if app.users.current.canModerate(this)
             # Count users with pending subscription
             postsnode = @nodes.get_or_create(id: 'posts')
             postsnode.subscribers.reduce (count, subscription) ->
