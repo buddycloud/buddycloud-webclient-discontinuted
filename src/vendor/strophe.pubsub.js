@@ -604,7 +604,7 @@ Extend connection object to have plugin name 'pubsub'.
      */
     setAffiliation: function(node, jid, affiliation, success, error) {
         var that = this._connection;
-        var iqid = thiat.getUniqueId("pubsubaffiliations");
+        var iqid = that.getUniqueId("pubsubaffiliations");
 
         var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})

@@ -92,6 +92,11 @@ class exports.DataHandler extends Backbone.EventHandler
             else
                 @get_all_node_affiliations nodeid, callback
 
+    set_channel_affiliation: (userid, affiliator, affiliation, callback) =>
+        forEachUserNode userid, (node, callback2) =>
+            @connector.set_node_affiliation node, affiliator, affiliation, callback
+        , callback
+
     publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node
         @connector.publish nodeid, item, callback

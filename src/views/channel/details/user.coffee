@@ -8,6 +8,9 @@ class exports.UserInfoView extends BaseView
 
     events:
         'click .channelInfo h4': 'navigate'
+        'click .cancelButton': 'on_click_cancel'
+        'click .okButton': 'on_click_ok'
+        'change select': 'on_change_select'
 
     initialize: () ->
         @mode = 'show'
@@ -18,15 +21,29 @@ class exports.UserInfoView extends BaseView
         if @currentjid?
             app.router.navigate @currentjid, true
 
-    set_mode: (mode) ->
-        @mode = mode
-        switch mode
-            when 'show'
-                @el.find('.actionRow').hide()
-            when 'moderator'
-                @el.find('.actionRow').show()
-                # TODO more
+    on_click_cancel: EventHandler ->
+        # Remove this popup
+        # HACK: fix set_user()!
+        @set_no_user()
 
+    on_click_ok: EventHandler ->
+        userid = @parent.parent.parent.model.get 'id'
+        affiliation = @$('select').val()
+        app.handler.data.set_channel_affiliation userid, @currentjid, affiliation, (err) =>
+            unless err
+                # Remove:
+                @on_click_cancel()
+
+    on_change_select: ->
+        @trigger 'update:select:affiliation'
+
+    set_no_user: ->
+        @ready =>
+            # prepare
+            @el.detach()
+            @_olduser?.removeClass('selected')
+            # close
+            return delete @_olduser
 
     set_user: (user, el) ->
         @ready =>
@@ -37,7 +54,6 @@ class exports.UserInfoView extends BaseView
             if @_olduser?.data('userid') is user.get('id')
                 return delete @_olduser
             # update
-            @set_mode 'show'
             @trigger 'user:update', user
             @currentjid = user.get 'id'
             imgs = $("img", el.parent())

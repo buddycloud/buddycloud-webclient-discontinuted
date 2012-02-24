@@ -184,6 +184,19 @@ class exports.Connector extends Backbone.EventHandler
             @connection.buddycloud.getAffiliations(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
 
+    set_node_affiliation: (nodeid, userid, affiliation, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                @work_enqueue ->
+                    done()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot set affiliation")
+            @connection.pubsub.setAffiliation(nodeid, userid, affiliation, success, error)
+
     set_node_metadata: (nodeid, metadata, callback) =>
         @request (done) =>
             success = =>

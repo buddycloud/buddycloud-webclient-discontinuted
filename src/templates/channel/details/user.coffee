@@ -21,12 +21,44 @@ userspeak =
     'moderator':"Moderator"
     'publisher':"Follower+Post"
     'member':   "Follower"
-    'outcast':  "Banned Follower"
+    'outcast':  "Banned"
     'none':     "Does not follow back"
+
+affiliations_infos =
+    owner: [
+        "read your channel"
+        "write comments & messages"
+        "post new topics"
+        "add & ban users"
+        "set user's roles"
+    ]
+    moderator: [
+        "approve new followers"
+        "delete posts"
+        "read your channel"
+        "write comments & messages"
+        "post new topics"
+    ]
+    publisher: [
+        "read your channel"
+        "write comments & messages"
+        "post new topics"
+    ]
+    member: [
+        "read your channel"
+        "write comments & messages if publish_model matches"
+    ]
+    outcast: [
+        "forbidden to read your channel"
+    ]
+    none: [
+        "read your open channel"
+    ]
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         channel = view.parent.parent.model
+        set_info_lines = ->
         @$div class:'adminAction', ->
             # .arrow
             @$div class:'holder', ->
@@ -73,12 +105,45 @@ module.exports = design (view) ->
                                     else
                                         console.warn "deselected", value, option
                                         option.removeAttr 'selected'
+                                set_info_lines(affiliations_infos[affiliation] or [])
                             set_current_option_callback = throttle_callback 100, set_current_option
                             view.bind 'user:update', (user) ->
                                 current_user = user
                                 set_current_option_callback()
                             view.parent.parent.parent.bind 'update:affiliations', set_current_option_callback
                             set_current_option()
+
+                            view.bind 'update:select:affiliation', =>
+                                # FIXME: couldn't we use dt like
+                                # above, just in a way that actually
+                                # works?
+                                set_info_lines(affiliations_infos[@attr('value')] or [])
+
+                        @$section class: 'info', ->
+                            @$div class: 'moderator', ->
+                                @remove()
+
+                            @$div class: 'moderator', ->
+                                @$ul ->
+                                    old_lines = []
+                                    set_info_lines = (lines) =>
+                                        for old_line in old_lines
+                                            old_line.remove()
+                                        old_lines = []
+                                        for line in lines
+                                            old_lines.push @$li ->
+                                                @text line
+
+                    @$section class: 'action banUser', ->
+                        @remove()
+                    @$section class: 'actionRow choose', ->
+                        @remove()
+
+                    @$section class: 'actionRow confirm', ->
+                        @$div ->
+                            @attr class: 'cancelButton'
+                        @$div ->
+                            @attr class: 'okButton'
 
             update_role = =>
                 classes = @attr('class').split(/\s+/)
