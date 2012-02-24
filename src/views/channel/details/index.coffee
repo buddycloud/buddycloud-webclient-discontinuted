@@ -11,6 +11,16 @@ class exports.ChannelDetailsView extends BaseView
         node = @model.nodes.get_or_create id: 'posts'
         @metadata = node.metadata
 
+        @moderators = new ChannelDetailsList
+            title: "moderators"
+            model: node.affiliations
+            parent: this
+            load_more: ->
+                # Do nothing as ChannelView already invokes
+                # app.handler.data.get_all_node_affiliations()
+            filter: (user) ->
+                ['owner', 'moderator'].
+                    indexOf(node.affiliations.get(user.get 'id')?.get('affiliation')) >= 0
         @followers = new ChannelDetailsList
             title: "followers"
             model: node.subscribers
@@ -41,6 +51,9 @@ class exports.ChannelDetailsView extends BaseView
 
     render: (callback) ->
         super =>
+            @moderators.render =>
+                @trigger 'subview:moderators', @moderators.el
+                @moderators.showAll()
             @followers.render =>
                 @trigger 'subview:followers', @followers.el
             @following.render =>

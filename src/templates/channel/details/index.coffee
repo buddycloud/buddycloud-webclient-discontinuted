@@ -53,6 +53,7 @@ module.exports = design (view) ->
                     postsnode.bind 'affiliation:update', update_metadata_callback
                     update_metadata()
 
+                view.bind 'subview:moderators', @add
                 view.bind 'subview:followers', @add
                 view.bind 'subview:following', (el) =>
                     @add el
