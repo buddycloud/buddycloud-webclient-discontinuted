@@ -14,7 +14,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/user'
-{ EventHandler } = require '../../../util'
+{ EventHandler, throttle_callback } = require '../../../util'
 
 userspeak =
     'owner':    "Producer"
@@ -42,6 +42,43 @@ module.exports = design (view) ->
                             role.remove()
                             delete role
 
+
+                    @$section class:'action changeRole', ->
+                        @$select ->
+                            @$option value: 'moderator', ->
+                                @remove()
+                            @$option value: 'followerPlus', ->
+                                @remove()
+                            @$option value: 'follower', ->
+                                @remove()
+
+                            options = {}
+                            for own value, text of userspeak
+                                postsnode = view.parent.parent.model.nodes.get_or_create(id: 'posts')
+                                unless value is 'none'
+                                    @$option {value}, ->
+                                        @text text
+                                        options[value] = this
+                            current_user = null
+                            set_current_option = =>
+                                affiliation = postsnode.affiliations.get(current_user)?.get('affiliation')
+                                console.warn "set_current_option", current_user, affiliation
+                                # FIXME: Preselecting the current <option/> doesn't work like this :-(
+                                @attr 'value', affiliation
+                                for value, option of options
+                                    if value is affiliation or
+                                       (value is 'follower' and affiliation is 'none')
+                                        console.warn "selected", value, option
+                                        option.attr 'selected', "selected"
+                                    else
+                                        console.warn "deselected", value, option
+                                        option.removeAttr 'selected'
+                            set_current_option_callback = throttle_callback 100, set_current_option
+                            view.bind 'user:update', (user) ->
+                                current_user = user
+                                set_current_option_callback()
+                            view.parent.parent.parent.bind 'update:affiliations', set_current_option_callback
+                            set_current_option()
 
             update_role = =>
                 classes = @attr('class').split(/\s+/)

@@ -68,8 +68,10 @@ class exports.User extends Model
     canModerate: (channel) ->
         return no if app.users.isAnonymous this
 
-        postsnode = app.channels.get_or_create(@get 'id').
-            nodes.get_or_create(id: 'posts')
+        if typeof channel is 'string'
+            channel = app.channels.get(channel)
+
+        postsnode = channel.nodes.get_or_create(id: 'posts')
         if @getAffiliationFor(channel) == 'moderator' and
            postsnode.metadata.get('channel_type')?.value is 'topic'
             yes
