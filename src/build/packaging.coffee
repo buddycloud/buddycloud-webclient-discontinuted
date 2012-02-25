@@ -2,7 +2,7 @@
 request = require 'request'
 async = require 'async'
 config = require 'jsconfig'
-ValveStream = require 'valvestream'
+BufferStream = require 'bufferstream'
 { Pack:Tarball } = require 'tarball'
 { spiderDir } = require './util'
 
@@ -47,7 +47,7 @@ module.exports = (tarPath) ->
         request("http://#{config.host}:#{config.port}/#{entry}")
             .on('error', onError)
             .on 'response', (res) ->
-                stream = new ValveStream
+                stream = new BufferStream disabled:yes # no splitting needed
                 stream.path = entry # res.path can't be set
                 stream.props = size:res.headers['content-length']
                 tarball.append stream, ->
