@@ -108,8 +108,12 @@ class exports.Connector extends Backbone.EventHandler
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot get posts")
+            # Only most recent status is interesting for the status
+            # node. TODO: this amount parameter is better moved up
+            # towards the views that actually display it.
+            rsmMax = if /\/status/.test(nodeid) then 1 else 30
             @connection.buddycloud.getChannelPosts(
-                { node: nodeid, rsmAfter, itemIds }, success, error, @connection.timeout)
+                { node: nodeid, rsmMax, rsmAfter, itemIds }, success, error, @connection.timeout)
 
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>

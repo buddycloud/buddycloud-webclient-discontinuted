@@ -445,9 +445,10 @@ Extend connection object to have plugin name 'pubsub'.
 	    }
 	}
 	iq.up()
-	  .c('set', { xmlns: Strophe.NS.RSM })
-	  .c('max').t("40")
-	  .up();
+	  .c('set', { xmlns: Strophe.NS.RSM });
+	if (options.rsmMax)
+	  iq.c('max').t("" + options.rsmMax)
+	    .up();
 	if (options.rsmAfter)
 	    iq.c('after').t(options.rsmAfter);
 
