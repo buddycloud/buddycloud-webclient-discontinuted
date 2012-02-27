@@ -70,10 +70,13 @@ module.exports = design (view) ->
                             name.text "#{user.get 'id'}"
                             affiliation = user.getAffiliationFor channel.get 'id'
                             role?.text "#{userspeak[affiliation] or affiliation}"
-                        if app.users.isAnonymous(app.users.current)
-                            role.remove()
-                            delete role
-
+                        update_role = =>
+                            if app.users.current.canEdit channel
+                                role.show()
+                            else
+                                role.hide()
+                        view.parent.parent.parent.bind 'update:permissions', update_role
+                        update_role()
 
                     @$section class:'action changeRole', ->
                         @$select ->
