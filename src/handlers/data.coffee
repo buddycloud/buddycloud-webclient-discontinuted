@@ -72,7 +72,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @get_subscriptions_queue.add node, callback
 
     get_all_node_subscriptions: (nodeid, callback) =>
-        @get_node_subscriptions nodeid, (err, done) =>
+        @get_node_subscriptions nodeid, (err, results, done) =>
             if err or done
                 callback?()
             else
@@ -86,7 +86,7 @@ class exports.DataHandler extends Backbone.EventHandler
         @get_affiliations_queue.add node, callback
 
     get_all_node_affiliations: (nodeid, callback) =>
-        @get_node_affiliations nodeid, (err, done) =>
+        @get_node_affiliations nodeid, (err, results, done) =>
             if err or done
                 callback?()
             else
@@ -188,8 +188,8 @@ class exports.DataHandler extends Backbone.EventHandler
             callback?(null, true)
 
     get_all_user_subscriptions: (jid, callback) =>
-        @get_all_user_subscriptions jid, (err, done) =>
-            unless err or done
+        @get_user_subscriptions jid, (err, results, done) =>
+            unless err or (not results?.length > 0) or done
                 @get_all_user_subscriptions jid, callback
 
     # event callbacks
