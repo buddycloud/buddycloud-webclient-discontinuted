@@ -44,7 +44,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
     # @param node {Node model or nodeid}
     # @param callback(err, done)
-    get_node_posts: (node, max=40, callback) ->
+    get_node_posts: (node, callback) ->
         if typeof node is 'string'
             channel = app.channels.get_or_create id:node
             node = channel.nodes.get_or_create nodeid:node
