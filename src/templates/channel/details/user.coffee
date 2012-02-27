@@ -100,14 +100,6 @@ module.exports = design (view) ->
                                 console.warn "set_current_option", current_user, affiliation
                                 # FIXME: Preselecting the current <option/> doesn't work like this :-(
                                 @attr 'value', affiliation
-                                for value, option of options
-                                    if value is affiliation or
-                                       (value is 'follower' and affiliation is 'none')
-                                        console.warn "selected", value, option
-                                        option.attr 'selected', "selected"
-                                    else
-                                        console.warn "deselected", value, option
-                                        option.removeAttr 'selected'
                                 set_info_lines(affiliations_infos[affiliation] or [])
                             set_current_option_callback = throttle_callback 100, set_current_option
                             view.bind 'user:update', (user) ->
