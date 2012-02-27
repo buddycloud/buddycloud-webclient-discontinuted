@@ -142,7 +142,6 @@ module.exports = design (view) ->
 
             update_role = =>
                 classes = @attr('class').split(/\s+/)
-                console.warn "update_role", view, app.users.current.canEdit channel
                 if app.users.current.canEdit channel
                     modClass = (class_) ->
                         if classes.indexOf(class_) < 0

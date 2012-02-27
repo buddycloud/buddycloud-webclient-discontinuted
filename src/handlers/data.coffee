@@ -169,7 +169,6 @@ class exports.DataHandler extends Backbone.EventHandler
 
         channel = app.channels.get(subscription.get('node'))
         channel.nodes.each (node) ->
-            console.warn "channel.nodes.each", arguments
             subscription1 = node.subscribers.get subscription.get('id')
             if subscription1?.get('subscription') is 'pending'
                 pending_subscriptions.push subscription1
