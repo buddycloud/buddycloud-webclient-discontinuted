@@ -24,7 +24,6 @@ class exports.ChannelEntry extends BaseView
         statusnode = @model.nodes.get_or_create(id: 'status')
         statusnode.bind 'post', =>
             @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value
-        app.handler.data.get_node_posts statusnode.get('nodeid')
 
     events:
         "click": "click_entry"

@@ -221,6 +221,18 @@ class exports.DataHandler extends Backbone.EventHandler
                 cb()
             , (cb) =>
                 @connector.replayNotifications mamStart, cb
+            , (cb) =>
+                # Check what status nodes are left to load
+                # (we display them in the sidebar):
+                statusnodes = app.users.current.channels.map((channel) =>
+                    channel.nodes.get_or_create(id: 'status')
+                ).filter((statusnode) =>
+                    # Not loaded most recent post yet?
+                    not (statusnode.posts.at(0)?)
+                )
+                async.forEach statusnodes, (statusnode, cb2) =>
+                    @get_node_posts statusnode.get('nodeid'), cb2
+                , cb
             ], =>
                 @set_loading false
 
