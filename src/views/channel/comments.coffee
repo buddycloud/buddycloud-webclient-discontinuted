@@ -1,16 +1,16 @@
-{ BaseView } = require '../base'
+{ PostsBaseView } = require './postsbase'
 { PostView } = require './post'
 { EventHandler } = require '../../util'
 
-class exports.CommentsView extends BaseView
+class exports.CommentsView extends PostsBaseView
+    ns: 'comment'
     template: require '../../templates/channel/comments'
 
     initialize: ->
         super
-        @views = {}
 #         @model.bind 'change', @render
-        @model.forEach @add_comment
-        @model.bind 'add', @add_comment
+        @model.forEach @add_post
+        @model.bind 'add', @add_post
 
     events:
         'keydown .answer textarea': 'hitEnterOnComment'
@@ -52,26 +52,17 @@ class exports.CommentsView extends BaseView
                     console.error "postError", error
                     @show_comment_error error
 
+    createView: (opts = {}) ->
+        opts.type ?= 'comment'
+        new PostView opts
+
+    indexOf: (model) ->
+        @model.indexOf(model)
+
     show_comment_error: (error) =>
         p = $('<p class="postError"></p>')
         @$('.answer .controls').prepend(p)
         p.text(error.text or error.condition)
-
-    add_comment: (comment) =>
-        view = @views[comment.cid] ?= new PostView
-            type:'comment'
-            model:comment
-            parent:this
-        return if view.rendering
-        i = @model.indexOf(view.model)
-        @ready =>
-            @trigger('view:comment:insert', i, (done) ->
-                view.ready ->
-                    view.domready ->
-                        view.__defineGetter__('_jquery',->view.el) # FIXME wtfuck?
-                        done()
-            )
-        view.render()
 
     render: (callback) ->
         super ->

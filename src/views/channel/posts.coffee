@@ -1,7 +1,8 @@
-{ BaseView } = require '../base'
+{ PostsBaseView } = require './postsbase'
 { TopicPostView } = require './topicpost'
 
-class exports.PostsView extends BaseView
+class exports.PostsView extends PostsBaseView
+    ns: 'topic'
     template: require '../../templates/channel/posts'
 #     tutorial: require '../../templates/channel/tutorial.eco'
 #     empty:    require '../../templates/channel/empty.eco'
@@ -10,7 +11,6 @@ class exports.PostsView extends BaseView
     # @el will be passed by @parent
     # @model is a PostsNode
     initialize: ->
-        @views = {}
         super
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
@@ -21,27 +21,12 @@ class exports.PostsView extends BaseView
                 app.handler.data.refresh_channel channel.get('id')
             , 50
 
-    ##
-    # TODO add different post type switch here
-    # currently only TopicPosts are supported
-    add_post: (post) =>
-        @$('.tutorial, .empty').remove()
-        view = @views[post.cid] ?= new TopicPostView
-            model:post
-            parent:this
-        return if view.rendering
-        i = @model.posts.indexOf(view.model)
-#         console.error "============================", i
-        @ready =>
-            @trigger('view:topic:insert', i, (done) ->
-#                 console.error "insert", i, view.cid
-                view.ready ->
-                    view.domready ->
-#                         console.error "domeready => ", i, view.el
-                        view.__defineGetter__('_jquery',->view.el) # FIXME wtfuck?
-                        done()
-            )
-        view.render()
+    createView: (opts = {}) ->
+        new TopicPostView opts
+
+    indexOf: (model) ->
+        @model.posts.indexOf(model)
+
 
 # FIXME this code should work again, i guess
 #         @$('.tutorial, .empty').remove()
