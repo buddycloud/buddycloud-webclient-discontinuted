@@ -17,3 +17,9 @@ class exports.Posts extends Collection
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()
+
+
+class exports.Comments extends exports.Posts
+    comparator: ->
+        -1 * super # comments have a reversed posts order
+

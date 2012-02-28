@@ -1,4 +1,4 @@
-{ Posts } = require '../collections/post'
+{ Comments } = require '../collections/post'
 { Post } = require './post'
 
 ##
@@ -6,9 +6,7 @@
 class exports.TopicPost extends Post
 
     initialize: ->
-        @comments = new Posts parent:this
-        @comments.comparator = (post) ->
-            new Date(post.get_last_update()).getTime()
+        @comments = new Comments parent:this
 
         # Bubble changes up:
         @comments.bind 'all', =>
