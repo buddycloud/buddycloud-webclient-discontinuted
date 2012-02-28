@@ -112,6 +112,12 @@ class exports.ChannelEditView extends BaseView
             app.handler.data.publish statusnode
             , { content: status, author: { name: app.users.current.get 'jid' } }
             , cb
+        , (cb) =>
+            # Subscriptions node
+            subsnode = @model.nodes.get_or_create id: 'subscriptions'
+            app.handler.data.set_node_metadata subsnode
+            , { access_model, publish_model: 'publishers', default_affiliation: 'member' }
+            , cb
         ], (err) =>
             @$('.save, .cancel').show()
             @trigger 'loading:stop'
