@@ -15,8 +15,8 @@ class exports.RSMQueue
                     # Reset RSM:
                     delete node["#{@name}_rsm"]
 
-            if rsm_info and rsm_info.end_reached
-                cb(null, [])
+            if rsm_info?.end_reached
+                cb? null, [], yes
 
             else
                 @queued[id] = [cb]
