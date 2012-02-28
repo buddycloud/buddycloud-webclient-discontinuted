@@ -336,7 +336,12 @@ Strophe.addConnectionPlugin('buddycloud', {
 		case 'description':
 		case 'access_model':
 		case 'publish_model':
+		case 'creation_date':
 		    config["pubsub#" + key] = value;
+		    break;
+		case 'default_affiliation':
+		case 'channel_type':
+		    config["buddycloud#" + key] = value;
 		    break;
 		}
 	    }

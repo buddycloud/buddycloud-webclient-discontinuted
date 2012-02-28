@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "create_topic_channel.html"
         select: () ->
-            @select "div.channelView", ".location.dual, .role"
+            @select "div.channelView", ".location.dual, .publish"
 
 
 { Template } = require 'dynamictemplate'
@@ -13,6 +13,19 @@ module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$div class:'channelView', ->
             @$form class: "stream clearfix", ->
+                @$div class: 'role', ->
+                    @$div ->
+                        role = null
+                        role = @$select id: 'channel_default_role'
+                        @$span class: 'hint followerPlusSelected', ->
+                            view.bind 'change:role', =>
+                                if role.attr('value') is 'publisher'
+                                    newClass = 'followerPlusSelected'
+                                else
+                                    newClass = 'followerSelected'
+                                @attr 'class', @attr('class').
+                                    replace(/followerSelected|followerPlusSelected/, "") +
+                                    " #{newClass}"
 
             @$nav class: "bottom clearfix", ->
                 @$div class: "button callToAction", ->

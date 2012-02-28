@@ -7,6 +7,7 @@ class exports.CreateTopicChannelView extends BaseView
 
     events:
         'click #create_button': 'on_click_create'
+        'change #channel_default_role': 'on_change_role'
 
     on_click_create: EventHandler ->
         if @$('#channel_public_access').prop('checked')
@@ -17,7 +18,8 @@ class exports.CreateTopicChannelView extends BaseView
             title: @$('#channel_name').val()
             description: @$('#channel_description').val()
             access_model: access_model
-            publish_model: @$('#channel_publish').val()
+            publish_model: 'publishers'
+            default_affiliation: @$('#channel_default_role').val()
 
         @trigger 'loading:start'
         app.handler.data.create_topic_channel metadata, (err, userid) =>
@@ -26,3 +28,6 @@ class exports.CreateTopicChannelView extends BaseView
                 return
 
             app.router.navigate "#{userid}", true
+
+    on_change_role: =>
+        @trigger 'change:role'
