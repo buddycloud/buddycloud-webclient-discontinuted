@@ -30,33 +30,20 @@ class exports.PostsView extends BaseView
             model:post
             parent:this
         return if view.rendering
-        view.render =>
-            @ready =>
-                @insert_post_view view
-
-#             post.bind 'change', =>
-#                     view.el.detach()
-#                 @insert_post_view view
-
-    insert_post_view: (view) =>
         i = @model.posts.indexOf(view.model)
-        olderPost = @views[@model.posts.at(i + 1)?.cid]
-        if olderPost?.rendered
-            if olderPost.el.parent().length > 0
-                olderPost.el.before view.el
-            else
-                # wtf .. jquery's design is so b0rken m(
-                dummy = $()
-                dummy = dummy.add view.el
-                dummy = dummy.add olderPost.el
-                olderPost.el = dummy
-        else if olderPost
-            olderPost.ready =>
-                @insert_post_view view
-        else
-            @el.append view.el
+#         console.error "============================", i
+        @ready =>
+            @trigger('view:topic:insert', i, (done) ->
+#                 console.error "insert", i, view.cid
+                view.ready ->
+                    view.domready ->
+#                         console.error "domeready => ", i, view.el
+                        view.__defineGetter__('_jquery',->view.el) # FIXME wtfuck?
+                        done()
+            )
+        view.render()
 
-#
+# FIXME this code should work again, i guess
 #         @$('.tutorial, .empty').remove()
 #         if not @parent.isLoading and count is 0
 #             if app.users.current.get('id') is @parent.model.get('id') # FIXME show tutorial for all users which have write access

@@ -63,28 +63,15 @@ class exports.CommentsView extends BaseView
             model:comment
             parent:this
         return if view.rendering
-        view.render =>
-            @ready =>
-                @insert_comment_view view
-
-#                 comment.bind 'change', =>
-#                     view.el.detach()
-#                     @insert_comment_view view
-
-    insert_comment_view: (view) =>
         i = @model.indexOf(view.model)
-        olderComment = @views[@model.at(i + 1)?.cid]
-        if olderComment?.rendered
-            if olderComment.el.parent().length > 0
-                olderComment.el.after view.el
-            else
-                # wtf .. jquery's design is so b0rken m(
-                olderComment.el = olderComment.el.add view.el
-        else if olderComment
-            olderComment.ready =>
-                @insert_comment_view view
-        else
-            @el.prepend view.el
+        @ready =>
+            @trigger('view:comment:insert', i, (done) ->
+                view.ready ->
+                    view.domready ->
+                        view.__defineGetter__('_jquery',->view.el) # FIXME wtfuck?
+                        done()
+            )
+        view.render()
 
     render: (callback) ->
         super ->
