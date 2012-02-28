@@ -7,6 +7,9 @@ class exports.TopicPost extends Post
 
     initialize: ->
         @comments = new Posts parent:this
+        @comments.comparator = (post) ->
+            new Date(post.get_last_update()).getTime()
+
         # Bubble changes up:
         @comments.bind 'all', =>
             @trigger 'change'
