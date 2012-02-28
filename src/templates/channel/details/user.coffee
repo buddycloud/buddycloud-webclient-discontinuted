@@ -46,7 +46,6 @@ affiliations_infos =
     ]
     member: [
         "read your channel"
-        "write comments & messages if publish_model matches"
     ]
     outcast: [
         "forbidden to read your channel"
