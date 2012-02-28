@@ -35,9 +35,6 @@ class exports.ChannelEditView extends BaseView
                 @el.show()
                 callback?.call(this)
 
-                publish_model = @model.nodes.get('posts').metadata.get('publish_model')?.value
-                @$('#channel_publish').val(publish_model)
-
     hide: =>
         return if @active
         @trigger 'update:el', $('<div id="editbar">')
@@ -91,20 +88,22 @@ class exports.ChannelEditView extends BaseView
         # whenever multiple ChannelViews are rendered yet hidden.
         open = @parent.$('#accessModel').prop 'checked'
         access_model = if open then 'open' else 'authorize'
-        publish_model = @$('#channel_publish').val()
+        publish_model = 'publishers'
+        default_affiliation = if @$('#allowPost').prop('checked') then 'publisher' else 'member'
+        console.warn "default_affiliation", default_affiliation
 
         # Send to server
         async.parallel [ (cb) =>
             # Full metadata for posts node
             postsnode = @model.nodes.get_or_create id: 'posts'
             app.handler.data.set_node_metadata postsnode
-            , { title, description, access_model, publish_model }
+            , { title, description, access_model, publish_model, default_affiliation }
             , cb
         , (cb) =>
             # Access model metadata for status node
             statusnode = @model.nodes.get_or_create id: 'status'
             app.handler.data.set_node_metadata statusnode
-            , { access_model }
+            , { access_model, publish_model: 'publishers', default_affiliation: 'member' }
             , cb
         , (cb) =>
             # Update status
