@@ -16,7 +16,9 @@ module.exports = design (view) ->
 
         @$div id:'editbar', ->
             @once('replace', load_indicate(this).clear)
-            view.bind('subview:editbar', @replace)
+            view.bind 'subview:editbar', @replace
+            view.bind 'show', @show
+            view.bind 'hide', @hide
 
         @$div id:'sidebar', ->
             @once('replace', load_indicate(this).clear)
@@ -32,7 +34,8 @@ module.exports = design (view) ->
                 console.log "content", tag
                 @add(tag)
 
-
+            view.bind 'show', @show
+            view.bind 'hide', @hide
 
 
 

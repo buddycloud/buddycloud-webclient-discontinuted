@@ -109,6 +109,7 @@ app.relogin = (user, password, callback) ->
     connection = new ConnectionHandler()
 
     on_connected = ->
+        # TODO: disconnect old connection
         clear()
         console.warn "connected", connection
         app.setConnection connection
