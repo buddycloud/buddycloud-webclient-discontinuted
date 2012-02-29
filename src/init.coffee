@@ -18,6 +18,7 @@ require './vendor-bridge'
 { UserStore } = require './collections/user'
 formatdate = require 'formatdate'
 Notificon = require 'notificon'
+{ DataHandler } = require './handlers/data'
 
 
 ### could be used to switch console output ###
@@ -70,7 +71,8 @@ app.initialize = ->
     app.users = new UserStore # userstore depends on channelstore
 
     # strophe handler
-    app.handler.connection = new ConnectionHandler
+    app.handler.data = new DataHandler()
+    app.setConnection app.relogin()
 
     ### the password hack ###
     ### FIXME
@@ -94,6 +96,41 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
+
+app.setConnection = (connection) ->
+    # Avoid DataHandler double-binding
+    if app.handler.connection isnt connection
+        app.handler.connection = connection
+        app.handler.connector = connection.connector
+        app.users.current = connection.user
+        app.handler.data.setConnector connection.connector
+
+app.relogin = (user, password, callback) ->
+    connection = new ConnectionHandler()
+
+    on_connected = ->
+        clear()
+        console.warn "connected", connection
+        app.setConnection connection
+        app.router.on_connected()
+    connection.bind 'connected', on_connected
+    clear = ->
+        connection.unbind 'connected', on_connected
+    on_fail = ->
+        callback new Error(event)
+    ["authfail", "connfail", "disconnected"].forEach (type) ->
+        on_fail = ->
+            clear()
+            callback new Error(type)
+        connection.bind type, on_fail
+        oldClear = clear
+        clear = ->
+            connection.unbind type, on_fail
+            oldClear()
+
+    connection.connect user, password
+    connection
+
 
 
 Modernizr.load
