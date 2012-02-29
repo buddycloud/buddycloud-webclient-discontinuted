@@ -15,15 +15,9 @@ class exports.PostsBaseView extends BaseView
             parent:this
         return if view.rendering
         i = @indexOf(view.model)
-#         console.error "============================", i
         @ready =>
-            @trigger("view:#{@ns}:insert", i, (done) ->
-#                 console.error "insert", i, view.cid
+            @trigger "view:#{@ns}:insert", i, (done) ->
                 view.ready ->
-                    view.domready ->
-#                         console.error "domeready => ", i, view.el
-                        view.__defineGetter__('_jquery',->view.el) # FIXME wtfuck?
-                        done()
-            )
+                    view.domready(done)
         view.render()
 

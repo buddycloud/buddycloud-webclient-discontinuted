@@ -7,10 +7,11 @@ class exports.BaseView extends Backbone.View
     initialize: ({@parent} = {}) ->
         @rendered = no
         @domisready = no
-        @bind 'dom:ready', =>
+        @bind 'dom:ready', (tag) =>
+            @_tag = tag
             @domisready = yes
             if @_waitingfordom?
-                cb() for cb in @_waitingfordom
+                cb(tag) for cb in @_waitingfordom
                 delete @_waitingfordom
 
     render: (callback) ->
@@ -42,7 +43,7 @@ class exports.BaseView extends Backbone.View
     domready: (callback) =>
         return this unless callback?
         if @domisready
-            callback()
+            callback(@_tag)
         else
             @_waitingfordom ?= []
             @_waitingfordom.push callback

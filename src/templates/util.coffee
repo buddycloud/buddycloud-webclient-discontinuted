@@ -1,8 +1,23 @@
 { List:dtList, jqueryify } = require 'dt-list'
 
+##
+# dt-list extended with event listener bind method
+# and with the right list callback.
+#
+# call it this way to get the tag (and not the view) into the list:
+#
+# list.push (done) ->
+#     view.domready(done)
+#
+# the view should be ready
+# and the template should contain a ready function call (the one down there)
+#
 class exports.List extends dtList
     constructor: (rootel) ->
-        super jqueryify rootel
+        listcallback = jqueryify rootel
+        super (pos, tag) ->
+            this[pos.idx] = tag if tag?
+            listcallback.call this, pos
 
     bind: (emitter, ns = "") ->
         ns += ":" if ns?.length?
@@ -31,5 +46,5 @@ exports.load_indicate = (tag) ->
 
 exports.ready = (tag, view) ->
         tag.ready ->
-            view.trigger 'dom:ready'
+            view.trigger 'dom:ready', tag
 
