@@ -109,9 +109,14 @@ app.relogin = (user, password, callback) ->
     connection = new ConnectionHandler()
 
     on_connected = ->
-        # TODO: disconnect old connection
         clear()
         console.warn "connected", connection
+
+        if app.handler.connection?.connection? and
+           app.handler.connection isnt connection
+            console.warn "Disconnect", app.handler.connection, connection
+            app.handler.connection.connection.disconnect()
+
         app.setConnection connection
         app.router.on_connected()
     connection.bind 'connected', on_connected

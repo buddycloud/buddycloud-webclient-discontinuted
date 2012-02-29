@@ -32,7 +32,7 @@ class exports.Router extends Backbone.Router
     on_connected: =>
         if @previous_connection?
             @previous_connection.unbind 'disconnected', @on_disconnected
-        @previous_connection = app.connection
+        @previous_connection = app.handler.connection
         app.handler.connection.bind 'disconnected', @on_disconnected
 
         if app.users.target?
