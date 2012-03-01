@@ -7,19 +7,10 @@ class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
         @el = $('#login')
-        input = $('#home_login_jid')
-        input.autoSuggestion
-            suffix: (val) ->
-                if val is "" or val.indexOf("@") isnt -1
-                    ""
-                else
-                    "@#{config.domain}"
-
         # get elements from login form (index.html)
         warning = $('label[for="store_local"] > div')
         checkbox = $('#store_local')
         passwdinput = $('#home_login_pwd')
-        userinput = input.parent().find('#auto-suggestion-'+input.prop 'id')
 
         # Always show checkbox
         $('label[for="store_local"]').show()
@@ -28,8 +19,8 @@ class exports.LoginView extends AuthenticationView
         jid = creds?[0]
         password = creds?[1]
         if jid? and password?
-            userinput.prop 'value', jid
-            passwdinput.prop 'value', password
+            $('#home_login_jid').val jid
+            passwdinput.val password
             checkbox.prop 'checked', yes
             warning.show()
         # bind warning to checkbox state
@@ -39,6 +30,14 @@ class exports.LoginView extends AuthenticationView
             else
                 setCredentials()
                 warning.hide()
+
+        input = $('#home_login_jid')
+        input.autoSuggestion
+            suffix: (val) ->
+                if val is "" or val.indexOf("@") isnt -1
+                    ""
+                else
+                    "@#{config.domain}"
 
         @el.find('form').live 'submit', EventHandler (ev) =>
             console.warn "form submit"
