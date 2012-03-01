@@ -106,6 +106,8 @@ app.setConnection = (connection) ->
         app.handler.data.setConnector connection.connector
 
 app.relogin = (user, password, callback) ->
+    if typeof password is 'object'
+        { password, register, email } = password
     connection = new ConnectionHandler()
 
     on_connected = ->
@@ -119,22 +121,25 @@ app.relogin = (user, password, callback) ->
 
         app.setConnection connection
         app.router.on_connected()
+        console.warn "app.relogin success callback"
+        callback?()
     connection.bind 'connected', on_connected
     clear = ->
         connection.unbind 'connected', on_connected
-    on_fail = ->
-        callback new Error(event)
-    ["authfail", "connfail", "disconnected"].forEach (type) ->
+    ["authfail", "regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) ->
         on_fail = ->
             clear()
-            callback new Error(type)
+            callback? new Error(type)
         connection.bind type, on_fail
         oldClear = clear
         clear = ->
             connection.unbind type, on_fail
             oldClear()
 
-    connection.connect user, password
+    if register
+        connection.register user, password, email
+    else
+        connection.connect user, password
     connection
 
 
