@@ -81,15 +81,8 @@ class exports.User extends Model
             no
 
 
-# Copied from server operations
-AFFILIATIONS = [
-    'outcast', 'none', 'member',
-    'publisher', 'moderator', 'owner'
-]
+# app.affiliations is sorted descending
 isAffiliationAtLeast = (affiliation1, affiliation2) ->
-    i1 = AFFILIATIONS.indexOf(affiliation1)
-    i2 = AFFILIATIONS.indexOf(affiliation2)
-    if i2 < 0
-        false
-    else
-        i1 >= i2
+    i1 = app.affiliations.indexOf(affiliation1 or 'none')
+    i2 = app.affiliations.indexOf(affiliation2 or 'none')
+    return i1 >= i2
