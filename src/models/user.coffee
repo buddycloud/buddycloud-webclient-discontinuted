@@ -85,4 +85,4 @@ class exports.User extends Model
 isAffiliationAtLeast = (affiliation1, affiliation2) ->
     i1 = app.affiliations.indexOf(affiliation1 or 'none')
     i2 = app.affiliations.indexOf(affiliation2 or 'none')
-    return i1 >= i2
+    return i1 >= i2 > -1
