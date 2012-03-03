@@ -28,15 +28,18 @@ class exports.Channels extends Collection
 
     filter: (filter) ->
         return @models if not filter? or filter is ""
-        filter = filter.toLowerCase()
-        super (channel) ->
-            # FIXME only id to check, there meight be more (hope so)
-            if (id = channel.get('id'))?
-                id.toLowerCase().indexOf(filter) > -1
+        if typeof filter is 'string'
+            filter = filter.toLowerCase()
+            super (channel) ->
+                # FIXME only id to check, there might be more (hope so)
+                if (id = channel.get('id'))?
+                    id.toLowerCase().indexOf(filter) > -1
 
-            else
-                # nothing to compare with, channel must be empty, so we can ignore it
-                no
+                else
+                    # nothing to compare with, channel must be empty, so we can ignore it
+                    no
+        else
+            super
 
     touch: (channel, opts = {}) =>
         channel.last_touched = opts.date or new Date

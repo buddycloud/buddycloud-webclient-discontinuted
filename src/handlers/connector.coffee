@@ -21,6 +21,17 @@ class exports.Connector extends Backbone.EventHandler
         , (error) =>
             callback? new Error("Cannot replay notifications")
 
+    createNode: (nodeid, metadata, callback) =>
+        @request (done) =>
+            success = =>
+                done()
+                callback?()
+            error = (error) =>
+                done()
+                callback?(error)
+            @connection.buddycloud.createNode(
+                nodeid, metadata, success, error)
+
     publish: (nodeid, item, callback) =>
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
@@ -38,16 +49,15 @@ class exports.Connector extends Backbone.EventHandler
     subscribe: (nodeid, callback) =>
         @request (done) =>
             # TODO: subscribe channel
-            @connection.buddycloud.subscribeNode nodeid, (stanza) =>
-                app.debug "subscribe", stanza
+            @connection.buddycloud.subscribeNode nodeid, (subscription) =>
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
                 @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'subscribed' # FIXME
+                    subscription: subscription
                 @work_enqueue ->
                     done()
-                    callback? null
+                    callback? null, subscription
             , =>
                 app.error "subscribe", nodeid
                 @work_enqueue ->
@@ -62,7 +72,7 @@ class exports.Connector extends Backbone.EventHandler
                 @trigger 'subscription',
                     jid: userJid
                     node: nodeid
-                    subscription: 'unsubscribed'
+                    subscription: 'none'
                 @work_enqueue ->
                     done()
                     callback? null
@@ -80,7 +90,7 @@ class exports.Connector extends Backbone.EventHandler
 #             app.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
-    get_node_posts: (nodeid, rsmAfter, callback) =>
+    get_node_posts: ({nodeid, rsmAfter, itemIds}, callback) =>
         @request (done) =>
             success = (posts) =>
                 for post in posts
@@ -89,8 +99,6 @@ class exports.Connector extends Backbone.EventHandler
                     else if post.subscriptions?
                         for own nodeid_, subscription of post.subscriptions
                             @trigger 'subscription', subscription
-                if posts.rsm
-                    @trigger 'posts:rsm:last', nodeid, posts.rsm.last
                 @work_enqueue ->
                     done()
                     callback? null, posts
@@ -100,8 +108,12 @@ class exports.Connector extends Backbone.EventHandler
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot get posts")
+            # Only most recent status is interesting for the status
+            # node. TODO: this amount parameter is better moved up
+            # towards the views that actually display it.
+            rsmMax = if /\/status/.test(nodeid) then 1 else 30
             @connection.buddycloud.getChannelPosts(
-                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
+                { node: nodeid, rsmMax, rsmAfter, itemIds }, success, error, @connection.timeout)
 
     get_node_metadata: (nodeid, callback) =>
         @request (done) =>
@@ -129,11 +141,9 @@ class exports.Connector extends Backbone.EventHandler
                             jid: user
                             node: nodeid
                             subscription: subscription
-                if subscribers.rsm
-                    @trigger 'subscribers:rsm:last', nodeid, subscribers.rsm.last
                 @work_enqueue ->
                     done()
-                    callback? null
+                    callback? null, subscribers
             error = (error) =>
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->
@@ -141,6 +151,55 @@ class exports.Connector extends Backbone.EventHandler
                     callback? new Error("Cannot get subscriptions")
             @connection.buddycloud.getSubscribers(
                 { node: nodeid, rsmAfter }, success, error, @connection.timeout)
+
+    set_node_subscriptions: (nodeid, subscriptions, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                @work_enqueue ->
+                    done()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? error
+            @connection.pubsub.setNodeSubscriptions(nodeid, subscriptions
+            , success, error, @connection.timeout)
+
+
+    get_node_affiliations: (nodeid, rsmAfter, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                console.warn "affiliations", nodeid, affiliations
+                for own user, affiliation of affiliations
+                    unless user is 'rsm'
+                        @trigger 'affiliation',
+                            jid: user
+                            node: nodeid
+                            affiliation: affiliation
+                @work_enqueue ->
+                    done()
+                    callback? null, affiliations
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot get affiliations")
+            @connection.buddycloud.getAffiliations(
+                { node: nodeid, rsmAfter }, success, error, @connection.timeout)
+
+    set_node_affiliation: (nodeid, userid, affiliation, callback) =>
+        @request (done) =>
+            success = (affiliations) =>
+                @work_enqueue ->
+                    done()
+                    callback? null
+            error = (error) =>
+                @trigger 'node:error', nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? new Error("Cannot set affiliation")
+            @connection.pubsub.setAffiliation(nodeid, userid, affiliation, success, error)
 
     set_node_metadata: (nodeid, metadata, callback) =>
         @request (done) =>

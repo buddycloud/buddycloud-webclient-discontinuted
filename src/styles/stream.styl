@@ -24,7 +24,12 @@
   width 76px
   height 26px
   text-indent -9999px
-  background url(../../public/images/poweredby.png)
+  background url(../../public/images/poweredby.png) no-repeat
+  color black
+  text-decoration none
+  &:hover
+    padding-top 20px
+    text-indent 0
   position absolute
   header.small #poweredby
     top 0
@@ -159,7 +164,7 @@
   width 500px
   border-radius 5px 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
-  float left
+  //float left
   position relative
   z-index 2
 
@@ -193,7 +198,7 @@
         box-shadow none
   .notification
     height 49px
-    margin-top -76px
+    margin-top -49px
     color white
     text-shadow 0 1px 1px rgba(0,0,0,.34)
     border-top 1px solid rgba(0, 0, 0, 0.13)
@@ -721,9 +726,12 @@
     overflow hidden
   .channelInfo
     padding 5px 8px
-    margin-bottom 1px
+    // margin-bottom 1px FIXME really necessary?
     background linear-gradient(top, #fafafa, #f7f7f7)
     box-shadow 0 1px 1px rgba(0, 0, 0, 0.34)
+    h4
+      // JID link
+      cursor pointer
   .action
     padding 5px 8px
     margin-bottom 1px
@@ -748,6 +756,7 @@
       &.negative
         background url(../../public/icons/minus.png) no-repeat 2px center
   .actionRow
+    display none
     width 100%
     box horizontal justify center
     &.confirm
@@ -772,18 +781,22 @@
         padding 6px 5px 4px
         background linear-gradient(top, #f7f7f7, #ccc)
         box-shadow 0 2px white inset, 0 1px rgba(0, 0, 0, 0.05)
+  &.moderator
+   .actionRow
+     display block
   &.choosen
     .actionRow
       display none
-      &.confirm
-        box horizontal justify center
+  &.choosen.moderator
+    .actionRow.confirm
+      box horizontal justify center
     &.role
       .changeRole
         display block
     &.ban
       .banUser
         display block
-        
+
 .count
   font-size 14px
   line-height 27px

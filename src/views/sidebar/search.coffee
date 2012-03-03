@@ -12,6 +12,15 @@ class exports.Searchbar extends BaseView
             console.log "searchbar", @el, @$('input[type="search"]')
             @parent.trigger 'subview:searchbar', @el
             @$('input[type="search"]').input @on_input
+
+            unless Modernizr.hasEvent 'search' # firefox
+                setTimeout => # wtf
+                    @$('input').keydown (ev) =>
+                        code = ev.keyCode or ev.which
+                        return unless code is 13
+                        @on_search(ev)
+                , 66
+
             callback?.call(this)
 
     on_input: (ev) =>

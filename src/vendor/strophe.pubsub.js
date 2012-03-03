@@ -349,7 +349,17 @@ Extend connection object to have plugin name 'pubsub'.
             iq.up().c('options').form(Strophe.NS.PUBSUB_SUBSCRIBE_OPTIONS, options);
         }
 
-        that.sendIQ(iq.tree(), success, error);
+        that.sendIQ(iq.tree(), function(stanza) {
+	    /* get returned subscription status */
+	    var subscription = 'subscribed';
+	    Strophe.forEachChild(stanza, 'pubsub', function(pubsubEl) {
+		Strophe.forEachChild(pubsubEl, 'subscription', function(subscriptionEl) {
+		    subscription = subscriptionEl.getAttribute('subscription');
+		});
+	    });
+	    if (success)
+		success(subscription);
+	}, error);
         return iqid;
     },
 
@@ -392,8 +402,27 @@ Extend connection object to have plugin name 'pubsub'.
 
         var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('publish', { node:node, jid:this.jid })
+          .c('publish', { node:node })
           .list('item', items);
+
+        that.sendIQ(iq.tree(), success, error);
+
+        return iqid;
+    },
+
+    /**
+     * Delete items of a node
+     */
+    retract: function(node, itemIds, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubretractitems");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
+          .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
+          .c('retract', { node:node });
+	for(var i = 0; i < itemIds.length; i++) {
+	    iq.c('item', { id: itemIds[i] }).up();
+	}
 
         that.sendIQ(iq.tree(), success, error);
 
@@ -409,10 +438,17 @@ Extend connection object to have plugin name 'pubsub'.
 	var node = options.node || options;
         var iq = $iq({from:this.jid, to:this.service, type:'get'})
           .c('pubsub', { xmlns:Strophe.NS.PUBSUB })
-          .c('items', {node:node}).up()
-	  .c('set', { xmlns: Strophe.NS.RSM })
-	  .c('max').t("40")
-	  .up();
+          .c('items', {node:node});
+	if (options.itemIds) {
+	    for(var i = 0; i < options.itemIds.length; i++) {
+		iq.c('item', { id: options.itemIds[i] }).up();
+	    }
+	}
+	iq.up()
+	  .c('set', { xmlns: Strophe.NS.RSM });
+	if (options.rsmMax)
+	  iq.c('max').t("" + options.rsmMax)
+	    .up();
 	if (options.rsmAfter)
 	    iq.c('after').t(options.rsmAfter);
 
@@ -474,6 +510,24 @@ Extend connection object to have plugin name 'pubsub'.
        return iqid;
     },
 
+    setNodeSubscriptions: function(node, subscriptions, success, error) {
+        var that = this._connection;
+        var iqid = that.getUniqueId("pubsubsubscriptions");
+
+        var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
+            .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})
+            .c('subscriptions', {'node':node});
+	for(var jid in subscriptions)
+	    if (subscriptions.hasOwnProperty(jid))
+		iq.c('subscription', { jid: jid,
+				       subscription: subscriptions[jid] })
+		    .up();
+
+       that.sendIQ(iq.tree(), success, error);
+
+       return iqid;
+    },
+
     /** Function: getSubOptions
      *  Get subscription options form.
      *
@@ -510,8 +564,9 @@ Extend connection object to have plugin name 'pubsub'.
      *  Returns:
      *    Iq id
      */
-    getAffiliations: function(node, success, error) {
+    getNodeAffiliations: function(options, success, error) {
         var that = this._connection;
+	var node = options.node || options;
         var iqid = that.getUniqueId("pubsubaffiliations");
 
         if (typeof node === 'function') {
@@ -527,6 +582,10 @@ Extend connection object to have plugin name 'pubsub'.
 
         var iq = $iq({from:this.jid, to:this.service, type:'get', id:iqid})
           .c('pubsub', xmlns).c('affiliations', attrs);
+	if (options.rsmAfter)
+	    iq.up().
+		c('set', { xmlns: Strophe.NS.RSM }).
+		c('after').t(options.rsmAfter);
 
         that.sendIQ(iq.tree(), success, error);
 
@@ -546,7 +605,7 @@ Extend connection object to have plugin name 'pubsub'.
      */
     setAffiliation: function(node, jid, affiliation, success, error) {
         var that = this._connection;
-        var iqid = thiat.getUniqueId("pubsubaffiliations");
+        var iqid = that.getUniqueId("pubsubaffiliations");
 
         var iq = $iq({from:this.jid, to:this.service, type:'set', id:iqid})
           .c('pubsub', {'xmlns':Strophe.NS.PUBSUB_OWNER})

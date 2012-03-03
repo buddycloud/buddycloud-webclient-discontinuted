@@ -9,11 +9,15 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
+{ throttle_callback } = require '../../../util'
 design = require '../../../_design/channel/details/index'
 
 
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
+        postsnode = view.model.nodes.get_or_create(id: 'posts')
+        metadata = postsnode.metadata
+
         @$div class: 'channelDetails', ->
             @$div class: 'holder', ->
                 @$section class: 'meta', ->
@@ -29,17 +33,38 @@ module.exports = design (view) ->
                     creationDate = make_field 'broadcast'
 
                     update_metadata = =>
-                        console.warn "update_metadata", view.metadata
-                        owner.text view.model.get('id')
-                        metadata = view.metadata.toJSON()
-                        description.text metadata.description?.value
-                        accessModel.text metadata.access_model?.value
-                        date = metadata.creation_date?.value
+                        owners = postsnode.affiliations.filter (affiliation) ->
+                                affiliation.get('affiliation') is 'owner'
+                        owner.text owners.map((owner) -> owner.get 'id').
+                            join(" ")
+                        description.text metadata.get('description')?.value
+                        if metadata.get('access_model')?.value is 'open'
+                            accessModel.text "open"
+                        else
+                            accessModel.text "private"
+                        date = metadata.get('creation_date')?.value
                         if date?
                             creationDate.attr "data-date":date
-                            creationDate._jquery.formatdate(update:off)
-                    view.metadata.bind 'change', update_metadata
+                            creationDate._jquery?.formatdate(update:off)
+                    # Filtering for owners takes potentially long, and
+                    # we bind to every affiliation update.
+                    update_metadata_callback = throttle_callback 400, update_metadata
+                    view.metadata.bind 'change', update_metadata_callback
+                    postsnode.bind 'affiliation:update', update_metadata_callback
                     update_metadata()
 
-                view.bind('subview:followers', @add)
-                view.bind('subview:following', @add)
+                view.bind 'subview:moderators', @add
+                view.bind 'subview:followers', @add
+                view.bind 'subview:following', (el) =>
+                    @add el
+
+                    update_visibility = ->
+                        # FIXME: uses the jQuery `el'. the `@add()'
+                        # result didn't work.
+                        if metadata.get('channel_type')?.value is 'topic'
+                            # Topic channels don't follow anyone
+                            el.hide()
+                        else
+                            el.show()
+                    metadata.bind 'change', update_visibility
+                    update_visibility()

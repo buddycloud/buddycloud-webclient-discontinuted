@@ -14,9 +14,19 @@ module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$div id: 'editbar', ->
             @$div class: 'edits', ->
+                @$div class: 'contenteditable', ->
+                    @$input id: 'allowPost', ->
+                        metadata = view.model.
+                            nodes.get_or_create(id: 'posts').metadata
+                        set_value = =>
+                            default_affiliation = metadata.get('default_affiliation')?.value
+                            if default_affiliation is 'publisher'
+                                @attr 'checked', 'checked'
+                            else
+                                @removeAttr 'checked'
+                        metadata.bind 'change', set_value
+                        set_value()
                 @$nav class: 'clearfix', ->
-                    spinner = @$span class: 'spinner'
-                    view.bind 'loading:stop', ->
-                        spinner.hide()
-                    view.bind 'loading:start', ->
-                        spinner.show()
+                    @$span class: 'spinner', ->
+                        view.bind('loading:stop',  @hide)
+                        view.bind('loading:start', @show)

@@ -1,4 +1,6 @@
 { User } = require '../models/user'
+{ RSMQueue } = require './rsm_queue'
+async = require 'async'
 
 
 class exports.DataHandler extends Backbone.EventHandler
@@ -15,30 +17,44 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'connection:established', @on_connection_established
         @connector.bind 'connection:end', @on_connection_end
 
-    # TODO: @param node {Node model}
+        @get_posts_queue = new RSMQueue 'posts', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_posts { nodeid, rsmAfter }, callback
+        @get_subscriptions_queue = new RSMQueue 'subscriptions', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_subscriptions nodeid, rsmAfter, callback
+        @get_affiliations_queue = new RSMQueue 'affiliations', (nodeid, rsmAfter, callback) =>
+            @connector.get_node_affiliations nodeid, rsmAfter, callback
+
+    ##
+    # Extracts and sanitizes userid part from title, then creates
+    # posts & status nodes.
+    create_topic_channel: (metadata, callback) ->
+        userid = metadata.title.
+            toLocaleLowerCase().
+            replace(/\s/g, "_").
+            replace(/[\"\&\'\/\:\<\>]/g, "")
+        if userid.indexOf("@") < 0 and config.topic_domain
+            userid = "#{userid}@#{config.topic_domain}"
+        @connector.createNode "/user/#{userid}/posts", metadata, (err) =>
+            if err
+                return callback(err)
+
+            @connector.createNode "/user/#{userid}/status", metadata, ->
+                # Don't care about status node result if posts worked
+                callback(null, userid)
+
+    # @param node {Node model or nodeid}
+    # @param callback(err, done)
     get_node_posts: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
 
-        # Reset pagination
-        node.push_posts_rsm_last null
+        @get_posts_queue.add node, callback
 
-        @connector.get_node_posts nodeid, null, (err, posts) =>
-            unless err
-                # Success retrieving first page?
-                node.on_posts_synced()
-            callback? err, posts
-
-    get_more_node_posts: (node, callback) ->
+    get_node_posts_by_id: (node, ids, callback) ->
         nodeid = node.get?('nodeid') or node
-        if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
-
-        rsm_after = node.posts_rsm_last
-        @connector.get_node_posts nodeid, rsm_after, callback
+        console.warn "get_node_posts_by_id", node, ids
+        @connector.get_node_posts { nodeid, itemIds: ids }, callback
 
     get_node_metadata: (node, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -49,28 +65,37 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.set_node_metadata nodeid, metadata, callback
 
     get_node_subscriptions: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
         if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
 
-        # Reset pagination
-        node.push_subscribers_rsm_last null
+        @get_subscriptions_queue.add node, callback
 
-        @connector.get_node_subscriptions nodeid, null, (err, subscribers) =>
-            unless err
-                # Success retrieving first page?
-                node.on_subscribers_synced()
-            callback? err, subscribers
+    get_all_node_subscriptions: (nodeid, callback) =>
+        @get_node_subscriptions nodeid, (err, results, done) =>
+            if err or done
+                callback?()
+            else
+                @get_all_node_subscriptions nodeid, callback
 
-    get_more_node_subscriptions: (node, callback) ->
-        nodeid = node.get?('nodeid') or node
+    get_node_affiliations: (node, callback) ->
         if typeof node is 'string'
-            channel = app.channels.get_or_create id:nodeid
-            node = channel.nodes.get_or_create nodeid:nodeid
+            channel = app.channels.get_or_create id:node
+            node = channel.nodes.get_or_create nodeid:node
 
-        rsm_after = node.subscribers_rsm_last
-        @connector.get_node_subscriptions nodeid, rsm_after, callback
+        @get_affiliations_queue.add node, callback
+
+    get_all_node_affiliations: (nodeid, callback) =>
+        @get_node_affiliations nodeid, (err, results, done) =>
+            if err or done
+                callback?()
+            else
+                @get_all_node_affiliations nodeid, callback
+
+    set_channel_affiliation: (userid, affiliator, affiliation, callback) =>
+        forEachUserNode userid, (node, callback2) =>
+            @connector.set_node_affiliation node, affiliator, affiliation, callback
+        , callback
 
     publish: (node, item, callback) ->
         nodeid = node.get?('nodeid') or node
@@ -116,26 +141,55 @@ class exports.DataHandler extends Backbone.EventHandler
             @connector.remove_from_roster user
             callback? if oneSuccess then null else oneError
 
+    grant_subscription: (subscription, callback) ->
+        newSubscriptions = {}
+        newSubscriptions[subscription.get('id')] = 'subscribed'
+
+        async.forEach @get_pending_user_subscriptions(subscription)
+        , (subscription1, cb) =>
+            @connector.set_node_subscriptions subscription1.get('node')
+            , newSubscriptions, cb
+        , callback
+
+    deny_subscription: (subscription, callback) ->
+        newSubscriptions = {}
+        newSubscriptions[subscription.get('id')] = 'none'
+
+        async.forEach @get_pending_user_subscriptions(subscription)
+        , (subscription1, cb) =>
+            @connector.set_node_subscriptions subscription1.get('node')
+            , newSubscriptions, cb
+        , callback
+
+
+    # Looks if there are other nodes in the same channel that this
+    # user has pending subscription to.
+    get_pending_user_subscriptions: (subscription) ->
+        pending_subscriptions = []
+
+        channel = app.channels.get(subscription.get('node'))
+        channel.nodes.each (node) ->
+            subscription1 = node.subscribers.get subscription.get('id')
+            if subscription1?.get('subscription') is 'pending'
+                pending_subscriptions.push subscription1
+
+        pending_subscriptions
+
+    ##
+    # @param callback(error, done)
     get_user_subscriptions: (jid, callback) =>
         nodeid = "/user/#{jid}/subscriptions"
 
         if jid isnt "anony@mous"
-            rsmAfter = null
-            step = =>
-                @connector.get_node_posts nodeid, rsmAfter, (err, posts) =>
-                    # TODO: synced?
-                    if not posts?.rsm?.after or posts?.rsm?.after is rsmAfter
-                        # Final page
-                        app.users.get(jid).subscriptions_synced = app.users.current.channels.get(nodeid)?
-                        callback? err
-                    else
-                        # Next page
-                        rsmAfter = posts.rsm.after
-                        step()
-            step()
+            @get_node_posts nodeid, callback
         else
             # anony@mous has no retrievable subscriptions
-            callback?()
+            callback?(null, true)
+
+    get_all_user_subscriptions: (jid, callback) =>
+        @get_user_subscriptions jid, (err, results, done) =>
+            unless err or (not results?.length > 0) or done
+                @get_all_user_subscriptions jid, callback
 
     # event callbacks
 
@@ -144,13 +198,6 @@ class exports.DataHandler extends Backbone.EventHandler
             post.unread = true
         channel = app.channels.get_or_create id:nodeid
         channel.push_post nodeid, post
-
-    on_node_posts_rsm_last: (nodeid, rsmLast) =>
-        channel = app.channels.get_or_create id:nodeid
-        # FIXME: more indirection like above?
-        node = channel.nodes.get_or_create id:nodeid
-        # Push info to retrieve next page
-        node.push_posts_rsm_last rsmLast
 
     on_node_error: (nodeid, error) =>
         channel = app.channels.get_or_create id:nodeid
@@ -165,15 +212,29 @@ class exports.DataHandler extends Backbone.EventHandler
             # Replay starting one day before last view
             lastView = new Date(app.users.current.channels.get_last_timestamp())
             mamStart = new Date(lastView - 23 * 60 * 60 * 1000).toISOString()
-            pending = 2
-            done = =>
-                pending--
-                if pending < 1
-                    @set_loading false
-            @get_user_subscriptions app.users.current.get('id'), (error) =>
-                done()
+
+            async.parallel [ (cb) =>
+                @get_all_user_subscriptions app.users.current.get('id'), cb
+            , (cb) =>
                 @scan_roster_for_channels()
-            @connector.replayNotifications mamStart, done
+                # return immediately:
+                cb()
+            , (cb) =>
+                @connector.replayNotifications mamStart, cb
+            , (cb) =>
+                # Check what status nodes are left to load
+                # (we display them in the sidebar):
+                statusnodes = app.users.current.channels.map((channel) =>
+                    channel.nodes.get_or_create(id: 'status')
+                ).filter((statusnode) =>
+                    # Not loaded most recent post yet?
+                    not (statusnode.posts.at(0)?)
+                )
+                async.forEach statusnodes, (statusnode, cb2) =>
+                    @get_node_posts statusnode.get('nodeid'), cb2
+                , cb
+            ], =>
+                @set_loading false
 
     on_connection_end: =>
         app.channels.each (channel) ->
@@ -242,21 +303,18 @@ class exports.DataHandler extends Backbone.EventHandler
 
         forEachUserNode userid, (nodeid, callback2) =>
             node = channel.nodes.get_or_create nodeid:nodeid
-            # 2: get_node_posts + get_node_metadata
-            pending = 2
-            done = ->
-                pending--
-                if pending < 1
-                    callback2()
-
-            unless node.posts_synced
-                @get_node_posts nodeid, done
-            else
-                done()
-            unless node.metadata_synced
-                @get_node_metadata nodeid, done
-            else
-                done()
+            async.parallel [ (callback3) =>
+                console.warn "refresh_channel", nodeid, node.posts_synced
+                unless node.posts_synced
+                    @get_node_posts nodeid, callback3
+                else
+                    callback3()
+            , (callback3) =>
+                unless node.metadata_synced
+                    @get_node_metadata nodeid, callback3
+                else
+                    callback3()
+            ], callback2
         , =>
             channel.set_loading false
             callback?()
@@ -285,12 +343,12 @@ class exports.DataHandler extends Backbone.EventHandler
 ##
 # @param iter {Function} callback(node, callback)
 forEachUserNode = (user, iter, callback) ->
-    pending = 0
-    ["posts", "status", "subscriptions",
-     "geo/previous", "geo/current", "geo/next"].forEach (type) ->
-        nodeid = "/user/#{user}/#{type}"
-        pending++
-        iter nodeid, ->
-            pending--
-            if pending < 1
-                callback?()
+    nodes = ("/user/#{user}/#{type}" for type in [
+        "posts",
+        "status",
+        "subscriptions",
+        "geo/previous",
+        "geo/current",
+        "geo/next",
+    ])
+    async.forEach nodes, iter, callback

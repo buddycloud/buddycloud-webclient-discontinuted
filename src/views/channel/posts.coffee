@@ -15,6 +15,12 @@ class exports.PostsView extends BaseView
         @model.posts.forEach @add_post
         @model.posts.bind 'add', @add_post
 
+        @model.bind 'unsync', =>
+            setTimeout =>
+                channel = app.channels.get @model.get('nodeid')
+                app.handler.data.refresh_channel channel.get('id')
+            , 50
+
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported
@@ -68,19 +74,19 @@ class exports.PostsView extends BaseView
                 { top: viewTop } = view.el.position()
                 viewBottom = viewTop + view.el.outerHeight()
                 if peepholeBottom >= viewTop
-                    @load_more()
+                    return @load_more()
 
-        if peepholeTop >= $('.stream').innerHeight() - peepholeBottom * 1.05
+        if peepholeBottom >= @parent.$('.stream').innerHeight() - 10
             @on_scroll_bottom()
 
     on_scroll_bottom: =>
         @load_more()
 
     load_more: =>
-        if @model.can_load_more_posts() and
-           not @model.collection.channel.isLoading
+        unless @model.collection.channel.isLoading
             @model.collection.channel.set_loading true
-            app.handler.data.get_more_node_posts @model, =>
+            app.handler.data.get_node_posts @model, (err, done) =>
                 @model.collection.channel.set_loading false
                 # Should we be loading even more?
-                @parent.on_scroll()
+                unless err or done
+                    @parent.on_scroll()

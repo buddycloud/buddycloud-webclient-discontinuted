@@ -13,9 +13,12 @@ browserify = require 'browserify'
 snippets = ["main"
     "channel/index", "channel/posts", "channel/post"
     "channel/topicpost", "channel/comments", "channel/edit"
-    "channel/details/index", "channel/details/list"
+    "channel/details/index", "channel/details/list", "channel/details/user"
+    "channel/follow_notification", "channel/pending_notification"
+    "channel/error_notification", "channel/private"
     "sidebar/index", "sidebar/search", "sidebar/entry"
     "authentication/overlay"
+    "create_topic_channel/index"
 ]
 
 
@@ -59,7 +62,8 @@ config.load (args, opts) ->
                 select: selector.select
                 watch:  yes
                 done:   done
-                dest:   path.join(designPath, selector.snippet) + ".js"
+                path:   designPath
+                dest:   "#{selector.snippet}.js"
     0
 
 start_server = (args, opts) ->
@@ -67,6 +71,7 @@ start_server = (args, opts) ->
     server = express.createServer()
 
     server.configure ->
+        server.use express.favicon(path.join(buildPath, "favicon.ico"))
 
         javascript = browserify
                 mount  : '/web/js/app.js'
@@ -75,7 +80,7 @@ start_server = (args, opts) ->
                 cache  : on
                 debug  : not config.build
                 require: [
-                    jquery  :'jquery-browserify'
+                    jquery  :'br-jquery'
                     backbone:'backbone-browserify'
                     path.join(cwd, "src", "init")
                 ]
@@ -92,6 +97,9 @@ start_server = (args, opts) ->
                         # expose MD5 lib because we need that for gravatar too
                         source += ";window.MD5=MD5"
                         source
+
+        javascript.use(require('shimify'))
+        javascript.use(require('scopify').createScope require:'./init')
 
         if config.build
             # minification
@@ -136,8 +144,7 @@ start_server = (args, opts) ->
     if config.build
         # this puts everything in a tarball
         pack = require './packaging'
-        url = "http://#{config.host}:#{config.port}"
-        pack url, "build.tar.gz"
+        pack "build.tar.gz"
     else
         console.log "build server listening on %s:%s …".magenta,
             config.host, config.port

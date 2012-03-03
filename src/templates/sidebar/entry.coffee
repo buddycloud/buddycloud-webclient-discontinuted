@@ -30,7 +30,7 @@ module.exports = design (view) ->
                     $.removeClass('selected')
 
             avatar = @div class:'avatar', ->
-                unread_counter = @$span class:'counter'
+                unread_counter = @$span class:'channelpost counter'
                 update_unread = ->
                     unread = channel.count_unread()
                     unread_counter.text "#{unread}"
@@ -40,13 +40,23 @@ module.exports = design (view) ->
                         unread_counter.hide()
 
                 view.bind 'update:unread_counter', update_unread
-                do update_unread
+                update_unread()
+
+                notification_counter = @$span class:'admin counter'
+                update_notification = ->
+                    count = channel.count_notifications()
+                    notification_counter.text "#{count}"
+                    if count > 0
+                        notification_counter.show()
+                    else
+                        notification_counter.hide()
+                view.bind 'update:notification_counter', update_notification
+                update_notification()
 
             @$div class:'info', ->
                 owner = @span class:'owner'
                 username = owner.span()
                 domain = owner.span class:'domain'
-                @$span class:'status', (channel.nodes.get('status')?.last() or "")
 
                 update = ->
                     avatar.attr style:"background-image:url(#{channel.avatar})"
@@ -62,4 +72,11 @@ module.exports = design (view) ->
                 username.end()
                 domain.end()
                 owner.end()
+
+                status = @$span class:'status'
+                update_status = (text) ->
+                    status.text text ? ""
+                    status.attr title:(text ? "")
+                view.bind 'update:status', update_status
+                update_status()
 

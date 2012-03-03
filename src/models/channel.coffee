@@ -7,10 +7,11 @@
 # Attribute jid: Jabber-Id
 class exports.Channel extends Model
     initialize: ->
+        @_unread_count = 0
         @id = @get 'id'
         @last_touched = new Date
         @nodes = new NodeStore channel:this
-        @avatar = gravatar @id, s:50, d:'retro'
+        @avatar = gravatar @id
         @nodes.fetch()
 
         # Auto-create the default set of nodes for that channel, so
@@ -28,7 +29,7 @@ class exports.Channel extends Model
 
     # subscription.jid is already filtered for this channel id (user)
     push_subscription: (subscription) ->
-        # subscription.subscription is either subscribed, unsubscribed or pending
+        # subscription.subscription is either subscribed, none or pending
         @trigger 'subscription', subscription
 
     push_affiliation: (affiliation) ->
@@ -54,6 +55,8 @@ class exports.Channel extends Model
                 count++
             else break
         @trigger 'bubble'
+        app.favicon(count - @_unread_count) # only add new ones
+        @_unread_count = count
         count
 
     mark_read: ->
@@ -61,4 +64,20 @@ class exports.Channel extends Model
         last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
         if last_update and last_update > last_view
             last_view = last_update
+        app.favicon(@_unread_count * -1) # remove them
+        @_unread_count = 0
         @save { last_view }
+
+    count_notifications: ->
+        if app.users.current.canModerate(this)
+            # Count users with pending subscription
+            postsnode = @nodes.get_or_create(id: 'posts')
+            postsnode.subscribers.reduce (count, subscription) ->
+                if subscription.get('subscription') is 'pending'
+                    count + 1
+                else
+                    count
+            , 0
+        else
+            # Isn't owner, no admin notifications
+            0

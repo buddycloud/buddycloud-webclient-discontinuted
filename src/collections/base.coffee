@@ -1,5 +1,8 @@
+{ Model } = require '../models/base'
 
 class exports.Collection extends Backbone.Collection
+    model: Model
+
     constructor: (options) ->
         @parent ?= options?.parent
         super()

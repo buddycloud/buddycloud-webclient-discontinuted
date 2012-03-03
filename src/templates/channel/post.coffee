@@ -13,9 +13,6 @@ design = require '../../_design/channel/post'
 { load_indicate } = require '../util'
 
 
-
-
-
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$section ->
@@ -26,8 +23,9 @@ module.exports = design (view) ->
                 update_time = ->
                     date = view.model.get('updated') or
                         view.model.get('published')
-                    time.attr "data-date":date
-                    time._jquery?.formatdate update:off
+                    if date?
+                        time.attr "data-date":date
+                        time._jquery?.formatdate(update:off)
                 view.model.bind 'change:updated', update_time
                 view.model.bind 'change:published', update_time
                 update_time()
@@ -49,34 +47,58 @@ module.exports = design (view) ->
             @$span class:'location', ->
                 @remove() # FIXME not implemented yet :(
             @$p ->
-                indicator = load_indicate this
-                update_text = =>
-                    content = view.model.get('content')?.value
-                    if content?.length
-                        @text(content)
-                        render_previews.call(this, view)
-                        if indicator?
-                            indicator?.clear()
-                            delete indicator
-                view.model.bind 'change:content', update_text
-                update_text()
+                view.once('update:content', load_indicate(this).clear)
+                view.bind('update:content', update_text.bind(this, view))
 
 
-render_previews =  (view) ->
-    urls = @text?().match /(https?:\/\/[^\s]+)/g
-    return unless urls?
+update_text = do ->
+    # Don't load them twice:
+    previews_rendered = {}
+    return (view, parts) ->
+        # Empty the <p/>
+        @text("")
 
-    for url in urls
-        do (url) =>
-            view.load_url_preview url, (data) =>
-                if data.html?
-                    @$div ->
-                        @raw data.html
-                else if data.type is 'photo' and data.url?
-                    @$img
-                        src: data.url
-                        style: "max-width: 100%"
-                else if data.thumbnail_url
-                    @$img
-                        src: data.thumbnail_url
-                        style: "max-width: 100%"
+        text = ""
+        flush_text = =>
+            if text and text.length > 0
+                @$span text
+                text = ""
+        for part in parts
+            switch part.type
+                when 'text'
+                    text += part.value
+                when 'link'
+                    flush_text()
+
+                    link = part.value
+                    @$a href: link, link
+                    unless previews_rendered[link]
+                        previews_rendered[link] = yes
+                        render_preview.call(@up(end: no), view, link)
+                when 'user'
+                    flush_text()
+
+                    userid = part.value
+                    @$a
+                        class: 'internal userlink'
+                        href: "/#{userid}"
+                        'data-userid': userid
+                    , ->
+                        @text userid
+        flush_text()
+
+
+render_preview = (view, url) ->
+    view.load_url_preview url, (data) =>
+        console.log "oembed", url, data
+        if data.html? and (data.type is 'rich' or data.type is 'video')
+            @$div ->
+                @raw data.html
+        else if data.type is 'photo' and data.url?
+            @$img
+                src: data.url
+                style: "max-width: 100%"
+        else if data.thumbnail_url
+            @$img
+                src: data.thumbnail_url
+                style: "max-width: 100%"

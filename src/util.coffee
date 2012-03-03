@@ -1,28 +1,16 @@
 
 
-exports.getBrowserPrefix = getBrowserPrefix = ->
-    regex = /^(Moz|Webkit|Khtml|O|ms|Icab)(?=[A-Z])/
-    tester = document.getElementsByTagName("script")[0]
-    prefix = ""
-    for prop of tester.style
-        if regex.test(prop)
-            prefix = prop.match(regex)[0]
-            break
-    prefix = "Webkit"  if "WebkitOpacity" of tester.style
-    unless prefix is ""
-        "-" + prefix.charAt(0).toLowerCase() + prefix.slice(1) + "-"
-    else
-        ""
-
 exports.transEndEventNames = transEndEventNames =
-    '-webkit-transition' : 'webkitTransitionEnd'
-    '-moz-transition' : 'transitionend'
-    '-o-transition' : 'oTransitionEnd'
-    'transition' : 'transitionEnd'
+    'WebkitTransition' : 'webkitTransitionEnd'
+    'MozTransition'    : 'transitionend'
+    'OTransition'      : 'oTransitionEnd'
+    'msTransition'     : 'MSTransitionEnd'
+    'transition'       : 'transitionend'
+exports.transitionendEvent = transEndEventNames[Modernizr.prefixed('transition')]
 
-exports.transitionendEvent = transEndEventNames[getBrowserPrefix()+'transition']
 
-exports.gravatar = (mail, opts) ->
+exports.gravatar = (mail) ->
+    opts = s:50, d:'retro'
     hash = MD5.hexdigest mail?.toLowerCase?() or ""
     "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
 
@@ -53,6 +41,55 @@ exports.compare_by_id = (model1, model2) ->
         1
     else
         0
+
+
+URLS_REGEX = ///^
+    (.*?) # Beginning of text
+    (?:
+        # Crazy regexp for matching URLs.
+        # Based on http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+        #   plus changed some '(' to '(?:'.
+        \b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))
+        #' <-- fix syntax highlighting...
+        |
+        # JID (or e-mail address not starting with mailto:)
+        \b(\S+@[a-zA-Z0-9_\-\.]+)\b
+    )
+    (.*) # End of text
+    $///
+exports.parse_post = (content = "") ->
+    # Trim leading & trailing whitespace:
+    if content.trim?
+        content = content.trim()
+
+    parts = []
+    for line in content.split(/\n/)
+        while line.length > 0
+            if (m = line.match(URLS_REGEX, "i"))
+                if m[1]
+                    parts.push
+                        type: 'text'
+                        value: m[1]
+                if m[2]
+                    parts.push
+                        type: 'link'
+                        value: m[2]
+                if m[3]
+                    parts.push
+                        type: 'user'
+                        value: m[3]
+                line = m[4] or ""
+            else
+                parts.push
+                    type: 'text'
+                    value: line
+                line = ""
+        # Restore line break
+        parts.push
+            type: 'text'
+            value: "\n"
+    return parts
+
 
 ##
 # Delay a callback by `interval' ms, while avoiding calling it

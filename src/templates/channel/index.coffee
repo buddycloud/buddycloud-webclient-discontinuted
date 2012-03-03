@@ -2,8 +2,8 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            el = @select "div.channelView", "article.topic, div.channelDetails"
-            el.find('h2, span:not(.loader)').text("")
+            el = @select "div.channelView", "article.topic, div.channelDetails, .notification"
+            el.find('h2, span:not(.loader), #poweredby').text("")
             return el
 
 
@@ -15,23 +15,33 @@ module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$div class:'channelView', ->
             @$header ->
-                # powered by buddycloud
+                @$a -># powered by buddycloud
+                    @text "#{app.version}"
                 @$img class:'avatar', ->
                     @attr src:"#{view.model.avatar}"
                 @$div class:'titleBar', ->
                     title = @$h2 class:'title'
-                    # FIXME: use .../status node post?
-                    status = @$span class:'status'
                     update_metadata = ->
                         title.text "#{view.metadata.get('title')?.value or view.model.get('id')}"
-                        status.text view.metadata.get('description')?.value or ""
                     view.metadata.bind 'change', update_metadata
                     update_metadata()
+
+                    status = @$span class:'status'
+                    update_status = (text) ->
+                        status.text text ? ""
+                    view.bind 'status', update_status
+                    update_status()
                 @$nav ->
                     @$div class:'messages button', ->
                         @remove() # FIXME
                     @$div class:'edit button', ->
-                        @remove() if app.users.isAnonymous(app.users.current)
+                        update_edit_button = =>
+                            if app.users.current.canEdit(view.model)
+                                @show()
+                            else
+                                @hide()
+                        view.bind 'update:affiliations', update_edit_button
+                        update_edit_button()
                     if app.users.isAnonymous(app.users.current)
                         @$div class:'login button', ->
                             @text "Login"#  FIXME +"or Register to Follow"
@@ -58,7 +68,13 @@ module.exports = design (view) ->
 
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
-                    return @remove() if app.users.isAnonymous(app.users.current)
+                    update_newTopic = =>
+                        if app.users.current.canPost(view.model)
+                            @show()
+                        else
+                            @hide()
+                    view.bind 'update:permissions', update_newTopic
+                    update_newTopic()
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
@@ -68,6 +84,10 @@ module.exports = design (view) ->
                         #    checkbox shouldShareLocation
                         #    label for shouldShareLocation
                         # @$div id:'createNewTopic'
+
+                @$div class: 'notifications', ->
+                    view.bind('subview:notification', @add)
+
                 @$section class:'topics', ->
                     view.bind('subview:topics', @replace)
                 @$p class:'loader', ->

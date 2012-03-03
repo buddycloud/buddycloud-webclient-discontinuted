@@ -130,22 +130,27 @@ Strophe.addConnectionPlugin('buddycloud', {
         var register, conn = this._connection;
         register = $iq({from:conn.jid, to:this.channels.jid, type:'set'})
             .c('query', {xmlns: Strophe.NS.REGISTER});
-        conn.sendIQ(register, success, error, timeout);
+        conn.sendIQ(register, success, this._errorcode(error), timeout);
+    },
+
+    createNode: function(node, metadata, success, error) {
+	var config = this._metadata_to_config(metadata);
+	this._connection.pubsub.createNode(node, config, success, this._errorcode(error));
     },
 
     subscribeNode: function (node, succ, err) {
         var conn = this._connection;
-        conn.pubsub.subscribe(node, null, succ, err);
+        conn.pubsub.subscribe(node, null, succ, this._errorcode(err));
     },
 
     unsubscribeNode: function (node, succ, err) {
         var conn = this._connection;
-        conn.pubsub.unsubscribe(node, null, null, succ, err);
+        conn.pubsub.unsubscribe(node, null, null, succ, this._errorcode(err));
     },
 
-    getChannelPosts: function (node, succ, err, timeout) {
+    getChannelPosts: function (options, succ, err, timeout) {
         var self = this, conn = this._connection;
-        conn.pubsub.items(node,
+        conn.pubsub.items(options,
             function  /*success*/ (stanza) {
                 if (succ) self._parsePost(stanza, succ);
             }, self._errorcode(err), timeout);
@@ -317,6 +322,11 @@ Strophe.addConnectionPlugin('buddycloud', {
     },
 
     setMetadata: function(node, metadata, success, error) {
+	var config = this._metadata_to_config(metadata);
+	this._connection.pubsub.setConfig(node, config, success, error);
+    },
+
+    _metadata_to_config: function(metadata) {
 	var config = {};
 	for(var key in metadata)
 	    if (metadata.hasOwnProperty(key)) {
@@ -324,16 +334,23 @@ Strophe.addConnectionPlugin('buddycloud', {
 		switch(key) {
 		case 'title':
 		case 'description':
+		case 'access_model':
+		case 'publish_model':
+		case 'creation_date':
 		    config["pubsub#" + key] = value;
+		    break;
+		case 'default_affiliation':
+		case 'channel_type':
+		    config["buddycloud#" + key] = value;
 		    break;
 		}
 	    }
-	this._connection.pubsub.setConfig(node, config, success, error);
+	return config;
     },
 
     /**
      * Attention:
-     * 
+     *
      * subscriptions may contain extraneous `rsm' key that must be
      * filtered from the user ids.
      */
@@ -358,6 +375,30 @@ Strophe.addConnectionPlugin('buddycloud', {
 
             that._applyRSM(stanza, subscribers);
             return success(subscribers);
+        }, this._errorcode(error));
+    },
+
+    getAffiliations: function(node, success, error) {
+        var that = this;
+        this._connection.pubsub.getNodeAffiliations(node, function(stanza) {
+            var pubsub, affiliations = {};
+            pubsub = stanza.getElementsByTagNameNS(
+                Strophe.NS.PUBSUB_OWNER, 'pubsub')[0];
+            if (pubsub)
+                Strophe.forEachChild(pubsub, 'affiliations',
+                    function(affiliationsEl) {
+                        Strophe.forEachChild(affiliationsEl, 'affiliation',
+                            function(affiliation) {
+                                var jid = affiliation.getAttribute('jid');
+                                if (jid)
+                                    affiliations[jid] =
+                                        affiliation.getAttribute('affiliation') ||
+                                        "none";
+                        });
+                });
+
+            that._applyRSM(stanza, affiliations);
+            return success(affiliations);
         }, this._errorcode(error));
     },
 
@@ -460,6 +501,10 @@ Strophe.addConnectionPlugin('buddycloud', {
 
     // helper
 
+    /**
+     * Wraps a callback to convert stanza error XML to a
+     * Strophe.StanzaError object.
+     */
     _errorcode: function (callback) {
         return function (stanza) {
             if (!stanza)

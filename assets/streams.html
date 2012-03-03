@@ -20,13 +20,21 @@
       -->
     <div class="edits">
       <div class="contenteditable">
-        <input id="allowPost" type="checkbox">
-        <label for="allowPost">New followers can post</label>
+	<input id="allowPost" type="checkbox">
+	<label for="allowPost">New followers can post</label>
       </div>
-      <div class="contenteditable">
+      <!--div class="contenteditable">
+	<select id="channel_publish">
+	  <option value="open">Anyone</option>
+	  <option value="subscribers">Followers</option>
+	  <option value="moderators">Moderators</option>
+	</select>
+        <label for="channel_publish">can post</label>
+      </div-->
+      <!--div class="contenteditable">
         <label for="userEmail">Email</label>
         <input id="userEmail" type="email" value="vera@buddycloud.com" placeholder="Email Adress">
-      </div>
+      </div-->
       <nav class="clearfix">
         <div class="button translucid cancel">Cancel</div>
         <div class="button prominent save">Save</div>
@@ -211,6 +219,7 @@
           </div>
         </div><!-- /antiscroll-inner -->
       </div><!-- /channels -->
+      <p id="create_topic_channel">Create topic channel…</p>
       <!-- replaced by scrolling
       <div id="more_channels">
         all Channels
@@ -249,20 +258,23 @@
               <div class="button prominent" id="createNewTopic">Post</div>
             </div>
           </section>
-          <!-- this produces some weird bug - some content below it gets lost when this is visible
-          <article class="notification">
-            <section>
-              <img class="avatar" src="public/avatars/user4.jpg" />
-              <span class="name">Martin</span>
-              <p>wants to follow this channel.</p>
-              <span class="granted">started following this channel.</span>
-              <span class="denied">was denied to follow this channel.</span>
-              <div class="controls">
-                <div class="button small negative light">Deny</div>
-                <div class="button small prominent positive light">Grant Martin to join</div>
-              </div>
-            </section>
-          </article>-->
+          <!-- this produces some weird bug - some content below
+	    it gets lost when this is visible -->
+	  <div class="notifications">
+	    <article class="notification">
+	      <section>
+                <img class="avatar" src="public/avatars/user4.jpg" />
+	        <span class="name">Martin</span>
+                <p>wants to follow this channel.</p>
+                <span class="granted">started following this channel.</span>
+                <span class="denied">was denied to follow this channel.</span>
+                <div class="controls">
+                  <div class="button small negative light">Deny</div>
+                  <div class="button small positive light">Grant Martin to join</div>
+                </div>
+              </section>
+	    </article>
+	  </div>
           <section class="topics">
             <article class="topic">
               <section class="opener">
@@ -506,7 +518,7 @@
                           </ul>
                         </div>
                       </section>
-                      <section class="actionRow">
+                      <section class="actionRow choose">
                         <div>Change Role</div>
                         <div>Ban User</div>
                       </section>  

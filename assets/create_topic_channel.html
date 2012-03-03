@@ -225,17 +225,17 @@
         <div class="access">
           <label for="channel_public_access">Public Access</label>
           <div>
-            <input type="checkbox" id="channel_public_access"/>
+            <input type="checkbox" id="channel_public_access" checked="checked"/>
           </div>
         </div>
         <div class="role">
           <label for="channel_default_role">Default Role</label>
           <div>
             <select id="channel_default_role">
-              <option value="follower">follower</option>
-              <option value="followerPlus">follower+</option>
+              <option value="member">follower</option>
+              <option value="publisher" selected>follower+post</option>
             </select>
-            <span class="hint followerSelected">
+            <span class="hint followerPlusSelected">
               <span class="follower">
                 can only read your channel
               </span>
@@ -245,9 +245,22 @@
             </span> 
           </div>
         </div>
+        <div class="publish">
+          <label for="channel_publish">Posting</label>
+          <div>
+            <select id="channel_publish">
+              <option value="open">Anyone</option>
+              <option value="subscribers" selected="selected">Followers</option>
+              <option value="moderators">Moderators</option>
+            </select>
+            <span class="hint followerSelected">
+	      can post
+            </span> 
+          </div>
+        </div>
       </form>
       <nav class="bottom clearfix">
-        <div class="button callToAction">Create</div>
+        <div id="create_button" class="button callToAction">Create</div>
         <div class="button">Discard</div>
       </nav>
     </div><!-- /channelView -->

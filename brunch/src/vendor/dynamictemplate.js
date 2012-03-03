@@ -1,1 +1,0 @@
-../../../node_modules/dynamictemplate/build/default/dynamictemplate.browser.js

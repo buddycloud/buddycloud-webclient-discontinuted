@@ -26,3 +26,7 @@ module.exports = design (view) ->
                     @$div -># antiscroll
                         # channel ...
                         view.bind('subview:entry', @add)
+                @$p id: 'create_topic_channel', ->
+                    if app.users.isAnonymous(app.users.current) or
+                       not config.topic_domain?
+                        @remove()
