@@ -27,11 +27,6 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 app.debug "OUT", Strophe.serialize stanza
                 send.apply @connection, arguments
 
-        # workaround for development
-        if window.location.hostname is "localhost"
-            # get around Access-Control-Allow-Origin restrictions
-            return callback()
-
         # check if the bosh service is reachable
         jQuery.ajax
             type:'POST'
