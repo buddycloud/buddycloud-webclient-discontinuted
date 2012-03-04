@@ -1,4 +1,5 @@
 fs = require 'fs'
+{ EventEmitter } = require 'events'
 
 
 spiderDir = (root, path) ->
@@ -26,10 +27,39 @@ wrap_prefix = (prefix, middleware) ->
             next()
 
 
+watchFile = (filepath, callback) ->
+    pending = no
+    fs.watchFile filepath, (curr, prev) ->
+        return if pending
+        pending = yes
+        if curr.mtime isnt prev.mtime
+            # modified, wait a little before reloading
+            # since modifications tend to come in waves
+            setTimeout ->
+                try
+                    callback?(filepath)
+                    pending = no
+                catch err
+                    console.error "#{e}".red.bold,"\n#{e?.stack}"
+            , 11
+
+
+class Watcher extends EventEmitter
+    constructor: () ->
+        @watched = {}
+
+    watch: (files...) ->
+        for file in files
+            continue if @watched[file]
+            @watched[file] = true
+            watchFile(file, @emit.bind(this, 'changed'))
+
+
 # exports
 
 module.exports = {
     spiderDir
     wrap_prefix
+    Watcher
 }
 

@@ -34,6 +34,7 @@
 ,   "formatdate": "0.2.0"
 ,   "store": "1.1.1"
 ,   "async": "0.1.15"
+,   "socket.io": "0.9.1-1"
 ,   "dynamictemplate": "0.4.2"
 ,   "dt-compiler": "0.1.5"
 ,   "dt-jquery": "0.2.6"

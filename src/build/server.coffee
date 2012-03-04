@@ -7,7 +7,7 @@ express = require 'express'
 browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
-{ wrap_prefix } = require './util'
+{ wrap_prefix, Watcher } = require './util'
 
 
 snippets = ["main"
@@ -32,6 +32,7 @@ config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
     build:['build',[off, "build and pack everything together" ]]
+    design:['design',[off, "enable build server on the fly style reload"]]
     dev:  [off, "enable build server code reload"]
 
 config.load (args, opts) ->
@@ -117,6 +118,10 @@ start_server = (args, opts) ->
                     compress: config.build or config.css.compress
                     force: config.css.force
                     warn: config.css.warn
+                watcher?.watch filename
+                style.on 'end', ->
+                    for imp in style.options._imports
+                        watcher?.watch imp.path
                 style.use nib()
 
         server.use javascript
@@ -140,7 +145,36 @@ start_server = (args, opts) ->
         res.header 'Content-Type', 'text/javascript'
         createReadStream(require.resolve 'store/store+json2.min').pipe(res)
 
+    # this stuff runs on the client for live reloading css (including stylus compiling)
+    server.get '/web/js/livecss.js', (req, res) ->
+        res.header 'Content-Type', 'text/javascript'
+        res.end "(" + ( ->
+            io.connect()
+                .on 'connect', () ->
+                    console.log "connected to build server."
+                .on 'changed', (filepath) ->
+                    console.log "file", filepath, "changed."
+                    q = '?reload=' + new Date().getTime()
+                    $('link[rel="stylesheet"]').each ->
+                        @href = @href.replace /\?.*|$/, q
+        ) + ")()"
+
+    if config.design
+        watcher = new Watcher
+        watcher.on 'changed', (filepath) ->
+            console.log "file #{filepath} changed.".cyan.bold
+        console.log "watching stylus files …".magenta
+        io = require('socket.io').listen server
+        io.sockets.on 'connection', (socket) ->
+            listener = (path) ->
+                socket.emit('changed', path)
+            watcher.on('changed', listener)
+            socket.on 'disconnect', ->
+                watcher.removeListener('changed', listener)
+
+
     server.listen config.port, config.host
+
     if config.build
         # this puts everything in a tarball
         pack = require './packaging'
