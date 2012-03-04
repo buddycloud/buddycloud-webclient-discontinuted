@@ -19,7 +19,7 @@
 ,   "express": "2.5.2"
 ,   "jsconfig": "0.1.2"
 ,   "uglify-js": "1.2.0"
-,   "stylus": "0.20.0"
+,   "stylus": "0.24.0"
 ,   "nib": "0.3.1"
 ,   "shimify": "0.0.0"
 ,   "jqueryify": "0.0.2"
