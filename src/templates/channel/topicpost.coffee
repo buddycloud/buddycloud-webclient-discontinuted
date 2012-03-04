@@ -8,6 +8,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/topicpost'
+{ ready } = require '../util'
 
 
 module.exports = design (view) ->
@@ -17,3 +18,5 @@ module.exports = design (view) ->
                 view.bind('subview:opener', @replace)
             @$section class:'comments', ->
                 view.bind('subview:comments', @replace)
+
+            ready this, view

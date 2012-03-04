@@ -4,12 +4,12 @@ window.app =
     handler: {}
     views: {}
     affiliations: [ # all possible pubsub affiliations
-        "owner"
-        "moderator"
-        "publisher"
-        "member"
+        "outcast"
         "none"
-        "outcast" ]
+        "member"
+        "publisher"
+        "moderator"
+        "owner"]
 
 require './vendor-bridge'
 { Router } = require './controllers/router'

@@ -10,7 +10,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/post'
-{ load_indicate } = require '../util'
+{ load_indicate, ready } = require '../util'
 
 
 module.exports = design (view) ->
@@ -49,6 +49,8 @@ module.exports = design (view) ->
             @$p ->
                 view.once('update:content', load_indicate(this).clear)
                 view.bind('update:content', update_text.bind(this, view))
+
+            ready this, view
 
 
 update_text = do ->

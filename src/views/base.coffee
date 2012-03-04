@@ -6,6 +6,13 @@ class exports.BaseView extends Backbone.View
 
     initialize: ({@parent} = {}) ->
         @rendered = no
+        @domisready = no
+        @bind 'dom:ready', (tag) =>
+            @_tag = tag
+            @domisready = yes
+            if @_waitingfordom?
+                cb(tag) for cb in @_waitingfordom
+                delete @_waitingfordom
 
     render: (callback) ->
         @render = -> throw new Error "ffffffffffffuuuuuuuuuuuuuu"
@@ -21,12 +28,23 @@ class exports.BaseView extends Backbone.View
             callback?.call?(this)
             # invoke delayed callbackes from ready
             if @_waiting?
-                cb?() for cb in @_waiting
+                cb() for cb in @_waiting
                 delete @_waiting
 
-    ready: (callback) ->
-        return unless callback?
-        return callback() if @rendered
-        @_waiting ?= []
-        @_waiting.push callback
+    ready: (callback) =>
+        return this unless callback?
+        if @rendered
+            callback()
+        else
+            @_waiting ?= []
+            @_waiting.push callback
+        return this
 
+    domready: (callback) =>
+        return this unless callback?
+        if @domisready
+            callback(@_tag)
+        else
+            @_waitingfordom ?= []
+            @_waitingfordom.push callback
+        return this
