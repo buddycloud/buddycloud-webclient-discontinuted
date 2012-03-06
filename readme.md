@@ -11,7 +11,7 @@ The [current draft](http://buddycloud.org/wiki/XMPP_XEP) should be submitted to 
 
 # buddycloud server implementations
 
-This The XMPP extensions that buddycloud describes have been implemented in two projects:
+The XMPP extensions that buddycloud describes have been implemented in two projects:
 
 * [Node channel server](https://github.com/buddycloud/buddycloud-server)
 * [java channel server](https://github.com/buddycloud/channel-server-java)
