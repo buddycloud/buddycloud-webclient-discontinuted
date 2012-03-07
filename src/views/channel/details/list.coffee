@@ -23,12 +23,18 @@ class exports.ChannelDetailsList extends BaseView
             @add_all()
             @model.bind 'add', @add_user
             @model.bind 'remove', @remove_user
-            @model.bind 'change', (user) =>
+            @bind 'change:user', (user) =>
                 @remove_user user
                 @add_user user
 
             if @model.length < 8
                 @load_more(false)
+
+        @model.bind 'change', (user) =>
+            @trigger 'change:user', user
+        @bind 'change:all:users', =>
+            @model.forEach (user) =>
+                @trigger 'change:user', user
 
     add_user: (user) =>
         user_id = user.get('id')

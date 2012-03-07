@@ -18,8 +18,8 @@ class exports.ChannelDetailsView extends BaseView
             load_more: ->
                 # Do nothing as ChannelView already invokes
                 # app.handler.data.get_all_node_affiliations()
-            filter: (user) ->
-                node.affiliations.get(user.get 'id')?.get('affiliation') is 'owner'
+            filter: (affiliator) ->
+                affiliator.get('affiliation') is 'owner'
         @moderators = new ChannelDetailsList
             title: "moderators"
             model: node.affiliations
@@ -27,22 +27,25 @@ class exports.ChannelDetailsView extends BaseView
             load_more: ->
                 # Do nothing as ChannelView already invokes
                 # app.handler.data.get_all_node_affiliations()
-            filter: (user) ->
-                node.affiliations.get(user.get 'id')?.get('affiliation') is 'moderator'
-        # TODO: filter affiliations
+            filter: (affiliator) ->
+                affiliator.get('affiliation') is 'moderator'
         @publishers = new ChannelDetailsList
             title: "followers+post"
             model: node.subscribers
             parent: this
             load_more: @load_more_followers
             filter: (subscriber) =>
-                app.users.get_or_create(id: subscriber.get 'id').canPost(@model)
+                affiliation = node.affiliations.get(subscriber.get 'id')?.get('affiliation')
+                subscriber.get('subscription') is 'subscribed' and
+                app.users.get_or_create(id: subscriber.get 'id').canPost(@model) and
+                    ['owner', 'moderator'].indexOf(affiliation) < 0
         @followers = new ChannelDetailsList
             title: "followers"
             model: node.subscribers
             parent: this
             load_more: @load_more_followers
             filter: (subscriber) =>
+                subscriber.get('subscription') is 'subscribed' and
                 not app.users.get_or_create(id: subscriber.get 'id').canPost(@model)
         @following = new ChannelDetailsList
             title: "following"
@@ -58,8 +61,15 @@ class exports.ChannelDetailsView extends BaseView
             load_more: ->
                 # Do nothing as ChannelView already invokes
                 # app.handler.data.get_all_node_affiliations()
-            filter: (user) ->
-                node.affiliations.get(user.get 'id')?.get('affiliation') is 'outcast'
+            filter: (affiliator) ->
+                affiliator.get('affiliation') is 'outcast'
+
+        node.affiliations.bind 'change', (user) =>
+            @publishers.trigger 'change:user', user
+            @followers.trigger 'change:user', user
+        @metadata.bind 'change', =>
+            @publishers.trigger 'change:all:users'
+            @followers.trigger 'change:all:users'
 
 
     load_more_followers: (all) =>
