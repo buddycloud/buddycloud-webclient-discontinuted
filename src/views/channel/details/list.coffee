@@ -10,8 +10,7 @@ class exports.ChannelDetailsList extends BaseView
         'click .avatar': 'showUser'
         'dblclick .avatar': 'clickUser'
 
-    initialize: ({@title, @load_more,
-                  @ignore_users, @filter}) ->
+    initialize: ({@title, @load_more, @filter}) ->
         super
 
         @showing_all = no
@@ -40,7 +39,6 @@ class exports.ChannelDetailsList extends BaseView
             @trigger 'add', user
 
         unless @showing_users[user_id] or
-               (@ignore_users and @ignore_users.indexOf(user_id) >= 0) or
                (@filter and not @filter(user))
             # Is not already shown
             if @showing_all
