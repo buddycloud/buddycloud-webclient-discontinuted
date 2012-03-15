@@ -6,70 +6,101 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="web/css/main.css" type="text/css" media="screen">
+  <script src="/socket.io/socket.io.js"></script>
   <script src="web/js/app.js"></script>
-  <!--<script>require('init');</script>-->
-  <script>require('./vendor-bridge');</script>
+  <script src="web/js/livecss.js"></script>
 </head>
 <body class="startpage">
   <header>
     <div class="holder">
-    buddycloud
+    <h1 class="logo"><a href="#">buddycloud</a></h1>
     <nav class="floatLeft">
       <a href="#">about</a>
       <a href="#">buddywear</a>
       <a href="#">developers</a>
     </nav>
-    <input type="search" placeholder="Find Channels">
+    <input class="search" type="search" placeholder="Find Channels">
     <nav class="floatRight">
-      <a href="#">register</a>
-      <a href="#">login</a>
+      <form>
+        <div>
+          <label for="jid">Username</label>
+          <input type="text" class="small" id="jid" name="jid" autofocus>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="text" class="small" id="password" name="password">
+        </div>
+        <div>
+          <input type="submit" value="Login">
+        </div>
+      </form>
     </nav>
     </div>
   </header>
   <div class="holder">
-    <h1>because coffee in the morning is lovely</h1>
+    <!--<h2>because we all need a place to stay</h2>-->
     <section class="stats floatLeft">
-      <h2>newest channels</h2>
-      <table>
-        <tr>
-          <td><span class="channelType topic">topic</span></td>
-          <td><a href="#">lowriders@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType personal">personal</span></td>
-          <td><a href="#">shinerx@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType topic">topic</span></td>
-          <td><a href="#">tats@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType personal">personal</span></td>
-          <td><a href="#">tinkerbel@example.com</a></td>
-        <tr>
-      </table>
-      <h2>most active channels</h2>
-      <table>
-        <tr>
-          <td><span class="channelType topic">topic</span></td>
-          <td><a href="#">lowriders@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType personal">personal</span></td>
-          <td><a href="#">shinerx@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType topic">topic</span></td>
-          <td><a href="#">tats@example.com</a></td>
-        <tr>
-        <tr>
-          <td><span class="channelType personal">personal</span></td>
-          <td><a href="#">tinkerbel@example.com</a></td>
-        <tr>
-      </table>
+      <h3>most active channels</h3>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <h3>most popular channels</h3>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
+      <div class="channel dark">
+        <div class="avatar" style="background-image: url(public/avatars/user7.jpg)">
+        </div>
+        <div class="info">
+          <span class="owner">verena<span class="domain">@buddycloud.com</span></span>
+          <span class="status">test's are over - party!!!</span>
+        </div>
+      </div>
     </section>
     <section class="about floatRight">
-      <h2>about domain</h2>
+      <h3>about buddycloud.com</h3>
       <p>
         another domain liberated by buddycloud. But seriously, I run
         example.com for you. You are different, you get this tingling 
@@ -80,7 +111,7 @@
         <span class="right">The Coffee Guy</span>
       </p>
       <div class="contact">
-        <h3>example.com contact details</h3>
+        <h4>example.com contact details</h4>
         <ul>
           <li><span class="key">buddycloud:</span>://help@example.com</li>
           <li><span class="key">email:</span>me@example.com</li>
