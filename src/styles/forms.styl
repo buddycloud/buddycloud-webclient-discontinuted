@@ -10,12 +10,15 @@ input[type=email]
   background white
   border-radius 3px
   border 1px solid rgba(0, 0, 0, 0.21)
-  box-shadow 0 1px 3px rgba(0, 0, 0, 0.21) inset, 0 1px rgba(255, 255, 255, 0.34)
+  box-shadow 0 1px rgba(0,0,0,.05) inset, 0 2px 3px rgba(0,0,0,.03) inset,0 1px rgba(255,255,255,0.34)
   display block
   transition border-color 500ms
   &:focus
-    border-color rgba(0,0,0,0.55)
+    border-color rgba(0,0,0,0.21)
     transition none
+  &.small
+    padding 3px 5px
+    font-size 16px
     
 input[type=search]
   height 23px
