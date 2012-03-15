@@ -1,14 +1,16 @@
 input[type=submit].button
   height 27px
   
-.button, button
+.button,
+button,
+input[type=submit],
+nav a
   height 26px
   padding 0 15px
   font-size 12px
   line-height 26px
   color rgba(0,0,0,.67)
   text-shadow 0 1px rgba(255,255,255,.55)
-  background #eee
   border 1px solid rgba(0, 0, 0, 0.21)
   border-bottom-color rgba(0,0,0,.34)
   border-radius 3px
@@ -118,3 +120,32 @@ input[type=submit].button
       height 9px
       background url(../../public/icons/minus.png) no-repeat
       position absolute
+
+nav a
+  border-radius 0
+  float left
+  position relative
+  &:hover
+    text-decoration none
+  &:visited
+    color rgba(0,0,0,.67)
+  &:not(:first-child):not(:last-child)
+    border-left none
+    border-right none
+  &:not(:last-child):after
+    content ""
+    position absolute
+    right 0
+    top 25%
+    height 50%
+    width 1px
+    background rgba(0,0,0,.13)
+    box-shadow 1px 0 rgba(255,255,255,.34)
+  &:not(:first-child)
+    border-left none
+  &:not(:last-child)
+    border-right none
+  &:first-child
+    border-radius 3px 0 0 3px
+  &:last-child
+    border-radius 0 3px 3px 0
