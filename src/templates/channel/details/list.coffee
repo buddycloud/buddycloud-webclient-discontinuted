@@ -16,6 +16,11 @@ design = require '../../../_design/channel/details/list'
 module.exports = design (view) ->
     return jqueryify new Template schema:5, ->
         @$section class: 'channelList', ->
+            view.bind 'show', @show
+            view.bind 'hide', @hide
+            # hidden by default, until 1st user is added:
+            @hide()
+
             update_count = null
             @$h3 ->
                 @text "#{view.title} "

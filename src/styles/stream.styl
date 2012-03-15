@@ -12,6 +12,7 @@
     
 .avatar
   border-radius 3px
+  cursor pointer
 
 #content
   top 0
@@ -312,6 +313,7 @@
     overflow hidden
     white-space nowrap
     text-overflow ellipsis    
+    cursor pointer
     + .location
       margin-left 5px
       font-size 11px
@@ -623,7 +625,7 @@
       margin 0 3px 3px 0
       border-radius 3px
       display inline-block
-      cursor pointer
+      cursor default
       &.selected
         box-shadow 0 0 0 1px #83AC35, 0 0 0 2px #8DBA39
     .showAll
@@ -644,7 +646,6 @@
   margin-bottom 13px
   position relative
   overflow hidden
-  display none
   &:after
     margin-top 0
     margin-left 2px
@@ -727,7 +728,6 @@
   .actionRow
     display none
     width 100%
-    box horizontal justify center
     &.confirm
       display none
     > div
@@ -751,10 +751,11 @@
         background linear-gradient(top, #f7f7f7, #ccc)
         box-shadow 0 2px white inset, 0 1px rgba(0, 0, 0, 0.05)
   &.moderator
-   .actionRow
+   .actionRow.choose
      display block
-  &.choosen
-    .actionRow
+     box horizontal justify center
+  &.moderator.choosen
+    .actionRow.choose
       display none
   &.choosen.moderator
     .actionRow.confirm

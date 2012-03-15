@@ -10,8 +10,7 @@ class exports.ChannelDetailsList extends BaseView
         'click .avatar': 'showUser'
         'dblclick .avatar': 'clickUser'
 
-    initialize: ({@title, @load_more,
-                  @ignore_users, @filter}) ->
+    initialize: ({@title, @load_more, @filter}) ->
         super
 
         @showing_all = no
@@ -24,12 +23,18 @@ class exports.ChannelDetailsList extends BaseView
             @add_all()
             @model.bind 'add', @add_user
             @model.bind 'remove', @remove_user
-            @model.bind 'change', (user) =>
+            @bind 'change:user', (user) =>
                 @remove_user user
                 @add_user user
 
             if @model.length < 8
                 @load_more(false)
+
+        @model.bind 'change', (user) =>
+            @trigger 'change:user', user
+        @bind 'change:all:users', =>
+            @model.forEach (user) =>
+                @trigger 'change:user', user
 
     add_user: (user) =>
         user_id = user.get('id')
@@ -40,7 +45,6 @@ class exports.ChannelDetailsList extends BaseView
             @trigger 'add', user
 
         unless @showing_users[user_id] or
-               (@ignore_users and @ignore_users.indexOf(user_id) >= 0) or
                (@filter and not @filter(user))
             # Is not already shown
             if @showing_all
@@ -48,6 +52,8 @@ class exports.ChannelDetailsList extends BaseView
                 show()
             else if not @showing_all and @showing_count < 8
                 show()
+
+            @trigger 'show'
 
     remove_user: (user) =>
         user_id = user.get('id')
@@ -59,11 +65,16 @@ class exports.ChannelDetailsList extends BaseView
             # Fill spot that is left
             @add_one()
 
+        if @showing_count < 1
+            @trigger 'hide'
+
     add_one: =>
         hidden = @model.filter (user1) =>
             not @showing_users[user1.get('id')]
         if not @showing_all and hidden?[0]?
             @add_user hidden[0]
+        else if not @showing_all and @showing_count < 8
+            @load_more(false)
 
     add_all: =>
         @model.each @add_user

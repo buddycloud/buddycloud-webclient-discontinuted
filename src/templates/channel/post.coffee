@@ -3,7 +3,7 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select "article.topic:first section.opener" , "p *"
-            el.find('p, span').text("")
+            el.find('p, span, a').text("")
             return el
 
 
@@ -29,7 +29,7 @@ module.exports = design (view) ->
                 view.model.bind 'change:updated', update_time
                 view.model.bind 'change:published', update_time
                 update_time()
-            name = @span class:'name'
+            name = @a class:'name'
 
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)
