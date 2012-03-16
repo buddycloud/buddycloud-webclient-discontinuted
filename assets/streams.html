@@ -12,7 +12,7 @@
   <script src="web/js/livecss.js"></script>
 </head>
 <body>
-  <div id="editbar">
+  <div class="editbar">
       <h2>Edit Mode</h2>
       <!--
         we could place a history of all changes here
@@ -227,22 +227,30 @@
     <div class="channelView personal clearfix">
         <!--<div class="banner" style="background-image: url(public/images/vera_bg.jpg);"></div>-->
         <header>
-          <div class="titleBar">
-            <img class="avatar" src="public/avatars/user2.jpg" />
-            <div class="titleText">
-              <h2 class="title" data-editmode="singleLine">Vera Meisterkoch's World</h2>
-              <span class="status" data-editmode="singleLine">Hanging out with the world at my feet</span>
-            </div>
-          </div>
-          <nav class="inChannel">
-            <div class="messages button newMessage">
-              <span class="holder">Messages</span><span class="message counter">2</span>
-            </div>
-            <div class="channel button">
-              <span class="holder">Channel</span>
-            </div>
-            <div class="edit button">Edit</div>
-          </nav>
+          <table class="titleBar">
+            <tbody>
+              <tr>
+                <td><img class="avatar" src="public/avatars/user2.jpg" /></td>
+                <td class="titleText">
+                  <div>
+                    <h2 class="title" data-editmode="singleLine">Vera Meisterkoch's World</h2>
+                    <span class="status" data-editmode="singleLine">Hanging out with the world at my feet</span>
+                  </div>
+                </td>
+                <td>
+                  <nav class="inChannel">
+                    <span class="messages button newMessage">
+                      <span class="holder">Messages</span><span class="message counter">2</span>
+                    </span>
+                    <span class="channel button">
+                      <span class="holder">Channel</span>
+                    </span>
+                    <span class="edit button">Edit</span>
+                  </nav>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <a href="http://www.buddycloud.com" id="poweredby">powered by buddycloud</a>
         </header>
         <section class="stream clearfix">
@@ -427,143 +435,143 @@
             <span class="spinner"></span>
           </p>
         </section><!-- /stream -->
-        <div class="channelDetails">
-          <div class="infoToggle">
-            <h4 class="title">Info</h4>
-            <span class="icon"></span>
-          </div>
-          <div class="holder">
-            <section class="meta">
-              <!--p class="owner">
-                <span class="title">Owner:</span>
-		<span class="data">vera@buddycloud.com</span>
-              </p-->
-              <p class="description">
-                <span class="title">About me:</span>
-		<span class="data" data-editmode="multiLine">I'm Vera, I love to cook, I love clothes and most of all, I love my boyfriend.</span>
-              </p>
-              <p class="open">
-                <span class="title">This Channel is:</span>
-		<span class="data accessModel" data-editmode="boolean">Public</span>
-              </p>
-              <p class="broadcast">
-                <span class="title">Broadcasting since:</span>
-		<span class="data format-date time"
-		      data-strftime="%d.%m.%Y %H:%M"
-		      data-strftitle="%A %d %B %Y %H:%M">188 days</span>
-              </p>
-              <p class="location">
-                <span class="title">Location:</span>
-                <span class="previous">Home</span> → 
-                <span class="current">Shopping</span> → 
-                <span class="next">Home</span>
-              </p>
-            </section>
-            <section class="channelList">
-              <h3>moderators <span class="count">1</count></h3>
-              <div class="list">
-                <img src="public/avatars/user2.jpg" />
-              </div>
-            </section><!-- /followers -->
-            <section class="channelList">
-              <h3>followers <span class="count">20</count></h3>
-              <div class="list">
-                <img src="public/avatars/user3.jpg" class="selected" />
-                <img src="public/avatars/user4.jpg" />
-                <img src="public/avatars/user5.jpg" />
-                <img src="public/avatars/user6.jpg" />
-                <div class="adminAction first">
-                  <div class="arrow"></div>
-                  <div class="holder">
-                    <div class="box">
-                      <section class="channelInfo">
-                        <h4>tom@buddycloud.com</h4>
-                        <div class="currentRole">Follower</div>
-                      </section>
-                      <section class="action changeRole">
-                        <h5>Change Role</h5>
-                        <select>
-                          <option value="moderator">Moderator</option>
-                          <option value="followerPlus">Follower+Post</option>
-                          <option value="follower" selected>Follower</option>
-                        </select>
-                        <section class="info">
-                          <div class="moderator">
-                            <ul>
-                              <li>read your channel</li>
-                              <li>write comments &amp; messages</li>
-                              <li>post new topics</li>
-                              <li>add &amp; ban users</li>
-                              <li>set user's roles</li>
-                            </ul>
-                          </div>
-                          <div class="followerPlus">
-                            <ul>
-                              <li>read your channel</li>
-                              <li>write comments &amp; messages</li>
-                              <li>post new topics</li>
-                            </ul>
-                          </div>
-                          <div class="follower">
-                            <ul>
-                              <li>read your channel</li>
-                            </ul>
-                          </div>
-                        </section>
-                      </section>
-                      <section class="action banUser">
-                        <h5>Ban User</h5>
-                        <div class="info">
+      </div><!-- /channelView -->
+      <div class="channelDetails">
+        <div class="infoToggle">
+          <h4 class="title">Info</h4>
+          <span class="icon"></span>
+        </div>
+        <div class="holder">
+          <section class="meta">
+            <!--p class="owner">
+              <span class="title">Owner:</span>
+	<span class="data">vera@buddycloud.com</span>
+            </p-->
+            <p class="description">
+              <span class="title">About me:</span>
+	<span class="data" data-editmode="multiLine">I'm Vera, I love to cook, I love clothes and most of all, I love my boyfriend.</span>
+            </p>
+            <p class="open">
+              <span class="title">This Channel is:</span>
+	<span class="data accessModel" data-editmode="boolean">Public</span>
+            </p>
+            <p class="broadcast">
+              <span class="title">Broadcasting since:</span>
+	<span class="data format-date time"
+	      data-strftime="%d.%m.%Y %H:%M"
+	      data-strftitle="%A %d %B %Y %H:%M">188 days</span>
+            </p>
+            <p class="location">
+              <span class="title">Location:</span>
+              <span class="previous">Home</span> → 
+              <span class="current">Shopping</span> → 
+              <span class="next">Home</span>
+            </p>
+          </section>
+          <section class="channelList">
+            <h3>moderators <span class="count">1</count></h3>
+            <div class="list">
+              <img src="public/avatars/user2.jpg" />
+            </div>
+          </section><!-- /followers -->
+          <section class="channelList">
+            <h3>followers <span class="count">20</count></h3>
+            <div class="list">
+              <img src="public/avatars/user3.jpg" class="selected" />
+              <img src="public/avatars/user4.jpg" />
+              <img src="public/avatars/user5.jpg" />
+              <img src="public/avatars/user6.jpg" />
+              <div class="adminAction first">
+                <div class="arrow"></div>
+                <div class="holder">
+                  <div class="box">
+                    <section class="channelInfo">
+                      <h4>tom@buddycloud.com</h4>
+                      <div class="currentRole">Follower</div>
+                    </section>
+                    <section class="action changeRole">
+                      <h5>Change Role</h5>
+                      <select>
+                        <option value="moderator">Moderator</option>
+                        <option value="followerPlus">Follower+Post</option>
+                        <option value="follower" selected>Follower</option>
+                      </select>
+                      <section class="info">
+                        <div class="moderator">
                           <ul>
-                            <li class="negative">Remove access to channel.</li>
+                            <li>read your channel</li>
+                            <li>write comments &amp; messages</li>
+                            <li>post new topics</li>
+                            <li>add &amp; ban users</li>
+                            <li>set user's roles</li>
+                          </ul>
+                        </div>
+                        <div class="followerPlus">
+                          <ul>
+                            <li>read your channel</li>
+                            <li>write comments &amp; messages</li>
+                            <li>post new topics</li>
+                          </ul>
+                        </div>
+                        <div class="follower">
+                          <ul>
+                            <li>read your channel</li>
                           </ul>
                         </div>
                       </section>
-                      <section class="actionRow choose">
-                        <div>Change Role</div>
-                        <div>Ban User</div>
-                      </section>  
-                      <section class="actionRow confirm">
-                        <div>Cancel</div>
-                        <div>Ok</div>
-                      </section>
-                    </div><!-- /box -->
-                  </div>
+                    </section>
+                    <section class="action banUser">
+                      <h5>Ban User</h5>
+                      <div class="info">
+                        <ul>
+                          <li class="negative">Remove access to channel.</li>
+                        </ul>
+                      </div>
+                    </section>
+                    <section class="actionRow choose">
+                      <div>Change Role</div>
+                      <div>Ban User</div>
+                    </section>  
+                    <section class="actionRow confirm">
+                      <div>Cancel</div>
+                      <div>Ok</div>
+                    </section>
+                  </div><!-- /box -->
                 </div>
-                <img src="public/avatars/user7.jpg" />
-                <img src="public/avatars/user8.jpg" />
-                <img src="public/avatars/user9.jpg" />
-                <img src="public/avatars/user10.jpg" />
-                <img src="public/avatars/user11.jpg" />
-                <img src="public/avatars/user12.jpg" />
-                <img src="public/avatars/user13.jpg" />
-                <img src="public/avatars/channel8.jpg" />
               </div>
-              <div class="showAll">show all</div>
-            </section><!-- /followers -->
-            <section class="channelList">
-              <h3>channels nearby <span class="count">10</count></h3>
-              <div class="list">
-                <img src="public/avatars/channel1.jpg" />
-                <img src="public/avatars/channel2.jpg" />
-                <img src="public/avatars/channel3.jpg" />
-                <img src="public/avatars/channel4.jpg" />
-              </div>
-              <div class="showAll">show all</div>
-            </section><!-- /followers -->
-            <section class="channelList">
-              <h3>similar channels <span class="count">8</count></h3>
-              <div class="list">
-                <img src="public/avatars/channel5.jpg" />
-                <img src="public/avatars/channel6.jpg" />
-                <img src="public/avatars/channel7.jpg" />
-                <img src="public/avatars/channel8.jpg" />
-              </div>
-              <div class="showAll">show all</div>
-            </section><!-- /followers -->
-          </div><!-- /holder -->
-        </div><!-- /detail -->
-      </div><!-- /channelView -->
+              <img src="public/avatars/user7.jpg" />
+              <img src="public/avatars/user8.jpg" />
+              <img src="public/avatars/user9.jpg" />
+              <img src="public/avatars/user10.jpg" />
+              <img src="public/avatars/user11.jpg" />
+              <img src="public/avatars/user12.jpg" />
+              <img src="public/avatars/user13.jpg" />
+              <img src="public/avatars/channel8.jpg" />
+            </div>
+            <div class="showAll">show all</div>
+          </section><!-- /followers -->
+          <section class="channelList">
+            <h3>channels nearby <span class="count">10</count></h3>
+            <div class="list">
+              <img src="public/avatars/channel1.jpg" />
+              <img src="public/avatars/channel2.jpg" />
+              <img src="public/avatars/channel3.jpg" />
+              <img src="public/avatars/channel4.jpg" />
+            </div>
+            <div class="showAll">show all</div>
+          </section><!-- /followers -->
+          <section class="channelList">
+            <h3>similar channels <span class="count">8</count></h3>
+            <div class="list">
+              <img src="public/avatars/channel5.jpg" />
+              <img src="public/avatars/channel6.jpg" />
+              <img src="public/avatars/channel7.jpg" />
+              <img src="public/avatars/channel8.jpg" />
+            </div>
+            <div class="showAll">show all</div>
+          </section><!-- /followers -->
+        </div><!-- /holder -->
+      </div><!-- /detail -->
   </div><!-- /content -->
 <script type="text/javascript">
   /* ###
@@ -813,11 +821,9 @@
       startEditMode();
     } else {
       $('html').removeClass('editmode');
-      stopEditMode(false);
+      stopEditMode(true);
     }
   });
-  $('#editbar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
-  $('#editbar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
 
   function startEditMode(){
     for(var i = 0, l = editableElements.length; i < l; i++){

@@ -36,20 +36,19 @@
   float left
   > header
     padding 5px 13px 0
-    height 58px
-    border-radius 5px 5px 0 0
     position relative
     .titleBar
-      padding-left 63px
-      float left
-      position relative
-    .avatar
-      left 0
-      width 50px
-      position absolute
+      td:last-child
+        padding-right 0
     .titleText
-      h2, .status, .location
+      width 100%
+      position relative
+      > div
         width 100%
+        left 0
+        top 0
+        position absolute
+      h2, .status, .location
         white-space nowrap
         overflow hidden
         text-shadow 0 1px 1px white
@@ -70,10 +69,13 @@
     + .topic
       border-radius 3px 3px 0 0
   nav
-    margin-top 10px
+    margin-bottom 5px
+    white-space nowrap /* this in combination of spans for the buttons let's them stay in one line */
     float right
-    > div
+    > span
       margin-left 5px
+      &:first-child
+        margin-left 0
     &.inChannel
       .channel
         display none
