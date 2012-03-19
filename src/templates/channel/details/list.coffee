@@ -8,13 +8,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/list'
 { EventHandler, gravatar } = require '../../../util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$section class: 'channelList', ->
             update_count = null
             @$h3 ->

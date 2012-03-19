@@ -7,12 +7,11 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/sidebar/index'
 { load_indicate } = require '../util'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$div id:'sidebar', ->
             @$div ->
                 @$div class:'personal channel', ->

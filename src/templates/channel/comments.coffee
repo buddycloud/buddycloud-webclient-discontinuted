@@ -6,13 +6,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/comments'
 { List } = require '../util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$section class:'comments', ->
             list = new List this
             list.bind(view, 'view:comment')

@@ -8,12 +8,11 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/error_notification'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         notification = @$article class: 'notification', ->
             @$section ->
                 @$p ->

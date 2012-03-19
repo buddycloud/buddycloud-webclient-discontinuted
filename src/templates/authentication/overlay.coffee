@@ -6,11 +6,10 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/authentication/overlay'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$div class:'overlay', ->
             @$div ->
                 @$div class: 'left', ->

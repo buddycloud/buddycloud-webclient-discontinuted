@@ -6,13 +6,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/topicpost'
 { ready } = require '../util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$article class:'topic', ->
             @$section class:'opener', ->
                 view.bind('subview:opener', @replace)

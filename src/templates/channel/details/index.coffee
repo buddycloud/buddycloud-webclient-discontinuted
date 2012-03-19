@@ -8,13 +8,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 { throttle_callback } = require '../../../util'
 design = require '../../../_design/channel/details/index'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         postsnode = view.model.nodes.get_or_create(id: 'posts')
         metadata = postsnode.metadata
 

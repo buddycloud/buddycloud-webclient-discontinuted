@@ -6,13 +6,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../_design/main'
 { load_indicate } = require './util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
 
         @$div id:'editbar', ->
             @once('replace', load_indicate(this).clear)

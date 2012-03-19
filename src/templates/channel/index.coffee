@@ -8,11 +8,10 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/index'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$div class:'channelView', ->
             @$header ->
                 @$a -># powered by buddycloud

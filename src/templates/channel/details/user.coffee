@@ -12,7 +12,6 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/user'
 { EventHandler, throttle_callback } = require '../../../util'
 
@@ -55,7 +54,7 @@ affiliations_infos =
     ]
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         channel = view.parent.parent.model
         set_info_lines = ->
         @$div class:'adminAction', ->

@@ -8,13 +8,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/post'
 { load_indicate, ready } = require '../util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$section ->
             @attr class:"#{view.type}"
             avatar = @img class:'avatar'

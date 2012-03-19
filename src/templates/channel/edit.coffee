@@ -7,11 +7,10 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/edit'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$div id: 'editbar', ->
             @$div class: 'edits', ->
                 @$div class: 'contenteditable', ->
