@@ -220,6 +220,11 @@ Strophe.addConnectionPlugin('buddycloud', {
         var parsers = {};
         parsers['{'+Strophe.NS.ATOM+'}entry'] = function(entry) {
             var attr, post;
+	    /**   ^
+	     *   / \ The variable `attr' actually refers
+	     *  / ! \ to elements in this function.
+	     * /_____\
+	     */
 
             // Takes an <item /> element and returns a hash of it's attributes
             post = this._parsetag(entry, "id", "published", "updated");

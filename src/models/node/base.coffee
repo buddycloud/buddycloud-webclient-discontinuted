@@ -41,8 +41,9 @@ class exports.Node extends Model
         @trigger 'subscriber:update', subscription
 
         s = subscription.get('subscription')
-        # Transition from/to subscribed
-        if s isnt old_s and (s is 'subscribed' or old_s is 'subscribed')
+        # Transition to subscribed, handlers need to refresh all data:
+        if subscription.jid is app.users.current.get('id') and
+           s is 'subscribed' or old_s isnt 'subscribed'
             @trigger 'unsync'
 
     push_affiliation: (affiliation) ->

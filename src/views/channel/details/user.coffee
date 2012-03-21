@@ -8,6 +8,8 @@ class exports.UserInfoView extends BaseView
 
     events:
         'click .channelInfo h4': 'navigate'
+        'click .changeRoleButton': 'on_click_changeRoleButton'
+        'click .banUserButton': 'on_click_banUserButton'
         'click .cancelButton': 'on_click_cancel'
         'click .okButton': 'on_click_ok'
         'change select': 'on_change_select'
@@ -21,6 +23,14 @@ class exports.UserInfoView extends BaseView
         if @currentjid?
             app.router.navigate @currentjid, true
 
+    on_click_changeRoleButton: EventHandler ->
+        @changing_role = yes
+        @trigger 'click:changeRole'
+
+    on_click_banUserButton: EventHandler ->
+        @banning = yes
+        @trigger 'click:banUser'
+
     on_click_cancel: EventHandler ->
         # Remove this popup
         # HACK: fix set_user()!
@@ -28,7 +38,12 @@ class exports.UserInfoView extends BaseView
 
     on_click_ok: EventHandler ->
         userid = @parent.parent.parent.model.get 'id'
-        affiliation = @$('select').val()
+        if @changing_role
+            affiliation = @$('select').val()
+        else if @banning
+            affiliation = 'outcast'
+        else
+            affiliation = 'none'
         app.handler.data.set_channel_affiliation userid, @currentjid, affiliation, (err) =>
             unless err
                 # Remove:
@@ -46,6 +61,9 @@ class exports.UserInfoView extends BaseView
             return delete @_olduser
 
     set_user: (user, el) ->
+        delete @changing_role
+        delete @banning
+
         @ready =>
             # prepare
             @el.detach()
@@ -68,8 +86,6 @@ class exports.UserInfoView extends BaseView
                 @el.insertAfter imgs.last()
             else
                 @el.insertAfter imgs.eq(row)
-            # show it!
-            @el.show()
             el.addClass('selected')
             @_olduser = el
 

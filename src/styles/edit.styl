@@ -1,22 +1,20 @@
-#editbar
+.editbar
   top 0
+  bottom 0
   left 234px
   width 234px
-  height 100%
   background rgba(255,255,255,.55)
   transition 400ms
   box-shadow -1px 0 rgba(0,0,0,.21) inset
   position absolute
   box-sizing border-box
   overflow-y auto
-  box vertical start stretch
   .editmode &
     left 0
   h2
     margin 13px 13px 0
   .edits
     margin 0 13px 13px
-    box-flex 1
     nav
       margin 10px 0 34px
       .button
@@ -34,6 +32,10 @@
         box-sizing border-box
   .dangerZone
     padding 0 13px
+    bottom 0
+    left 0
+    right 0
+    position absolute
     &:before,
     &:after
       height 21px
@@ -46,6 +48,8 @@
       background repeating-linear-gradient(-45deg, red, red 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
       box-shadow 0 0 0 1px #700, 0 2px rgba(0,0,0,.08),0 0 0 1px rgba(255,255,255,.89) inset
       display block
+    &:after
+      margin-bottom 0
     p
       margin-bottom 13px
       color rgba(0,0,0,.55)
@@ -73,7 +77,7 @@
     text-shadow none
     
 .editmode
-  #sidebar
+  .sidebar
     left -234px
   .stream
     p

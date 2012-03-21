@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>buddycloud Streams</title>
+  <title>buddycloud Discover</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -12,7 +12,7 @@
   <script src="web/js/livecss.js"></script>
 </head>
 <body>
-  <div class="editbar">
+  <div id="editbar">
       <h2>Edit Mode</h2>
       <!--
         we could place a history of all changes here
@@ -60,7 +60,7 @@
       </nav>
     </div>
     <nav class="actionBar clearfix">
-      <button class="discover"><span>Discover New Channels</span></button>
+      <button class="discover active"><span>Discover New Channels</span></button>
     </nav>
     <div class="search">
       <input type="search" results="5" autosave="channelSearch" placeholder="Search Channels ..." />
@@ -224,354 +224,217 @@
     <button id="create_topic_channel"><span>Create Topic Channel</span></button>
   </div>
   <div id="content">
-    <div class="channelView personal clearfix">
-        <!--<div class="banner" style="background-image: url(public/images/vera_bg.jpg);"></div>-->
-        <header>
-          <table class="titleBar">
-            <tbody>
-              <tr>
-                <td><img class="avatar" src="public/avatars/user2.jpg" /></td>
-                <td class="titleText">
-                  <div>
-                    <h2 class="title" data-editmode="singleLine">Vera Meisterkoch's World</h2>
-                    <span class="status" data-editmode="singleLine">Hanging out with the world at my feet</span>
-                  </div>
-                </td>
-                <td>
-                  <nav class="inChannel">
-                    <span class="messages button newMessage">
-                      <span class="holder">Messages</span><span class="message counter">2</span>
-                    </span>
-                    <span class="channel button">
-                      <span class="holder">Channel</span>
-                    </span>
-                    <span class="edit button">Edit</span>
-                  </nav>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <a href="http://www.buddycloud.com" id="poweredby">powered by buddycloud</a>
-        </header>
-        <section class="stream clearfix">
-          <section class="newTopic">
-            <img class="avatar" src="public/avatars/user1.jpg" />
-            <textarea placeholder="New Topic..."></textarea>
-            <div class="controls">
-              <div class="button checkbox">
-                <input type="checkbox" id="shouldShareLocation" />
-                <label for="shouldShareLocation">Share Location: Home</label>
-              </div>
-              <div class="button prominent" id="createNewTopic">Post</div>
-            </div>
-          </section>
-          <!-- this produces some weird bug - some content below
-	    it gets lost when this is visible -->
-	  <div class="notifications">
-	    <article class="notification">
-	      <section>
-                <img class="avatar" src="public/avatars/user4.jpg" />
+      <div class="discoverChannels">
+        <div class="local span-2">
+          <h1>Local</h1>
+          <div class="mostActive span-1">
+            <h2>Most Active</h2>
+            <div class="list">
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user12.jpg)"></div>
                 <div class="info">
-  	        <span class="name">martin<span class="domain">@buddycloud.com</span></span>
-                  <p>wants to follow this channel.</p>
-                  <span class="granted">started following this channel.</span>
-                  <span class="denied">was denied to follow this channel.</span>
-                </div>
-                <div class="controls">
-                  <div class="button small negative light">Deny</div>
-                  <div class="button small positive light">Grant Martin to join</div>
-                </div>
-              </section>
-	    </article>
-	  </div>
-          <section class="topics">
-            <article class="topic">
-              <section class="opener">
-                <img class="avatar" src="public/avatars/user2.jpg" />
-                <div class="postmeta">
-                  <span class="format-date time ago" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M" title="5:06pm 06.06.2011">1 minute</span>
-                </div>
-                <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Home</span>
-                <p>So it looks like Andi finally joined: <a class="internal" href="buddycloud.com/andi@buddycloud.com">andi<span class="domain">@buddycloud.com</span></a></p>
-              </section>
-              <section class="comments">
-                <section class="answer">
-                  <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
-                  <div class="controls">
-                    <div class="button small checkbox">
-                      <input type="checkbox" id="shouldShareLocation123" />
-                      <label for="shouldShareLocation123">Share Location: Home</label>
-                    </div>
-                    <div class="button small prominent createComment">Post</div>
-                  </div>
-                </section>
-              </section>
-            </article>
-            <article class="topic">
-              <section class="opener">
-                <img class="avatar" src="public/avatars/user2.jpg" />
-                <div class="postmeta">
-                  <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M" title="5:06pm 06.06.2011">5 minutes</span>
-                </div>
-                <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Home</span>
-                <p>I'm a sociopath; there's not much he can do for me. I have a dark side, too. I will not kill my sister. I will not kill my sister. I will not kill my sister. He taught me a code. To survive. Under normal circumstances, I'd take that as a compliment. I'm generally confused most of the time.</p>
-              </section>
-              <section class="comments">
-                <section class="answer">
-                  <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
-                  <div class="controls">
-                    <div class="button small checkbox">
-                      <input type="checkbox" id="shouldShareLocation124" />
-                      <label for="shouldShareLocation124">Share Location: Home</label>
-                    </div>
-                    <div class="button small prominent createComment">Post</div>
-                  </div>
-                </section>
-              </section>
-            </article>
-            <article class="topic">
-              <section class="opener">
-                <img class="avatar" src="public/avatars/user2.jpg" />
-                <div class="postmeta">
-                  <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                </div>
-                <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Campus Library</span>
-                <p>Pretend. You pretend the feelings are there, for the world, for the people around you.</p>
-              </section>
-              <section class="comments">
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user6.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">mona<span class="domain">@buddycloud.com</span></span><span class="location">from Cafe Extra</span>
-                  <p>Who knows? Maybe one day they will be. I like seafood.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user7.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">verena<span class="domain">@buddycloud.com</span></span><span class="location">from Home</span>
-                  <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user11.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">betty<span class="domain">@buddycloud.com</span></span><span class="location">from Donau</span>
-                  <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user13.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">daniel<span class="domain">@buddycloud.com</span></span><span class="location">from Home</span>
-                  <p>I'm going to tell you something that I've never told anyone before.</p>
-                </section>
-                <section class="answer">
-                  <img class="avatar" src="public/avatars/user1.jpg" />
-                  <textarea placeholder="add comment (use CTRL enter to add automatically)"></textarea>
-                  <div class="controls">
-                    <div class="button small checkbox">
-                      <input type="checkbox" id="shouldShareLocation125" />
-                      <label for="shouldShareLocation125">Share Location: Home</label>
-                    </div>
-                    <div class="button small prominent createComment">Post</div>
-                  </div>
-                </section>
-              </section>
-            </article>
-            <article class="topic">
-              <section class="opener">
-                <img class="avatar" src="public/avatars/user2.jpg" />
-                <div class="postmeta">
-                  <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                </div>
-                <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Munich</span>
-                <p>Pretend. You pretend the feelings are there, for the world, for the people around you.</p>
-              </section>
-              <section class="comments">
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user3.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">Tom</span><span class="location">from Men's Cave</span>
-                  <p>Who knows? Maybe one day they will be. I like seafood.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user5.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">gero<span class="domain">@buddycloud.com</span></span><span class="location">from Regensburg</span>
-                  <p>Finding a needle in a haystack isn't hard when every straw is computerized. I'm really more an apartment person.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user2.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Munich</span>
-                  <p>I feel like a jigsaw puzzle missing a piece. And I'm not even sure what the picture should be.</p>
-                </section>
-                <section class="comment">
-                  <img class="avatar" src="public/avatars/user12.jpg" />
-                  <div class="postmeta">
-                    <span class="time" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M">3 days</span>
-                  </div>
-                  <span class="name">sebastian<span class="domain">@buddycloud.com</span></span><span class="location">from Passau</span>
-                  <p>I'm going to tell you something that I've never told anyone before.</p>
-                </section>
-              </section>
-            </article>
-          </section>
-          <p class="loader">
-            <span class="spinner"></span>
-          </p>
-        </section><!-- /stream -->
-      </div><!-- /channelView -->
-      <div class="channelDetails">
-        <div class="infoToggle">
-          <h4 class="title">Info</h4>
-          <span class="icon"></span>
-        </div>
-        <div class="holder">
-          <section class="meta">
-            <!--p class="owner">
-              <span class="title">Owner:</span>
-	<span class="data">vera@buddycloud.com</span>
-            </p-->
-            <p class="description">
-              <span class="title">About me:</span>
-	<span class="data" data-editmode="multiLine">I'm Vera, I love to cook, I love clothes and most of all, I love my boyfriend.</span>
-            </p>
-            <p class="open">
-              <span class="title">This Channel is:</span>
-	<span class="data accessModel" data-editmode="boolean">Public</span>
-            </p>
-            <p class="broadcast">
-              <span class="title">Broadcasting since:</span>
-	<span class="data format-date time"
-	      data-strftime="%d.%m.%Y %H:%M"
-	      data-strftitle="%A %d %B %Y %H:%M">188 days</span>
-            </p>
-            <p class="location">
-              <span class="title">Location:</span>
-              <span class="previous">Home</span> → 
-              <span class="current">Shopping</span> → 
-              <span class="next">Home</span>
-            </p>
-          </section>
-          <section class="channelList">
-            <h3>moderators <span class="count">1</count></h3>
-            <div class="list">
-              <img src="public/avatars/user2.jpg" />
-            </div>
-          </section><!-- /followers -->
-          <section class="channelList">
-            <h3>followers <span class="count">20</count></h3>
-            <div class="list">
-              <img src="public/avatars/user3.jpg" class="selected" />
-              <img src="public/avatars/user4.jpg" />
-              <img src="public/avatars/user5.jpg" />
-              <img src="public/avatars/user6.jpg" />
-              <div class="adminAction first">
-                <div class="arrow"></div>
-                <div class="holder">
-                  <div class="box">
-                    <section class="channelInfo">
-                      <h4>tom@buddycloud.com</h4>
-                      <div class="currentRole">Follower</div>
-                    </section>
-                    <section class="action changeRole">
-                      <h5>Change Role</h5>
-                      <select>
-                        <option value="moderator">Moderator</option>
-                        <option value="followerPlus">Follower+Post</option>
-                        <option value="follower" selected>Follower</option>
-                      </select>
-                      <section class="info">
-                        <div class="moderator">
-                          <ul>
-                            <li>read your channel</li>
-                            <li>write comments &amp; messages</li>
-                            <li>post new topics</li>
-                            <li>add &amp; ban users</li>
-                            <li>set user's roles</li>
-                          </ul>
-                        </div>
-                        <div class="followerPlus">
-                          <ul>
-                            <li>read your channel</li>
-                            <li>write comments &amp; messages</li>
-                            <li>post new topics</li>
-                          </ul>
-                        </div>
-                        <div class="follower">
-                          <ul>
-                            <li>read your channel</li>
-                          </ul>
-                        </div>
-                      </section>
-                    </section>
-                    <section class="action banUser">
-                      <h5>Ban User</h5>
-                      <div class="info">
-                        <ul>
-                          <li class="negative">Remove access to channel.</li>
-                        </ul>
-                      </div>
-                    </section>
-                    <section class="actionRow choose">
-                      <div>Change Role</div>
-                      <div>Ban User</div>
-                    </section>  
-                    <section class="actionRow confirm">
-                      <div>Cancel</div>
-                      <div>Ok</div>
-                    </section>
-                  </div><!-- /box -->
+                  <span class="owner">franz<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Hanging out at starbucks</span>
                 </div>
               </div>
-              <img src="public/avatars/user7.jpg" />
-              <img src="public/avatars/user8.jpg" />
-              <img src="public/avatars/user9.jpg" />
-              <img src="public/avatars/user10.jpg" />
-              <img src="public/avatars/user11.jpg" />
-              <img src="public/avatars/user12.jpg" />
-              <img src="public/avatars/user13.jpg" />
-              <img src="public/avatars/channel8.jpg" />
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user11.jpg)"></div>
+                <div class="info">
+                  <span class="owner">lisa<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Where is the love?</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user13.jpg)"></div>
+                <div class="info">
+                  <span class="owner">ralf<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Ich bin ein Berliner!</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user6.jpg)"></div>
+                <div class="info">
+                  <span class="owner">steffi<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Listening to Fuadadeimuada</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user7.jpg)"></div>
+                <div class="info">
+                  <span class="owner">anna<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">First Season of Game of Thrones was a blast!</span>
+                </div>
+              </div>
             </div>
-            <div class="showAll">show all</div>
-          </section><!-- /followers -->
-          <section class="channelList">
-            <h3>channels nearby <span class="count">10</count></h3>
+          </div>
+          <div class="popular span-1">
+            <h2>Popular</h2>
             <div class="list">
-              <img src="public/avatars/channel1.jpg" />
-              <img src="public/avatars/channel2.jpg" />
-              <img src="public/avatars/channel3.jpg" />
-              <img src="public/avatars/channel4.jpg" />
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user1.jpg)"></div>
+                <div class="info">
+                  <span class="owner">mrflix<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">I don't like cinema</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user4.jpg)"></div>
+                <div class="info">
+                  <span class="owner">martin<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Handed in my thesis. Like a boss.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user2.jpg)"></div>
+                <div class="info">
+                  <span class="owner">vera<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Munich here I come.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user3.jpg)"></div>
+                <div class="info">
+                  <span class="owner">tom<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Island is great. Let's make music</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user5.jpg)"></div>
+                <div class="info">
+                  <span class="owner">josef<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Desmond Myers really knows how to rap</span>
+                </div>
+              </div>
             </div>
-            <div class="showAll">show all</div>
-          </section><!-- /followers -->
-          <section class="channelList">
-            <h3>similar channels <span class="count">8</count></h3>
+          </div>
+        </div>
+        <div class="global span-2">
+          <h1>Global</h1>
+          <div class="mostActive span-1">
+            <h2>Most Active</h2>
             <div class="list">
-              <img src="public/avatars/channel5.jpg" />
-              <img src="public/avatars/channel6.jpg" />
-              <img src="public/avatars/channel7.jpg" />
-              <img src="public/avatars/channel8.jpg" />
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user12.jpg)"></div>
+                <div class="info">
+                  <span class="owner">franz<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Hanging out at starbucks</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user11.jpg)"></div>
+                <div class="info">
+                  <span class="owner">lisa<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Where is the love?</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user13.jpg)"></div>
+                <div class="info">
+                  <span class="owner">ralf<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Ich bin ein Berliner!</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user6.jpg)"></div>
+                <div class="info">
+                  <span class="owner">steffi<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Listening to Fuadadeimuada</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user7.jpg)"></div>
+                <div class="info">
+                  <span class="owner">anna<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">First Season of Game of Thrones was a blast!</span>
+                </div>
+              </div>
             </div>
-            <div class="showAll">show all</div>
-          </section><!-- /followers -->
-        </div><!-- /holder -->
-      </div><!-- /detail -->
+          </div>
+          <div class="popular span-1">
+            <h2>Popular</h2>
+            <div class="list">
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user1.jpg)"></div>
+                <div class="info">
+                  <span class="owner">mrflix<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">I don't like cinema</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user4.jpg)"></div>
+                <div class="info">
+                  <span class="owner">martin<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Handed in my thesis. Like a boss.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user2.jpg)"></div>
+                <div class="info">
+                  <span class="owner">vera<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Munich here I come.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user3.jpg)"></div>
+                <div class="info">
+                  <span class="owner">tom<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Island is great. Let's make music</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user5.jpg)"></div>
+                <div class="info">
+                  <span class="owner">josef<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Desmond Myers really knows how to rap</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="location span-1">
+          <h1>Location</h1>
+          <div class="nearby span-1">
+            <h2>Nearby</h2>
+            <div class="list">
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user1.jpg)"></div>
+                <div class="info">
+                  <span class="owner">mrflix<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">I don't like cinema</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user4.jpg)"></div>
+                <div class="info">
+                  <span class="owner">martin<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Handed in my thesis. Like a boss.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user2.jpg)"></div>
+                <div class="info">
+                  <span class="owner">vera<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Munich here I come.</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user3.jpg)"></div>
+                <div class="info">
+                  <span class="owner">tom<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Island is great. Let's make music</span>
+                </div>
+              </div>
+              <div class="channel">
+                <div class="avatar" style="background-image: url(public/avatars/user5.jpg)"></div>
+                <div class="info">
+                  <span class="owner">josef<span class="domain">@buddycloud.com</span></span>
+                  <span class="status">Desmond Myers really knows how to rap</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </div><!-- /content -->
 <script type="text/javascript">
   /* ###
@@ -821,9 +684,11 @@
       startEditMode();
     } else {
       $('html').removeClass('editmode');
-      stopEditMode(true);
+      stopEditMode(false);
     }
   });
+  $('#editbar .save').click(function(){ $('html').removeClass('editmode'); stopEditMode(true); });
+  $('#editbar .cancel').click(function(){ $('html').removeClass('editmode'); stopEditMode(false); });
 
   function startEditMode(){
     for(var i = 0, l = editableElements.length; i < l; i++){
