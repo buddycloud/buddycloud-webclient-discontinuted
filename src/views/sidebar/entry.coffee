@@ -51,6 +51,7 @@ class exports.ChannelEntry extends BaseView
         app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
 
     bubble: (duration = 500) =>
+        return # FIXME
         return if @isPersonal() # dont eva eva bubble the personal channel!1!elf
         @parent._movingChannels ?= 0
         channelsel = @parent.$('#channels > .scrollHolder') # FIXME y ?
