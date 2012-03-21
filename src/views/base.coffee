@@ -19,12 +19,14 @@ class exports.BaseView extends Backbone.View
         fail = =>
             console.error @cid + " is breaking shit!"
         timeout = setTimeout(fail, 5000)
-        tpl = @template(this)
+        tpl = jqueryify @template(this)
+        @trigger('template:create', tpl)
         tpl.ready =>
             clearTimeout(timeout)
             @rendered = yes
             @el = tpl.jquery
             @delegateEvents()
+            @trigger('template:ready', tpl)
             callback?.call?(this)
             # invoke delayed callbackes from ready
             if @_waiting?
