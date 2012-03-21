@@ -29,17 +29,14 @@ class exports.BaseView extends Backbone.View
             callback?.call?(this)
             # invoke delayed callbackes from ready
             if @_waiting?
-                cb() for cb in @_waiting
+                cb?() for cb in @_waiting
                 delete @_waiting
 
-    ready: (callback) =>
-        return this unless callback?
-        if @rendered
-            callback()
-        else
-            @_waiting ?= []
-            @_waiting.push callback
-        return this
+    ready: (callback) ->
+        return unless callback?
+        return callback() if @rendered
+        @_waiting ?= []
+        @_waiting.push callback
 
     domready: (callback) =>
         return this unless callback?

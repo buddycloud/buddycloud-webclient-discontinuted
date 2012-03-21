@@ -7,9 +7,9 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/posts'
-{ List } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
-        list = new List @$section class:'topics'
-        list.bind(view, 'view:topic')
+        @$section class:'topics'#, ->
+#             view.bind 'view:topic', (tag) =>
+#                 @_jquery?.append(tag._jquery ? tag)

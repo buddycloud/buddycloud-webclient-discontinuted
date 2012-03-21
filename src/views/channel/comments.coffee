@@ -64,6 +64,35 @@ class exports.CommentsView extends PostsBaseView
         @$('.answer .controls').prepend(p)
         p.text(error.text or error.condition)
 
+    add_comment: (comment) =>
+        view = @views[comment.cid] ?= new PostView
+            type:'comment'
+            model:comment
+            parent:this
+        return if view.rendering
+        view.render =>
+            @ready =>
+                @insert_comment_view view
+
+#                 comment.bind 'change', =>
+#                     view.el.detach()
+#                     @insert_comment_view view
+
+    insert_comment_view: (view) =>
+        i = @model.indexOf(view.model)
+        olderComment = @views[@model.at(i + 1)?.cid]
+        if olderComment?.rendered
+            if olderComment.el.parent().length > 0
+                olderComment.el.after view.el
+            else
+                # wtf .. jquery's design is so b0rken m(
+                olderComment.el = olderComment.el.add view.el
+        else if olderComment
+            olderComment.ready =>
+                @insert_comment_view view
+        else
+            @el.prepend view.el
+
     render: (callback) ->
         super ->
 
