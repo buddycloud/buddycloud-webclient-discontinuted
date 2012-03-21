@@ -3,7 +3,7 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select "div.channelView", "article.topic, div.channelDetails, .notification"
-            el.find('h2, span:not(.loader), #poweredby').text("")
+            el.find('h2, span:not(.loader, .button), #poweredby').text("")
             return el
 
 
@@ -14,55 +14,61 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'channelView', ->
             @$header ->
+                @$table -> @$tbody -> @$tr ->
+                    @$td ->
+                        @$img class:'avatar', ->
+                            @attr src:"#{view.model.avatar}"
+                    @$td ->
+                        @$div class:'titleBar', ->
+                            title = @$h2 class:'title'
+                            update_metadata = ->
+                                title.text "#{view.metadata.get('title')?.value or view.model.get('id')}"
+                            view.metadata.bind 'change', update_metadata
+                            update_metadata()
+
+                            status = @$span class:'status'
+                            update_status = (text) ->
+                                status.text text ? ""
+                            view.bind 'status', update_status
+                            update_status()
+                    @$td ->
+                        @$nav ->
+                            @$span class:'messages button', ->
+                                @remove() # FIXME
+                            @$span class:'edit button', ->
+                                update_edit_button = =>
+                                    if app.users.current.canEdit(view.model)
+                                        @show()
+                                    else
+                                        @hide()
+                                view.bind 'update:affiliations', update_edit_button
+                                update_edit_button()
+                            if app.users.isAnonymous(app.users.current)
+                                @$span class:'login button', ->
+                                    @text "Login"#  FIXME +"or Register to Follow"
+                            else
+                                follow = @$span class:'follow button', ->
+                                    @text "Follow"
+                                unfollow = @$span class:'unfollow button', ->
+                                    @text "Unfollow"
+
+                                update_follow_unfollow = ->
+                                    if app.users.current.get('id') is view.model.get('id')
+                                        follow.hide()
+                                        unfollow.hide()
+                                    else if app.users.current.isFollowing view.model
+                                        follow.hide()
+                                        unfollow.show()
+                                    else
+                                        follow.show()
+                                        unfollow.hide()
+                                app.users.current.channels.bind 'add', update_follow_unfollow
+                                app.users.current.channels.bind 'remove', update_follow_unfollow
+                                update_follow_unfollow()
                 @$a -># powered by buddycloud
                     @text "#{app.version}"
-                @$img class:'avatar', ->
-                    @attr src:"#{view.model.avatar}"
-                @$div class:'titleBar', ->
-                    title = @$h2 class:'title'
-                    update_metadata = ->
-                        title.text "#{view.metadata.get('title')?.value or view.model.get('id')}"
-                    view.metadata.bind 'change', update_metadata
-                    update_metadata()
-
-                    status = @$span class:'status'
-                    update_status = (text) ->
-                        status.text text ? ""
-                    view.bind 'status', update_status
-                    update_status()
-                @$nav ->
-                    @$div class:'messages button', ->
-                        @remove() # FIXME
-                    @$div class:'edit button', ->
-                        update_edit_button = =>
-                            if app.users.current.canEdit(view.model)
-                                @show()
-                            else
-                                @hide()
-                        view.bind 'update:affiliations', update_edit_button
-                        update_edit_button()
-                    if app.users.isAnonymous(app.users.current)
-                        @$div class:'login button', ->
-                            @text "Login"#  FIXME +"or Register to Follow"
-                    else
-                        follow = @$div class:'follow button', ->
-                            @text "Follow"
-                        unfollow = @$div class:'unfollow button', ->
-                            @text "Unfollow"
-
-                        update_follow_unfollow = ->
-                            if app.users.current.get('id') is view.model.get('id')
-                                follow.hide()
-                                unfollow.hide()
-                            else if app.users.current.isFollowing view.model
-                                follow.hide()
-                                unfollow.show()
-                            else
-                                follow.show()
-                                unfollow.hide()
-                        app.users.current.channels.bind 'add', update_follow_unfollow
-                        app.users.current.channels.bind 'remove', update_follow_unfollow
-                        update_follow_unfollow()
+            view.bind('show', @show)
+            view.bind('hide', @hide)
 
 
             @$section class:'stream', ->
@@ -96,7 +102,9 @@ module.exports = design (view) ->
                         spinner.show()
                     view.model.bind 'loading:stop', ->
                         spinner.hide()
-            @$div class:'channelDetails', ->
-                view.bind('subview:details', @replace)
+        @$div class:'channelDetails', ->
+            view.bind('subview:details', @replace)
+            view.bind('show', @show)
+            view.bind('hide', @hide)
 
 

@@ -13,11 +13,11 @@ design = require '../_design/main'
 module.exports = design (view) ->
     return new Template schema:5, ->
 
-        @$div id:'editbar', ->
+        @$div class:'editbar', ->
             @once('replace', load_indicate(this).clear)
             view.bind('subview:editbar', @replace)
 
-        @$div id:'sidebar', ->
+        @$div class:'sidebar', ->
             @once('replace', load_indicate(this).clear)
             view.bind('subview:sidebar', @replace)
 

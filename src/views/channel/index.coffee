@@ -109,7 +109,7 @@ class exports.ChannelView extends BaseView
             @show_pending_notification()
 
             unless @hidden
-                @el.show()
+                @trigger 'show'
                 @on_scroll()
 
             callback?.call(this)
@@ -124,7 +124,6 @@ class exports.ChannelView extends BaseView
 
     show: =>
         @hidden = false
-        @el.show()
 
         @model.mark_read()
         # Not subscribed? Refresh!
@@ -141,7 +140,6 @@ class exports.ChannelView extends BaseView
 
     hide: =>
         @hidden = true
-        @el.hide()
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()

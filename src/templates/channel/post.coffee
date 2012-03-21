@@ -28,7 +28,7 @@ module.exports = design (view) ->
                 view.model.bind 'change:updated', update_time
                 view.model.bind 'change:published', update_time
                 update_time()
-            name = @a class:'name'
+            name = @span class:'name'
 
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)

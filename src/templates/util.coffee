@@ -18,4 +18,4 @@ exports.ready = (tag, view) ->
     tag.ready ->
         view.trigger 'dom:ready'
 
-    
+

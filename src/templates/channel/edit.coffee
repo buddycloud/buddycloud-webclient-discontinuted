@@ -3,7 +3,7 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             # FIXME: hide .dangerZone, delete channel will be implemented later
-            @select "#editbar", ".dangerZone"
+            @select ".editbar", ".dangerZone"
 
 
 { Template } = require 'dynamictemplate'
@@ -11,7 +11,7 @@ design = require '../../_design/channel/edit'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
-        @$div id: 'editbar', ->
+        @$div class: 'editbar', ->
             @$div class: 'edits', ->
                 @$div class: 'contenteditable', ->
                     @$input id: 'allowPost', ->
