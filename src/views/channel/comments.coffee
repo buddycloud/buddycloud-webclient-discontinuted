@@ -9,8 +9,8 @@ class exports.CommentsView extends PostsBaseView
     initialize: ->
         super
 #         @model.bind 'change', @render
-        @model.forEach @add_post
-        @model.bind 'add', @add_post
+        @model.forEach @add_comment
+        @model.bind 'add', @add_comment
 
     events:
         'keydown .answer textarea': 'hitEnterOnComment'
