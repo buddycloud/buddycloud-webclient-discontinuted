@@ -77,3 +77,4 @@ module.exports = design (view) ->
                             el.hide()
                     postsnode.affiliations.bind 'change', update_visibility
                     update_visibility()
+                view.bind 'subview:similar', @add

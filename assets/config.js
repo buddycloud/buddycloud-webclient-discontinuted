@@ -20,4 +20,6 @@ window.config = {
 
     /* Sign up for an embed.ly account to use OEmbed */
     //embedly_key: "xxx"
+    
+    directoryService: "search.buddycloud.org"
 };

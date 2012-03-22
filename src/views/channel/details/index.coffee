@@ -71,6 +71,22 @@ class exports.ChannelDetailsView extends BaseView
             @publishers.trigger 'change:all:users'
             @followers.trigger 'change:all:users'
 
+        app.handler.connector.get_similar_channels @model.get('id'), 16, (err, jids) =>
+            unless jids and jids.length > 0
+                # Nothing to display
+                return
+            collection = new Backbone.Collection()
+            jids.forEach (jid) ->
+                collection.add app.users.get_or_create(id: jid)
+            @similar = new ChannelDetailsList
+                title: "similar channels"
+                model: collection
+                parent: this
+                load_more: ->
+            @ready =>
+                @similar.render =>
+                    @trigger 'subview:similar', @similar.el
+
 
     load_more_followers: (all) =>
         node = @model.nodes.get_or_create id: 'posts'
