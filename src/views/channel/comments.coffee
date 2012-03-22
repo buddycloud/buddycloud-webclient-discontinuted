@@ -83,15 +83,19 @@ class exports.CommentsView extends PostsBaseView
         olderComment = @views[@model.at(i + 1)?.cid]
         if olderComment?.rendered
             if olderComment.el.parent().length > 0
-                olderComment.el.after view.el
+                olderComment.el.before view.el
             else
                 # wtf .. jquery's design is so b0rken m(
-                olderComment.el = olderComment.el.add view.el
+                dummy = $()
+                dummy = dummy.add view.el
+                dummy = dummy.add olderComment.el
+                olderComment.el = dummy
         else if olderComment
             olderComment.ready =>
                 @insert_comment_view view
         else
-            @el.prepend view.el
+            @el.append view.el
+
 
     render: (callback) ->
         super ->
