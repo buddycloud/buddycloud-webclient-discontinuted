@@ -61,10 +61,8 @@ module.exports = design (view) ->
             update_visibility = =>
                 if app.users.current.canEdit(channel) and
                    not isOwner
-                    console.warn "update_visibility :-)"
                     add_class 'moderator'
                 else
-                    console.warn "update_visibility :-("
                     rm_class 'moderator'
             view.parent.parent.parent.bind 'update:permissions', update_visibility
             view.bind 'user:update', (user) =>
