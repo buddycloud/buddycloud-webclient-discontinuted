@@ -15,11 +15,6 @@ class exports.Router extends Backbone.Router
         ":id@:domain":"loadingchannel"
 
     initialize: ->
-
-        # bootstrapping after login or registration
-        app.handler.connection.bind "connected", @on_connected
-        app.handler.connection.bind "disconnected", @on_disconnected
-
         Backbone.history.start pushState:on
 
     navigate: ->
@@ -35,13 +30,18 @@ class exports.Router extends Backbone.Router
         @current_view.trigger 'show'
 
     on_connected: =>
-        app.users.target ?= app.users.current
-        jid = app.users.target.get('jid')
-        app.views.index = new MainView
-        @navigate jid
-        # in anonymous direct browsing route, navigate above doesn't
-        # trigger an URL change event at all
-        @loadingchannel jid
+        if @previous_connection?
+            @previous_connection.unbind 'disconnected', @on_disconnected
+        @previous_connection = app.handler.connection
+        app.handler.connection.bind 'disconnected', @on_disconnected
+
+        if app.users.target?
+            jid = app.users.target.get('jid')
+            app.views.index = new MainView
+            @navigate jid
+            # in anonymous direct browsing route, navigate above doesn't
+            # trigger an URL change event at all
+            @loadingchannel jid
 
     on_disconnected: =>
          # we are still on the welcome site
@@ -92,8 +92,6 @@ class exports.Router extends Backbone.Router
             app.views.index.setCurrentChannel channel
             @setView app.views.index
         else
-            # connect as anony@mous
-            do app.handler.connection.connect unless app.users.current
             # Wait for on_connected...
             app.views.loadingchannel ?= new LoadingChannelView
             @setView app.views.loadingchannel

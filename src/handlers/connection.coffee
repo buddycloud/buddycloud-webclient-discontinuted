@@ -1,11 +1,9 @@
-{ DataHandler } = require './data'
 { Connector } = require './connector'
 
 class exports.ConnectionHandler extends Backbone.EventHandler
     constructor: ->
         @connected = false
         @connector = new Connector(this) # before datahandler
-        app.handler.data = new DataHandler(@connector)
 
         @last_login = {}
 

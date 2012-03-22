@@ -201,11 +201,10 @@ class exports.ChannelView extends BaseView
 
     clickLogin: EventHandler (ev) ->
         # Just make this work for now
-        window.location = "/login"
+        app.router.navigate "login", true
         return
         # TODO: implement the overlay login below and graceful
-        # replacement of the Strophe session
-
+        # replacement of the Strophe session & registration!
         @overlay ?= new OverlayLogin()
         @overlay.show()
 

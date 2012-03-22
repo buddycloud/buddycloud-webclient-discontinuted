@@ -11,7 +11,7 @@ class exports.LoadingChannelView extends Backbone.View
         tpl.ready =>
             @el = tpl.jquery
             $('body').removeClass('start').addClass('center').append @el
-            $('.centerBox').remove()
+            $('.centerBox').hide()
 
     hide: =>
         @el.remove()
