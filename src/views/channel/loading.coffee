@@ -1,3 +1,5 @@
+jqueryify = require 'dt-jquery'
+
 
 class exports.LoadingChannelView extends Backbone.View
     template: require '../../templates/channel/loading'
@@ -7,7 +9,7 @@ class exports.LoadingChannelView extends Backbone.View
         do @render
 
     render: =>
-        tpl = @template( jid: app.users.target.get('jid') )
+        tpl = jqueryify @template( jid: app.users.target.get('jid') )
         tpl.ready =>
             @el = tpl.jquery
             $('body').removeClass('start').addClass('center').append @el
