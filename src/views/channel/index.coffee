@@ -244,8 +244,9 @@ class exports.ChannelView extends BaseView
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: throttle_callback(100, ->
         if this is @parent.current
-            peepholeTop = @el.scrollTop()
-            peepholeBottom = peepholeTop + @el.outerHeight()
+            content = $('#content')
+            peepholeTop = content.scrollTop()
+            peepholeBottom = peepholeTop + content.outerHeight()
             @postsview?.on_scroll(peepholeTop, peepholeBottom)
     )
 
