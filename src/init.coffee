@@ -107,12 +107,12 @@ app.setConnection = (connection) ->
         app.handler.data.setConnector connection.connector
 
 app.relogin = (user, password, callback) ->
+    console.warn "relogin", user
     if typeof password is 'object'
         { password, register, email } = password
     connection = new ConnectionHandler()
 
     on_connected = ->
-        clear()
         console.warn "connected", connection
 
         if app.handler.connection?.connection? and
@@ -125,17 +125,9 @@ app.relogin = (user, password, callback) ->
         console.warn "app.relogin success callback"
         callback?()
     connection.bind 'connected', on_connected
-    clear = ->
-        connection.unbind 'connected', on_connected
     ["authfail", "regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) ->
-        on_fail = ->
-            clear()
+        connection.bind type, ->
             callback? new Error(type)
-        connection.bind type, on_fail
-        oldClear = clear
-        clear = ->
-            connection.unbind type, on_fail
-            oldClear()
 
     if register
         connection.register user, password, email
