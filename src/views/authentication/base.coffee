@@ -18,11 +18,16 @@ class exports.AuthenticationView extends Backbone.View
         app.router.navigate "welcome", true
 
     show: =>
+        $('.centerBox').show()
         @box.addClass @cssclass
-        @el.find('input').first().focus() # bug on ipad: the focus has to be delayed to happen after the transition (on 3d animation enabled devices the slides flip in 3d)
+        # bug on ipad: the focus has to be delayed to happen after the
+        # transition (on 3d animation enabled devices the slides flip
+        # in 3d)
+        @el.find('input').first().focus()
 
     hide: =>
         @box.removeClass @cssclass
+        $('.centerBox').hide()
 
     go_away: =>
         # nicely animate the login form away
