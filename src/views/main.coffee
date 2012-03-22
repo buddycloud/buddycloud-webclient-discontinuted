@@ -7,6 +7,9 @@
 class exports.MainView extends BaseView
     template: require '../templates/main'
 
+    events:
+        'scroll': 'on_scroll'
+
     initialize: ->
         super
         @bind 'show', @show
@@ -105,3 +108,6 @@ class exports.MainView extends BaseView
         @current = new CreateTopicChannelView(parent: this)
         @current.render =>
             @trigger 'subview:content', @current.el
+
+    on_scroll: =>
+        @current?.on_scroll()
