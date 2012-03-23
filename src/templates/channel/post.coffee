@@ -70,7 +70,7 @@ update_text = do ->
                     flush_text()
 
                     link = part.value
-                    @$a href: link, link
+                    @$a { href: link, target: "_blank" }, link
                     unless previews_rendered[link]
                         previews_rendered[link] = yes
                         render_preview.call(@up(end: no), view, link)
