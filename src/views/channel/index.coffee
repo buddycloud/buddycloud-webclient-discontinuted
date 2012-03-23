@@ -123,6 +123,12 @@ class exports.ChannelView extends BaseView
 #             unless pending
 
     show: =>
+        @ready =>
+            content = $('#content')
+            par = content.parent()
+            content.detach()
+            par.append(@el)
+
         @hidden = false
 
         @model.mark_read()

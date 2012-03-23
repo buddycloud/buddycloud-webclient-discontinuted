@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            el = @select "div.channelView", "article.topic, div.channelDetails, .notification"
+            el = @select "#content", "article.topic, div.channelDetails, .notification"
             el.find('h2, span:not(.loader, .button), #poweredby').text("")
             return el
 
@@ -11,7 +11,7 @@ unless process.title is 'browser'
 design = require '../../_design/channel/index'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template schema:5, -> @$div id:'content', ->
         @$div class:'channelView', ->
             @$header ->
                 @$table -> @$tbody -> @$tr ->

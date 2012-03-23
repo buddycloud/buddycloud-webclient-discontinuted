@@ -2,14 +2,14 @@ unless process.title is 'browser'
     return module.exports =
         src: "create_topic_channel.html"
         select: () ->
-            @select "div.channelView", ".location.dual, .publish"
+            @select "#content", ".location.dual, .publish"
 
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/create_topic_channel/index'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template schema:5, -> @$div id:'content', ->
         @$div class:'channelView', ->
             @$form class: "stream clearfix", ->
                 @$div class: 'role', ->

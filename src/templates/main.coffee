@@ -15,9 +15,9 @@ module.exports = design (view) ->
 
         @$div class:'editbar', ->
             @once('replace', load_indicate(this).clear)
-            view.bind 'subview:editbar', @replace
-            view.bind 'show', @show
-            view.bind 'hide', @hide
+            view.bind('subview:editbar', @replace)
+            view.bind('show', @show)
+            view.bind('hide', @hide)
 
         @$div class:'sidebar', ->
             @once('replace', load_indicate(this).clear)
@@ -30,11 +30,14 @@ module.exports = design (view) ->
                     indicator.clear()
                     delete indicator
 
-                console.log "content", tag
-                @add(tag)
+                console.error "content", tag
+                @ready =>
+                    @_jquery?.parent().append(tag._jquery ? tag)
+                    @_jquery?.detach()
+                    @_jquery = tag._jquery ? tag
 
-            view.bind 'show', @show
-            view.bind 'hide', @hide
+            view.bind('show', @show)
+            view.bind('hide', @hide)
 
 
 
