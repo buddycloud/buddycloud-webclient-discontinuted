@@ -17,7 +17,7 @@ module.exports = design (view) ->
                 @remove() if app.users.isAnonymous(app.users.current)
                 #@text "loading personal channel …"
                 view.bind('subview:personalchannel', @replace)
-            @$nav class:'actionBar' # why?
+            # nav.actionBar
             @$div class:'search', ->
                 @once('replace', load_indicate(this).clear)
                 view.bind('subview:searchbar', @replace)
