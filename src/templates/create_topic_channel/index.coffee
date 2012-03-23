@@ -48,4 +48,4 @@ module.exports = design (view) ->
                     view.bind 'loading:start', @show
                     view.bind 'loading:error', @hide
 
-            view.bind 'hide', @remove
+        view.bind 'hide', @remove
