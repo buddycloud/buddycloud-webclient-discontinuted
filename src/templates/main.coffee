@@ -23,7 +23,7 @@ module.exports = design (view) ->
             @once('replace', load_indicate(this).clear)
             view.bind('subview:sidebar', @replace)
 
-        @$div id:'content', ->
+        @$div class:'content', ->
             indicator = load_indicate this
             view.bind 'subview:content', (tag) =>
                 if indicator?
@@ -33,8 +33,6 @@ module.exports = design (view) ->
                 console.error "content", tag
                 @ready =>
                     @_jquery?.parent().append(tag._jquery ? tag)
-                    @_jquery?.detach()
-                    @_jquery = tag._jquery ? tag
 
             view.bind('show', @show)
             view.bind('hide', @hide)

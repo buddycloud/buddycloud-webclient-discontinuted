@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            el = @select "#content", "article.topic, div.channelDetails, .notification"
+            el = @select ".content", "article.topic, div.channelDetails, .notification"
             el.find('h2, span:not(.loader, .button), #poweredby').text("")
             return el
 
@@ -11,7 +11,7 @@ unless process.title is 'browser'
 design = require '../../_design/channel/index'
 
 module.exports = design (view) ->
-    return new Template schema:5, -> @$div id:'content', ->
+    return new Template schema:5, -> @$div class:'content', ->
         @$div class:'channelView', ->
             @$header ->
                 @$table -> @$tbody -> @$tr ->
@@ -67,9 +67,6 @@ module.exports = design (view) ->
                                 update_follow_unfollow()
                 @$a -># powered by buddycloud
                     @text "#{app.version}"
-            view.bind('show', @show)
-            view.bind('hide', @hide)
-
 
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
@@ -102,9 +99,11 @@ module.exports = design (view) ->
                         spinner.show()
                     view.model.bind 'loading:stop', ->
                         spinner.hide()
+
         @$div class:'channelDetails', ->
             view.bind('subview:details', @replace)
-            view.bind('show', @show)
-            view.bind('hide', @hide)
+
+        view.bind('show', @show)
+        view.bind('hide', @hide)
 
 

@@ -123,12 +123,6 @@ class exports.ChannelView extends BaseView
 #             unless pending
 
     show: =>
-        @ready =>
-            content = $('#content')
-            par = content.parent()
-            content.detach()
-            par.append(@el)
-
         @hidden = false
 
         @model.mark_read()
@@ -249,9 +243,8 @@ class exports.ChannelView extends BaseView
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: throttle_callback(100, ->
         if this is @parent.current
-            content = $('#content')
-            peepholeTop = content.scrollTop()
-            peepholeBottom = peepholeTop + content.outerHeight()
+            peepholeTop = @el.scrollTop()
+            peepholeBottom = peepholeTop + @el.outerHeight()
             @postsview?.on_scroll(peepholeTop, peepholeBottom)
     )
 
