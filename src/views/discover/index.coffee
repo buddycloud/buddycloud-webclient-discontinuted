@@ -13,16 +13,22 @@ class exports.DiscoverView extends BaseView
         @button.addClass('active')
         super
 
-        ###
+        my_jid = app.users.current.get('id')
+
+        mostActive = new Backbone.Collection()
+        channels_to_collection mostActive, 'get_most_active_nodes', null
+        popular = new Backbone.Collection()
+        channels_to_collection popular, 'get_popular_nodes', null
         @views.local = new DiscoverGroupView
             name:"Local"
             id:"local"
             lists:
-                'mostActive':"Most Active"
-                'popular':"Popular"
-        ###
-
-        my_jid = app.users.current.get('id')
+                'mostActive':
+                    name: "Most Active"
+                    model: mostActive
+                'popular':
+                    name: "Popular"
+                    model: popular
 
         recommended = new Backbone.Collection()
         channels_to_collection recommended, 'recommend_channels', my_jid, 10
@@ -57,4 +63,8 @@ channels_to_collection = (model, method, args...) ->
     connector[method].call connector, args..., (err, jids) ->
         if jids
             for jid in jids
-                model.add app.channels.get_or_create(id: jid)
+                # Some queries return nodes not jids:
+                if (m = jid.match(/\/user\/([^\/]+)/))
+                    jid = m[1]
+                unless model.get(jid)?
+                    model.add app.channels.get_or_create(id: jid)

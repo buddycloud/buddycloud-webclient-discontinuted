@@ -271,6 +271,52 @@ class exports.Connector extends Backbone.EventHandler
             , 1
 
     ##
+    # buddycloud-server statistics queries
+    ##
+
+    get_most_active_nodes: (max, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                nodes = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (node = itemEl.getAttribute 'node')
+                            nodes.push node
+                callback(null, nodes)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: @connection.pubsub.service, type: 'get').
+                c('query', xmlns: Strophe.NS.DISCO_ITEMS,
+                    node: "/top-published-nodes")
+            if max
+                iq.c('set', xmlns: Strophe.NS.RSM).
+                   c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    get_popular_nodes: (max, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                nodes = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (node = itemEl.getAttribute 'node')
+                            nodes.push node
+                callback(null, nodes)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: @connection.pubsub.service, type: 'get').
+                c('query', xmlns: Strophe.NS.DISCO_ITEMS,
+                    node: "/top-followed-nodes")
+            if max
+                iq.c('set', xmlns: Strophe.NS.RSM).
+                   c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    ##
     # Directory queries
     ##
 
