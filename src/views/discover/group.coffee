@@ -11,8 +11,11 @@ class exports.DiscoverGroupView extends BaseView
         @views = {}
         super
 
-        for id, name of lists
-            @views[id] = new DiscoverListView {id, name}
+        for id, listOpts of lists
+            opts = Object.create(listOpts)
+            opts.id = id
+            @views[id] =
+                new DiscoverListView opts
 
 
     render: (callback) ->
