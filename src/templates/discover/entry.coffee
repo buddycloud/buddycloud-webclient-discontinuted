@@ -20,8 +20,8 @@ module.exports = design (view) ->
                 @$span class:'owner', ->
                     @text view.model.get('id') # FIXME
                 status = @$span class:'status'
-                update_status = (text) ->
-                    status.text text ? ""
+                update_status = ->
+                    status.text view.status ? ""
                 view.bind 'status', update_status
                 update_status()
 
