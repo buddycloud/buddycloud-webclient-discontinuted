@@ -11,6 +11,7 @@ class exports.Router extends Backbone.Router
         "welcome"    :"index"
         "login"      :"login"
         "register"   :"register"
+        "discover"   :"discover"
         "more"       :"overview"
         ":id@:domain":"loadingchannel"
         "create-topic-channel":"createtopicchannel"
@@ -102,5 +103,8 @@ class exports.Router extends Backbone.Router
             app.views.index.on_create_topic_channel()
         else
             @navigate "/"
+
+    discover: () ->
+        app.views.index?.on_discover?()
 
 

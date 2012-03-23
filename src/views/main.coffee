@@ -2,6 +2,7 @@
 { Channels } = require '../collections/channel'
 { Sidebar } = require './sidebar/index'
 { BaseView } = require './base'
+{ DiscoverView } = require './discover/index'
 { CreateTopicChannelView } = require './create_topic_channel/index'
 
 class exports.MainView extends BaseView
@@ -106,6 +107,12 @@ class exports.MainView extends BaseView
     on_create_topic_channel: =>
         @current?.trigger 'hide'
         @current = new CreateTopicChannelView(parent: this)
+        @current.render =>
+            @trigger 'subview:content', @current.el
+
+    on_discover: =>
+        @current?.trigger 'hide'
+        @current = new DiscoverView(parent: this)
         @current.render =>
             @trigger 'subview:content', @current.el
 

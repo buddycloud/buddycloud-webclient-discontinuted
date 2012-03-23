@@ -19,6 +19,7 @@ snippets = ["main"
     "sidebar/index", "sidebar/search", "sidebar/entry"
     "authentication/overlay"
     "create_topic_channel/index"
+    "discover/index", "discover/group", "discover/list", "discover/entry"
 ]
 
 
@@ -140,6 +141,7 @@ start_server = (args, opts) ->
     server.get '/more',        index
     server.get '/login',       index
     server.get '/register',    index
+    server.get '/discover',    index
     server.get '/:id@:domain', index
     server.get '/create-topic-channel', index
 
