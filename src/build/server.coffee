@@ -141,6 +141,7 @@ start_server = (args, opts) ->
     server.get '/login',       index
     server.get '/register',    index
     server.get '/:id@:domain', index
+    server.get '/create-topic-channel', index
 
     server.get '/web/js/store.js', (req, res) ->
         res.header 'Content-Type', 'text/javascript'

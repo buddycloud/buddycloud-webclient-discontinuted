@@ -103,7 +103,7 @@ class exports.Sidebar extends BaseView
         @current = null
         old?.trigger('update:highlight')
 
-        @parent.on_create_topic_channel()
+        app.router.navigate "create-topic-channel", true
 
     # sliding in animation
     moveIn: (t = 200) ->

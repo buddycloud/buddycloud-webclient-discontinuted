@@ -13,6 +13,7 @@ class exports.Router extends Backbone.Router
         "register"   :"register"
         "more"       :"overview"
         ":id@:domain":"loadingchannel"
+        "create-topic-channel":"createtopicchannel"
 
     initialize: ->
         Backbone.history.start pushState:on
@@ -95,3 +96,11 @@ class exports.Router extends Backbone.Router
             # Wait for on_connected...
             app.views.loadingchannel ?= new LoadingChannelView
             @setView app.views.loadingchannel
+
+    createtopicchannel: () ->
+        if app.views.index?.on_create_topic_channel?
+            app.views.index.on_create_topic_channel()
+        else
+            @navigate "/"
+
+
