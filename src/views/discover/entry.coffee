@@ -17,3 +17,8 @@ class exports.DiscoverListEntryView extends BaseView
         @status = @statusnode.posts.at(0)?.get('content')?.value
         @trigger 'status', @status
 
+    events:
+        click: 'on_click'
+
+    on_click: =>
+        app.router.navigate @model.get('id'), yes
