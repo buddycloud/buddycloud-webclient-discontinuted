@@ -8,13 +8,12 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 { throttle_callback } = require '../../../util'
 design = require '../../../_design/channel/details/index'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         postsnode = view.model.nodes.get_or_create(id: 'posts')
         metadata = postsnode.metadata
 
@@ -27,16 +26,11 @@ module.exports = design (view) ->
                         p.end()
                         span
 
-                    owner = make_field 'owner'
                     description = make_field 'description'
                     accessModel = make_field 'open'
                     creationDate = make_field 'broadcast'
 
                     update_metadata = =>
-                        owners = postsnode.affiliations.filter (affiliation) ->
-                                affiliation.get('affiliation') is 'owner'
-                        owner.text owners.map((owner) -> owner.get 'id').
-                            join(" ")
                         description.text metadata.get('description')?.value
                         if metadata.get('access_model')?.value is 'open'
                             accessModel.text "open"
@@ -53,7 +47,9 @@ module.exports = design (view) ->
                     postsnode.bind 'affiliation:update', update_metadata_callback
                     update_metadata()
 
+                view.bind 'subview:owners', @add
                 view.bind 'subview:moderators', @add
+                view.bind 'subview:publishers', @add
                 view.bind 'subview:followers', @add
                 view.bind 'subview:following', (el) =>
                     @add el
@@ -68,3 +64,17 @@ module.exports = design (view) ->
                             el.show()
                     metadata.bind 'change', update_visibility
                     update_visibility()
+                view.bind 'subview:banned', (el) =>
+                    @add el
+
+                    update_visibility = ->
+                        # FIXME: uses the jQuery `el'. the `@add()'
+                        # result didn't work.
+                        if app.users.current.canModerate view.model
+                            # Only owners and moderators can see banned users
+                            el.show()
+                        else
+                            el.hide()
+                    postsnode.affiliations.bind 'change', update_visibility
+                    update_visibility()
+                view.bind 'subview:similar', @add

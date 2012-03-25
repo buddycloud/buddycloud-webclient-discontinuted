@@ -11,6 +11,7 @@ class exports.Sidebar extends BaseView
 
     events:
         'click #create_topic_channel': 'on_create_topic_channel'
+        'click button.discover': 'on_discover'
 
     initialize: () ->
         super
@@ -98,12 +99,21 @@ class exports.Sidebar extends BaseView
 
 
     on_create_topic_channel: =>
-        console.log "on_create_topic_channel", arguments
+        console.log "on_create_topic_channel", arguments...
         old = @current
         @current = null
         old?.trigger('update:highlight')
 
-        @parent.on_create_topic_channel()
+        app.router.navigate "create-topic-channel", true
+
+    on_discover: =>
+        console.log "on_create_topic_channel", arguments...
+        old = @current
+        @current = null
+        old?.trigger('update:highlight')
+
+        app.router.navigate "discover", true
+
 
     # sliding in animation
     moveIn: (t = 200) ->

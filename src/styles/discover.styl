@@ -1,0 +1,78 @@
+.discoverChannels
+  padding 0 8px
+  h1
+    padding 21px 13px 10px
+    font-size 89px
+    line-height 55px
+    color rgba(0,0,0,.08)
+  h2
+    padding 0 13px
+    font-size 34px
+    line-height 55px
+    color rgba(0,0,0,.55)
+  .list
+    margin-bottom 55px
+    background rgba(255,255,255,.55)
+    border 1px solid rgba(0,0,0,.21)
+    border-radius 5px
+    box-sizing border-box
+    box-shadow 0 1px rgba(0,0,0,.08), 0 3px 0 -1px rgba(0,0,0,.03), 0 3px 8px -1px rgba(0,0,0,.03)
+  .channel
+    padding 21px 21px 21px 76px
+    box-shadow 0 -1px rgba(0,0,0,.13) inset, 0 1px white inset
+    cursor pointer
+    &:hover
+      background white
+    &:first-child
+      border-radius 5px 5px 0 0
+    &:last-child
+      border-radius 0 0 5px 5px
+      box-shadow 0 1px white inset
+    &:only-child
+      border-radius 5px
+      box-shadow 0 1px white inset
+    .avatar
+      top 12px
+    .info
+      .owner
+        color rgba(0,0,0,.89)
+      .status
+        color rgba(0,0,0,0.65)
+
+/* future stuff */
+.discover
+  overflow hidden
+  h1
+    left 21px
+    top 21px
+    color rgba(255,255,255,.08)
+    font-size 120px
+    line-height 1
+    position absolute
+  body > .content
+    display none
+  
+  .search
+    display none
+  
+  .channel
+    margin-left -70px
+    margin-top -33px
+    width 141px
+    left 50%
+    top 50%
+    position absolute
+    transition top 500ms, left 500ms
+    &.personal,
+    &.selected
+      background none
+      box-shadow none
+      .avatar
+        top 8px
+    &.personal
+      transition none
+      z-index 1
+    .info
+      display none
+    .counter
+      display none

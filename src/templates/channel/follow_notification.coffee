@@ -9,14 +9,13 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/follow_notification'
 
 
 module.exports = design (view) ->
     user = app.users.get_or_create(id: view.model.get('id'))
 
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$article class: 'notification', ->
             view.bind 'visible', =>
                 # TODO: use upcoming ready() in templates here:

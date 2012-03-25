@@ -51,19 +51,24 @@ class exports.RegisterView extends AuthenticationView
     start_registration: (name, password, email) ->
         @unbind 'hide', @hide
         @bind 'hide', @go_away
-        app.handler.connection.register name, password, email
-        app.handler.connection.bind "registered", @register_success
-        app.handler.connection.bind "connected",  @login_success
-
-        ["regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) =>
-            event = () =>
-                app.handler.connection.unbind type, event
-                @reset()
-                if type is "regifail" and app.handler.connection.isRegistered()
+        connection = app.relogin name
+        , { register: yes, password, email }
+        , (err) =>
+            console.warn "start_registration", name, err
+            @reset()
+            if err?.message is "regifail" and app.handler.connection.isRegistered()
                     @register_success()
+                    @login_success()
+                else if err
+                    @reset()
+                    @error(err.message)
                 else
-                    @error(type)
-            app.handler.connection.bind type, event
+                    @login_success()
+        connection.bind 'registered', =>
+            @register_success()
+            # Navigate to home channel after auth:
+            app.users.target ?= connection.user
+
 
     register_success: =>
         $('#register_waiting').html $('#login_waiting').html()
@@ -74,7 +79,5 @@ class exports.RegisterView extends AuthenticationView
 
     reset: =>
         super
-        app.handler.connection.unbind "registered", @register_success
-        app.handler.connection.unbind "connected",  @login_success
         $('#home_register_submit').prop "disabled", false
         $('#register_waiting').css "visibility","hidden"

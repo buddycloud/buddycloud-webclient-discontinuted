@@ -9,11 +9,10 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/sidebar/entry'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>

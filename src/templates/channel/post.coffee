@@ -3,18 +3,17 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select "article.topic:first section.opener" , "p *"
-            el.find('p, span').text("")
+            el.find('p, span, a').text("")
             return el
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/post'
-{ load_indicate, ready } = require '../util'
+{ load_indicate } = require '../util'
 
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         @$section ->
             @attr class:"#{view.type}"
             avatar = @img class:'avatar'
@@ -50,8 +49,6 @@ module.exports = design (view) ->
                 view.once('update:content', load_indicate(this).clear)
                 view.bind('update:content', update_text.bind(this, view))
 
-            ready this, view
-
 
 update_text = do ->
     # Don't load them twice:
@@ -73,7 +70,7 @@ update_text = do ->
                     flush_text()
 
                     link = part.value
-                    @$a href: link, link
+                    @$a { href: link, target: "_blank" }, link
                     unless previews_rendered[link]
                         previews_rendered[link] = yes
                         render_preview.call(@up(end: no), view, link)

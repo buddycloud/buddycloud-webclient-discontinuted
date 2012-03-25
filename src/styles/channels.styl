@@ -1,121 +1,182 @@
-#sidebar
+.sidebar
+  top 0
   left 0
-  height 100%
+  bottom 0
   width 234px
   color white
   border-right 0 1px black
   position absolute
-  overflow hidden
   transition 400ms
-  .flexHolder
-    height 100%
-    box vertical start start
   
 #channels
-  width 234px
-  box-flex 1
-  display block // overwrites antiscroll's display: inline-block which brakes the flex-box
-
-.scrollHolder
-  width 100%
-  height 100%
-  overflow-y auto
+  top 153px
+  right 0
+  bottom 0
+  left 0
   position absolute
+  overflow-y auto
 
-#sidebar
-  .personal.channel,
-  .personal.channel.selected
-    width 234px
-    height 76px
-    background linear-gradient(top, lighten(desaturate(darkBackground, 75%), 40%), lighten(desaturate(darkBackground, 70%), 30%))
-    box-shadow 0 1px black, -1px 0 black inset, 0 2px rgba(255, 255, 255, 0.21)
-    position relative
-    z-index 5
-  .search
-    width 223px
-    padding 6px 5px 5px
-    background lighten(desaturate(darkBackground, 70%), 30%)
-    box-shadow 0 1px rgba(0,0,0,0.55),0 2px rgba(0,0,0,0.21), 0 3px rgba(0,0,0,0.13)
+.sidebar
+  nav
+    box-shadow 0 1px black, 0 2px rgba(255, 255, 255, 0.21)
     position relative
     z-index 4
+    overflow hidden
+  button
+    width 100%
+    height 42px
+    color white
+    font-weight bold
+    text-shadow 0 1px rgba(0,0,0,0.21)
+    background lighten(desaturate(darkBackground, 70%), 30%)
+    border none
+    border-right 1px solid black
+    border-radius 0
+    box-shadow 1px 0 rgba(255,255,255,.21) inset, 0 1px rgba(255,255,255,.21) inset
+    float left
+    transition none
+    box-sizing border-box
+    &:hover
+      text-shadow 0 1px rgba(0,0,0,0.21)
+    &:first-child
+      box-shadow 0 1px rgba(255,255,255,.21) inset
+    &.active, &:active
+      top 0
+      background lighten(desaturate(darkBackground, 70%), 10%)
+      line-height 47px
+      box-shadow none
+    span
+      padding-left 41px
+      position relative
+      &:before
+        left 0
+        top -9px
+        height 34px
+        width 31px
+        content ""
+        display block
+        position absolute
+    &.discover
+      span:before
+        background url(../../public/icons/globe.png)
+    &#create_topic_channel
+      span:before
+        background url(../../public/icons/new.png)
+    &#create_topic_channel
+      left 0
+      right 0
+      bottom 0
+      position absolute
+      background black
+      z-index 9
+      box-shadow 1px 0 rgba(255,255,255,.21) inset, 0 1px rgba(255,255,255,.21) inset, 0 -1px rgba(0,0,0,0.55), 0 -2px rgba(0,0,0,0.21), 0 -3px rgba(0,0,0,0.13)
+      &:active
+        top auto
+        line-height 45px
+        position absolute
+        box-shadow 0 -1px rgba(0,0,0,0.55), 0 -2px rgba(0,0,0,0.08), 0 -3px rgba(0,0,0,0.03)
+  .search
+    padding 6px 5px 5px
+    background lighten(desaturate(darkBackground, 70%), 30%)
+    box-shadow -1px 0 black inset, 0 1px rgba(0,0,0,0.55),0 2px rgba(0,0,0,0.21), 0 3px rgba(0,0,0,0.13)
+    position relative
+    z-index 3
     input[type=search]
-      width 223px
+      width 100%
       box-shadow 0 1px rgba(255, 255, 255, 0.34), 0 0 0 1px black inset, 0 2px rgba(0, 0, 0, 0.13) inset
     + .channel
       padding-top 6px
   .channel
-    width 234px
-    height 64px
-    position relative
-    overflow hidden
-    transform-origin top
-    &.selected
-      background linear-gradient(top, rgba(0,0,0,0.13), rgba(128,128,128,0), rgba(255,255,255,0.13))
-      box-shadow 0 1px rgba(0,0,0,.55), 0 2px rgba(255, 255, 255, 0.21), 0 1px rgba(0,0,0,.55) inset, 0 -1px rgba(255, 255, 255, 0.21)
-    &.bubbleUp
-      position absolute
-      z-index 2
-    .info      
-      width 148px
-      top 50%
-      margin-top -39px
-      padding 22px 17px 22px 77px
-      font-size 12px
-      line-height 17px
-      text-shadow 0 0 1px rgba(0, 0, 0, 0.13)
-      position absolute
-      opacity 1
-      border-radius 5px
-      cursor pointer
-      .owner, .status
-        width 100%
-        white-space nowrap
-        overflow hidden
-        text-overflow ellipsis
-        display block
-      .owner
-        font-weight bold
-        color white
-      .status
-        color rgba(255,255,255,.65)
-        display block
-      .domain
-        width auto
-    .avatar
-      height 50px
-      width 50px
-      top 50%
-      left 13px
-      margin-top -25px
-      border-radius 3px
-      position absolute
-      transition 500ms
-      cursor pointer
-      z-index 1
-      box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
-    &.unknown .avatar
-      height 32px
-      width 32px
-      top 50%
-      left 23px
-      margin-top -16px
-      border-radius 32px
-  .tutorial
-    height 123px
-    background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21))
-    .arrow
-      padding-left 7px
-      font-size 42px
-      color admin_highlight
-      text-shadow black 0 0 2px
-    .info
-      cursor auto
-      top 0
-      margin-top 0
-      padding 12px 12px 12px 7px
-      text-shadow black 0 0 1px
-  .selected .avatar
-    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px default_highlight, 0 0 0 4px lighten(default_highlight, 8%), 0 0 2px 4px rgba(0, 0, 0, 0.34)
+    width 145px
+.personal.channel,
+.personal.channel.selected
+  padding-top 21px
+  padding-bottom 21px
+  background linear-gradient(top, lighten(desaturate(darkBackground, 75%), 40%), lighten(desaturate(darkBackground, 70%), 30%))
+  border-bottom 1px solid black
+  box-shadow -1px 0 black inset
+  position relative
+  z-index 5
+  .avatar
+    top 13px
+  nav
+    width 200px
+    border 1px solid black
+    border-radius 5px
+    box-shadow 0 1px 8px black
+    position absolute
+    display none
+    button
+      background white
+      border-bottom 1px solid black
+      &:last-child
+        border-bottom none
+        border-radius 0 0 5px 5px
+      &:only-child
+        border-radius 5px
+      &:first-child
+        border-radius 5px 5px 0 0
+.channel
+  height 34px
+  padding 16px 13px 16px 76px
+  position relative
+  transform-origin top
+  transition opacity 200ms
+  &.hidden
+    opacity 0.34
+  &.selected
+    background linear-gradient(top, rgba(0,0,0,0.13), rgba(128,128,128,0), rgba(255,255,255,0.13))
+    box-shadow 0 1px rgba(0,0,0,.55), 0 2px rgba(255, 255, 255, 0.21), 0 1px rgba(0,0,0,.55) inset, 0 -1px rgba(255, 255, 255, 0.21)
+  &.bubbleUp
+    position absolute
+    z-index 2
+  .info
+    font-size 12px
+    line-height 17px
+    text-shadow 0 0 1px rgba(0, 0, 0, 0.13)
+    border-radius 5px
+    cursor pointer
+    .owner, .status
+      width 100%
+      white-space nowrap
+      overflow hidden
+      text-overflow ellipsis
+      display block
+    .owner
+      font-weight bold
+      color white
+    .status
+      color rgba(255,255,255,.65)
+      display block
+    .domain
+      width auto
+  .avatar
+    height 50px
+    width 50px
+    top 8px
+    left 13px
+    border-radius 3px
+    position absolute
+    transition 500ms
+    cursor pointer
+    z-index 1
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset
+.tutorial
+  height 123px
+  background linear-gradient(top, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.21))
+  .arrow
+    padding-left 7px
+    font-size 42px
+    color admin_highlight
+    text-shadow black 0 0 2px
+  .info
+    cursor auto
+    top 0
+    margin-top 0
+    padding 12px 12px 12px 7px
+    text-shadow black 0 0 1px
+.selected .avatar
+  box-shadow 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.55) inset, 0 0 0 3px default_highlight, 0 0 0 4px lighten(default_highlight, 8%), 0 0 2px 4px rgba(0, 0, 0, 0.34)
 
 .counter
   top -5px
@@ -142,104 +203,3 @@
   &.admin
     background-color admin_highlight
     box-shadow 0 0 0 1px darken(admin_highlight, 15%), 0 1px rgba(255, 255, 255, 0.55) inset, 0 1px 2px black
-
-.channelOverview #sidebar
-  box-flex 1
-  #channels
-    padding 21px 55px
-    position relative
-    width auto
-  .personal.channel
-    background linear-gradient(top, transparent, transparent)
-    box-shadow none
-  .search
-    display none
-    + .channel
-      padding-top 0
-  .channel
-    margin 24px 0.5%
-    height 76px
-    width 19%
-    float left
-    border-radius 5px
-    transition none
-    &.selected
-      background none
-      box-shadow none
-    .avatar
-      left 0
-      margin-left 9px
-      transition margin-left 500ms, left 500ms
-    .info
-      width 153px
-      opacity 1
-      padding-left 79px
-      transition opacity 500ms, margin-left 500ms, padding-left 500ms
-  .personal.channel,
-  .channel.selected,
-  .channel
-    &:hover
-      background linear-gradient(top, rgba(0, 0, 0, 0.13), rgba(0, 0, 0, 0.21))
-      box-shadow 0 1px rgba(255, 255, 255, 0.13), 0 1px rgba(0, 0, 0, 0.13) inset
-  #active_channel_indicator
-    display none
-.channelOverview.stateArrived #sidebar 
-  overflow-y scroll // scroll-y otherwise prevents all transitions
-  .channel
-    transition 500ms height
-
-#create_topic_channel
-  width 232px
-  bottom 0
-  margin-left 1px
-  color white
-  line-height 27px
-  text-align center
-  text-shadow 0 1px black
-  border-top 1px solid black
-  background rgba(0,0,0,.89)
-  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.21)
-  cursor pointer
-  position fixed
-  z-index 9
-
-#more_channels, .channelOverview #more_channels
-  width 231px
-  bottom 0
-  margin-left 1px
-  color white
-  line-height 27px
-  text-align center
-  text-shadow 0 1px black
-  border-top 1px solid black
-  background rgba(0,0,0,.89)
-  box-shadow 0 1px 0 1px black, inset 0 1px rgba(255,255,255,.21)
-  cursor pointer
-  position fixed
-  z-index 9
-.channelOverview #more_channels
-  width 231px
-  border-top-right-radius 5px
-  
-.active_channel_indicator
-  top 26px
-  right 0
-  width 10px
-  height 12px
-  overflow hidden
-  position absolute
-  z-index 8
-  > div
-    top -1px
-    left 7px
-    width 14px
-    height 14px
-    background #eee
-    box-shadow 0 0 0 1px black, 0 0 0 2px rgba(0, 0, 0, 0.21)
-    transform rotate(45deg)
-    transform-origin center center
-    position absolute
-.channelOverview .active_channel_indicator, .inTransition .active_channel_indicator
-  right -10px
-.personal.channel .active_channel_indicator
-  top 32px

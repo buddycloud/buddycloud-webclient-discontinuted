@@ -2,15 +2,14 @@ unless process.title is 'browser'
     return module.exports =
         src: "create_topic_channel.html"
         select: () ->
-            @select "div.channelView", ".location.dual, .publish"
+            @select ".content", ".location.dual, .publish"
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/create_topic_channel/index'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, -> @$div class:'content', ->
         @$div class:'channelView', ->
             @$form class: "stream clearfix", ->
                 @$div class: 'role', ->
@@ -49,4 +48,4 @@ module.exports = design (view) ->
                     view.bind 'loading:start', @show
                     view.bind 'loading:error', @hide
 
-            view.bind 'hide', @remove
+        view.bind 'hide', @remove

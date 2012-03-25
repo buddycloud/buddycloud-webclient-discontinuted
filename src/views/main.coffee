@@ -2,10 +2,14 @@
 { Channels } = require '../collections/channel'
 { Sidebar } = require './sidebar/index'
 { BaseView } = require './base'
+{ DiscoverView } = require './discover/index'
 { CreateTopicChannelView } = require './create_topic_channel/index'
 
 class exports.MainView extends BaseView
     template: require '../templates/main'
+
+    events:
+        'scroll': 'on_scroll'
 
     initialize: ->
         super
@@ -105,3 +109,12 @@ class exports.MainView extends BaseView
         @current = new CreateTopicChannelView(parent: this)
         @current.render =>
             @trigger 'subview:content', @current.el
+
+    on_discover: =>
+        @current?.trigger 'hide'
+        @current = new DiscoverView(parent: this)
+        @current.render =>
+            @trigger 'subview:content', @current.el
+
+    on_scroll: =>
+        @current?.on_scroll()

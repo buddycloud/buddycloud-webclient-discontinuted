@@ -6,11 +6,10 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../_design/channel/posts'
-{ List } = require '../util'
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
-        list = new List @$section class:'topics'
-        list.bind(view, 'view:topic')
+    return new Template schema:5, ->
+        @$section class:'topics'#, ->
+#             view.bind 'view:topic', (tag) =>
+#                 @_jquery?.append(tag._jquery ? tag)

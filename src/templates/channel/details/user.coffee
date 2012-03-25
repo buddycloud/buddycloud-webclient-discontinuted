@@ -12,7 +12,6 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 design = require '../../../_design/channel/details/user'
 { EventHandler, throttle_callback } = require '../../../util'
 
@@ -25,13 +24,6 @@ userspeak =
     'none':     "Does not follow back"
 
 affiliations_infos =
-    owner: [
-        "read your channel"
-        "write comments & messages"
-        "post new topics"
-        "add & ban users"
-        "set user's roles"
-    ]
     moderator: [
         "approve new followers"
         "delete posts"
@@ -47,18 +39,50 @@ affiliations_infos =
     member: [
         "read your channel"
     ]
-    outcast: [
-        "forbidden to read your channel"
-    ]
-    none: [
-        "read your open channel"
-    ]
 
 module.exports = design (view) ->
-    return jqueryify new Template schema:5, ->
+    return new Template schema:5, ->
         channel = view.parent.parent.model
         set_info_lines = ->
         @$div class:'adminAction', ->
+            add_class = (c) =>
+                classes = @attr('class').
+                    split(/\s+/).
+                    filter((cl) -> cl isnt c)
+                classes.push c
+                @attr 'class', classes.join(" ")
+            rm_class = (c) =>
+                @attr 'class', @attr('class').
+                    split(/\s+/).
+                    filter((cl) -> cl isnt c).
+                    join(" ")
+
+            isOwner = no
+            update_visibility = =>
+                if app.users.current.canEdit(channel) and
+                   not isOwner
+                    add_class 'moderator'
+                else
+                    rm_class 'moderator'
+            view.parent.parent.parent.bind 'update:permissions', update_visibility
+            view.bind 'user:update', (user) =>
+                userid = user?.get('id')
+                isOwner = userid and app.users.get(userid).getAffiliationFor(channel) is 'owner'
+                console.warn "isOwner", userid, isOwner
+                update_visibility()
+            update_visibility()
+
+            view.bind 'click:changeRole', ->
+                add_class 'choosen'
+                add_class 'role'
+            view.bind 'click:banUser', ->
+                add_class 'choosen'
+                add_class 'ban'
+            view.bind 'user:update', ->
+                rm_class 'choosen'
+                rm_class 'role'
+                rm_class 'ban'
+
             # .arrow
             @$div class:'holder', ->
                 @$div class:'box', ->
@@ -87,11 +111,11 @@ module.exports = design (view) ->
                                 @remove()
 
                             options = {}
-                            for own value, text of userspeak
+                            for own value, info of affiliations_infos
                                 postsnode = view.parent.parent.model.nodes.get_or_create(id: 'posts')
                                 unless value is 'none'
                                     @$option {value}, ->
-                                        @text text
+                                        @text userspeak[value]
                                         options[value] = this
                             current_user = null
                             set_current_option = =>
@@ -129,9 +153,12 @@ module.exports = design (view) ->
                                                 @text line
 
                     @$section class: 'action banUser', ->
-                        @remove()
+
                     @$section class: 'actionRow choose', ->
-                        @remove()
+                        @$div ->
+                            @attr class: 'changeRoleButton'
+                        @$div ->
+                            @attr class: 'banUserButton'
 
                     @$section class: 'actionRow confirm', ->
                         @$div ->
@@ -139,19 +166,3 @@ module.exports = design (view) ->
                         @$div ->
                             @attr class: 'okButton'
 
-            update_role = =>
-                classes = @attr('class').split(/\s+/)
-                if app.users.current.canEdit channel
-                    modClass = (class_) ->
-                        if classes.indexOf(class_) < 0
-                            classes.push class_
-                else
-                    modClass = (class_) ->
-                        classes = classes.filter (class__) ->
-                            class_ isnt class__
-                modClass 'moderator'
-                modClass 'choosen'
-                modClass 'role'
-                @attr 'class', classes.join(" ")
-            view.parent.parent.parent.bind 'update:permissions', update_role
-            update_role()

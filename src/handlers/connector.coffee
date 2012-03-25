@@ -1,5 +1,11 @@
 { RequestHandler } = require './request'
 
+Strophe.addNamespace 'RSM', 'http://jabber.org/protocol/rsm'
+Strophe.addNamespace 'DIR_METADATA', 'http://buddycloud.com/channel_directory/metadata_query'
+Strophe.addNamespace 'DIR_CONTENT', 'http://buddycloud.com/channel_directory/content_query'
+Strophe.addNamespace 'DIR_RECOMMEND', 'http://buddycloud.com/channel_directory/recommendation_query'
+Strophe.addNamespace 'DIR_SIMILAR', 'http://buddycloud.com/channel_directory/similar_channels'
+
 class exports.Connector extends Backbone.EventHandler
 
     ##
@@ -263,4 +269,170 @@ class exports.Connector extends Backbone.EventHandler
                     fun()
                     @work_work_queue()
             , 1
+
+    ##
+    # buddycloud-server statistics queries
+    ##
+
+    get_most_active_nodes: (max, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                nodes = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (node = itemEl.getAttribute 'node')
+                            nodes.push node
+                callback(null, nodes)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: @connection.pubsub.service, type: 'get').
+                c('query', xmlns: Strophe.NS.DISCO_ITEMS,
+                    node: "/top-published-nodes")
+            if max
+                iq.c('set', xmlns: Strophe.NS.RSM).
+                   c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    get_popular_nodes: (max, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                nodes = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (node = itemEl.getAttribute 'node')
+                            nodes.push node
+                callback(null, nodes)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: @connection.pubsub.service, type: 'get').
+                c('query', xmlns: Strophe.NS.DISCO_ITEMS,
+                    node: "/top-followed-nodes")
+            if max
+                iq.c('set', xmlns: Strophe.NS.RSM).
+                   c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    ##
+    # Directory queries
+    ##
+
+    # <iq to='search.buddycloud.org' type='get'>
+    #   <query xmlns='http://buddycloud.com/channel_directory/similar_channels'>
+    #     <channel-jid>astro@buddycloud.org</channel-jid>
+    #     <set xmlns='http://jabber.org/protocol/rsm'>
+    #       <max>10</max>
+    #     </set>
+    #   </query>
+    # </iq>
+    get_similar_channels: (jid, max=16, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                jids = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (jid = itemEl.getAttribute 'jid')
+                            jids.push jid
+                callback(null, jids)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: config.directoryService, type: 'get').
+                c('query', xmlns: Strophe.NS.DIR_SIMILAR).
+                c('channel-jid').t(jid).
+                up().
+                c('set', xmlns: Strophe.NS.RSM).
+                c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    # <iq to='search.buddycloud.org' type='get'>
+    #   <query xmlns='http://buddycloud.com/channel_directory/recommendation_query'>
+    #     <channel-jid>astro@buddycloud.org</channel-jid>
+    #     <set xmlns='http://jabber.org/protocol/rsm'>
+    #       <max>10</max>
+    #     </set>
+    #   </query>
+    # </iq>
+    recommend_channels: (jid, max=16, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                jids = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (jid = itemEl.getAttribute 'jid')
+                            jids.push jid
+                callback(null, jids)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: config.directoryService, type: 'get').
+                c('query', xmlns: Strophe.NS.DIR_RECOMMEND).
+                c('user-jid').t(jid).
+                up().
+                c('set', xmlns: Strophe.NS.RSM).
+                c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    # <iq to='directory.example.org' from='thedude@coffee-channels.com' type='get'>
+    #   <query xmlns='http://buddycloud.com/channel_directory/metadata_query'>
+    #     <search>topic</search>
+    #     <set xmlns='http://jabber.org/protocol/rsm'>
+    #       <max>10</max>
+    #     </set>
+    #   </query>
+    # </iq>
+    search_content: (content, max=16, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                jids = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (jid = itemEl.getAttribute 'jid')
+                            jids.push jid
+                callback(null, jids)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: config.directoryService, type: 'get').
+                c('query', xmlns: Strophe.NS.DIR_METADATA).
+                c('search').t(content).
+                up().
+                c('set', xmlns: Strophe.NS.RSM).
+                c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
+
+    # <iq to='directory.example.org' from='thedude@coffee-channels.com' type='get'>
+    #   <query xmlns='http://buddycloud.com/channel_directory/content_query'>
+    #     <search>topic</search>
+    #     <set xmlns='http://jabber.org/protocol/rsm'>
+    #       <max>10</max>
+    #     </set>
+    #   </query>
+    # </iq>
+    search_content: (content, max=16, callback) ->
+        @request (done) =>
+            success = (reply) =>
+                jids = []
+                Strophe.forEachChild reply, "query", (queryEl) ->
+                    Strophe.forEachChild queryEl, "item", (itemEl) ->
+                        if (jid = itemEl.getAttribute 'jid')
+                            jids.push jid
+                callback(null, jids)
+                done()
+            error = (e) =>
+                callback(e)
+                done()
+            iq = $iq(to: config.directoryService, type: 'get').
+                c('query', xmlns: Strophe.NS.DIR_CONTENT).
+                c('search').t(content).
+                up().
+                c('set', xmlns: Strophe.NS.RSM).
+                c('max').t("#{max}")
+            @connection.sendIQ iq.tree(), success, error
 

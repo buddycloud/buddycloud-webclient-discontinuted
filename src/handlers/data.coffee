@@ -5,7 +5,7 @@ async = require 'async'
 
 class exports.DataHandler extends Backbone.EventHandler
 
-    constructor: (@connector) ->
+    setConnector: (@connector) ->
         @connector.bind 'post', @on_node_post
         @connector.bind 'posts:rsm:last', @on_node_posts_rsm_last
         @connector.bind 'subscribers:rsm:last', @on_node_subscribers_rsm_last
@@ -13,7 +13,6 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
         @connector.bind 'node:error', @on_node_error
-        @connector.bind 'connection:start', @on_prefill_from_cache
         @connector.bind 'connection:established', @on_connection_established
         @connector.bind 'connection:end', @on_connection_end
 
@@ -205,9 +204,7 @@ class exports.DataHandler extends Backbone.EventHandler
 
     on_connection_established: =>
         user = app.users.current
-        if user.get('jid') is "anony@mous"
-            @refresh_channel app.users.target.get('id')
-        else
+        unless app.users.isAnonymous user
             @set_loading true
             # Replay starting one day before last view
             lastView = new Date(app.users.current.channels.get_last_timestamp())
@@ -250,12 +247,6 @@ class exports.DataHandler extends Backbone.EventHandler
             @trigger 'loading:start'
         else
             @trigger 'loading:stop'
-
-    on_prefill_from_cache: =>
-        app.users.current = app.handler.connection.user
-
-        app.users.forEach (user) ->
-            #user.affiliations.fetch()
 
     on_affiliation: (affiliation) =>
         return unless /\/user\/([^\/]+@[^\/]+)\//.test affiliation.node

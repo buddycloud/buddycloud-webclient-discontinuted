@@ -1,100 +1,54 @@
-#globalHeader
-  height 30px
-  padding 0 13px
-  color rgba(255, 255, 255, 0.89)
-  line-height 28px
-  text-shadow 0 1px black
-  background linear-gradient(top, #666, #555)
-  box-shadow 0 1px #ccc, 0 -1px #333 inset, 0 -2px #444 inset
-  position relative
-  z-index 5
-  .logo
-    float right
-  .search
-    input
-      padding 2px 5px
-      box-shadow 0 1px white, 0 1px rgba(0,0,0,.03) inset
-      border 1px solid rgba(0,0,0,.08)
-      border-radius 3px
-
 #poweredby
-  left 521px
+  right -89px
   top 15px
   margin-top 2px
   width 76px
   height 26px
-  text-indent -9999px
+  font 0/0 a
+  color transparent
+  text-shadow none
   background url(../../public/images/poweredby.png) no-repeat
-  color black
-  text-decoration none
-  &:hover
-    padding-top 20px
-    text-indent 0
   position absolute
-  header.small #poweredby
-    top 0
     
 .avatar
   border-radius 3px
+  cursor pointer
 
-#content
-  margin-left 234px
-  min-width 790px
-  height 100%
+body > .content
+  top 0
+  right 0
+  bottom 0
+  left 234px
+  padding 13px
   color rgba(0,0,0,.89)
   text-shadow 0 1px rgba(255,255,255,.34)
   background #eee url("../../public/images/logo.png") no-repeat center center
   box-shadow -1px 0 black, -2px 0 rgba(0, 0, 0, 0.21)
-  position relative
+  position absolute
+  overflow auto
   z-index 1
-  &.overlapping
-    min-height 100%
-    position absolute
-    .channelView
-      height 100%
-      position fixed
-    .messageView
-      min-height 100%
-      margin-left 200px
-      box-shadow 0 0 13px rgba(0, 0, 0, 0.55), 0 0 34px rgba(0, 0, 0, 0.55), 0 0 55px rgba(0, 0, 0, 0.55)
-      float none
-      position absolute
-      z-index 4
-.channelOverview #content
-  box-flex 0
-  width 0
-  .channelView
-    position absolute
-    height 0
-    overflow hidden
-.channelOverview.stateArrived #content
-  //height 300px // variable height (smaller than screen height) to disable the vertical scrollbar
-  //overflow hidden // -> problem: the scroll-state will be gone -> store scroll-state
 
 .channelView
+  margin-right 13px
+  min-width 500px
+  max-width 580px
   transition 250ms
-  .banner
-    height 100%
-    width 100%
-    background-size cover
-    background-position left top
-    position fixed
-    box-shadow 1px 0 rgba(255,255,255,.34) inset
+  float left
   > header
-    margin 13px 13px 0 13px
-    padding 5px 8px 0 
-    width 484px
-    height 58px
-    border-radius 5px 5px 0 0
+    padding 5px 13px 0
     position relative
-    box horizontal left stretch
-    .avatar
-      width 50px
-      margin 0 13px 0 5px
     .titleBar
-      box-flex 1
-      h2, .status, .location
+      td:last-child
+        padding-right 0
+    .titleText
+      width 100%
+      position relative
+      > div
         width 100%
+        left 0
+        top 0
+        position absolute
+      h2, .status, .location
         white-space nowrap
         overflow hidden
         text-shadow 0 1px 1px white
@@ -115,9 +69,13 @@
     + .topic
       border-radius 3px 3px 0 0
   nav
-    margin-top 10px
-    > div
+    margin-bottom 5px
+    white-space nowrap /* this in combination of spans for the buttons let's them stay in one line */
+    float right
+    > span
       margin-left 5px
+      &:first-child
+        margin-left 0
     &.inChannel
       .channel
         display none
@@ -158,50 +116,91 @@
         z-index 3
         cursor default
   
-  
-.stream  
-  margin 0 0 13px 13px
-  width 500px
+.stream
   border-radius 5px 5px
   box-shadow 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 13px rgba(0, 0, 0, 0.05)
-  //float left
   position relative
   z-index 2
-
-  /*
-   * one of those two lines causing a horrible rerender bug in webkit browsers
-   */
-  //transform-style preserve-3d
-  //perspective 1000
-
   .topics
     article
       padding 13px
       background white
       position relative
       box-shadow inset 0 -1px rgba(0,0,0,.21)
-      overflow hidden
+      overflow hidden      
       &:first-child
         border-radius 5px 5px 0 0
-      &:last-child
-        border-radius 0 0 5px 5px
-        box-shadow none
       &:only-child
         border-radius 5px
         box-shadow none
-  .newTopic + .topics 
-    article
-      &:first-child
-        border-radius 0
       &:last-child
         border-radius 0 0 5px 5px
         box-shadow none
+  .newTopic + .notifications + .topics
+    article
+      &:first-child
+        border-radius 0
+      &:only-child
+        border-radius 0 0 5px 5px
+        box-shadow none
+  .newTopic
+    padding 13px 13px 12px
+    background linear-gradient(top, white, #eee)
+    border-bottom 1px solid rgba(0,0,0,.13)
+    border-radius 5px 5px 0 0
+    display block
+    overflow hidden
+    position relative
+    z-index 1
+    .avatar
+      left 13px
+      top 13px
+      width 50px
+      position absolute
+      z-index 2
+      transition 250ms
+      display none
+    textarea
+      width 100%
+      height 50px
+      padding 5px
+      margin 0
+      border 1px solid rgba(0, 0, 0, 0.13)
+      font 13px/19.5px sans-serif
+      color gray
+      display block
+      float right
+      position relative
+      z-index 2
+      transition 250ms
+      box-sizing border-box
+    &.write textarea
+      height 89px
+      margin-bottom 33px
+      color black
+  .controls
+    bottom 13px
+    right 13px
+    font-size 11px
+    position absolute 
+    .button
+      margin-left 3px
+    .postError
+      margin-left 5px
+      color red
+      display inline-block
+  .notifications
+    transform-style preserve-3d
+    perspective 1000
   .notification
-    height 49px
-    margin-top -49px
+    margin-left -1px
+    margin-right -1px
+    min-height 48px
+    margin-top -75px
+    padding 13px
     color white
-    text-shadow 0 1px 1px rgba(0,0,0,.34)
-    border-top 1px solid rgba(0, 0, 0, 0.13)
+    text-shadow none
+    border 1px solid rgba(0, 0, 0, 0.13)
     radial-bg-gradient cover, admin_highlight, darken(admin_highlight, 8%)
     box-shadow 0 0 1px rgba(255, 255, 255, 0.34) inset, box-shadow inset 0 -1px rgba(0,0,0,.21)
     transition 500ms 
@@ -215,6 +214,7 @@
     &.private
       height 34px
       box-shadow none
+      text-shadow 0 1px 1px rgba(0,0,0,.34)
       p img
         margin-right 8px
         vertical-align bottom
@@ -223,38 +223,51 @@
         padding-left 0
         text-align center
     section
-      padding-left 63px
-    .name
-      vertical-align top
-      transition 500ms
+      padding 5px 0 5px 63px 
+    .info
+      float left
+      .name
+        vertical-align top
+        transition 500ms
+      p
+        color white
     .controls
-      right 13px
-      top 28px
-      position absolute
+      margin-top 9px
+      float right
+      position static
       > .button
         margin-left 5px
         color black
+        background #eee
+        box-shadow 0 1px rgba(255,255,255,0.89) inset, 0 1px rgba(0,0,0,0.21), 0 1px 0 2px hsl(336, 67%, 42%), 1px 0 0 2px #b3235d,  -1px 0 0 2px #b3235d, 0 2px 0 2px rgba(255,255,255,.21), 0 -1px 0 2px hsl(336, 67%, 39%)
+        &:active
+          background #ddd
       > .postError
         margin-left 5px
         color red
         display inline-block
     .avatar
+      top 13px
       width 50px
       transition 500ms
       cursor pointer
+      position absolute
     &.log
-      height 25px
+      min-height 23px
       padding-top 5px
       padding-bottom 5px
       color rgba(0, 0, 0, 0.55)
       text-shadow 0 1px 1px rgba(255,255,255,.34)
       background #f2f2f2
-      border-top-width 0
-      box-shadow 0 -1px rgba(0, 0, 0, 0.08) inset
+      border-bottom-color rgba(0,0,0,.08)
+      border-top-color transparent
       section
+        padding-top 0
+        padding-bottom 0
         line-height 25px
         min-height 25px
       .avatar
+        top 5px
         left 38px
         width 25px
       p
@@ -264,6 +277,7 @@
       &.granted .name,
       &.denied .name
         opacity 1
+        color gray
       .controls 
         display none
       &.granted .granted,
@@ -296,10 +310,12 @@
         display block
         color rgba(0,0,0,.34)
   .name
-    color gray
+    color black
+    font-weight bold
     overflow hidden
     white-space nowrap
     text-overflow ellipsis    
+    cursor pointer
     + .location
       margin-left 5px
       font-size 11px
@@ -318,14 +334,15 @@
     textarea
       margin-top 13px
       padding 4px 5px 2px
-      height 18px
-      width 386px
+      width 100%
+      height 27px
       font 12px/18px sans-serif
       color gray
       border 1px solid rgba(0,0,0,.21)
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
       position relative
       resize none
+      box-sizing border-box
     .avatar
       width 40px
       left 11px
@@ -340,16 +357,15 @@
         display block
       textarea
         margin-bottom 27px
-        height 37px
+        height 39px
         color black
         resize vertical
       .controls
         display block
   .comments
-    padding-left 13px
     .comment
       margin-top 8px
-      min-height 40px
+      min-height 34px
       position relative
     section
       padding-top 5px
@@ -361,59 +377,16 @@
           left -2px
         textarea
           margin-top 8px
-          width 399px
     .avatar
       top 6px
-      left 11px
-      width 40px
+      left 17px
+      width 34px
       border-radius 2px
+    .location
+      display none
   p
     white-space pre-wrap
     word-wrap break-word
-  section.newTopic
-    padding 13px 13px 12px 51px
-    background linear-gradient(top, white, #eee)
-    border-bottom 1px solid rgba(0,0,0,.13)
-    border-radius 5px 5px 0 0
-    display block
-    overflow hidden
-    position relative
-    z-index 1
-    .avatar
-      left 13px
-      top 13px
-      width 50px
-      position absolute
-      z-index 2
-      transition 250ms
-    textarea
-      width 400px
-      height 38px
-      padding 5px
-      margin 0
-      border 1px solid rgba(0, 0, 0, 0.13)
-      font 13px/19.5px sans-serif
-      color gray
-      display block
-      float right
-      position relative
-      z-index 2
-      transition 250ms
-    &.write textarea
-      height 89px
-      margin-bottom 33px
-      color black
-  .controls
-    bottom 13px
-    right 13px
-    font-size 11px
-    position absolute 
-    .button
-      margin-left 3px
-    .postError
-      margin-left 5px
-      color red
-      display inline-block
   .message
     min-height 14px
     padding-left 66px
@@ -555,13 +528,13 @@
 
 .channelDetails
   width 304px
+  margin-top 96px
+  margin-left -13px
   font-size 12px
   color gray
   text-shadow 0 1px 1px white
-  position absolute
-  left 513px
-  top 96px
   overflow hidden
+  float left
   .infoToggle
     width 259px
     height 26px
@@ -654,7 +627,7 @@
       margin 0 3px 3px 0
       border-radius 3px
       display inline-block
-      cursor pointer
+      cursor default
       &.selected
         box-shadow 0 0 0 1px #83AC35, 0 0 0 2px #8DBA39
     .showAll
@@ -675,7 +648,6 @@
   margin-bottom 13px
   position relative
   overflow hidden
-  display none
   &:after
     margin-top 0
     margin-left 2px
@@ -758,7 +730,6 @@
   .actionRow
     display none
     width 100%
-    box horizontal justify center
     &.confirm
       display none
     > div
@@ -782,10 +753,11 @@
         background linear-gradient(top, #f7f7f7, #ccc)
         box-shadow 0 2px white inset, 0 1px rgba(0, 0, 0, 0.05)
   &.moderator
-   .actionRow
+   .actionRow.choose
      display block
-  &.choosen
-    .actionRow
+     box horizontal justify center
+  &.moderator.choosen
+    .actionRow.choose
       display none
   &.choosen.moderator
     .actionRow.confirm

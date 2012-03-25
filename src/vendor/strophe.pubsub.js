@@ -77,9 +77,9 @@ Strophe.Builder.prototype.children = function (object) {
         if (Array.isArray(value)) {
             this.list(key, value);
         } else if (typeof value === 'string') {
-            this.c(key, {}, value);
+            this.c(key, {}).t(value).up();
         } else if (typeof value === 'number') {
-            this.c(key, {}, ""+value);
+            this.c(key, {}).t(""+value).up();
         } else if (typeof value === 'object') {
             this.c(key).children(value).up();
         } else {

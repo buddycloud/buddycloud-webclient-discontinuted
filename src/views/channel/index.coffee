@@ -109,7 +109,7 @@ class exports.ChannelView extends BaseView
             @show_pending_notification()
 
             unless @hidden
-                @el.show()
+                @trigger 'show'
                 @on_scroll()
 
             callback?.call(this)
@@ -124,7 +124,6 @@ class exports.ChannelView extends BaseView
 
     show: =>
         @hidden = false
-        @el.show()
 
         @model.mark_read()
         # Not subscribed? Refresh!
@@ -141,7 +140,6 @@ class exports.ChannelView extends BaseView
 
     hide: =>
         @hidden = true
-        @el.hide()
 
     openNewTopicEdit: EventHandler (ev) ->
         ev.stopPropagation()
@@ -203,11 +201,10 @@ class exports.ChannelView extends BaseView
 
     clickLogin: EventHandler (ev) ->
         # Just make this work for now
-        window.location = "/login"
+        app.router.navigate "login", true
         return
         # TODO: implement the overlay login below and graceful
-        # replacement of the Strophe session
-
+        # replacement of the Strophe session & registration!
         @overlay ?= new OverlayLogin()
         @overlay.show()
 
