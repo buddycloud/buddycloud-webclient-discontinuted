@@ -19,7 +19,7 @@ module.exports = design (view) ->
                         @$img class:'avatar', ->
                             @attr src:"#{view.model.avatar}"
                     @$td ->
-                        @$div class:'titleBar', ->
+                        @$div ->
                             title = @$h2 class:'title'
                             update_metadata = ->
                                 title.text "#{view.metadata.get('title')?.value or view.model.get('id')}"
