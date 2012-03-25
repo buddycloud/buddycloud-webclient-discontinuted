@@ -66,7 +66,7 @@ module.exports = design (view) ->
                                 app.users.current.channels.bind 'remove', update_follow_unfollow
                                 update_follow_unfollow()
                 @$a -># powered by buddycloud
-                    @text "#{app.version}"
+                    @attr title:"#{app.version}"
 
             @$section class:'stream', ->
                 @$section class:'newTopic', ->
