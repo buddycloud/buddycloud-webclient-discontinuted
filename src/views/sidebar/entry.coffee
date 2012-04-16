@@ -25,17 +25,23 @@ class exports.ChannelEntry extends BaseView
         statusnode.bind 'post', =>
             @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value
 
+
     events:
         "click": "click_entry"
 
     render: (callback) =>
+        @bind 'template:create', (tpl) =>
+            if @isPersonal()
+                @parent.trigger('subview:personalchannel', tpl)
+            else
+                @parent.trigger('subview:entry', tpl)
         super ->
             @trigger 'update:highlight'
             callback()
 
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model
-            @parent.parent.setCurrentChannel @model
+            app.router.navigate @model.get('id'), true
 
             # setCurrentChannel() invoked mark_read(), update counter:
             @trigger 'update:unread_counter'

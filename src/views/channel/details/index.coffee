@@ -105,18 +105,6 @@ class exports.ChannelDetailsView extends BaseView
 
     render: (callback) ->
         super =>
-            @owners.render =>
-                @trigger 'subview:owners', @owners.el
-                @owners.showAll()
-            @moderators.render =>
-                @trigger 'subview:moderators', @moderators.el
-                @moderators.showAll()
-            @publishers.render =>
-                @trigger 'subview:publishers', @publishers.el
-            @followers.render =>
-                @trigger 'subview:followers', @followers.el
-            @following.render =>
-                @trigger 'subview:following', @following.el
-            @banned.render =>
-                @trigger 'subview:banned', @banned.el
+            for role in ['owners', 'moderators', 'publishers', 'followers', 'following', 'banned']
+                this[role].render()
             callback?.call(this)

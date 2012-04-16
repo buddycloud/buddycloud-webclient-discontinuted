@@ -16,7 +16,7 @@ module.exports = design (view) ->
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>
-                $ = @_jquery
+                return unless ($ = @_jquery)?
 
                 if view.isPersonal()
                     $.addClass('personal')

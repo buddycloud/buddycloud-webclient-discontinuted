@@ -35,10 +35,6 @@ class exports.ChannelView extends BaseView
         # To display posts node errors:
         postsnode.bind 'error', @set_error
         @set_error postsnode.error if postsnode.error
-        @postsview.render =>
-            @ready =>
-                @trigger 'subview:topics', @postsview.el
-                @on_scroll() unless @hidden
 #
         # New post, visible? Mark read.
         @model.bind 'post', =>
@@ -102,8 +98,9 @@ class exports.ChannelView extends BaseView
 
                 @update_status()
 
-            @details.render =>
-                @trigger 'subview:details', @details.el
+            @postsview.render =>
+                @on_scroll() unless @hidden
+            @details.render()
 
             @show_follow_notifications()
             @show_pending_notification()
@@ -242,6 +239,7 @@ class exports.ChannelView extends BaseView
 
     # InfiniteScrolling™ when reaching the bottom
     on_scroll: throttle_callback(100, ->
+        return unless @rendered
         if this is @parent.current
             peepholeTop = @el.scrollTop()
             peepholeBottom = peepholeTop + @el.outerHeight()
@@ -258,14 +256,16 @@ class exports.ChannelView extends BaseView
                 parent:this
                 error:error
             @ready =>
-                @error_view.render =>
-                    @trigger('subview:notification', @error_view.el)
+                @error_view.bind 'template:create', (tpl) =>
+                    @trigger 'subview:notification', tpl
+                @error_view.render()
 
     clickEdit: EventHandler ->
         unless @editview
             @editview = new ChannelEditView { parent: this, @model }
-            @editview.bind 'update:el', (el) =>
-                @parent.trigger('subview:editbar', el)
+            @editview.bind 'template:create', (tpl) =>
+                @parent.trigger('subview:editbar', tpl)
+            @editview.render()
         @editview.toggle()
 
     isEditing: =>
@@ -285,9 +285,9 @@ class exports.ChannelView extends BaseView
                     view = new FollowNotificationView(parent: this, model: subscriber)
                     @follow_notification_views[jid] = view
                     @ready =>
-                        view.render =>
-                            console.warn "FollowNotificationView", view
-                            @trigger 'subview:notification', view.el
+                        view.bind 'template:create', (tpl) =>
+                            @trigger 'subview:notification', tpl
+                        view.render()
 
                 else if @follow_notification_views.hasOwnProperty(jid) and
                         subscriber.get('subscription') isnt 'pending'
@@ -306,8 +306,9 @@ class exports.ChannelView extends BaseView
         if subscription is 'pending' and
            not @pending_notification?
             @pending_notification = new PendingNotificationView(parent: this)
-            @pending_notification.render =>
-                @trigger 'subview:notification', @pending_notification.el
+            @pending_notification.bind 'template:create', (tpl) =>
+                @trigger 'subview:notification', tpl
+            @pending_notification.render()
         else if subscription isnt 'pending' and
                 @pending_notification?
             @pending_notification.remove()

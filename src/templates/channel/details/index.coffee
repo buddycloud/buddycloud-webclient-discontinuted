@@ -47,10 +47,9 @@ module.exports = design (view) ->
                     postsnode.bind 'affiliation:update', update_metadata_callback
                     update_metadata()
 
-                view.bind 'subview:owners', @add
-                view.bind 'subview:moderators', @add
-                view.bind 'subview:publishers', @add
-                view.bind 'subview:followers', @add
+                for role in ['owners', 'moderators', 'publishers', 'followers']
+                    view[role].bind('template:create', @add)
+
                 view.bind 'subview:following', (el) =>
                     @add el
 

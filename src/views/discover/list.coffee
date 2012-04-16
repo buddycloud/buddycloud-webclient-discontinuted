@@ -12,5 +12,8 @@ class exports.DiscoverListView extends BaseView
 
     add_entry: (entry) =>
         view = new DiscoverListEntryView(model: entry, parent: this)
-        view.render =>
-            @trigger 'subview:entry', view.el
+        view.bind 'template:create', (tpl) =>
+            @trigger 'subview:entry', tpl
+        view.render()
+#         view.render =>
+#             @trigger 'subview:entry', view.el

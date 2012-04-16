@@ -20,7 +20,7 @@ module.exports = design (view) ->
             # nav.actionBar
             @$div class:'search', ->
                 @once('replace', load_indicate(this).clear)
-                view.bind('subview:searchbar', @replace)
+                view.search.bind('template:create', @replace)
             @$div id:'channels', ->
                 @$div -># antiscroll
                     # channel ...

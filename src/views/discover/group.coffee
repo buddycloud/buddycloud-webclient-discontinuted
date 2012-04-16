@@ -21,8 +21,11 @@ class exports.DiscoverGroupView extends BaseView
     render: (callback) ->
         super ->
             for _, view of @views
-                do (view) => view.render =>
-                    @trigger 'subview:list', view.el
+                view.bind 'template:create', (tpl) =>
+                    @trigger 'subview:list', tpl
+                view.render()
+#                 do (view) => view.render =>
+#                     @trigger 'subview:list', view.el
             callback?.call(this)
 
 

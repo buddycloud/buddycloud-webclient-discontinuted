@@ -1,5 +1,4 @@
 { Template } = require 'dynamictemplate'
-jqueryify = require 'dt-jquery'
 
 class exports.BaseView extends Backbone.View
     template: -> new Template # empty.
@@ -20,7 +19,8 @@ class exports.BaseView extends Backbone.View
         fail = =>
             console.error @cid + " is breaking shit!"
         timeout = setTimeout(fail, 5000)
-        tpl = jqueryify @template(this)
+        tpl = @template(this)
+        tpl = @adapter tpl if @adapter
         @trigger('template:create', tpl)
         tpl.ready =>
             clearTimeout(timeout)

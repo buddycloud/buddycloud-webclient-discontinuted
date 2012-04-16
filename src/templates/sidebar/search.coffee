@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select "#sidebar div.search"
+            @select ".sidebar div.search"
 
 
 { Template } = require 'dynamictemplate'

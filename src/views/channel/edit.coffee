@@ -1,6 +1,7 @@
 { BaseView } = require '../base'
 { EventHandler } = require '../../util'
 async = require 'async'
+{ Tag } = require 'dynamictemplate'
 
 
 class exports.ChannelEditView extends BaseView
@@ -17,8 +18,6 @@ class exports.ChannelEditView extends BaseView
         @bind 'show', @show
         @bind 'hide', @hide
 
-        do @render
-
     setTimeout: (time, callback) ->
         clearTimeout(@timeout) if @timeout?
         @timeout = setTimeout =>
@@ -29,15 +28,17 @@ class exports.ChannelEditView extends BaseView
     show: (callback) =>
         @ready =>
             return unless @active
-            @trigger 'update:el', @el
-            @setTimeout 60, => # workaround for requestAnimationFrame
-                @delegateEvents() # workaround to reconnect all dom events
-                @el.show()
-                callback?.call(this)
+#             @trigger 'update:el', @tpl
+#             @setTimeout 60, => # workaround for requestAnimationFrame
+#                 @delegateEvents() # workaround to reconnect all dom events
+#                 @el.show()
+#                 callback?.call(this)
+            @el.show()
+            callback?.call(this)
 
     hide: =>
-        return if @active
-        @trigger 'update:el', $('<div id="editbar">')
+#         return if @active
+#         @trigger 'update:el', new Tag "div", class:'editbar'
 
     turn: (state) =>
         @active = state
@@ -51,6 +52,7 @@ class exports.ChannelEditView extends BaseView
         @turn not @active
 
     render: (callback) ->
+#         @bind('template:create', (@tpl) => )
         super ->
             @el.css left:"234px"
             @trigger 'loading:stop'

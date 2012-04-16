@@ -54,8 +54,11 @@ class exports.DiscoverView extends BaseView
     render: (callback) ->
         super ->
             for _, view of @views
-                do (view) => view.render =>
-                    @trigger 'subview:group', view.el
+                view.bind 'template:create', (tpl) =>
+                    @trigger 'subview:group', tpl
+                view.render()
+#                 do (view) => view.render =>
+#                     @trigger 'subview:group', view.el
             callback?.call(this)
 
 channels_to_collection = (model, method, args...) ->

@@ -9,8 +9,6 @@ class exports.Searchbar extends BaseView
 
     render: (callback) ->
         super ->
-            console.log "searchbar", @el, @$('input[type="search"]')
-            @parent.trigger 'subview:searchbar', @el
             @$('input[type="search"]').input @on_input
 
             unless Modernizr.hasEvent 'search' # firefox

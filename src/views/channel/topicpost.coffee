@@ -25,31 +25,29 @@ class exports.TopicPostView extends BaseView
         if @model.get('author')?.jid?
             # Show only openers with content
             @hidden = no
-            @el.show()
+            @el?.show()
         else
             # Do not yet show openers that were automatically created
             # for an early-received comment
             @hidden = yes
-            @el.hide()
+            @el?.hide()
 
     render: (callback) ->
         @rendering = yes
+        if @model.get('content')?.value?.indexOf?("Waiting for the ") is 0
+            console.error "##############", @cid, this
         super ->
             @rendering = no
             parallel [((n)->n())
             ,(_..., next) =>
-                @opener.render =>
-                    @trigger 'subview:opener', @opener.el
-                    next()
+                @opener.render(next)
             ,(_..., next) =>
-                @comments.render =>
-                    @trigger 'subview:comments', @comments.el
-                    next()
+                @comments.render(next)
             ],(err) =>
                 callback?.call(this)
 
             if @hidden
-                @el.hide()
+                @el?.hide()
             else
-                @el.show()
+                @el?.show()
 

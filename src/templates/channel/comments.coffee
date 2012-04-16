@@ -12,6 +12,7 @@ design = require '../../_design/channel/comments'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$section class:'comments', ->
+            view.bind('view:comment', @add)
             #  <% if @user?.hasRightToPost: %> FIXME
             @$section class:'answer', ->
                 update_answer = =>

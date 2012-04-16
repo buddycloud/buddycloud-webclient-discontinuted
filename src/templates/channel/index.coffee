@@ -91,7 +91,7 @@ module.exports = design (view) ->
                     view.bind('subview:notification', @add)
 
                 @$section class:'topics', ->
-                    view.bind('subview:topics', @replace)
+                    view.postsview.bind('template:create', @replace)
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
                     spinner.hide()
@@ -101,7 +101,7 @@ module.exports = design (view) ->
                         spinner.hide()
 
         @$div class:'channelDetails', ->
-            view.bind('subview:details', @replace)
+            view.details.bind('template:create', @replace)
 
         view.bind('show', @show)
         view.bind('hide', @hide)

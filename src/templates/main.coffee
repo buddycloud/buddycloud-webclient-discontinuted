@@ -21,7 +21,7 @@ module.exports = design (view) ->
 
         @$div class:'sidebar', ->
             @once('replace', load_indicate(this).clear)
-            view.bind('subview:sidebar', @replace)
+            view.sidebar.bind('template:create', @replace)
 
         indicator = load_indicate this
         view.bind 'subview:content', (tag) =>
@@ -29,7 +29,6 @@ module.exports = design (view) ->
                 indicator.clear()
                 delete indicator
 
-            console.error "content", tag
             @add tag
 
 

@@ -7,6 +7,7 @@
 
 class exports.MainView extends BaseView
     template: require '../templates/main'
+    adapter: require 'dt-jquery'
 
     events:
         'scroll': 'on_scroll'
@@ -43,15 +44,12 @@ class exports.MainView extends BaseView
             # if we already found a view in the cache
             #@current?.el.show()
 
-            channel = app.users.current.channels.get(app.users.target.get('id'))
-            if channel?
-                @setCurrentChannel channel
+            @setCurrentChannel(@_first_channel)
 
     render: (callback) ->
         super ->
             body = $('body').removeClass('start')
-            for el in @el
-                body.append el
+            body.append(@el)
             @el.show()
             @sidebar.render(callback)
 
@@ -64,6 +62,8 @@ class exports.MainView extends BaseView
         @current?.trigger 'hide'
 
     setCurrentChannel: (channel) =>
+        return unless channel?
+        return @_first_channel = channel unless @rendered
         old = @current
         # Throw away if current user did not subscribe:
         oldChannel = @current?.model
@@ -96,8 +96,9 @@ class exports.MainView extends BaseView
                 model:channel
                 parent:this
             @views[channel.cid] = view
-            view.render =>
-                @trigger 'subview:content', view.el
+            view.bind 'template:create', (tpl) =>
+                @trigger 'subview:content', tpl
+            view.render()
         view
 
     remove_channel_view: (channel) =>
@@ -107,14 +108,16 @@ class exports.MainView extends BaseView
     on_create_topic_channel: =>
         @current?.trigger 'hide'
         @current = new CreateTopicChannelView(parent: this)
-        @current.render =>
-            @trigger 'subview:content', @current.el
+        @current.once 'template:create', (tpl) =>
+            @trigger 'subview:content', tpl
+        @current.render()
 
     on_discover: =>
         @current?.trigger 'hide'
         @current = new DiscoverView(parent: this)
-        @current.render =>
-            @trigger 'subview:content', @current.el
+        @current.once 'template:create', (tpl) =>
+            @trigger 'subview:content', tpl
+        @current.render()
 
     on_scroll: =>
         @current?.on_scroll()

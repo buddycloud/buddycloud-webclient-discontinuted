@@ -12,14 +12,18 @@ class exports.PostsView extends PostsBaseView
     # @model is a PostsNode
     initialize: ->
         super
-        @model.posts.forEach @add_post
-        @model.posts.bind 'add', @add_post
 
         @model.bind 'unsync', =>
             setTimeout =>
                 channel = app.channels.get @model.get('nodeid')
                 app.handler.data.refresh_channel channel.get('id')
             , 50
+
+    render: (callback) ->
+        super ->
+            @model.posts.forEach @add_post
+            @model.posts.bind 'add', @add_post
+            callback()
 
     createView: (opts = {}) ->
         new TopicPostView opts
@@ -30,37 +34,37 @@ class exports.PostsView extends PostsBaseView
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported
-    add_post: (post) =>
-        @$('.tutorial, .empty').remove()
-        view = @views[post.cid] ?= new TopicPostView
-            model:post
-            parent:this
-        return if view.rendering
-        view.render =>
-            @ready =>
-                @insert_post_view view
-
-#             post.bind 'change', =>
-#                     view.el.detach()
+#     add_post: (post) =>
+#         @$('.tutorial, .empty').remove()
+#         view = @views[post.cid] ?= new TopicPostView
+#             model:post
+#             parent:this
+#         return if view.rendering
+#         view.render =>
+#             @ready =>
 #                 @insert_post_view view
+#
+# #             post.bind 'change', =>
+# #                     view.el.detach()
+# #                 @insert_post_view view
 
-    insert_post_view: (view) =>
-        i = @model.posts.indexOf(view.model)
-        olderPost = @views[@model.posts.at(i + 1)?.cid]
-        if olderPost?.rendered
-            if olderPost.el.parent().length > 0
-                olderPost.el.before view.el
-            else
-                # wtf .. jquery's design is so b0rken m(
-                dummy = $()
-                dummy = dummy.add view.el
-                dummy = dummy.add olderPost.el
-                olderPost.el = dummy
-        else if olderPost
-            olderPost.ready =>
-                @insert_post_view view
-        else
-            @el.append view.el
+#     insert_post_view: (view) =>
+#         i = @model.posts.indexOf(view.model)
+#         olderPost = @views[@model.posts.at(i + 1)?.cid]
+#         if olderPost?.rendered
+#             if olderPost.el.parent().length > 0
+#                 olderPost.el.before view.el
+#             else
+#                 # wtf .. jquery's design is so b0rken m(
+#                 dummy = $()
+#                 dummy = dummy.add view.el
+#                 dummy = dummy.add olderPost.el
+#                 olderPost.el = dummy
+#         else if olderPost
+#             olderPost.ready =>
+#                 @insert_post_view view
+#         else
+#             @el.append view.el
 
 #
 #         @$('.tutorial, .empty').remove()
@@ -74,6 +78,7 @@ class exports.PostsView extends PostsBaseView
 #         app.views.index?.on_scroll?()
 
     on_scroll: (peepholeTop, peepholeBottom) =>
+        return unless @rendered
         for own cid, view of @views
             content = view.model.get('content')?.value
             unless content?

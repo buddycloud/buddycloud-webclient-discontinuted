@@ -32,8 +32,10 @@ class exports.Sidebar extends BaseView
         @views = {} # this contains the channel entry views
         @timeouts = {} # this contains the channelview remove timeouts
 #         @model.forEach        @new_channel_entry
-        @model.bind 'add',    @new_channel_entry
-        @model.bind 'remove', @remove_channel_entry
+        @ready =>
+            @model.forEach        @new_channel_entry
+            @model.bind 'add',    @new_channel_entry
+            @model.bind 'remove', @remove_channel_entry
 
 #         unless app.views.overview?
 #             app.views.overview = new ChannelOverView
@@ -41,10 +43,7 @@ class exports.Sidebar extends BaseView
 
     render: (callback) ->
         super ->
-            # goes straight to MainView::template
-            # add this view to the dom before searchbar is ready rendered
-            @parent.trigger "subview:sidebar", @el
-            @channelsel = $('#channels > .scrollHolder')
+            @channelsel = @$('#channels > .scrollHolder')
             @search.render(callback)
 #         @$('.tutorial').remove()
 #         if channels.length < 2
@@ -60,15 +59,8 @@ class exports.Sidebar extends BaseView
             @views[channel.cid] = entry
             @current ?= entry
             entry?.render =>
-                @ready =>
-                    if @channelsel?
-                        if entry.isPersonal()
-                            @trigger('subview:personalchannel', entry.el)
-                        else
-                            @trigger('subview:entry', entry.el)
-
-                        @channelsel.parent().antiscroll()
-                    @$('.tutorial').remove()
+                @channelsel?.parent().antiscroll()
+                @$('.tutorial').remove()
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 

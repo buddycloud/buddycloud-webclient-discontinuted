@@ -13,6 +13,6 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$article class:'topic', ->
             @$section class:'opener', ->
-                view.bind('subview:opener', @replace)
+                view.opener.bind('template:create', @replace)
             @$section class:'comments', ->
-                view.bind('subview:comments', @replace)
+                view.comments.bind('template:create', @replace)
