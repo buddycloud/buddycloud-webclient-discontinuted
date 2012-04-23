@@ -64,6 +64,13 @@ class exports.ChannelDetailsView extends BaseView
             filter: (affiliator) ->
                 affiliator.get('affiliation') is 'outcast'
 
+        similars = new Backbone.Collection()
+        @similar = new ChannelDetailsList
+            title: "similar channels"
+            model: similars
+            parent: this
+            load_more: ->
+
         node.affiliations.bind 'change', (user) =>
             @publishers.trigger 'change:user', user
             @followers.trigger 'change:user', user
@@ -75,17 +82,8 @@ class exports.ChannelDetailsView extends BaseView
             unless jids and jids.length > 0
                 # Nothing to display
                 return
-            collection = new Backbone.Collection()
             jids.forEach (jid) ->
-                collection.add app.users.get_or_create(id: jid)
-            @similar = new ChannelDetailsList
-                title: "similar channels"
-                model: collection
-                parent: this
-                load_more: ->
-            @ready =>
-                @similar.render =>
-                    @trigger 'subview:similar', @similar.el
+                similars.add app.users.get_or_create(id: jid)
 
 
     load_more_followers: (all) =>
@@ -105,6 +103,6 @@ class exports.ChannelDetailsView extends BaseView
 
     render: (callback) ->
         super =>
-            for role in ['owners', 'moderators', 'publishers', 'followers', 'following', 'banned']
+            for role in ['owners', 'moderators', 'publishers', 'followers', 'following', 'banned', 'similar']
                 this[role].render()
             callback?.call(this)

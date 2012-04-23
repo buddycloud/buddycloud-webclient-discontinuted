@@ -81,12 +81,11 @@ module.exports = design (view) ->
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
                     # textarea
-                    @$div class:'controls', ->
+                    # @$div class:'controls', ->
                         # div button checkbox
                         #    checkbox shouldShareLocation
                         #    label for shouldShareLocation
                         # @$div id:'createNewTopic'
-
                 @$div class: 'notifications', ->
                     view.bind('subview:notification', @add)
 

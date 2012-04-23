@@ -50,7 +50,7 @@ module.exports = design (view) ->
                 for role in ['owners', 'moderators', 'publishers', 'followers']
                     view[role].bind('template:create', @add)
 
-                view.bind 'subview:following', (el) =>
+                view.following.bind 'template:create', (el) =>
                     @add el
 
                     update_visibility = ->
@@ -58,12 +58,12 @@ module.exports = design (view) ->
                         # result didn't work.
                         if metadata.get('channel_type')?.value is 'topic'
                             # Topic channels don't follow anyone
-                            el.hide()
+                            el.jquery?.hide()
                         else
-                            el.show()
+                            el.jquery?.show()
                     metadata.bind 'change', update_visibility
                     update_visibility()
-                view.bind 'subview:banned', (el) =>
+                view.banned.bind 'template:create', (el) =>
                     @add el
 
                     update_visibility = ->
@@ -71,9 +71,9 @@ module.exports = design (view) ->
                         # result didn't work.
                         if app.users.current.canModerate view.model
                             # Only owners and moderators can see banned users
-                            el.show()
+                            el.jquery?.show()
                         else
-                            el.hide()
+                            el.jquery?.hide()
                     postsnode.affiliations.bind 'change', update_visibility
                     update_visibility()
-                view.bind 'subview:similar', @add
+                view.similar.bind('template:create', @add)
