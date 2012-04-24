@@ -81,6 +81,13 @@ module.exports = design (view) ->
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
                     # textarea
+                    # Following code will implement autoresize on the textarea which
+                    # is used to post a new topic to a channel.
+                    # Autoresize means the form is "growing" automatically bigger when
+                    # more and more text is added.
+                    @$textarea ->
+                        @ready ->
+                            @_jquery.autoResize()
                     # @$div class:'controls', ->
                         # div button checkbox
                         #    checkbox shouldShareLocation

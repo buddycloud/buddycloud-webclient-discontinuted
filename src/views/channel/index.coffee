@@ -91,9 +91,6 @@ class exports.ChannelView extends BaseView
             if @model
                 text = @$('.newTopic textarea')
                 text.textSaver()
-                text.autoResize
-                    extraSpace:0
-                    animate:off
                 @$('.newTopic').click() unless text.val() is ""
 
                 @update_status()
