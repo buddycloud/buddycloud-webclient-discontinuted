@@ -14,9 +14,10 @@ design = require '../../_design/channel/comments'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$section class:'comments', ->
-            view.bind('view:comment', insert.bind(this, new List))
+            comments = new List
+            view.bind('view:comment', insert.bind(this, comments))
             #  <% if @user?.hasRightToPost: %> FIXME
-            @$section class:'answer', ->
+            comments.push @$section class:'answer', ->
                 update_answer = =>
                     if app.users.current.canPost(view.parent.parent.parent.model)
                         @show()
