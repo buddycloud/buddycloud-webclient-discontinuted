@@ -70,10 +70,16 @@ update_text = do ->
                     flush_text()
 
                     link = part.value
-                    @$a { href: link, target: "_blank" }, link
-                    unless previews_rendered[link]
-                        previews_rendered[link] = yes
-                        render_preview.call(@up(end: no), view, link)
+                    # Protocol part may be missing (short URLs like
+                    # ur1.ca/8jz57). Make sure there's one or the browser will
+                    # think it's a link to http://example.com/ur1.ca/8jz57.
+                    full_link = link
+                    unless link.match(/^[a-z0-9-]+:/)
+                        full_link = 'http://' + link
+                    @$a { href: full_link, target: "_blank"}, link
+                    unless previews_rendered[full_link]
+                        previews_rendered[full_link] = yes
+                        render_preview.call(@up(end: no), view, full_link)
                 when 'user'
                     flush_text()
 
