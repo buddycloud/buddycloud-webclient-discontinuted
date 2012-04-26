@@ -26,7 +26,8 @@ class exports.OverlayLogin extends BaseView
 
     onClick: (ev) ->
         # Hide when clicking overlay around dialog
-        if ev.srcElement is @el[0]
+        el = ev.target or ev.srcElement
+        if el is @el[0]
             @hide()
 
     onKeydown: (ev) =>

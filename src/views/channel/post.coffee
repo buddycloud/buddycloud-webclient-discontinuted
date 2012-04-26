@@ -40,7 +40,7 @@ class exports.PostView extends BaseView
         app.router.navigate @model.get('author')?.jid, true
 
     clickUserlink: EventHandler (ev) ->
-        el = ev.srcElement
+        el = ev.target or ev.srcElement
         userid = el and $(el).data('userid')
         if userid
             app.router.navigate userid, true
