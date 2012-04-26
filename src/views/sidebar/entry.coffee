@@ -34,7 +34,11 @@ class exports.ChannelEntry extends BaseView
         @bind 'template:create', (tpl) =>
             if @isPersonal()
                 @parent.trigger('subview:personalchannel', tpl)
+                @parent.personal = this
             else
+                if @parent.personal?
+                    # fill the index gap
+                    i -= 1 if i > @parent.model.indexOf(@parent.personal.model)
                 @parent.trigger('subview:entry', i, tpl)
         super ->
             @trigger 'update:highlight'
