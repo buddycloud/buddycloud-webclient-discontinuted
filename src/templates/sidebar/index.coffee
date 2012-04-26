@@ -7,8 +7,9 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+{ List } = require 'dt-list'
 design = require '../../_design/sidebar/index'
-{ load_indicate } = require '../util'
+{ load_indicate, insert } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
@@ -24,7 +25,7 @@ module.exports = design (view) ->
             @$div id:'channels', ->
                 @$div -># antiscroll
                     # channel ...
-                    view.bind('subview:entry', @add)
+                    view.bind('subview:entry', insert.bind(this, new List))
             @$button id: 'create_topic_channel', ->
                 if app.users.isAnonymous(app.users.current) or
                   not config.topic_domain?

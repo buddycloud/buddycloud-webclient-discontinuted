@@ -23,7 +23,7 @@ class exports.MainView extends BaseView
         @channels = new Channels
         @channels.comparator = (channel) ->
             a = new Date(channel.last_touched)
-            b = new Date(channel.nodes.get('posts')?.posts.at(0)?.get_last_update() or 0)
+            b = new Date(channel.nodes.get('posts')?.posts.first()?.get_last_update() or 0)
             a.getTime() - b.getTime()
 
         @sidebar = new Sidebar
