@@ -1,21 +1,13 @@
-{ Collection } = require './base'
+{ Posts } = require './post'
 { TopicPost } = require '../models/topicpost'
 
-class exports.TopicPosts extends Collection
+class exports.TopicPosts extends Posts
     model: TopicPost
 
-    constructor: ({@parent}) ->
-        super()
-
-    initialize: ->
-        @parent.bind 'post', (post) =>
-            @get_or_create post
-        @bind 'add', (post) =>
-            # Hook 'change' as Backbone Collections only sort on 'add'
-            post.bind 'change', =>
-                @sort(silent: true)
-            post.bind 'change:unread', =>
-                @trigger 'change:unread'
+    onadd: (post) ->
+        super # implemented on Posts only for this purpose
+        post.bind 'change:unread', =>
+            @trigger 'change:unread'
 
     get_or_create: (post) ->
         if post.in_reply_to
@@ -24,5 +16,3 @@ class exports.TopicPosts extends Collection
         else
             super
 
-    comparator: (post) ->
-        - new Date(post.get_last_update()).getTime()
