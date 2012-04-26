@@ -6,13 +6,15 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+{ List } = require 'dt-list'
 design = require '../../_design/channel/comments'
+{ insert } = require '../util'
 
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$section class:'comments', ->
-            view.bind('view:comment', @add)
+            view.bind('view:comment', insert.bind(this, new List))
             #  <% if @user?.hasRightToPost: %> FIXME
             @$section class:'answer', ->
                 update_answer = =>

@@ -1,4 +1,13 @@
 { Template } = require 'dynamictemplate'
+{ Adapter:JQueryAdapter } = require 'dt-jquery'
+addListSupport = require 'dt-list/adapter/jquery'
+
+adapters =
+    jquery: (opts, tpl) ->
+        [tpl, opts] = [opts, null] unless tpl?
+        addListSupport new JQueryAdapter(tpl, opts)
+        return tpl
+
 
 class exports.BaseView extends Backbone.View
     template: -> new Template # empty.
@@ -20,7 +29,7 @@ class exports.BaseView extends Backbone.View
             console.error @cid + " is breaking shit!"
         timeout = setTimeout(fail, 5000)
         tpl = @template(this)
-        tpl = @adapter tpl if @adapter
+        tpl = adapters[@adapter](tpl) if @adapter
         @trigger('template:create', tpl)
         tpl.ready =>
             clearTimeout(timeout)

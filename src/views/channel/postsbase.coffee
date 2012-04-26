@@ -16,10 +16,6 @@ class exports.PostsBaseView extends BaseView
         return if view.rendering
         i = @indexOf(view.model)
         view.bind 'template:create', (tpl) =>
-            @trigger "view:#{@ns}", tpl
-#         @ready =>
-#             @trigger "view:#{@ns}:insert", i, (done) ->
-#                 view.ready ->
-#                     view.domready(done)
+            @trigger "view:#{@ns}", i, tpl
         view.render()
 

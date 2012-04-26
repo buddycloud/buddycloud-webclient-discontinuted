@@ -7,7 +7,7 @@
 
 class exports.MainView extends BaseView
     template: require '../templates/main'
-    adapter: require 'dt-jquery'
+    adapter: 'jquery'
 
     events:
         'scroll': 'on_scroll'
