@@ -1,11 +1,11 @@
 #!/bin/sh
 for arg in $@; do
     case $arg in
-        '--dev') dev=1 ;;
         '--help') help=1 ;;
+        '--restart') restart=1 ;;
     esac
 done
-if [ $dev ] && [ ! $help ]; then
+if [ $restart ] && [ ! $help ]; then
     exec ./node_modules/.bin/node-dev ./src/build/server.coffee $@
 else
     exec ./node_modules/.bin/coffee ./src/build/server.coffee $@
