@@ -7,6 +7,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/create_topic_channel/index'
+{ addClass, removeClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, -> @$div class:'content', ->
@@ -18,13 +19,12 @@ module.exports = design (view) ->
                         role = @$select id: 'channel_default_role'
                         @$span class: 'hint followerPlusSelected', ->
                             view.bind 'change:role', =>
-                                if role.attr('value') is 'publisher'
-                                    newClass = 'followerPlusSelected'
-                                else
-                                    newClass = 'followerSelected'
-                                @attr 'class', @attr('class').
-                                    replace(/followerSelected|followerPlusSelected/, "") +
-                                    " #{newClass}"
+                                removeClass(@,"followerSelected",
+                                              "followerPlusSelected")
+                                addClass @, if role.attr('value') is 'publisher'
+                                        "followerPlusSelected"
+                                    else
+                                        "followerSelected"
 
             @$nav class: "bottom clearfix", ->
                 @$div class: "button callToAction", ->

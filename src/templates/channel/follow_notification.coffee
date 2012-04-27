@@ -10,6 +10,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/follow_notification'
+{ addClass, removeClass } = require '../util'
 
 
 module.exports = design (view) ->
@@ -18,18 +19,15 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$article class: 'notification', ->
             view.bind 'visible', =>
-                # TODO: use upcoming ready() in templates here:
-                notifclass = @attr('class')
-                if notifclass.indexOf('visible') is -1
-                    @attr 'class', "#{notifclass} visible"
+                addClass(@,"visible")
             view.bind 'invisible', =>
-                @attr 'class', @attr('class').replace('visible', "")
+                removeClass(@,"visible")
                 setTimeout(@remove, 2000) # wait for css animation
 
             view.bind 'granted', =>
-                @attr 'class', "#{@attr 'class'} log granted"
+                addClass(@,"log", "granted")
             view.bind 'denied', =>
-                @attr 'class', "#{@attr 'class'} log denied"
+                addClass(@,"log", "denied")
 
             @$section ->
                 @$img ->

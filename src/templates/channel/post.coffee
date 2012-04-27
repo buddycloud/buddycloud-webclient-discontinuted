@@ -9,7 +9,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/post'
-{ load_indicate } = require '../util'
+{ load_indicate, addClass, removeClass } = require '../util'
 
 
 module.exports = design (view) ->
@@ -18,12 +18,11 @@ module.exports = design (view) ->
             @attr class:"#{view.type}"
             view.model.bind 'change:unread', =>
                 if view.model.get('unread')
-                    cls = @attr 'class'
-                    @attr class:"unread #{cls}" unless /unread/.test cls
+                    addClass(@,"unread")
                 else
                     onfocus = =>
                         setTimeout =>
-                            @attr class:@attr('class').replace(/unread/g, "")
+                            removeClass(@,"unread")
                         , 2000
                     if app.focused
                         onfocus()

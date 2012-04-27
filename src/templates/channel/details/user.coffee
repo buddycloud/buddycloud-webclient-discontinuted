@@ -18,7 +18,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../../_design/channel/details/user'
-{ EventHandler, throttle_callback } = require '../../../util'
+{ addClass, removeClass } = require '../../util'
 
 userspeak =
     'owner':    "Producer"
@@ -47,37 +47,22 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         channel = view.parent.parent.model
         @$div class:'adminAction', ->
-            add_class = (c) =>
-                classes = @attr('class')
-                    .split(/\s+/)
-                    .filter((cl) -> cl isnt c)
-                classes.push c
-                @attr 'class', classes.join(" ")
-            rm_class = (c) =>
-                @attr 'class', @attr('class')
-                    .split(/\s+/)
-                    .filter((cl) -> cl isnt c)
-                    .join(" ")
 
             lastclass = ''
-            update_visibility = ->
+            update_visibility = =>
                 affiliation = app.users.current.getAffiliationFor(channel)
-                rm_class lastclass
+                removeClass(@,lastclass)
                 lastclass = class_map[affiliation]
-                add_class lastclass
+                addClass(@,lastclass)
             view.bind('user:update', update_visibility)
             view.parent.parent.parent.bind('update:permissions', update_visibility)
 
-            view.bind 'click:changeRole', ->
-                add_class 'choosen'
-                add_class 'role'
-            view.bind 'click:banUser', ->
-                add_class 'choosen'
-                add_class 'ban'
-            view.bind 'user:update', ->
-                rm_class 'choosen'
-                rm_class 'role'
-                rm_class 'ban'
+            view.bind 'click:changeRole', =>
+                addClass(@,'choosen', 'role')
+            view.bind 'click:banUser', =>
+                addClass(@,'choosen', 'ban')
+            view.bind 'user:update', =>
+                removeClass(@,'choosen', 'role', 'ban')
 
             # .arrow
             @$div class:'holder', ->

@@ -10,23 +10,22 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/sidebar/entry'
+{ addClass, removeClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>
-                return unless ($ = @_jquery)?
-
                 if view.isPersonal()
-                    $.addClass('personal')
+                    addClass(@,"personal")
                 else
-                    $.removeClass('personal')
+                    removeClass(@,"personal")
 
                 if view.isSelected()
-                    $.addClass('selected')
+                    addClass(@,"selected")
                 else
-                    $.removeClass('selected')
+                    removeClass(@,"selected")
 
             avatar = @div class:'avatar', ->
                 unread_counter = @$span class:'channelpost counter'

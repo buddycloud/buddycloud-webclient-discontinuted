@@ -9,7 +9,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/error_notification'
-
+{ addClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
@@ -17,8 +17,5 @@ module.exports = design (view) ->
             @$section ->
                 @$p ->
                     view.bind 'error', (text) =>
-                        notifclass = notification.attr('class')
-                        if notifclass.indexOf('visible') is -1
-                            notification.attr('class', "#{notifclass} visible")
-                        console.error "render error", text, @_jquery, notification._jquery
+                        addClass(@,"visible")
                         @text text ? ""
