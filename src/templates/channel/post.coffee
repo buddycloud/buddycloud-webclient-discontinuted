@@ -37,7 +37,7 @@ module.exports = design (view) ->
                         view.model.get('published')
                     if date?
                         time.attr "data-date":date
-                        time._jquery?.formatdate(update:off)
+                        time.ready -> @_jquery.formatdate(update:off)
                 view.model.bind 'change:updated', update_time
                 view.model.bind 'change:published', update_time
                 update_time()

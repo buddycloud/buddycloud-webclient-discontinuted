@@ -39,7 +39,7 @@ module.exports = design (view) ->
                         date = metadata.get('creation_date')?.value
                         if date?
                             creationDate.attr "data-date":date
-                            creationDate._jquery?.formatdate(update:off)
+                            creationDate.ready -> @_jquery?.formatdate(update:off)
                     # Filtering for owners takes potentially long, and
                     # we bind to every affiliation update.
                     update_metadata_callback = throttle_callback 400, update_metadata
@@ -58,9 +58,9 @@ module.exports = design (view) ->
                         # result didn't work.
                         if metadata.get('channel_type')?.value is 'topic'
                             # Topic channels don't follow anyone
-                            el.jquery?.hide()
+                            el.hide()
                         else
-                            el.jquery?.show()
+                            el.show()
                     metadata.bind 'change', update_visibility
                     update_visibility()
                 view.banned.bind 'template:create', (el) =>
@@ -71,9 +71,9 @@ module.exports = design (view) ->
                         # result didn't work.
                         if app.users.current.canModerate view.model
                             # Only owners and moderators can see banned users
-                            el.jquery?.show()
+                            el.show()
                         else
-                            el.jquery?.hide()
+                            el.hide()
                     postsnode.affiliations.bind 'change', update_visibility
                     update_visibility()
                 view.similar.bind('template:create', @add)
