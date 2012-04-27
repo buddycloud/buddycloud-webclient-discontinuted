@@ -34,7 +34,7 @@ config.cli
     port: ['port', ['p', "build server listen port",  'number']]
     build:['build',[off, "build and pack everything together" ]]
     design:['design',[off, "enable build server on the fly style reload"]]
-    dev:    [off, "enable code reload and development tools in the browser"]
+    dev:['dev',[off, "enable code reload and development tools in the browser"]]
     restart:[off, "enable build server restart"]
 
 config.load (args, opts) ->
