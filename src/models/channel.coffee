@@ -52,6 +52,7 @@ class exports.Channel extends Model
         count = 0
         for post in (@nodes.get('posts')?.posts.models or [])
             if post.get_last_update() > last_view
+                post.set unread:yes unless post.get 'unread'
                 count++
             else break
         @trigger 'bubble'
@@ -61,8 +62,10 @@ class exports.Channel extends Model
 
     mark_read: ->
         last_view = @get('last_view') or (new Date 0).toISOString()
-        last_update = @nodes.get('posts').posts.at(0)?.get_last_update()
+        posts = @nodes.get('posts').posts
+        last_update = posts.first()?.get_last_update()
         if last_update and last_update > last_view
+            posts.forEach((post) -> post.set unread:no if post.get 'unread')
             last_view = last_update
         app.favicon(@_unread_count * -1) # remove them
         @_unread_count = 0

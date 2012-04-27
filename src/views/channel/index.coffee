@@ -120,6 +120,7 @@ class exports.ChannelView extends BaseView
         @hidden = false
 
         @model.mark_read()
+
         # Not subscribed? Refresh!
         unless app.users.current.isFollowing(@model)
             app.handler.data.refresh_channel(@model.get 'id')

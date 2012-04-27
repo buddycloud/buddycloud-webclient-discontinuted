@@ -1,4 +1,7 @@
-window.app =
+{ EventEmitter } = require 'events'
+
+window.app = new EventEmitter
+app[k] = v for k,v of {
     version: '0.0.0-59'
     localStorageVersion:'9e5dcf0'
     handler: {}
@@ -10,8 +13,10 @@ window.app =
         "publisher"
         "moderator"
         "owner"]
+}
 
 require './vendor-bridge'
+{ EventEmitter:DomEventEmitter } = require 'domevents'
 { Router } = require './controllers/router'
 { ConnectionHandler } = require './handlers/connection'
 { ChannelStore } = require './collections/channel'
@@ -46,6 +51,29 @@ app.favicon = (number) ->
         color: "#ffffff"
     total_number = total
 
+
+# provide event listeners for document and window for the whole app
+app.document = new DomEventEmitter document
+app.window   = new DomEventEmitter window
+
+# trace the tab focus
+app.focused = no
+
+onfocus = ->
+    app.focused = yes
+    app.emit 'focus'
+#     document.title = "focus"
+
+onblur = ->
+    app.focused = no
+    app.emit 'unfocus'
+#     document.title = "blur"
+
+app.window.on('focus', onfocus)
+app.window.on('blur',  onblur)
+# ie
+app.document.on('focusin', onfocus)
+app.document.on('focusout', onblur)
 
 
 # app bootstrapping on document ready

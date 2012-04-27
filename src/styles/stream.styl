@@ -13,6 +13,7 @@
 .avatar
   border-radius 3px
   cursor pointer
+  transition 250ms
 
 body > .content
   top 0
@@ -459,6 +460,9 @@ body > .content
       text-shadow black 0 0 2px
   .empty.topic p
     text-align center
+  .unread
+    .avatar
+      box-shadow 0 0 0 1px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.55) inset,0 0 0 3px #83ac35,0 0 0 4px #90bd3a,0 0 2px 4px rgba(0,0,0,0.34)
 
 .conversation
   article
