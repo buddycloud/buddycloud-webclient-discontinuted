@@ -11,9 +11,10 @@ class exports.DiscoverListView extends BaseView
         @model.bind 'add', @add_entry
 
     add_entry: (entry) =>
+        i = @model.indexOf(entry)
         view = new DiscoverListEntryView(model: entry, parent: this)
         view.bind 'template:create', (tpl) =>
-            @trigger 'subview:entry', tpl
+            @trigger 'subview:entry', i, tpl
         view.render()
 #         view.render =>
 #             @trigger 'subview:entry', view.el

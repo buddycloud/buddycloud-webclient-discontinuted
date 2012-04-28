@@ -31,6 +31,8 @@ class exports.BaseView extends Backbone.View
         tpl = @template(this)
         tpl = adapters[@adapter](tpl) if @adapter
         @trigger('template:create', tpl)
+        tpl.once 'end', =>
+            @trigger('template:end', tpl)
         tpl.ready =>
             clearTimeout(timeout)
             @rendered = yes

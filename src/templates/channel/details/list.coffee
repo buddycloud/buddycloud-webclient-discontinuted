@@ -8,15 +8,16 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+{ List } = require 'dt-list'
 design = require '../../../_design/channel/details/list'
-{ EventHandler, gravatar } = require '../../../util'
-
+{ gravatar } = require '../../../util'
+{ addClass, removeClass } = require '../../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
-        @$section class: 'channelList', ->
-            view.bind 'show', @show
-            view.bind 'hide', @hide
+        section = @$section class: 'channelList', ->
+            view.bind('show', @show)
+            view.bind('hide', @hide)
             # hidden by default, until 1st user is added:
             @hide()
 
@@ -32,28 +33,63 @@ module.exports = design (view) ->
                         @show()
                         update_count()
                     update_count()
-            list = @$div class: 'list', ->
+            @$div class:'list', ->
+                users = new List
+                idxs = {}
 
-                new_user = (user) =>
-                    uid = user.get('id')
-                    img = @$img
+                view.bind 'add', (user) =>
+                    uid = user.get 'id'
+                    users.push @$img
                         class:'avatar'
                         src:"#{gravatar uid}"
                         title:uid
                         'data-userid': uid # FIXME UGLY
-                    return remove:->
-                        img.remove()
+                    idxs[uid] = users.keys[users.length - 1]
+                    update_count?()
+                    section.show() if users.length is 1
 
-                users = {}
-                view.bind 'add', (user) ->
-                    users[user.get('id')] ?= new_user(user)
-                    update_count?()
                 view.bind 'remove', (user) ->
-                    users[user.get('id')]?.remove()
-                    delete users[user.get('id')]
+                    uid = user.get 'id'
+                    i = idxs[uid]?.i
+                    i -= 1 if i? and view.info.idx?.i? and i > view.info.idx?.i
+                    users.remove(i)?.remove()
+                    delete idxs[uid]
                     update_count?()
+                    section.hide() if users.length is 0
+
+                olduser = null
+                view.info.bind 'update:select:user', (user, el) =>
+                    return unless (idx = idxs[user.get 'id'])?
+                    return unless (cur = users[idx.i])?
+
+                    removeClass(olduser,"selected")
+
+                    if view.info.idx
+                        users.remove(view.info.idx.i).remove(soft:yes)
+                        if cur is olduser
+                            view.info.idx = null
+                            return # close user info
+
+                    addClass(cur, "selected")
+                    olduser = cur
+
+                    row = idx.i - idx.i%4 + 4
+                    if users.length < 4 or row > users.length
+                        row = users.length
+                    view.info.tpl (t) =>
+                        view.info.arrow = idx.i%4
+                        view.info.trigger 'update:select:arrow'
+                        users.insert(row, t)
+                        @add(t)
+
+                        view.info.idx = users.keys[row]
+
+
+                view.info.bind 'update:select:none', ->
+                    view.info.tpl (t) -> t.remove(soft:yes)
+                    view.info.idx = null
+                    removeClass(olduser,"selected")
+                    olduser = null
 
             @$div class: 'showAll', ->
-                view.bind 'show:all', =>
-                    @remove()
-
+                view.bind('show:all', @remove)

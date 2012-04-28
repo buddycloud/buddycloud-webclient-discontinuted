@@ -19,22 +19,27 @@ class exports.ChannelDetailsList extends BaseView
 
         @info = new UserInfoView parent:this
 
-        @ready =>
-            @add_all()
-            @model.bind 'add', @add_user
-            @model.bind 'remove', @remove_user
-            @bind 'change:user', (user) =>
-                @remove_user user
-                @add_user user
+    show: => @trigger 'show'
+    hide: => @trigger 'hide'
 
+    render: ->
+        @once 'template:end', =>
+            @add_all()
+            @model.bind('add', @add_user)
+            @model.bind('remove', @remove_user)
+            @model.bind('change', @change_user)
+            @bind( 'change:user', @change_user)
+            @bind('change:all:users', @change_all)
             if @model.length < 8
                 @load_more(false)
+        super
 
-        @model.bind 'change', (user) =>
-            @trigger 'change:user', user
-        @bind 'change:all:users', =>
-            @model.forEach (user) =>
-                @trigger 'change:user', user
+    change_user: (user) =>
+        @remove_user user
+        @add_user user
+
+    change_all: =>
+        @model.forEach @change_user
 
     add_user: (user) =>
         user_id = user.get('id')
@@ -44,16 +49,9 @@ class exports.ChannelDetailsList extends BaseView
             @showing_users[user_id] = yes
             @trigger 'add', user
 
-        unless @showing_users[user_id] or
-               (@filter and not @filter(user))
-            # Is not already shown
-            if @showing_all
-                # Expanded by "show all"
-                show()
-            else if not @showing_all and @showing_count < 8
-                show()
-
-            @trigger 'show'
+        if not @showing_users[user_id] and @filter?(user) and
+         (@showing_all or not @showing_all and @showing_count < 8)
+            show()
 
     remove_user: (user) =>
         user_id = user.get('id')
@@ -65,9 +63,6 @@ class exports.ChannelDetailsList extends BaseView
             # Fill spot that is left
             @add_one()
 
-        if @showing_count < 1
-            @trigger 'hide'
-
     add_one: =>
         hidden = @model.filter (user1) =>
             not @showing_users[user1.get('id')]
@@ -77,7 +72,7 @@ class exports.ChannelDetailsList extends BaseView
             @load_more(false)
 
     add_all: =>
-        @model.each @add_user
+        @model.forEach @add_user
 
     showAll: EventHandler ->
         @showing_all = yes
@@ -88,7 +83,7 @@ class exports.ChannelDetailsList extends BaseView
     showUser: EventHandler (ev) ->
         el = $(ev.target)
         user = app.users.get_or_create(id:el.data('userid')) # FIXME UGLY
-        @info.set_user user, el
+        @info.set_user user
 
     clickUser: EventHandler (ev) ->
         userid = $(ev.target).data('userid') # FIXME UGLY

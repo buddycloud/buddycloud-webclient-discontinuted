@@ -14,7 +14,7 @@ class exports.DiscoverListEntryView extends BaseView
             app.handler.data.get_node_posts @statusnode
 
     update_status: =>
-        @status = @statusnode.posts.at(0)?.get('content')?.value
+        @status = @statusnode.posts.first()?.get('content')?.value
         @trigger 'status', @status
 
     events:

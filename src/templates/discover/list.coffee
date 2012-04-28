@@ -9,7 +9,9 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+{ List } = require 'dt-list'
 design = require '../../_design/discover/list'
+{ insert } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
@@ -18,5 +20,5 @@ module.exports = design (view) ->
             @$h2 ->
                 @text view.name
             @$div class:'list', ->
-                view.bind("subview:entry", @add)
+                view.bind("subview:entry", insert.bind(this, new List))
 

@@ -1,3 +1,5 @@
+arrowpos = ['first', 'second', 'third', 'fourth']
+
 unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
@@ -8,17 +10,14 @@ unless process.title is 'browser'
             el.removeClass(c) for c in [
                 'moderator'
                 'choosen'
-                'first'
-                'second'
-                'third'
-                'fourth'
-            ]
+            ].concat arrowpos
             return el
 
 
 { Template } = require 'dynamictemplate'
+{ List } = require 'dt-list'
 design = require '../../../_design/channel/details/user'
-{ addClass, removeClass } = require '../../util'
+{ addClass, removeClass, insert } = require '../../util'
 
 userspeak =
     'owner':    "Producer"
@@ -47,22 +46,27 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         channel = view.parent.parent.model
         @$div class:'adminAction', ->
-
             lastclass = ''
             update_visibility = =>
                 affiliation = app.users.current.getAffiliationFor(channel)
                 removeClass(@,lastclass)
                 lastclass = class_map[affiliation]
                 addClass(@,lastclass)
-            view.bind('user:update', update_visibility)
+            view.bind('update:select:user', update_visibility)
             view.parent.parent.parent.bind('update:permissions', update_visibility)
 
             view.bind 'click:changeRole', =>
                 addClass(@,'choosen', 'role')
             view.bind 'click:banUser', =>
                 addClass(@,'choosen', 'ban')
-            view.bind 'user:update', =>
-                removeClass(@,'choosen', 'role', 'ban')
+            view.bind 'update:select:user', =>
+                removeClass(@,'choosen', 'role', 'ban', arrowpos...)
+
+            removeClass(@,arrowpos...)
+            addClass(@,arrowpos[view.arrow]) if view.arrow
+            view.bind 'update:select:arrow', =>
+                removeClass(@,arrowpos...)
+                addClass(@,arrowpos[view.arrow])
 
             # .arrow
             @$div class:'holder', ->
@@ -70,7 +74,7 @@ module.exports = design (view) ->
                     @$section class:'channelInfo', ->
                         name = @$h4()
                         role = @$div class:'currentRole'
-                        view.bind 'user:update', (user) ->
+                        view.bind 'update:select:user', (user) ->
                             name.text "#{user.get 'id'}"
                             affiliation = user.getAffiliationFor channel.get 'id'
                             role?.text "#{userspeak[affiliation] or affiliation}"
@@ -103,8 +107,6 @@ module.exports = design (view) ->
                             infos[role]?.show()
                             selected = role
                             # FIXME set info
-                        view.bind('user:update', set_current_option)
-                        view.parent.parent.parent
-                            .bind('update:affiliations', set_current_option)
-
+                        view.bind('update:affiliations', set_current_option)
+                        view.bind('update:select:user',  set_current_option)
 
