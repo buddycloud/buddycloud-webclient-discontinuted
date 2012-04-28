@@ -19,19 +19,19 @@ exports.ready = (tag, view) ->
         view.trigger 'dom:ready'
 
 exports.insert = (list, i, el) ->
-    v = @builder.template._view
-#     console.error "#{v.cid} insert #{v.ns} #{i}", el
     list.insert(i, el)
     @add(el)
 
 exports.addClass = (tag, classes...) ->
+    return unless tag?.attr
     tagclass = tag.attr 'class'
     for cls in classes
         unless new RegExp(cls).test tagclass
             tagclass = "#{cls} #{tagclass}"
-    tag.attr class:tagclass
+    tag.attr class:tagclass.replace(/\s\s/g, " ")
 
 exports.removeClass = (tag, classes...) ->
+    return unless tag?.attr
     tagclass = tag.attr 'class'
     for cls in classes
         if new RegExp(cls).test tagclass
