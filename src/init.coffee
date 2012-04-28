@@ -120,7 +120,7 @@ app.initialize = ->
     formatdate.options.max.unit = 9 # century
     formatdate.options.max.amount = 20 # 2000 years
     formatdate.options.min.string = "a moment ago"
-    formatdate.hook '[data-date]'
+    formatdate.hook 'time'
 
     $(document).ready ->
         # page routing

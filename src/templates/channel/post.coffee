@@ -3,7 +3,8 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select "article.topic:first section.opener" , "p *"
-            el.find('p, span, a').text("")
+            el.find('time').attr(datetime:"", title:"")
+            el.find('p, span, a, time').text("")
             return el
 
 
@@ -30,15 +31,19 @@ module.exports = design (view) ->
                         app.once('focus', onfocus)
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
-                time = @$span class:'time'
+                time = @$time()
                 update_time = ->
                     date = view.model.get('updated') or
-                        view.model.get('published')
+                           view.model.get('published')
                     if date?
-                        time.attr "data-date":date
+                        time.attr "data-date":date, datetime:date
                         time.ready -> @_jquery.formatdate(update:off)
-                view.model.bind 'change:updated', update_time
-                view.model.bind 'change:published', update_time
+                    if new Date(date ? 0).getTime() is 0
+                        time.hide()
+                    else
+                        time.show()
+                view.model.bind('change:updated',   update_time)
+                view.model.bind('change:published', update_time)
                 update_time()
             name = @span class:'name'
 

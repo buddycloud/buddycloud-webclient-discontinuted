@@ -3,7 +3,8 @@ unless process.title is 'browser'
         src: "streams.html"
         select: () ->
             el = @select ".channelDetails:first", ".location, .channelList"
-            el.find('.data, .time').text("")
+            el.find('time').attr(datetime:"", title:"")
+            el.find('.data, time').text("")
             el
 
 
@@ -20,15 +21,15 @@ module.exports = design (view) ->
         @$div class: 'channelDetails', ->
             @$div class: 'holder', ->
                 @$section class: 'meta', ->
-                    make_field = (pClass) =>
+                    make_field = (pClass, tagname = 'span') =>
                         p = @p class: pClass
-                        span = p.$span class: 'data'
+                        span = p["$#{tagname}"] class: 'data'
                         p.end()
                         span
 
                     description = make_field 'description'
                     accessModel = make_field 'open'
-                    creationDate = make_field 'broadcast'
+                    creationDate = make_field 'broadcast', 'time'
 
                     update_metadata = =>
                         description.text metadata.get('description')?.value
@@ -38,8 +39,12 @@ module.exports = design (view) ->
                             accessModel.text "private"
                         date = metadata.get('creation_date')?.value
                         if date?
-                            creationDate.attr "data-date":date
+                            creationDate.attr "data-date":date, datetime:date
                             creationDate.ready -> @_jquery?.formatdate(update:off)
+                        if new Date(date ? 0).getTime() is 0
+                            creationDate.hide()
+                        else
+                            creationDate.show()
                     # Filtering for owners takes potentially long, and
                     # we bind to every affiliation update.
                     update_metadata_callback = throttle_callback 400, update_metadata
