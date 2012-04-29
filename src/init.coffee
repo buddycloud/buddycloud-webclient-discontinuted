@@ -2,7 +2,7 @@
 
 window.app = new EventEmitter
 app[k] = v for k,v of {
-    version: '0.0.0-59'
+    version: '0.0.0-60'
     localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}
