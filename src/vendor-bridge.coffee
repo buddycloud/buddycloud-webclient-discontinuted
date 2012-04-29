@@ -20,8 +20,6 @@ window.jQuery = window.$ = require 'jquery'
 require "./vendor/jquery.copycss.js"
 require "./vendor/jquery.mousewheel.js"
 require "./vendor/jquery.antiscroll.js"
-require "./vendor/jquery.autoresize.js"
-require "./vendor/jquery.autoresize+input.js"
 require "./vendor/jquery.animate-enhanced.js"
 # from npm
 require "jquery-inputevent"

@@ -156,13 +156,16 @@ body > .content
       z-index 2
       transition 250ms
       display none
-    textarea
+    .area
       width 100%
-      height 50px
-      padding 5px
+      pre, textarea
+        min-height 50px
+        padding 5px
       margin 0
       border 1px solid rgba(0, 0, 0, 0.13)
       font 13px/19.5px sans-serif
+      pre, textarea
+        font 13px/19.5px sans-serif
       color gray
       display block
       float right
@@ -170,13 +173,16 @@ body > .content
       z-index 2
       transition 250ms
       box-sizing border-box
-    &.write textarea
-      height 89px
+    &.write .area
+      textarea
+        min-height 89px
+      pre
+        min-height 84px // 89px - 2*5px padding
       margin-bottom 33px
       color black
   .controls
     bottom 13px
-    right 13px
+    right 14px
     font-size 11px
     position absolute 
     .button
@@ -327,12 +333,15 @@ body > .content
   section.answer
     position relative
     overflow hidden
-    textarea
+    .area
       margin-top 13px
-      padding 4px 5px 2px
       width 100%
-      height 27px
+      pre, textarea
+        min-height 18px
+        padding 4px 5px 2px
       font 12px/18px sans-serif
+      pre, textarea
+        font 12px/18px sans-serif
       color gray
       border 1px solid rgba(0,0,0,.21)
       box-shadow 1px 1px white, inset 1px 1px rgba(0,0,0,0.05)
@@ -351,9 +360,12 @@ body > .content
     &.write
       .avatar
         display block
-      textarea
+      .area
         margin-bottom 27px
-        height 39px
+        textarea
+          min-height 39px
+        pre
+          min-height 33px // 39px - 4px - 2px padding
         color black
         resize vertical
       .controls
@@ -371,7 +383,7 @@ body > .content
         &.write .avatar
           top 13px
           left -2px
-        textarea
+        .area
           margin-top 8px
     .avatar
       top 6px
@@ -460,6 +472,26 @@ body > .content
       text-shadow black 0 0 2px
   .empty.topic p
     text-align center
+  .expanding.area
+    pre, textarea
+      white-space pre-wrap
+      word-wrap break-word
+    textarea
+      width 100%
+      box-sizing border-box
+    pre
+      display none
+    &.active
+      textarea
+        overflow hidden
+        position absolute
+        top 0
+        left 0
+        height 100%
+        resize none
+      pre
+        display block
+        visibility hidden
   .unread
     .avatar
       box-shadow 0 0 0 1px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.55) inset,0 0 0 3px #83ac35,0 0 0 4px #90bd3a,0 0 2px 4px rgba(0,0,0,0.34)

@@ -8,7 +8,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../_design/channel/comments'
-{ insert } = require '../util'
+{ insert, autoResize } = require '../util'
 
 
 module.exports = design (view) ->
@@ -28,7 +28,8 @@ module.exports = design (view) ->
 
                 @$img class:'avatar', ->
                     @attr src:"#{app.users.current.avatar}"
-                # textarea
+                autoResize(@div class:'expanding area').textarea.ready ->
+                        @_jquery.textSaver()
                 # div.controls
                 #   div.button.small.checkbox
                 #   input#shouldShareLocation125

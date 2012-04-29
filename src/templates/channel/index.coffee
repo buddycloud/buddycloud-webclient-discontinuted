@@ -9,6 +9,7 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/index'
+{ autoResize } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, -> @$div class:'content', ->
@@ -80,14 +81,12 @@ module.exports = design (view) ->
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
-                    # textarea
                     # Following code will implement autoresize on the textarea which
                     # is used to post a new topic to a channel.
                     # Autoresize means the form is "growing" automatically bigger when
                     # more and more text is added.
-                    @$textarea ->
-                        @ready ->
-                            @_jquery.autoResize()
+                    autoResize(@div class:'expanding area').textarea.ready ->
+                        @_jquery.textSaver()
                     # @$div class:'controls', ->
                         # div button checkbox
                         #    checkbox shouldShareLocation
@@ -101,10 +100,8 @@ module.exports = design (view) ->
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
                     spinner.hide()
-                    view.model.bind 'loading:start', ->
-                        spinner.show()
-                    view.model.bind 'loading:stop', ->
-                        spinner.hide()
+                    view.model.bind('loading:start', spinner.show)
+                    view.model.bind('loading:stop',  spinner.hide)
 
         @$div class:'channelDetails', ->
             view.details.bind('template:create', @replace)

@@ -37,3 +37,17 @@ exports.removeClass = (tag, classes...) ->
         if new RegExp(cls).test tagclass
             tagclass = tagclass.replace(cls, "")
     tag.attr class:tagclass
+
+# thanks to http://www.alistapart.com/articles/expanding-text-areas-made-elegant/
+exports.autoResize = (container) ->
+    res = {container}
+    res.pre = container.$pre ->
+        res.span = @$span()
+        @$br()
+    res.textarea = container.$textarea().ready ->
+        @_jquery.input =>
+            res.span.text @_jquery.val()
+        exports.addClass(container, 'active')
+    container.end()
+    return res
+

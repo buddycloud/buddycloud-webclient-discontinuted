@@ -63,14 +63,7 @@ class exports.CommentsView extends PostsBaseView
             @model.forEach @add_post
             @model.bind 'add', @add_post
 
-            if @model
-                text = @$('.answer textarea')
-                text.textSaver()
-                text.autoResize
-                    extraSpace:0
-                    animate:off
-
-                @$('.answer').click() unless text.val() is ""
+            @$('.answer').click() unless @$('.answer textarea').val() is ""
 
             callback?.call(this)
 
