@@ -17,6 +17,8 @@ class exports.UserInfoView extends BaseView
         @once('template:create', (@_tpl) => )
         @parent.parent.parent.bind('update:affiliations', # ugly
                @trigger.bind(this, 'update:affiliations'))
+        @parent.parent.parent.bind('update:permissions',  # ugly
+               @trigger.bind(this, 'update:permissions'))
 
     render: =>
         @rendering = yes
@@ -62,8 +64,8 @@ class exports.UserInfoView extends BaseView
         return @trigger 'update:select:none'unless user?
         delete @changing_role
         delete @banning
-        @trigger 'update:select:user', user
-        @render() unless @rendering
         @currentjid = user.get 'id'
+        @trigger 'update:select:user', user
+        do @render unless @rendering
 
 

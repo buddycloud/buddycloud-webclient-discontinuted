@@ -53,14 +53,15 @@ module.exports = design (view) ->
                 lastclass = class_map[affiliation]
                 addClass(@,lastclass)
             view.bind('update:select:user', update_visibility)
-            view.parent.parent.parent.bind('update:permissions', update_visibility)
+            view.bind('update:permissions', update_visibility)
+            update_visibility()
 
             view.bind 'click:changeRole', =>
                 addClass(@,'choosen', 'role')
             view.bind 'click:banUser', =>
                 addClass(@,'choosen', 'ban')
             view.bind 'update:select:user', =>
-                removeClass(@,'choosen', 'role', 'ban', arrowpos...)
+                removeClass(@,'choosen', 'role', 'ban')
 
             removeClass(@,arrowpos...)
             addClass(@,arrowpos[view.arrow]) if view.arrow
@@ -74,10 +75,12 @@ module.exports = design (view) ->
                     @$section class:'channelInfo', ->
                         name = @$h4()
                         role = @$div class:'currentRole'
-                        view.bind 'update:select:user', (user) ->
+                        update_user = (user) ->
                             name.text "#{user.get 'id'}"
                             affiliation = user.getAffiliationFor channel.get 'id'
                             role?.text "#{userspeak[affiliation] or affiliation}"
+                        view.bind('update:select:user', update_user)
+                        update_user(app.users.get_or_create id:view.currentjid)
 
                     @$section class:'action changeRole', ->
                         infos = {}
@@ -86,11 +89,13 @@ module.exports = design (view) ->
                         @$select ->
                             for role, value of affiliations_map
                                 options[role] = @$option {value}
-                            view.bind 'update:select:affiliation', =>
+                            update_affiliation = =>
                                 role = reversed_affiliations_map[@attr 'value']
                                 infos[selected]?.hide()
                                 infos[role]?.show()
                                 selected = role
+                            view.bind('update:select:affiliation', update_affiliation)
+                            update_affiliation()
 
                         @$section class:'info', ->
                             for role, cls of affiliations_map
@@ -109,4 +114,5 @@ module.exports = design (view) ->
                             # FIXME set info
                         view.bind('update:affiliations', set_current_option)
                         view.bind('update:select:user',  set_current_option)
+                        set_current_option(app.users.get_or_create id:view.currentjid)
 

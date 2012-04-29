@@ -78,10 +78,9 @@ module.exports = design (view) ->
                         row = users.length
                     view.info.tpl (t) =>
                         view.info.arrow = idx.i%4
-                        view.info.trigger 'update:select:arrow'
                         users.insert(row, t)
                         @add(t)
-
+                        view.info.trigger 'update:select:arrow'
                         view.info.idx = users.keys[row]
 
 
