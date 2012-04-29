@@ -89,13 +89,14 @@ module.exports = design (view) ->
                         @$select ->
                             for role, value of affiliations_map
                                 options[role] = @$option {value}
-                            update_affiliation = =>
-                                role = reversed_affiliations_map[@attr 'value']
+                            update_affiliation = (val) =>
+                                role = reversed_affiliations_map[val]
+                                return if role is selected
                                 infos[selected]?.hide()
                                 infos[role]?.show()
                                 selected = role
                             view.bind('update:select:affiliation', update_affiliation)
-                            update_affiliation()
+                            update_affiliation(selected)
 
                         @$section class:'info', ->
                             for role, cls of affiliations_map

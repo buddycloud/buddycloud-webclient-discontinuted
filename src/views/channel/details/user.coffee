@@ -57,8 +57,8 @@ class exports.UserInfoView extends BaseView
                 # Remove:
                 @on_click_cancel()
 
-    on_change_select: ->
-        @trigger 'update:select:affiliation'
+    on_change_select: (ev) ->
+        @trigger 'update:select:affiliation', $(ev.target).attr('value')
 
     set_user: (user) ->
         return @trigger 'update:select:none'unless user?
