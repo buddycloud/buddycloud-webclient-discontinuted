@@ -15,6 +15,7 @@ class exports.Posts extends Collection
         # Hook 'change' as Backbone Collections only sort on 'add'
         post.bind 'change', =>
             @sort(silent: true)
+            post.trigger 'update', this
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()

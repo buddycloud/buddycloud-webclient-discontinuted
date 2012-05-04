@@ -13,5 +13,8 @@ design = require '../../_design/channel/posts'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$section class:'topics', ->
-            view.bind('view:topic', insert.bind(this, new List))
+            list = new List
+            view.bind('view:topic', insert.bind(this, list))
+            view.bind 'view:topic:remove', (i) ->
+                list.remove(i).remove(soft:true)
 
