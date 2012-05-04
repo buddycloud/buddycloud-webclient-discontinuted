@@ -18,8 +18,10 @@ class exports.PostsBaseView extends BaseView
         view.bind 'template:create', (tpl) =>
             @trigger "view:#{@ns}", i, tpl
             view.model.bind 'update', =>
+                j = @indexOf(view.model)
+                return if j is i
                 @trigger "view:#{@ns}:remove", i
-                i = @indexOf(view.model)
-                @trigger "view:#{@ns}", i, tpl
+                @trigger "view:#{@ns}", j, tpl
+                i = j
         view.render()
 
