@@ -19,8 +19,6 @@ class exports.Sidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-#         @search.bind 'filter', @render
-
         @channelsel = null
         @hidden = yes
 

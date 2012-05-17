@@ -7,22 +7,19 @@ class exports.Searchbar extends BaseView
     events:
         'search input[type="search"]': 'on_search'
 
-    render: (callback) ->
-        super ->
-            @$('input[type="search"]').input @on_input
+    constructor: ->
+        unless Modernizr.hasEvent 'search' # firefox
+            # let delegateEvents handle the rest
+            @events['keydown input[type="search"]'] = 'on_keydown'
+        super
 
-            unless Modernizr.hasEvent 'search' # firefox
-                setTimeout => # wtf
-                    @$('input').keydown (ev) =>
-                        code = ev.keyCode or ev.which
-                        return unless code is 13
-                        @on_search(ev)
-                , 66
+    on_keydown: (ev) =>
+        code = ev.keyCode or ev.which
+        return unless code is 13
+        @on_search(ev)
 
-            callback?.call(this)
-
-    on_input: (ev) =>
-        search = @$('input[type="search"]').val()?.toLowerCase() or ""
+    on_input: (tag, ev) => # used in the template, since we use an input event shim
+        search = tag._jquery?.val()?.toLowerCase() or ""
         @filter = search
         @trigger 'filter', search
 
