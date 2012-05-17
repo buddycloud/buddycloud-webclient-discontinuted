@@ -29,20 +29,10 @@ class exports.ChannelEntry extends BaseView
     events:
         "click": "click_entry"
 
-    render: (callback) =>
-        i = @parent.model.indexOf(@model)
-        @bind 'template:create', (tpl) =>
-            if @isPersonal()
-                @parent.trigger('subview:personalchannel', tpl)
-                @parent.personal = this
-            else
-                if @parent.personal?
-                    # fill the index gap
-                    i -= 1 if i > @parent.model.indexOf(@parent.personal.model)
-                @parent.trigger('subview:entry', i, tpl)
+    render: (callback) ->
         super ->
             @trigger 'update:highlight'
-            callback()
+            callback?()
 
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model

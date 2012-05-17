@@ -41,6 +41,21 @@ module.exports = design (view) ->
                             scrollarea._jquery?.antiscroll()
                         , 500
 
+                    view.search.bind 'filter', (search) ->
+                        return if search is last_search
+                        last_search = search
+                        if search is ""
+                            for el in entries
+                                el._jquery?.css(opacity:1.00)
+                            return
+                        channels = view.model.filter(search)
+                        for el in entries
+                            if (entry = view.views[el.builder.template.cid])? # HACK
+                                if entry.model in channels
+                                    el._jquery?.css(opacity:1.00)
+                                else
+                                    el._jquery?.css(opacity:0.42)
+
                 setTimeout => # damn sync jquery plugins
                     @_jquery.antiscroll()
                     $(window).resize =>

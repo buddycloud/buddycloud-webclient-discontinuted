@@ -52,8 +52,7 @@ class exports.Sidebar extends BaseView
                 parent:this
             @views[channel.cid] = entry
             @current ?= entry
-            entry?.render =>
-                @$('.tutorial').remove()
+            @insert_entry(entry)
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 
@@ -69,6 +68,25 @@ class exports.Sidebar extends BaseView
             delete @timeouts[channel.cid]
             delete @views[channel.cid]
         ), time
+
+    indexOf: (blob) ->
+        i = @model.indexOf(blob)
+        if @personal?
+            # fill the index gap
+            i -= 1 if i > @model.indexOf(@personal.model)
+        return i
+
+    insert_entry: (entry) ->
+        entry.bind 'template:create', (tpl) =>
+            tpl.cid = entry.model.cid # important for the template HACK
+            i = @indexOf(entry.model)
+            if entry.isPersonal()
+                @trigger('subview:personalchannel', tpl)
+                @personal = entry
+            else
+                @trigger('subview:entry', i, tpl)
+        entry.render =>
+            @$('.tutorial').remove()
 
     setCurrentEntry: (channel) =>
         old = @current
