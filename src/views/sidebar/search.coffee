@@ -21,7 +21,8 @@ class exports.Searchbar extends BaseView
     on_input: (tag, ev) => # used in the template, since we use an input event shim
         search = tag._jquery?.val()?.toLowerCase() or ""
         @filter = search
-        @trigger 'filter', search
+        process.nextTick =>
+            @trigger 'filter', search
 
     on_search: EventHandler ->
         input = @$('input[type="search"]')
@@ -37,7 +38,8 @@ class exports.Searchbar extends BaseView
 
         input.val ""
         @filter = ""
-        @trigger 'filter', ""
+        process.nextTick =>
+            @trigger 'filter', ""
 
 
 
