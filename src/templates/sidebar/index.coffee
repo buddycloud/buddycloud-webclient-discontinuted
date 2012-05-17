@@ -22,10 +22,31 @@ module.exports = design (view) ->
             @$div class:'search', ->
                 @once('replace', load_indicate(this).clear)
                 view.search.bind('template:create', @replace)
-            @$div id:'channels', ->
-                @$div -># antiscroll
+            scrollarea = @$div id:'channels', ->
+                @$div -> # antiscroll
                     # channel ...
-                    view.bind('subview:entry', insert.bind(this, new List))
+                    last_search = ""
+                    entries = new List
+
+                    view.bind 'subview:entry', (i, el) =>
+                        entries.insert(i, el)
+                        idx = entries.keys[i]
+                        el.once 'remove', ->
+                            entries.remove(idx.i)
+                            setTimeout -> # damn sync jquery plugins
+                                scrollarea._jquery?.antiscroll()
+                            , 500
+                        @add(el)
+                        setTimeout -> # damn sync jquery plugins
+                            scrollarea._jquery?.antiscroll()
+                        , 500
+
+                setTimeout => # damn sync jquery plugins
+                    @_jquery.antiscroll()
+                    $(window).resize =>
+                        @_jquery.antiscroll()
+                , 500
+
             @$button id: 'create_topic_channel', ->
                 if app.users.isAnonymous(app.users.current) or
                   not config.topic_domain?

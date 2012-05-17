@@ -22,9 +22,6 @@ class exports.Sidebar extends BaseView
         @channelsel = null
         @hidden = yes
 
-        $(window).resize =>
-            @channelsel?.parent().antiscroll()
-
         # sidebar entries
         @current = undefined
         @views = {} # this contains the channel entry views
@@ -41,7 +38,6 @@ class exports.Sidebar extends BaseView
 
     render: (callback) ->
         super ->
-            @channelsel = @$('#channels > .scrollHolder')
             @search.render(callback)
 #         @$('.tutorial').remove()
 #         if channels.length < 2
@@ -57,7 +53,6 @@ class exports.Sidebar extends BaseView
             @views[channel.cid] = entry
             @current ?= entry
             entry?.render =>
-                @channelsel?.parent().antiscroll()
                 @$('.tutorial').remove()
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
@@ -70,7 +65,7 @@ class exports.Sidebar extends BaseView
         if @timeouts[channel.cid]?
             clearTimeout @timeouts[channel.cid]
         @timeouts[channel.cid] = setTimeout ( =>
-            @views[channel.cid].el?.remove?()
+            @views[channel.cid].trigger 'remove'
             delete @timeouts[channel.cid]
             delete @views[channel.cid]
         ), time
