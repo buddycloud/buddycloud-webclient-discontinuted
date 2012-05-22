@@ -1,12 +1,18 @@
 { Template } = require 'dynamictemplate'
-{ Adapter:JQueryAdapter } = require 'dt-jquery'
-addListSupport = require 'dt-list/adapter/jquery'
 
 adapters =
-    jquery: (opts, tpl) ->
-        [tpl, opts] = [opts, null] unless tpl?
-        addListSupport new JQueryAdapter(tpl, opts)
-        return tpl
+    jquery: require('dt-jquery').bind(this,
+        # options
+        use:[
+            require('dt-list/adapter/jquery')
+        ]
+    )
+#     dom: require('dt-dom').bind(this,
+#         # options
+#         use:[
+#             require('dt-list/adapter/dom')
+#         ]
+#     )
 
 
 class exports.BaseView extends Backbone.View
