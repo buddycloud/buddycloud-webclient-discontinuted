@@ -45,6 +45,17 @@ module.exports = design (view) ->
                 view.model.bind('change:updated',   update_time)
                 view.model.bind('change:published', update_time)
                 update_time()
+                
+                clientTag = @span class:'client-used'
+                update_client_meta = ->
+                  if view.model.has('clientinterface')
+                    client = view.model.get('clientinterface')
+                    clientTag.text('Sent from ' + client)
+                  clientTag.end()
+                view.model.bind('change:updated',   update_client_meta)
+                view.model.bind('change:published', update_client_meta)
+                update_client_meta()
+                   
             name = @span class:'name'
 
             update_author = ->
