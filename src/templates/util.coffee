@@ -51,7 +51,7 @@ exports.removeClass = (tag, classes...) ->
     tag.attr class:tagclass
 
 # sync backbone collection with dt-list on reset event
-exports.sync = (items, collection, options) ->
+exports.sync = (items, collection, options, models = null) ->
     # now its gonna get dirty!
     bycid = {}
     removed = []
@@ -61,11 +61,10 @@ exports.sync = (items, collection, options) ->
         bycid[item.cid] = item
         old_models.push collection.getByCid(item.cid)
     # apply diff patches on items list
-    for patch in adiff.diff(old_models, collection.models)
+    for patch in adiff.diff(old_models, models ? collection.models)
         # remove all items from dom before splicing them in
         for i in [(patch[0]) ... (patch[0]+patch[1])]
-            items[i].remove(soft:yes)
-            removed.push items[i]
+            removed.push items[i].remove(soft:yes)
         # replace models with items
         for i in [2 ... patch.length]
             patch[i] = bycid[patch[i].cid]
@@ -75,6 +74,7 @@ exports.sync = (items, collection, options) ->
     #   that the collection doesn't change its size
     for item in removed
         @add(item)
+    undefined
 
 # thanks to http://www.alistapart.com/articles/expanding-text-areas-made-elegant/
 exports.autoResize = (container) ->

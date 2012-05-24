@@ -44,9 +44,9 @@ module.exports = design (view) ->
 
                     # after sort
                     view.model.bind 'reset', (collection, options) =>
-                        col = collection.filter (m) ->
+                        models = collection.filter (m) ->
                             not view.views[m.cid].isPersonal()
-                        sync.call(this, entries, col, options)
+                        sync.call(this, entries, collection, options, models)
 
                     view.search.bind 'filter', (search) ->
                         return if search is last_search
