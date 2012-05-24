@@ -227,7 +227,7 @@ Strophe.addConnectionPlugin('buddycloud', {
 	     */
 
             // Takes an <item /> element and returns a hash of it's attributes
-            post = this._parsetag(entry, "id", "published", "updated");
+            post = this._parsetag(entry, "id", "published", "updated", "clientinterface");
 
             // content
             attr = entry.getElementsByTagName("content");

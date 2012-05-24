@@ -31,6 +31,7 @@ class exports.CommentsView extends PostsBaseView
                 author:
                     name: app.users.current.get 'jid'
                 in_reply_to: @model.parent.get 'id'
+                clientinterface: @$('.client-interface').val()
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, (error) =>
                 # Re-enable form
