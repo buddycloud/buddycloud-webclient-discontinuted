@@ -1,6 +1,7 @@
 { EventEmitter } = require 'events'
 
 window.app = new EventEmitter
+app.setMaxListeners(0) # unlimited
 app[k] = v for k,v of {
     version: '0.0.0-60'
     localStorageVersion:'9e5dcf0'
