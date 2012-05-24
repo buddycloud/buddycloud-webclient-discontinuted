@@ -9,7 +9,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../_design/sidebar/index'
-{ load_indicate, insert } = require '../util'
+{ load_indicate, insert, sync } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
@@ -28,6 +28,7 @@ module.exports = design (view) ->
                     last_search = ""
                     entries = new List
 
+                    # instead of view.model.on 'add' …
                     view.bind 'subview:entry', (i, el) =>
                         entries.insert(i, el)
                         idx = entries.keys[i]
@@ -40,6 +41,12 @@ module.exports = design (view) ->
                         setTimeout -> # damn sync jquery plugins
                             scrollarea._jquery?.antiscroll()
                         , 500
+
+                    # after sort
+                    view.model.bind 'reset', (collection, options) =>
+                        col = collection.filter (m) ->
+                            not view.views[m.cid].isPersonal()
+                        sync.call(this, entries, col, options)
 
                     view.search.bind 'filter', (search) ->
                         return if search is last_search
