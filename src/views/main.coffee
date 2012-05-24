@@ -49,8 +49,8 @@ class exports.MainView extends BaseView
     render: (callback) ->
         super ->
             body = $('body').removeClass('start')
-            body.append(@el)
-            @el.show()
+            body.append(@$el)
+            @$el.show()
             @sidebar.render(callback)
 
     show: =>

@@ -186,7 +186,7 @@ class exports.ChannelView extends BaseView
                 @isPosting = false
                 unless error
                     # Reset form
-                    @el.find('.newTopic').removeClass 'write'
+                    @$('.newTopic').removeClass 'write'
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'
@@ -239,8 +239,8 @@ class exports.ChannelView extends BaseView
     on_scroll: throttle_callback(100, ->
         return unless @rendered
         if this is @parent.current
-            peepholeTop = @el.scrollTop()
-            peepholeBottom = peepholeTop + @el.outerHeight()
+            peepholeTop = @$el.scrollTop()
+            peepholeBottom = peepholeTop + @$el.outerHeight()
             @postsview?.on_scroll(peepholeTop, peepholeBottom)
     )
 

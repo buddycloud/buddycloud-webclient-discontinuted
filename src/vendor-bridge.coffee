@@ -31,6 +31,7 @@ require './vendor/transform.js'
 ## Backbone.js
 window._ = require 'underscore'
 window.Backbone = require 'backbone'
+Backbone.setDomLibrary(require 'jquery')
 # plugins
 require "./vendor/backbone-localstorage.js"
 require "./vendor/backbone-extensions.js"

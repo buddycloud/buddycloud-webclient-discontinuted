@@ -7,7 +7,7 @@ class exports.OverlayLogin extends BaseView
 
     initialize: ->
         @render ->
-            $('body').prepend @el
+            $('body').prepend(@$el)
 
     events:
         'click .close': 'hide'
@@ -16,18 +16,18 @@ class exports.OverlayLogin extends BaseView
 
     show: ->
         @ready =>
-            @el.fadeIn(300)
+            @$el.fadeIn(300)
             $(document).keydown @onKeydown
 
     hide: ->
         @ready =>
-            @el.fadeOut(100)
+            @$el.fadeOut(100)
             $(document).unbind 'keydown', @onKeydown
 
     onClick: (ev) ->
         # Hide when clicking overlay around dialog
         el = ev.target or ev.srcElement
-        if el is @el[0]
+        if el is @$el[0]
             @hide()
 
     onKeydown: (ev) =>

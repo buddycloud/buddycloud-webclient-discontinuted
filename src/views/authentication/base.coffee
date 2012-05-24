@@ -7,7 +7,6 @@ class exports.AuthenticationView extends Backbone.View
         @bind 'show', @show
         @bind 'hide', @hide
         @box = $('.centerBox')
-        @delegateEvents()
         for type in ['nobosh', 'nochannelserver']
             app.handler.connection.bind(type, @error.bind(this, type))
 
@@ -23,7 +22,7 @@ class exports.AuthenticationView extends Backbone.View
         # bug on ipad: the focus has to be delayed to happen after the
         # transition (on 3d animation enabled devices the slides flip
         # in 3d)
-        @el.find('input').first().focus()
+        @$('input').first().focus()
 
     hide: =>
         @box.removeClass @cssclass
@@ -53,12 +52,12 @@ class exports.AuthenticationView extends Backbone.View
          .animate({left:"#{curr_pos.left - 10}"},50)
          .animate({left:"#{curr_pos.left + 10}"},50)
          .animate({left:"#{curr_pos.left - 10}"},50)
-        @el.find("form").addClass('hasError')
-        par = @el.find("##{type}").show().parent()
+        @$("form").addClass('hasError')
+        par = @$("##{type}").show().parent()
         do par.show if par.hasClass('error')
 
     reset: () =>
         @unbind 'hide', @go_away
         @bind 'hide', @hide
         app.handler.connection.unbind "connected", @reset
-        @el.find('.leftBox').removeClass "working"
+        @$('.leftBox').removeClass "working"

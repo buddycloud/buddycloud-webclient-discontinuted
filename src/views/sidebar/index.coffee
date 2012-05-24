@@ -94,8 +94,8 @@ class exports.Sidebar extends BaseView
             @current = @new_channel_entry channel
         if @timeouts[@current.model.cid]?
             clearTimeout @timeouts[@current.model.cid]
-            @current.el.clearQueue()
-            @current.el.css opacity:1
+            @current.$el.clearQueue()
+            @current.$el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
@@ -120,12 +120,12 @@ class exports.Sidebar extends BaseView
 
     # sliding in animation
     moveIn: (t = 200) ->
-        @el.animate(left:"0", t)
+        @$el?.animate(left:"0", t)
 #         @overview.show(t)
         @hidden = no
 
     # sliding out animation
     moveOut: (t = 200) ->
-        @el.animate(left:"-#{@el.width?()}px", t)
+        @$el?.animate(left:"-#{@$el?.width?() ? 0}px", t)
 #         @overview.hide(t)
         @hidden = yes

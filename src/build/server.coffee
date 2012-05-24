@@ -84,7 +84,6 @@ start_server = (args, opts) ->
                 debug  : config.dev
                 require: [
                     jquery  :'br-jquery'
-                    backbone:'backbone-browserify'
                     path.join(cwd, "src", "init")
                 ]
                 extensions:

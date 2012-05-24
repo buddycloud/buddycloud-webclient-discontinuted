@@ -38,7 +38,7 @@ class exports.CommentsView extends PostsBaseView
                 text.removeAttr "disabled"
                 unless error
                     # Reset form
-                    @el.find('.answer').removeClass 'write'
+                    @$('.answer').removeClass 'write'
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'

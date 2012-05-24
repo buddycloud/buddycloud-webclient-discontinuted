@@ -1,3 +1,4 @@
+{ View } = require 'backbone'
 { Template } = require 'dynamictemplate'
 
 adapters =
@@ -14,42 +15,45 @@ adapters =
 #         ]
 #     )
 
-
-class exports.BaseView extends Backbone.View
+class exports.BaseView extends View
     template: -> new Template # empty.
-    el: $('<div empty>') # so @el is always a jquery object
 
     initialize: ({@parent} = {}) ->
         @rendered = no
-        @domisready = no
-        @bind 'dom:ready', (tag) =>
-            @_tag = tag
-            @domisready = yes
-            if @_waitingfordom?
-                cb(tag) for cb in @_waitingfordom
-                delete @_waitingfordom
 
-    render: (callback) ->
-        @render = -> throw new Error "ffffffffffffuuuuuuuuuuuuuu"
+    # patch some backbone internals
+
+    make: -> # do nothing
+    delegateEvents:   -> super if @$el?
+    undelegateEvents: -> super if @$el?
+    $:                -> super if @$el?
+
+    setElement: (element, delegate, callback) ->
+        return unless element?
+        @el = element # it's actually a template instance
+        @el = adapters[@adapter](@el) if @adapter
+        @trigger('template:create', @el)
+        @el.once 'end', =>
+            @trigger('template:end', @el)
         fail = =>
             console.error @cid + " is breaking shit!"
         timeout = setTimeout(fail, 5000)
-        tpl = @template(this)
-        tpl = adapters[@adapter](tpl) if @adapter
-        @trigger('template:create', tpl)
-        tpl.once 'end', =>
-            @trigger('template:end', tpl)
-        tpl.ready =>
+        @el.ready =>
             clearTimeout(timeout)
             @rendered = yes
-            @el = tpl.jquery
-            @delegateEvents()
-            @trigger('template:ready', tpl)
-            callback?.call?(this)
+            do @undelegateEvents if @$el
+            @$el = @el.jquery
+            do @delegateEvents if delegate isnt off
+            @trigger('template:ready', @el)
+            callback?.call?(this, @$el)
             # invoke delayed callbackes from ready
             if @_waiting?
                 cb?() for cb in @_waiting
-                delete @_waiting
+                @_waiting = null
+        this
+
+    render: (callback) ->
+        @setElement(@template(this), null, callback)
 
     ready: (callback) ->
         return unless callback?

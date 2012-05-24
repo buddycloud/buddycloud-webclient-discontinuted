@@ -7,8 +7,8 @@ class exports.GeoDetail extends BaseView
 
     initialize: ->
         super
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
+#         @model.bind 'change', @render
+#         @model.bind 'change:node:metadata', @render
 
     render: =>
         @update_attributes()

@@ -58,18 +58,18 @@ class exports.ChannelEntry extends BaseView
         channelsel = @parent.$('#channels > .scrollHolder') # FIXME y ?
 
         # relative offset + absolute offset
-        offset = @el.position().top + channelsel.scrollTop()
+        offset = @$el.position().top + channelsel.scrollTop()
 
         # don't bubble if the channel is..
         #  - on top
         #  - bubbling
-        return off if offset is 0 or @el.hasClass('bubbleUp')
+        return off if offset is 0 or @$el.hasClass('bubbleUp')
 
         # sets z-index so that the element moves on top of all the others
-        @el.addClass('bubbleUp')
+        @$el.addClass('bubbleUp')
         # create a gap where the channel starts off
-        @el.before $('<div>')
-            .height(@el.height())
+        @$el.before $('<div>')
+            .height(@$el.height())
             .animate {height:0},
                 duration: duration
                 complete: ->
@@ -77,8 +77,8 @@ class exports.ChannelEntry extends BaseView
 
         # detach the bubbling channel from the DOM
         # and insert it at the top
-        @el.detach().css(top:offset)
-        channelsel.prepend @el
+        @$el.detach().css(top:offset)
+        channelsel.prepend @$el
 
         # wrap a growing holder around it
         @el.wrap $('<div>')
@@ -87,7 +87,7 @@ class exports.ChannelEntry extends BaseView
         # bubble the channel
         increase = => @parent._movingChannels += 1
         decrease = => @parent._movingChannels -= 1
-        @el.animate({top:0},
+        @$el.animate({top:0},
             duration: duration
             complete: ->
                 decrease()
@@ -99,7 +99,7 @@ class exports.ChannelEntry extends BaseView
         ).css('z-index', increase() + 1)
 
         # let the holder grow
-        @el.parent()
-            .animate({height:@el.height()}, duration)
+        @$el.parent()
+            .animate({height:@$el.height()}, duration)
             .css(overflow:'visible')
 

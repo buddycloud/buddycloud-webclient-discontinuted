@@ -1,13 +1,17 @@
+{ View } = require 'backbone'
 { EventHandler } = require '../../util'
 
 
-class exports.WelcomeView extends Backbone.View
+class exports.WelcomeView extends View
     template: require '../../templates/welcome/show.html'
 
     initialize: ->
-        @el = $('.centerBox')
+        @setElement $('.centerBox')
+
+        @on 'show', -> @$el.show()
+        @on 'hide', -> @$el.hide()
+
         do @render
-        super
 
     events:
         "click #goLogin"   : 'click_login'

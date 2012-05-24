@@ -99,7 +99,7 @@ class exports.ChannelDetailsView extends BaseView
         "click .infoToggle": "click_toggle"
 
     click_toggle: EventHandler ->
-        @el.toggleClass 'hidden'
+        @$el.toggleClass 'hidden'
 
     render: (callback) ->
         super =>

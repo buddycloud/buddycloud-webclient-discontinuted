@@ -54,20 +54,20 @@ class exports.ChannelEditView extends BaseView
     render: (callback) ->
 #         @bind('template:create', (@tpl) => )
         super ->
-            @el.css left:"234px"
+            @$el.css left:"234px"
             @trigger 'loading:stop'
             callback?.call(this)
 
     begin: =>
         @show =>
-            @el.css left:"0px"
+            @$el.css left:"0px"
             $('html').addClass('editmode')
             @parent.$('*').each @makeEditable
 
     end: =>
         $('html').removeClass('editmode')
         @parent.$('*').each @undoEditable
-        @el.css left:"234px"
+        @$el.css left:"234px"
         @setTimeout(410, @hide)
 
         @trigger 'end'

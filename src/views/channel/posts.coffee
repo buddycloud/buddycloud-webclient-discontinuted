@@ -8,7 +8,6 @@ class exports.PostsView extends PostsBaseView
 #     empty:    require '../../templates/channel/empty.eco'
 
     # @parent is ChannelView
-    # @el will be passed by @parent
     # @model is a PostsNode
     initialize: ->
         super
@@ -36,8 +35,8 @@ class exports.PostsView extends PostsBaseView
         for own cid, view of @views
             content = view.model.get('content')?.value
             unless content?
-                { top: viewTop } = view.el.position()
-                viewBottom = viewTop + view.el.outerHeight()
+                { top: viewTop } = view.$el?.position() ? {top:0}
+                viewBottom = viewTop + (view.$el?.outerHeight() ? 0)
                 if peepholeBottom >= viewTop
                     return @load_more()
 
