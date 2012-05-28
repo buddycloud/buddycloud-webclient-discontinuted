@@ -26,14 +26,11 @@ class exports.CommentsView extends PostsBaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post =
-                content: text.val()
-                author:
-                    name: app.users.current.get 'jid'
-                in_reply_to: @model.parent.get 'id'
-                clientinterface: @$('.client-interface').val()
+            @define_post_data()
+            console.log "^^^^^^^ post"
+            console.log @post
             node = @model.parent.collection.parent
-            app.handler.data.publish node, post, (error) =>
+            app.handler.data.publish node, @post, (error) =>
                 # Re-enable form
                 @isPosting = false
                 text.removeAttr "disabled"
@@ -68,6 +65,12 @@ class exports.CommentsView extends PostsBaseView
 
             callback?.call(this)
 
+    define_post_data: ->
+        @post =
+            content: @$('textarea').val()
+            author:
+              name: app.users.current.get 'jid'
+            in_reply_to: @model.parent.get 'id'        
+      
 #     update_attributes: ->
 #         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
-
