@@ -80,7 +80,7 @@ class exports.Sidebar extends BaseView
         entry.bind 'template:create', (tpl) =>
             tpl.cid = tpl.xml.cid = entry.model.cid # important for the template HACK
             i = @indexOf(entry.model)
-            if entry.isPersonal()
+            if app.users.isPersonal(entry.model)
                 @trigger('subview:personalchannel', tpl)
                 @personal = entry
             else

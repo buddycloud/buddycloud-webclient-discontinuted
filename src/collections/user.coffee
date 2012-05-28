@@ -8,6 +8,8 @@ class UsersBaseCollection extends Collection
     isAnonymous: (user) ->
         user.get('id') is 'anony@mous'
 
+    isPersonal: (user) ->
+        user.get('id') is app.users.current.get('id')
 
 
 class exports.Users extends UsersBaseCollection

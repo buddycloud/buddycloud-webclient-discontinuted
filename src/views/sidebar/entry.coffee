@@ -41,19 +41,12 @@ class exports.ChannelEntry extends BaseView
             # setCurrentChannel() invoked mark_read(), update counter:
             @trigger 'update:unread_counter'
 
-    isPersonal : (a, b) =>
-        (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
-
-    isSelected : (a, b) =>
-        (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
-
-
-    isFollowed : (a, b) =>
-        app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
+    isSelected: =>
+        @model.get('id') is @parent.current?.model.get('id')
 
     bubble: (duration = 500) =>
         return # FIXME
-        return if @isPersonal() # dont eva eva bubble the personal channel!1!elf
+        return if app.users.isPersonal(@model) # dont eva eva bubble the personal channel!1!elf
         @parent._movingChannels ?= 0
         channelsel = @parent.$('#channels > .scrollHolder') # FIXME y ?
 
