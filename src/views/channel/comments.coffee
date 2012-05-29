@@ -46,8 +46,8 @@ class exports.CommentsView extends PostsBaseView
         return _.extend({
             content: ""
             author:
-                name: app.users.current.get 'jid'
-            in_reply_to:  @model.parent.get 'jid'
+                name: app.users.current.get 'id'
+            in_reply_to:  @model.parent.get 'id'
         }, value)
 
     createView: (opts = {}) ->
