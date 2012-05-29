@@ -27,8 +27,6 @@ class exports.CommentsView extends PostsBaseView
             text.attr "disabled", "disabled"
             @isPosting = true
             @define_post_data()
-            console.log "^^^^^^^ post"
-            console.log @post
             node = @model.parent.collection.parent
             app.handler.data.publish node, @post, (error) =>
                 # Re-enable form
