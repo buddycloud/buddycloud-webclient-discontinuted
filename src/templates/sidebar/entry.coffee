@@ -5,6 +5,7 @@ unless process.title is 'browser'
             el = @select '.channel:not(.personal):first'
             el.find('.avatar').removeAttr('style')
             el.find('span').text("")
+            el.removeClass 'selected'
             return el
 
 
