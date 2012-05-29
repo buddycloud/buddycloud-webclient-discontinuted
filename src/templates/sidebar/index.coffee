@@ -14,10 +14,14 @@ design = require '../../_design/sidebar/index'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'sidebar', ->
-            @$div class:'personal channel', ->
-                @remove() if app.users.isAnonymous(app.users.current)
-                #@text "loading personal channel …"
-                view.bind('subview:personalchannel', @replace)
+            if view.personal?
+                # FIXME dt-linker listens only for new tags, not for added ones.
+                @$div class:'personal channel', ->
+                    @replace(view.personal.el)
+            else
+                @$div class:'personal channel', ->
+                    return @remove() if app.users.isAnonymous(app.users.current)
+                    view.bind('subview:personalchannel', @replace)
             # nav.actionBar
             @$div class:'search', ->
                 @once('replace', load_indicate(this).clear)

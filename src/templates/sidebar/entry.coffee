@@ -19,7 +19,7 @@ module.exports = design (view) ->
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>
-                if app.users.isPersonal(view.model)
+                if app.users.isPersonal(channel)
                     addClass(@,"personal")
                 else
                     removeClass(@,"personal")
