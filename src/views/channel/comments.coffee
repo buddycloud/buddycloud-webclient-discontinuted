@@ -26,11 +26,7 @@ class exports.CommentsView extends PostsBaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post =
-                content: text.val()
-                author:
-                    name: app.users.current.get 'jid'
-                in_reply_to: @model.parent.get 'id'
+            post = @createPost(content:text.val())
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, (error) =>
                 # Re-enable form
@@ -45,6 +41,14 @@ class exports.CommentsView extends PostsBaseView
                 else
                     console.error "postError", error
                     @show_comment_error error
+
+    createPost: (value = {}) ->
+        return _.extend({
+            content: ""
+            author:
+                name: app.users.current.get 'jid'
+            in_reply_to:  @model.parent.get 'jid'
+        }, value)
 
     createView: (opts = {}) ->
         opts.type ?= 'comment'
