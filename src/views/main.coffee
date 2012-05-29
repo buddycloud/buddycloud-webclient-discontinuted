@@ -51,7 +51,8 @@ class exports.MainView extends BaseView
             body = $('body').removeClass('start')
             body.append(@$el)
             @$el.show()
-            @sidebar.render(callback)
+            @sidebar.render()
+            callback?()
 
     show: =>
         @sidebar.moveIn()
