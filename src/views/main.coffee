@@ -21,10 +21,12 @@ class exports.MainView extends BaseView
         @views = {} # this contains the channelnode views
         @timeouts = {} # this contains the channelview remove timeouts
         @channels = new Channels
-        @channels.comparator = (channel) ->
-            a = new Date(channel.last_touched)
-            b = new Date(channel.nodes.get('posts')?.posts.first()?.get_last_update() or 0)
-            a.getTime() - b.getTime()
+        @channels.comparator = (a, b) ->
+            a = new Date(a.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            b = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            return 0 if a is b
+            return 1 if a < b
+            return -1
 
         @sidebar = new Sidebar
             parent:this
