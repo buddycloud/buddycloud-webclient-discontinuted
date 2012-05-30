@@ -25,6 +25,5 @@ class exports.PostsBaseView extends BaseView
         view.on 'template:create', (tpl) =>
             tpl.cid = tpl.xml.cid = view.model.cid # important for the template HACK
             @trigger "view:#{@ns}", i, tpl
-        view.model.on('update', @sort)
         view.render()
 

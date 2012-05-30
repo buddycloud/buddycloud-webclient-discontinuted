@@ -9,13 +9,8 @@ class exports.Posts extends Collection
 
     initialize: ->
         @parent.bind('post', @get_or_create.bind(this))
-        @bind('add', @onadd.bind(this))
-
-    onadd: (post) ->
-        # Hook 'change' as Backbone Collections only sort on 'add'
-        post.bind 'change', =>
-            @sort(silent: true)
-            post.trigger 'update', this
+        @on 'change:updated', =>
+            @sort()
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()

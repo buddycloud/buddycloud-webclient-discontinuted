@@ -7,10 +7,6 @@ class exports.TopicPost extends Post
 
     initialize: ->
         @comments = new Comments parent:this
-
-        # Bubble changes up:
-        @comments.bind 'all', =>
-            @trigger 'change'
         super
 
     # Also dives into comments
