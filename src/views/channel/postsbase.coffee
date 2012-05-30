@@ -6,6 +6,13 @@ class exports.PostsBaseView extends BaseView
         @views = {}
         super
 
+    createPost: (value = {}) ->
+        _.extend({
+            content: ""
+            author:
+                name: app.users.current.get 'id'
+        }, value)
+
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported

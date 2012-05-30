@@ -42,13 +42,8 @@ class exports.CommentsView extends PostsBaseView
                     console.error "postError", error
                     @show_comment_error error
 
-    createPost: (value = {}) ->
-        return _.extend({
-            content: ""
-            author:
-                name: app.users.current.get 'id'
-            in_reply_to:  @model.parent.get 'id'
-        }, value)
+    createPost: ->
+        _.extend(super, in_reply_to:@model.parent.get 'id')
 
     createView: (opts = {}) ->
         opts.type ?= 'comment'
