@@ -34,7 +34,26 @@ Strophe.StanzaError.prototype.constructor = Strophe.StanzaError;
 
 Strophe.addConnectionPlugin('buddycloud', {
     _connection: null,
+    _tags: {
+    	'standard' : ["id", "published", "updated"],
+    	'author'   : ["name", "uri"],
+    	'geo'      : ["country", "locality", "text"],
+    },
 
+    addTag: function(namespace, tag) {
+        if (this._tags.hasOwnProperty(namespace) == false) {
+        	this._tags[namespace] = new Array();
+        }
+        this._tags[namespace].push(tag)
+        return this
+    },
+    
+    removeTag: function(namespace, tag) {
+    	var index = this._tags[namespace].indexOf(tag)
+    	if (index != -1) this._tags[namespace].splice(index, 1)
+    	return this
+    },
+    
     //The plugin must have the init function.
     init: function(conn) {
         this._connection = conn;
@@ -227,8 +246,8 @@ Strophe.addConnectionPlugin('buddycloud', {
 	     */
 
             // Takes an <item /> element and returns a hash of it's attributes
-            post = this._parsetag(entry, "id", "published", "updated");
-
+            post = this._parsetag(entry, this._tags['standard']);
+            
             // content
             attr = entry.getElementsByTagName("content");
             if (attr.length > 0) {
@@ -239,20 +258,14 @@ Strophe.addConnectionPlugin('buddycloud', {
                 };
             }
 
-            // author
-            attr = entry.getElementsByTagName("author");
-            if (attr.length > 0) {
-                post.author = this._parsetag(attr.item(0),
-                                             "name", "uri");
-                if (post.author.uri)
-                    post.author.jid = post.author.uri.replace(/^[^:]+:/,"");
+            for (index in this._tags) {
+            	if (index == 'standard') continue;
+            	attr = entry.getElementsByTagName(index.toString());
+            	if (attr.length > 0) {
+            		post[index] = this._parsetag(attr.item(0), this._tags[index]);
+            	}
             }
-
-            // geo
-            attr = entry.getElementsByTagName("geo");
-            if (attr.length > 0)
-                post.geo = this._parsetag(attr.item(0),
-                                          "country", "locality", "text");
+            if (post['author'].uri) post['author'].jid = post['author'].uri.replace(/^[^:]+:/,"");
 
             // in reply to
             var in_reply_tos = entry.getElementsByTagNameNS(
@@ -548,14 +561,13 @@ Strophe.addConnectionPlugin('buddycloud', {
         };
     },
 
-    _parsetag: function (tag) {
+    _parsetag: function (tag, tagsToParse) {
         var attr, res = {};
-        Array.prototype.slice.call(arguments,1).forEach(function (name) {
+        tagsToParse.forEach(function (name) {
             attr = tag.getElementsByTagName(name);
             if (attr.length > 0)
                 res[name] = attr.item(0).textContent;
         });
         return res;
     },
-
-});
+})
