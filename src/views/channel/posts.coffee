@@ -30,6 +30,9 @@ class exports.PostsView extends PostsBaseView
     indexOf: (model) ->
         @model.posts.indexOf(model)
 
+    sort: () =>
+        @model.posts.sort()
+
     on_scroll: (peepholeTop, peepholeBottom) =>
         return unless @rendered
         for own cid, view of @views

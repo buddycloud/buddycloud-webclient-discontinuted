@@ -57,6 +57,9 @@ class exports.CommentsView extends PostsBaseView
     indexOf: (model) ->
         @model.indexOf(model)
 
+    sort: () =>
+        @model.sort()
+
     show_comment_error: (error) =>
         p = $('<p class="postError"></p>')
         @$('.answer .controls').prepend(p)

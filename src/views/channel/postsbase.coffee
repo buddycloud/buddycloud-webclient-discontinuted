@@ -15,13 +15,9 @@ class exports.PostsBaseView extends BaseView
             parent:this
         return if view.rendering
         i = @indexOf(view.model)
-        view.bind 'template:create', (tpl) =>
+        view.on 'template:create', (tpl) =>
+            tpl.cid = tpl.xml.cid = view.model.cid # important for the template HACK
             @trigger "view:#{@ns}", i, tpl
-            view.model.bind 'update', =>
-                j = @indexOf(view.model)
-                return if j is i
-                @trigger "view:#{@ns}:remove", i
-                @trigger "view:#{@ns}", j, tpl
-                i = j
+        view.model.on('update', @sort)
         view.render()
 

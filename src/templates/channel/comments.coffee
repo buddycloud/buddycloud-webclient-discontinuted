@@ -8,22 +8,25 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../_design/channel/comments'
-{ insert, autoResize } = require '../util'
+{ insert, sync, autoResize } = require '../util'
 
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$section class:'comments', ->
             comments = new List
-            view.bind('view:comment', insert.bind(this, comments))
-            #  <% if @user?.hasRightToPost: %> FIXME
+            view.on('view:comment', insert.bind(this, comments))
+            view.model.on('reset',    sync.bind(this, comments))
+            view.model.on 'remove', (entry, collection, options) ->
+                comments.remove(options.index)?.remove()
+
             comments.push @$section class:'answer', ->
                 update_answer = =>
                     if app.users.current.canPost(view.parent.parent.parent.model)
                         @show()
                     else
                         @hide()
-                view.parent.parent.parent.bind 'update:permissions', update_answer
+                view.parent.parent.parent.on('update:permissions',update_answer)
                 update_answer()
 
                 @$img class:'avatar', ->
