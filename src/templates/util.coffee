@@ -60,6 +60,8 @@ exports.sync = (items, collection, options, models = null) ->
     for item in items
         bycid[item.cid] = item
         old_models.push collection.getByCid(item.cid)
+    unless (l1 = old_models.length) is (l2 = (models ? collection.models).length)
+        console.error "sync might fail because #{l1} != #{l2} (old,new)"
     # apply diff patches on items list
     for patch in adiff.diff(old_models, models ? collection.models)
         # remove all items from dom before splicing them in
