@@ -15,7 +15,8 @@ require "./vendor/strophe.buddycloud.js"
 
 ## jQuery
 window.jQuery = window.$ = require 'jquery'
-# plugins
+
+
 # from vendor folder
 require "./vendor/jquery.copycss.js"
 require "./vendor/jquery.mousewheel.js"
@@ -38,3 +39,9 @@ require "./vendor/backbone-extensions.js"
 ## helpers
 
 require './vendor/modernizr'
+
+# plugins
+window.app.plugins = []
+require "./plugins/show-client-0.1.0/show-client.js"
+
+

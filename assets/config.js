@@ -2,7 +2,7 @@
 window.config = {
 
     /* address of the bosh gateway. this should be reachable from webclient domain */
-    bosh_service: 'https://example.com:443/http-bind/',
+    bosh_service: 'https://beta.buddycloud.org:443/http-bind/',
 
     /*this is the inbox domain for anon users */
     home_domain: "example.com",
@@ -21,5 +21,9 @@ window.config = {
     /* Sign up for an embed.ly account to use OEmbed */
     //embedly_key: "xxx"
     
-    directoryService: "search.buddycloud.org"
+    directoryService: "search.buddycloud.org",
+
+    plugins: {
+        'show-client': '0.1.0'
+    }
 };

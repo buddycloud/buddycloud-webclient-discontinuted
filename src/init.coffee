@@ -125,6 +125,8 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
+        for plugin in app.plugins
+           plugin.init app,require
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
@@ -162,8 +164,6 @@ app.relogin = (user, password, callback) ->
     else
         connection.connect user, password
     connection
-
-
 
 Modernizr.load
     test:Modernizr.localStorage

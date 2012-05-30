@@ -40,7 +40,7 @@ class exports.ChannelView extends BaseView
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
-
+        console.log @
         # Potentially expensive (filters all node affiliations)
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
@@ -169,10 +169,7 @@ class exports.ChannelView extends BaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post =
-                content: text.val()
-                author:
-                    name: app.users.current.get 'jid'
+            post = @gatherPostData(text)
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, (error) =>
                 # TODO: make sure prematurely added post
@@ -229,6 +226,13 @@ class exports.ChannelView extends BaseView
         else
             @load_status_posts()
 
+    gatherPostData: (text) ->
+        post =
+          content: text.val()
+          author:
+            name: app.users.current.get 'jid'
+        return post
+        
     load_status_posts: =>
         statusnode = @model.nodes.get_or_create(id:'status')
         # FIXME: when we're anonymous, refresh_channel() gets those
@@ -311,3 +315,4 @@ class exports.ChannelView extends BaseView
                 @pending_notification?
             @pending_notification.remove()
             delete @pending_notification
+    
