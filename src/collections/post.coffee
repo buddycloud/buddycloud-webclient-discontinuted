@@ -22,6 +22,6 @@ class exports.Posts extends Collection
 
 
 class exports.Comments extends exports.Posts
-    comparator: ->
-        -1 * super # comments have a reversed posts order
+    comparator: (post) ->
+        -1 * super(post) # comments have a reversed posts order
 
