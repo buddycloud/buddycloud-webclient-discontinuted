@@ -68,7 +68,7 @@ class exports.CommentsView extends PostsBaseView
           content: text.val()
           author:
             name: app.users.current.get 'jid'
-            in_reply_to: @model.parent.get 'id'
+          in_reply_to: @model.parent.get 'id'
         return post
         
 #     update_attributes: ->
