@@ -34,12 +34,9 @@ class exports.MainView extends BaseView
 
         # special because normaly parents add their children views to the dom
         @render =>
-            app.users.current.channels.bind 'add', (channel) =>
-                @channels.get_or_create channel
-            app.users.current.channels.forEach (channel) =>
-                @channels.get_or_create channel
-
-            @channels.bind 'remove', @remove_channel_view
+            app.users.current.channels.on('add', @add_channel)
+            app.users.current.channels.forEach(  @add_channel)
+            @channels.on('remove', @remove_channel_view)
             # FIXME: let the ChannelView be created on-demand, they're
             # rendering much too often during startup. mrflix supposedly says
             #@channels.bind 'add',    @new_channel_view
@@ -91,6 +88,13 @@ class exports.MainView extends BaseView
         @sidebar.setCurrentEntry channel
         @current.trigger 'show'
         old?.trigger 'hide' unless old is @current
+
+    add_channel: (channel) =>
+        channel = @channels.get_or_create(channel)
+        channel.on 'change:node:unread', =>
+            @channels.sort()
+        channel.nodes.get_or_create(id:'posts').on 'post:updated', =>
+            @channels.sort()
 
     new_channel_view: (channel) =>
         channel = @channels.get_or_create channel, silent:yes

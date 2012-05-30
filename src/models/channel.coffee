@@ -22,6 +22,7 @@ class exports.Channel extends Model
             node.bind 'change:unread', =>
                 app.debug "channel got unread"
                 @trigger 'change:node:unread'
+        @nodes.get('posts').on('post:updated', @trigger.bind(this, 'post:updated'))
 
     push_post: (nodeid, post) ->
         @trigger 'post', nodeid, post

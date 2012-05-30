@@ -9,8 +9,12 @@ class exports.Posts extends Collection
 
     initialize: ->
         @parent.bind('post', @get_or_create.bind(this))
-        @on 'change:updated', =>
+        @bind('add', @onadd.bind(this))
+        @on 'change:updated', (post) =>
             @sort()
+
+    onadd: (post) ->
+        # do nothing. this is needed in the topicpost collection
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()
