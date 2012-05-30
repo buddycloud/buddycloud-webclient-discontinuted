@@ -44,14 +44,14 @@ Strophe.addConnectionPlugin('buddycloud', {
         if (this._tags.hasOwnProperty(namespace) == false) {
         	this._tags[namespace] = new Array();
         }
-        this._tags[namespace].push(tag)
-        return this
+        this._tags[namespace].push(tag);
+        return this;
     },
     
     removeTag: function(namespace, tag) {
-    	var index = this._tags[namespace].indexOf(tag)
-    	if (index != -1) this._tags[namespace].splice(index, 1)
-    	return this
+    	var index = this._tags[namespace].indexOf(tag);
+    	if (index != -1) this._tags[namespace].splice(index, 1);
+    	return this;
     },
     
     //The plugin must have the init function.
