@@ -169,7 +169,7 @@ class exports.ChannelView extends BaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post = @createPost(content:text.val())
+            post = @postsview.createPost(content:text.val())
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, (error) =>
                 # TODO: make sure prematurely added post
