@@ -8,7 +8,7 @@
 class exports.Channel extends Model
     initialize: ->
         @_unread_count = 0
-        @id = @get 'id'
+        @id = @get 'id' # jid
         @last_touched = new Date
         @nodes = new NodeStore channel:this
         @avatar = gravatar @id
@@ -17,9 +17,8 @@ class exports.Channel extends Model
         # Auto-create the default set of nodes for that channel, so
         # that its data can be retrieved via XMPP
         ["posts", "status", "subscriptions",
-         "geo/previous", "geo/current", "geo/next"].forEach (type) =>
-            nodeid = "/user/#{@id}/#{type}"
-            node = @nodes.get_or_create {id:nodeid, nodeid}
+         "geo/previous", "geo/current", "geo/next"].forEach (id) =>
+            node = @nodes.get_or_create {id, nodeid:"/user/#{@id}/#{id}"}
             node.bind 'change:unread', =>
                 app.debug "channel got unread"
                 @trigger 'change:node:unread'
