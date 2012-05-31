@@ -21,6 +21,7 @@ class exports.ChannelView extends BaseView
         'click #createNewTopic': 'clickPost'
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
+        'click .save': 'clickSave'
 
     initialize: () ->
         super
@@ -262,6 +263,14 @@ class exports.ChannelView extends BaseView
                 @parent.trigger('subview:editbar', tpl)
             @editview.render()
         @editview.toggle()
+        
+    clickSave: EventHandler ->
+#        unless @editview
+#            @editview = new ChannelEditView { parent: this, @model }
+#            @editview.bind 'template:create', (tpl) =>
+#                @parent.trigger('subview:editbar', tpl)
+#            @editview.render()
+        @editview.clickSave()
 
     isEditing: =>
         @editview?.active

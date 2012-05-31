@@ -7,10 +7,6 @@ async = require 'async'
 class exports.ChannelEditView extends BaseView
     template: require '../../templates/channel/edit'
 
-    events:
-        'click .save': 'clickSave'
-        'click .cancel': 'clickCancel'
-
     initialize: ->
         super
         @active = no
@@ -44,8 +40,12 @@ class exports.ChannelEditView extends BaseView
         @active = state
         if state is on
             @begin()
+            $('.edit').text('Cancel')
+            $('.save').show()
         else if state is off
             @end()
+            $('.edit').text('Edit')
+            $('.save').hide()
         else throw new Error "wtf is that?"
 
     toggle: =>
