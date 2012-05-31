@@ -29,7 +29,6 @@ module.exports = design (view) ->
             scrollarea = @$div id:'channels', ->
                 @$div -> # antiscroll
                     # channel ...
-                    last_search = ""
                     entries = new List
 
                     sort_required = no
@@ -64,8 +63,6 @@ module.exports = design (view) ->
                             on_sort(view.model)
 
                     view.search.bind 'filter', (search) ->
-                        return if search is last_search
-                        last_search = search
                         if search is ""
                             for el in entries
                                 el._jquery?.css(opacity:1.00)
