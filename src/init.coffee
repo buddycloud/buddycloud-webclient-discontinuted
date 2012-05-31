@@ -27,6 +27,9 @@ Notificon = require 'notificon'
 { DataHandler } = require './handlers/data'
 
 
+app.use = (plugin) ->
+    plugin?.call(this, this, require)
+
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
 app.debug = ->
