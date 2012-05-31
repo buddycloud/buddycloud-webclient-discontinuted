@@ -32,6 +32,19 @@ module.exports = design (view) ->
                     last_search = ""
                     entries = new List
 
+                    sort_required = no
+                    on_sort = (collection, options) =>
+                        models = collection.filter (m) ->
+                            not app.users.isPersonal(m)
+                        if models.length isnt collection.length
+                            # break here and do it on 'subview:entry'
+                            # this happens when the collection gets new entries fast.
+                            sort_required = yes
+                            return
+                        sync.call(this, entries, collection, options, models)
+                    # after sort
+                    view.model.on('reset', on_sort)
+
                     # instead of view.model.on 'add' …
                     view.bind 'subview:entry', (i, el) =>
                         entries.insert(i, el)
@@ -46,11 +59,9 @@ module.exports = design (view) ->
                             scrollarea._jquery?.antiscroll()
                         , 500
 
-                    # after sort
-                    view.model.bind 'reset', (collection, options) =>
-                        models = collection.filter (m) ->
-                            not app.users.isPersonal(m)
-                        sync.call(this, entries, collection, options, models)
+                        if sort_required
+                            sort_required = no
+                            on_sort(view.model)
 
                     view.search.bind 'filter', (search) ->
                         return if search is last_search
