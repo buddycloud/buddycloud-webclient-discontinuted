@@ -89,12 +89,15 @@ class exports.MainView extends BaseView
         @current.trigger 'show'
         old?.trigger 'hide' unless old is @current
 
+    sort_channels: () =>
+        # don't interfere with current event chain
+        process.nextTick =>
+            @channels.sort()
+
     add_channel: (channel) =>
         channel = @channels.get_or_create(channel)
-        channel.on 'change:node:unread', =>
-            @channels.sort()
-        channel.nodes.get_or_create(id:'posts').on 'post:updated', =>
-            @channels.sort()
+        channel.on('change:node:unread', @sort_channels)
+        channel.nodes.get_or_create(id:'posts').on('post:updated', @sort_channels)
 
     new_channel_view: (channel) =>
         channel = @channels.get_or_create channel, silent:yes
