@@ -27,6 +27,9 @@ class exports.MainView extends BaseView
                 bi = b.id.indexOf(@sidebar.search.filter)
                 return  1 if ai is -1 and bi isnt -1
                 return -1 if bi is -1 and ai isnt -1
+            if a.unread_count or b.unread_count
+                unless a.unread_count is b.unread_count
+                    return b.unread_count - a.unread_count
             da = new Date(a.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
             db = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
             return db - da
