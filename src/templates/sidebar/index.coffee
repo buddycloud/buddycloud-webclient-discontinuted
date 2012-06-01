@@ -31,15 +31,9 @@ module.exports = design (view) ->
                     # channel ...
                     entries = new List
 
-                    sort_required = no
                     on_sort = (collection, options) =>
                         models = collection.filter (m) ->
                             not app.users.isPersonal(m)
-                        if models.length isnt collection.length
-                            # break here and do it on 'subview:entry'
-                            # this happens when the collection gets new entries fast.
-                            sort_required = yes
-                            return
                         sync.call(this, entries, collection, options, models)
                     # after sort
                     view.model.on('reset', on_sort)
@@ -48,19 +42,16 @@ module.exports = design (view) ->
                     view.bind 'subview:entry', (i, el) =>
                         entries.insert(i, el)
                         idx = entries.keys[i]
-                        el.once 'remove', ->
-                            entries.remove(idx.i)
-                            setTimeout -> # damn sync jquery plugins
-                                scrollarea._jquery?.antiscroll()
-                            , 500
+                        el.on 'remove', (tag, opts) ->
+                            unless opts.soft
+                                entries.remove(idx.i)
+                                setTimeout -> # damn sync jquery plugins
+                                    scrollarea._jquery?.antiscroll()
+                                , 500
                         @add(el)
                         setTimeout -> # damn sync jquery plugins
                             scrollarea._jquery?.antiscroll()
                         , 500
-
-                        if sort_required
-                            sort_required = no
-                            on_sort(view.model)
 
                     view.search.bind 'filter', (search) ->
                         if search is ""
