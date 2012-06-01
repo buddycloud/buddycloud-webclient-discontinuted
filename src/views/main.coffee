@@ -21,16 +21,20 @@ class exports.MainView extends BaseView
         @views = {} # this contains the channelnode views
         @timeouts = {} # this contains the channelview remove timeouts
         @channels = new Channels
-        @channels.comparator = (a, b) ->
-            a = new Date(a.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
-            b = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
-            return 0 if a is b
-            return 1 if a < b
-            return -1
+        @channels.comparator = (a, b) =>
+            if @sidebar.search.filter.length
+                ai = a.id.indexOf(@sidebar.search.filter)
+                bi = b.id.indexOf(@sidebar.search.filter)
+                return  1 if ai is -1 and bi isnt -1
+                return -1 if bi is -1 and ai isnt -1
+            da = new Date(a.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            db = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            return db - da
 
         @sidebar = new Sidebar
             parent:this
             model: @channels
+        @sidebar.search.on('filter', @sort_channels)
 
         # special because normaly parents add their children views to the dom
         @render =>
