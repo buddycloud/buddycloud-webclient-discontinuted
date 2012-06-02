@@ -7,14 +7,8 @@ class exports.ChannelEntry extends BaseView
 
     initialize: ->
         super
-#         @model.bind 'change:node:metadata', @render
-        # Update unread counter:
-#         @model.bind 'post', @render
-        @ready =>
-            @parent.ready =>
-                @model.bind 'bubble', @bubble
 
-        @model.bind 'post', throttle_callback 50, =>
+        @model.bind 'update:unread', throttle_callback 50, =>
             @trigger 'update:unread_counter'
 
         postsnode = @model.nodes.get_or_create(id: 'posts')
@@ -24,7 +18,6 @@ class exports.ChannelEntry extends BaseView
         statusnode = @model.nodes.get_or_create(id: 'status')
         statusnode.bind 'post', =>
             @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value
-
 
     events:
         "click": "click_entry"

@@ -57,6 +57,7 @@ class exports.NodeStore extends exports.Nodes
         @channel.bind 'post', (nodeid, post) =>
             node = @get_or_create {nodeid}
             node.push_post post
+            @channel.count_unread()
         @channel.bind 'metadata', (nodeid, metadata) =>
             node = @get_or_create {nodeid}
             node.push_metadata metadata

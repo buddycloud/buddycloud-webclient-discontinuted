@@ -8,8 +8,8 @@ class exports.Posts extends Collection
         super()
 
     initialize: ->
-        @parent.bind('post', @get_or_create.bind(this))
-        @bind('add', @onadd.bind(this))
+        @parent.on('post', @get_or_create.bind(this))
+        @on('add', @onadd.bind(this))
         @on 'change:updated', (post) =>
             @sort()
 

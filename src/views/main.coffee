@@ -103,7 +103,7 @@ class exports.MainView extends BaseView
 
     add_channel: (channel) =>
         channel = @channels.get_or_create(channel)
-        channel.on('change:node:unread', @sort_channels)
+        channel.on('update:unread', @sort_channels)
         channel.nodes.get_or_create(id:'posts').on('post:updated', @sort_channels)
 
     new_channel_view: (channel) =>

@@ -32,7 +32,7 @@ module.exports = design (view) ->
             avatar = @div class:'avatar', ->
                 unread_counter = @$span class:'channelpost counter'
                 update_unread = ->
-                    unread = channel.count_unread()
+                    unread = channel.unread_count
                     unread_counter.text "#{unread}"
                     if unread > 0
                         unread_counter.show()

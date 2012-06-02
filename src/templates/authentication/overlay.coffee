@@ -12,6 +12,7 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'overlay', ->
             @$div ->
+                # .close
                 @$div class: 'left', ->
                     @$p ->
                         @$a ->

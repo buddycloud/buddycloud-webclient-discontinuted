@@ -2,9 +2,6 @@
 { NodeStore } = require '../collections/node'
 { gravatar } = require '../util'
 
-##
-# Attribute id: Jabber-Id
-# Attribute jid: Jabber-Id
 class exports.Channel extends Model
     initialize: ->
         @unread_count = 0
@@ -18,10 +15,7 @@ class exports.Channel extends Model
         # that its data can be retrieved via XMPP
         ["posts", "status", "subscriptions",
          "geo/previous", "geo/current", "geo/next"].forEach (id) =>
-            node = @nodes.get_or_create {id, nodeid:"/user/#{@id}/#{id}"}
-            node.bind 'change:unread', =>
-                app.debug "channel got unread"
-                @trigger 'change:node:unread'
+            @nodes.get_or_create {id, nodeid:"/user/#{@id}/#{id}"}
         @nodes.get('posts').on('post:updated', @trigger.bind(this, 'post:updated'))
 
     push_post: (nodeid, post) ->
@@ -55,6 +49,7 @@ class exports.Channel extends Model
                 post.set unread:yes unless post.get 'unread'
                 count++
             else break
+        @trigger 'update:unread', count if count - @unread_count
         app.favicon(count - @unread_count) # only add new ones
         @unread_count = count
         count
@@ -66,6 +61,7 @@ class exports.Channel extends Model
         if last_update and last_update > last_view
             posts.forEach((post) -> post.set unread:no if post.get 'unread')
             last_view = last_update
+        @trigger 'update:unread', 0 if @unread_count
         app.favicon(@unread_count * -1) # remove them
         @unread_count = 0
         @save { last_view }

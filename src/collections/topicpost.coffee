@@ -6,8 +6,8 @@ class exports.TopicPosts extends Posts
 
     onadd: (post) ->
         super # implemented on Posts only for this purpose
-        post.bind 'change:unread', =>
-            @trigger 'change:unread'
+        post.comments.bind 'change:updated', =>
+            @trigger 'change:updated'
 
     get_or_create: (post) ->
         if post.in_reply_to
