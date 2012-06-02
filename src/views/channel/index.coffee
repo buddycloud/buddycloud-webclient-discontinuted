@@ -120,7 +120,7 @@ class exports.ChannelView extends BaseView
     show: =>
         @hidden = false
 
-        @model.mark_read()
+        @model.mark_read() unless @rendered
 
         # Not subscribed? Refresh!
         unless app.users.current.isFollowing(@model)

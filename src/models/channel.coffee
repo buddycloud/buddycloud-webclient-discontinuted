@@ -46,7 +46,9 @@ class exports.Channel extends Model
         count = 0
         for post in (@nodes.get('posts')?.posts.models or [])
             if post.get_last_update() > last_view
-                post.set unread:yes unless post.get 'unread'
+                unless post.get 'unread'
+                    post.set(unread:yes)
+                    post.trigger 'unread'
                 count++
             else break
         @trigger 'update:unread', count if count - @unread_count
@@ -59,7 +61,10 @@ class exports.Channel extends Model
         posts = @nodes.get('posts').posts
         last_update = posts.first()?.get_last_update()
         if last_update and last_update > last_view
-            posts.forEach((post) -> post.set unread:no if post.get 'unread')
+            for post in (@nodes.get('posts')?.posts.models or [])
+                if post.get 'unread'
+                    post.set(unread:no)
+                    post.trigger 'read'
             last_view = last_update
         @trigger 'update:unread', 0 if @unread_count
         app.favicon(@unread_count * -1) # remove them

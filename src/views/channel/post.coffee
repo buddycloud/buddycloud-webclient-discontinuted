@@ -7,8 +7,21 @@ class exports.PostView extends BaseView
     initialize: ({@type}) ->
         super
 
-        @model.bind 'change:content', @change_content
+        @model.on('change:content', @change_content)
         @ready @change_content
+
+        @model.on 'unread', =>
+            @trigger 'unread'
+
+        @model.on 'read', =>
+            onfocus = =>
+                setTimeout =>
+                    @trigger 'read'
+                , 5000
+            if app.focused
+                onfocus()
+            else
+                app.once('focus', onfocus)
 
     ##
     # TODO

@@ -17,18 +17,9 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$section ->
             @attr class:"#{view.type}"
-            view.model.bind 'change:unread', =>
-                if view.model.get('unread')
-                    addClass(@,"unread")
-                else
-                    onfocus = =>
-                        setTimeout =>
-                            removeClass(@,"unread")
-                        , 2000
-                    if app.focused
-                        onfocus()
-                    else
-                        app.once('focus', onfocus)
+             view.on('read', removeClass.bind(this, "unread"))
+            view.on('unread',  addClass.bind(this, "unread"))
+            addClass(this, "unread") if view.model.get 'unread'
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 time = @$time()
