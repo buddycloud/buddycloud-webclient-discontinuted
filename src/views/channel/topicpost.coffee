@@ -21,6 +21,9 @@ class exports.TopicPostView extends BaseView
             model:@model.comments
             parent:this
 
+    getChannel: () ->
+        @parent.getChannel()
+
     on_author: =>
         if @model.get('author')?.jid?
             # Show only openers with content

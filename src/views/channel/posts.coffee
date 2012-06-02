@@ -14,8 +14,7 @@ class exports.PostsView extends PostsBaseView
 
         @model.bind 'unsync', =>
             setTimeout =>
-                channel = app.channels.get @model.get('nodeid')
-                app.handler.data.refresh_channel channel.get('id')
+                app.handler.data.refresh_channel @getChannel().get('id')
             , 50
 
     render: (callback) ->
@@ -26,6 +25,9 @@ class exports.PostsView extends PostsBaseView
 
     createView: (opts = {}) ->
         new TopicPostView opts
+
+    getChannel: () ->
+        app.channels.get @model.get('nodeid')
 
     indexOf: (model) ->
         @model.posts.indexOf(model)

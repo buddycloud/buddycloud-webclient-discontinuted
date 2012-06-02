@@ -49,6 +49,9 @@ class exports.CommentsView extends PostsBaseView
         opts.type ?= 'comment'
         new PostView opts
 
+    getChannel: () ->
+        @parent.parent?.getChannel?()
+
     indexOf: (model) ->
         @model.indexOf(model)
 
