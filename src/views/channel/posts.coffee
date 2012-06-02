@@ -1,14 +1,12 @@
 { PostsBaseView } = require './postsbase'
 { TopicPostView } = require './topicpost'
 
+# @parent is ChannelView
+# @model is a PostsNode
 class exports.PostsView extends PostsBaseView
     ns: 'topic'
     template: require '../../templates/channel/posts'
-#     tutorial: require '../../templates/channel/tutorial.eco'
-#     empty:    require '../../templates/channel/empty.eco'
 
-    # @parent is ChannelView
-    # @model is a PostsNode
     initialize: ->
         super
 

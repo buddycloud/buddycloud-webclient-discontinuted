@@ -97,6 +97,25 @@ module.exports = design (view) ->
 
                 @$section class:'topics', ->
                     view.postsview.bind('template:create', @replace)
+
+                tutorial = null
+                update_tutorial = =>
+                    return tutorial?.remove() if view.model.length
+                    type = "empty"
+                    type = "tutorial" if app.users.current.canPost(view.model)
+                    return if type is tutorial?.type
+                    tutorial?.remove()
+                    tutorial = @$p({class:"#{type}"}, tutorial_text[type])
+                    tutorial.type = type
+                timeout = null
+                throttled_update_tutorial = ->
+                    if timeout?
+                        clearTimeout(timeout)
+                        timeout = null
+                    timeout ?= setTimeout(update_tutorial, 200)
+                view.model.on('add',    throttled_update_tutorial)
+                view.model.on('remove', throttled_update_tutorial)
+
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
                     spinner.hide()
@@ -110,3 +129,6 @@ module.exports = design (view) ->
         view.bind('hide', @hide)
 
 
+tutorial_text =
+    tutorial:"content goes above ..."
+    empty:"this channel is empty"
