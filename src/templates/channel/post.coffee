@@ -45,6 +45,8 @@ module.exports = design (view) ->
                 view.model.bind('change:updated',   update_time)
                 view.model.bind('change:published', update_time)
                 update_time()
+                @$button class:'delete button', ->
+                    return @remove() if app.users.isAnonymous(app.users.current)
             name = @span class:'name'
 
             update_author = ->

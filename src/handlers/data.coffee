@@ -100,6 +100,15 @@ class exports.DataHandler extends Backbone.EventHandler
         nodeid = node.get?('nodeid') or node
         @connector.publish nodeid, item, callback
 
+    retract: (node, items, callback) ->
+        nodeid = node.get?('nodeid') or node
+        itemIds = (m.get('id') for m in items when m?.get?)
+        @connector.retract nodeid, itemIds, (err) ->
+            return callback?(err) if err
+            for model in items
+                model?.collection?.remove(model)
+            callback?(null)
+
     add_post: (node, post) ->
         nodeid = node.get?('nodeid') or node
         @on_node_post post, nodeid

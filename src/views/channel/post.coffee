@@ -33,6 +33,7 @@ class exports.PostView extends BaseView
 
     events:
         'click .name': 'clickAuthor'
+        'click .delete': 'clickDelete'
         'click .avatar': 'clickAuthor'
         'click .userlink': 'clickUserlink'
 
@@ -44,6 +45,16 @@ class exports.PostView extends BaseView
         userid = el and $(el).data('userid')
         if userid
             app.router.navigate userid, true
+
+    clickDelete: EventHandler ->
+        @$el?.toggleClass 'dangerZone'
+        return if not @$el or @$el.hasClass 'dangerZone'
+        # FIXME add second button tu delete
+        channel = @parent.getChannel()
+        if app.users.current.canEdit(channel)
+            node = channel.nodes.get('posts')
+            app.handler.data.retract node, [@model], (err) =>
+                return if err
 
     # TODO: make url configurable
     # TODO: filter HTML for XSS
