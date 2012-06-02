@@ -66,6 +66,9 @@ module.exports = design (view) ->
                                 else
                                     el._jquery?.css(opacity:0.42)
 
+                    unless app.users.isAnonymous(app.users.current)
+                        createTutorial this, {view, entries}
+
                 setTimeout => # damn sync jquery plugins
                     @_jquery.antiscroll()
                     $(window).resize =>
@@ -76,3 +79,35 @@ module.exports = design (view) ->
                 if app.users.isAnonymous(app.users.current) or
                   not config.topic_domain?
                     @remove()
+
+
+tutorial_text =  ["start typing into the"
+    "searchbar to filter your sidebar or"
+    "enter a full user address (like"
+    "name@domain) to navigate to its"
+    "channel ..."].join " "
+
+createTutorial = (tag, {view, entries}) ->
+    tutorial = null
+    update_tutorial = ->
+        if view.model.length > 3
+            if tutorial?
+                entries.pop()
+                tutorial = null
+            return
+        return if tutorial?
+        tutorial = tag.$div class:'channel tutorial', ->
+            @$div class:'holder', ->
+                @$span class:'arrow', "➽"
+                @$span class:'info', tutorial_text
+        entries.push tutorial
+
+    timeout = null
+    throttled_update_tutorial = ->
+        if timeout?
+            clearTimeout(timeout)
+            timeout = null
+        timeout ?= setTimeout(update_tutorial, 200)
+
+    view.model.on('add',    throttled_update_tutorial)
+    view.model.on('remove', throttled_update_tutorial)

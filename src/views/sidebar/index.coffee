@@ -39,9 +39,6 @@ class exports.Sidebar extends BaseView
     render: (callback) ->
         super ->
             @search.render(callback)
-#         @$('.tutorial').remove()
-#         if channels.length < 2
-#             @el.append @tutorial()
 
     new_channel_entry: (channel) =>
         old = @current
@@ -85,8 +82,7 @@ class exports.Sidebar extends BaseView
             else
                 i = @indexOf(entry.model)
                 @trigger('subview:entry', i, tpl)
-        entry.render =>
-            @$('.tutorial').remove()
+        do entry.render
 
     setCurrentEntry: (channel) =>
         old = @current
