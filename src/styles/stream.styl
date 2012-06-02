@@ -297,20 +297,26 @@ body > .content
       transition 500ms
   .opener
     min-height 50px
-    padding-left 63px
+    margin-left 63px
   .postmeta
     float right
     margin 0 0 0 13px
     text-align right
     nav
       visibility hidden
+    span, button, time
+      line-height 19.5px
     span, time
       color rgba(0,0,0,.5)
       font-size 11.5px
-      line-height 19.5px
     time
-      display block
+      display inline-block
       color rgba(0,0,0,.34)
+    button
+      padding 0
+      height 16px
+      &.delete
+        min-width 16px
   .name
     color black
     font-weight bold
@@ -331,6 +337,8 @@ body > .content
   p
     color black
   section.answer
+    margin-left -63px
+    padding-left 63px
     position relative
     overflow hidden
     .area
@@ -350,8 +358,8 @@ body > .content
       box-sizing border-box
     .avatar
       width 40px
-      left 11px
-      top 18px
+      left 13px
+      top 16px
       display none
     .controls
       bottom 0
@@ -376,18 +384,21 @@ body > .content
       min-height 34px
       position relative
     section
-      padding-top 5px
-      padding-left 63px
+      padding-bottom 5px
+      margin-left 63px
+      &.answer
+        margin-left 0
       &.answer:first-child
-        padding-left 50px
         &.write .avatar
-          top 13px
-          left -2px
+          top 11px
+          left 11px
         .area
           margin-top 8px
+      &:last-child
+        padding-bottom 0
     .avatar
       top 6px
-      left 17px
+      left -44px
       width 34px
       border-radius 2px
     .location
@@ -495,6 +506,26 @@ body > .content
   .unread
     .avatar
       box-shadow 0 0 0 1px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.55) inset,0 0 0 3px #83ac35,0 0 0 4px #90bd3a,0 0 2px 4px rgba(0,0,0,0.34)
+
+  .opener, .comment
+    p, span, time, button
+      background-color white
+    transition background-color 200ms
+    background -webkit-repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+    background -moz-repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+    background -o-repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+    background -ms-repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+    background repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,.89) 10px, rgba(255,255,255,.89) 20px)
+    background-color white
+  .dangerZone
+    box-shadow 0 1px rgba(255, 255, 255, 0.89), 0 1px 0 rgba(0, 0, 0, 0.21) inset, 0 0 0 1px rgba(0, 0, 0, 0.13) inset
+    background-color red
+    border-radius 3px
+    span, time, p, button
+      border-radius 1px
+      box-shadow 0 1px rgba(255, 255, 255, 0.89) inset, 0 1px 0 rgba(0, 0, 0, 0.21), 0 0 0 1px rgba(0, 0, 0, 0.13)
+    button
+      border-radius 3px
 
 .conversation
   article
