@@ -1,6 +1,7 @@
 { ChannelView } = require './channel/index'
 { Channels } = require '../collections/channel'
 { Sidebar } = require './sidebar/index'
+{ MinimalSidebar } = require './sidebar/minimal'
 { BaseView } = require './base'
 { DiscoverView } = require './discover/index'
 { CreateTopicChannelView } = require './create_topic_channel/index'
@@ -34,9 +35,14 @@ class exports.MainView extends BaseView
             db = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
             return db - da
 
-        @sidebar = new Sidebar
-            parent:this
-            model: @channels
+        @sidebar = if app.users.isAnonymous(app.users.current)
+                new MinimalSidebar
+                    model: @channels
+                    parent:this
+            else
+                new Sidebar
+                    model: @channels
+                    parent:this
         @sidebar.search.on('filter', @sort_channels)
 
         # special because normaly parents add their children views to the dom
@@ -55,6 +61,10 @@ class exports.MainView extends BaseView
     render: (callback) ->
         super ->
             body = $('body').removeClass('start')
+            if app.users.isAnonymous(app.users.current)
+                body.addClass('anonymous')
+            else
+                body.removeClass('anonymous')
             body.append(@$el)
             @$el.show()
             @sidebar.render()
