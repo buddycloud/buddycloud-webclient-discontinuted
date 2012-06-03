@@ -42,6 +42,7 @@ class exports.Channel extends Model
             @trigger 'loading:stop'
 
     count_unread: ->
+        return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
         count = 0
         for post in (@nodes.get('posts')?.posts.models or [])
@@ -57,6 +58,7 @@ class exports.Channel extends Model
         count
 
     mark_read: ->
+        return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
         posts = @nodes.get('posts').posts
         last_update = posts.first()?.get_last_update()

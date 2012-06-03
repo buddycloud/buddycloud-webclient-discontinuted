@@ -17,9 +17,10 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$section ->
             @attr class:"#{view.type}"
-             view.on('read', removeClass.bind(this, "unread"))
-            view.on('unread',  addClass.bind(this, "unread"))
-            addClass(this, "unread") if view.model.get 'unread'
+            unless app.users.isAnonymous(app.users.current)
+                view.on('read', => removeClass(@,"unread"))
+                view.on('unread',  => addClass(@,"unread"))
+                addClass(@,"unread") if view.model.get 'unread'
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 time = @$time()
