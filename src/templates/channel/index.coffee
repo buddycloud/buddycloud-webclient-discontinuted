@@ -36,7 +36,8 @@ module.exports = design (view) ->
                         @$nav ->
                             @$span class:'messages button', ->
                                 @remove() # FIXME
-                            @$span class:'edit button', ->
+                            save = @$span class:'save button'
+                            edit = @$span class:'edit button', ->
                                 update_edit_button = =>
                                     if app.users.current.canEdit(view.model)
                                         @show()
@@ -44,6 +45,14 @@ module.exports = design (view) ->
                                         @hide()
                                 view.bind 'update:affiliations', update_edit_button
                                 update_edit_button()
+                            app.on 'editmode', (state) ->
+                                return if view.hidden
+                                if state is on
+                                    save.show()
+                                    edit.text "Cancel"
+                                else if state is off
+                                    save.hide()
+                                    edit.text "Edit"
                             if app.users.isAnonymous(app.users.current)
                                 @$span class:'login button', ->
                                     @text "Login"#  FIXME +"or Register to Follow"
