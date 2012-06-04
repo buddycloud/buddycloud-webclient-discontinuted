@@ -4,6 +4,9 @@ window.config = {
     /* address of the bosh gateway. this should be reachable from webclient domain */
     bosh_service: 'https://example.com:443/http-bind/',
 
+    /* enable or disable registration */
+    registration: true,
+
     /*this is the inbox domain for anon users */
     home_domain: "example.com",
 
@@ -17,9 +20,9 @@ window.config = {
     /* Default domain to create topics under
      * unless the user specifies …@domain as the name. (see: https://buddycloud.org/wiki/Install#Advanced_Topics) */
     //topic_domain: "topics.example.com",
+    directoryService: "search.buddycloud.org",
 
     /* Sign up for an embed.ly account to use OEmbed */
-    //embedly_key: "xxx"
-    
-    directoryService: "search.buddycloud.org"
+    embedly_key:undefined
+
 };

@@ -19,6 +19,7 @@ class exports.WelcomeView extends View
 
     render: ->
         @$('#index').html $(@template())
+        $('#goRegister').remove() if config.registration is off
         @delegateEvents()
 
     click_login: EventHandler ->

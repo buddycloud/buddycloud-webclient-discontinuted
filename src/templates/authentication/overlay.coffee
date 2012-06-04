@@ -16,4 +16,5 @@ module.exports = design (view) ->
                 @$div class: 'left', ->
                     @$p ->
                         @$a ->
+                            return @remove() if config.registration is off
                             @attr href: "/register"
