@@ -45,13 +45,13 @@ module.exports = design (view) ->
                         el.on 'remove', (tag, opts) ->
                             unless opts.soft
                                 entries.remove(idx.i)
-                                setTimeout -> # damn sync jquery plugins
-                                    scrollarea._jquery?.antiscroll()
-                                , 500
+#                                 setTimeout -> # damn sync jquery plugins
+#                                     scrollarea._jquery?.antiscroll()
+#                                 , 500
                         @add(el)
-                        setTimeout -> # damn sync jquery plugins
-                            scrollarea._jquery?.antiscroll()
-                        , 500
+#                         setTimeout -> # damn sync jquery plugins
+#                             scrollarea._jquery?.antiscroll()
+#                         , 500
 
                     view.search.bind 'filter', (search) ->
                         if search is ""
@@ -69,11 +69,11 @@ module.exports = design (view) ->
                     unless app.users.isAnonymous(app.users.current)
                         createTutorial this, {view, entries}
 
-                setTimeout => # damn sync jquery plugins
-                    @_jquery.antiscroll()
-                    $(window).resize =>
-                        @_jquery.antiscroll()
-                , 500
+#                 setTimeout => # damn sync jquery plugins
+#                     @_jquery.antiscroll()
+#                     $(window).resize =>
+#                         @_jquery.antiscroll()
+#                 , 500
 
             @$button id: 'create_topic_channel', ->
                 if app.users.isAnonymous(app.users.current) or

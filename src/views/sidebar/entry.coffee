@@ -81,7 +81,7 @@ class exports.ChannelEntry extends BaseView
                     .removeClass('bubbleUp')
                     .css(top:'', 'z-index':'')
                     .unwrap()
-                channelsel.parent().antiscroll()
+#                 channelsel.parent().antiscroll()
         ).css('z-index', increase() + 1)
 
         # let the holder grow
