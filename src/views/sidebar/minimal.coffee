@@ -4,6 +4,9 @@
 class exports.MinimalSidebar extends BaseView
     template: require '../../templates/sidebar/minimal'
 
+    events:
+        'click button.discover': 'clickDiscover'
+
     initialize: () ->
         super
         @hidden = yes
@@ -17,6 +20,9 @@ class exports.MinimalSidebar extends BaseView
             @search.render(callback)
 
     setCurrentEntry: -> # do nothing
+
+    clickDiscover: ->
+        app.router.navigate "discover", true
 
     # sliding in animation
     moveIn: (t = 200) ->
