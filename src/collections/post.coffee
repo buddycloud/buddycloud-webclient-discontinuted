@@ -10,8 +10,12 @@ class exports.Posts extends Collection
     initialize: ->
         @parent.on('post', @get_or_create.bind(this))
         @on('add', @onadd.bind(this))
-        @on 'change:updated', (post) =>
-            @sort()
+        @on('change:updated',   @update_time)
+        @on('change:published', @update_time)
+
+    update_time: (post) =>
+        @sort()
+        @trigger('update:tine', post)
 
     onadd: (post) ->
         # do nothing. this is needed in the topicpost collection

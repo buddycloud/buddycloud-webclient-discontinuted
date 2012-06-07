@@ -7,7 +7,6 @@ class exports.TopicPost extends Post
 
     initialize: ->
         @comments = new Comments parent:this
-        @comments.on('change:updated', @trigger.bind(this, 'change:updated'))
         super
 
     # Also dives into comments

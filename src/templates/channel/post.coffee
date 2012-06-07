@@ -34,8 +34,7 @@ module.exports = design (view) ->
                         time.hide()
                     else
                         time.show()
-                view.model.bind('change:updated',   update_time)
-                view.model.bind('change:published', update_time)
+                view.model.on('update:time', update_time)
                 update_time()
                 @$button class:'delete button', ->
                     return @remove() if app.users.isAnonymous(app.users.current)
