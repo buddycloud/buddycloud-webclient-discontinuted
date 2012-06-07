@@ -10,7 +10,7 @@ design = require '../../_design/channel/topicpost'
 
 
 module.exports = design (view) ->
-    return new Template schema:5, userdata:{cid:view.model.cid}, ->
+    return new Template {schema:5, view}, ->
         @$article class:'topic', ->
             @$section class:'opener', ->
                 view.opener.bind('template:create', @replace)

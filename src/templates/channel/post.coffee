@@ -14,7 +14,7 @@ design = require '../../_design/channel/post'
 
 
 module.exports = design (view) ->
-    return new Template schema:5, userdata:{cid:view.model.cid}, ->
+    return new Template {schema:5, view}, ->
         @$section ->
             @attr class:"#{view.type}"
             unless app.users.isAnonymous(app.users.current)
