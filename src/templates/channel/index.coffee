@@ -12,7 +12,7 @@ design = require '../../_design/channel/index'
 { autoResize } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {view:view,schema:5}, -> @$div class:'content', ->
+    return new Template {userdata:view,schema:5}, -> @$div class:'content', ->
         @$div class:'channelView', ->
             @$header ->
                 @$table -> @$tbody -> @$tr ->

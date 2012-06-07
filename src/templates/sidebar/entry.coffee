@@ -13,7 +13,7 @@ design = require '../../_design/sidebar/entry'
 { addClass, removeClass } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {view:view,schema:5}, ->
+    return new Template {userdata:view,schema:5}, ->
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>

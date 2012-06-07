@@ -11,7 +11,7 @@ design = require '../../_design/channel/posts'
 { insert } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {view:view,schema:5}, ->
+    return new Template {userdata:view,schema:5}, ->
         @$section class:'topics', ->
             list = new List
             view.bind('view:topic', insert.bind(this, list))

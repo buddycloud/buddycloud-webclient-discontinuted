@@ -12,7 +12,7 @@ design = require '../../_design/channel/error_notification'
 { addClass } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {view:view,schema:5}, ->
+    return new Template {userdata:view,schema:5}, ->
         notification = @$article class: 'notification', ->
             @$section ->
                 @$p ->
