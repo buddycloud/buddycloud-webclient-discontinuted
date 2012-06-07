@@ -23,7 +23,6 @@ class exports.PostsBaseView extends BaseView
         return if view.rendering
         i = @indexOf(view.model)
         view.on 'template:create', (tpl) =>
-            tpl.cid = tpl.xml.cid = view.model.cid # important for the template HACK
             @trigger "view:#{@ns}", i, tpl
         view.render()
 

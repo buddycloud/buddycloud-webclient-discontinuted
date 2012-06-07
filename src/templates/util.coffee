@@ -58,8 +58,8 @@ exports.sync = (items, collection, options, models = null) ->
     old_models = []
     # rebuild old collection state
     for item in items
-        bycid[item.cid] = item
-        old_models.push collection.getByCid(item.cid)
+        bycid[item.userdata.cid] = item
+        old_models.push collection.getByCid(item.userdata.cid)
     unless (l1 = old_models.length) is (l2 = (models ? collection.models).length)
         console.error "sync might fail because #{l1} != #{l2} (old,new)"
     # apply diff patches on items list

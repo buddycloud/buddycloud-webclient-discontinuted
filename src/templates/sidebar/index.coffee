@@ -60,7 +60,7 @@ module.exports = design (view) ->
                             return
                         channels = view.model.filter(search)
                         for el in entries
-                            if (entry = view.views[el.builder.template.cid])? # HACK
+                            if (entry = view.views[el.userdata.cid])?
                                 if entry.model in channels
                                     el._jquery?.css(opacity:1.00)
                                 else
