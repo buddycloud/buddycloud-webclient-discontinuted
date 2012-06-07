@@ -109,7 +109,8 @@ module.exports = design (view) ->
 
                 tutorial = null
                 update_tutorial = =>
-                    return tutorial?.remove() if view.model.length
+                    if view.model.nodes.get('posts').posts.length
+                        return tutorial?.remove()
                     type = "empty"
                     type = "tutorial" if app.users.current.canPost(view.model)
                     return if type is tutorial?.type
