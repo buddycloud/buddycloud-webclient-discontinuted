@@ -10,11 +10,12 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/discover/group'
+{ addClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div ->
-            @attr 'class', "#{view.id} "+@attr('class')
+            addClass(@,"#{view.id}")
             @$h1 ->
                 @text view.name
             view.bind("subview:list", @add)
