@@ -102,7 +102,7 @@ class exports.MainView extends BaseView
         title = @current.model.nodes.get('posts')?.metadata.get('title')?.value
         document.title = title or @current.model.get('id')
 
-        unless old is @current
+        if @current isnt old
             old?.trigger 'hide'
             @sidebar.setCurrentEntry channel
             @current.trigger 'show'
@@ -141,11 +141,16 @@ class exports.MainView extends BaseView
         @current.render()
 
     on_discover: =>
-        @current?.trigger 'hide'
-        @current = new DiscoverView(parent: this)
-        @current.once 'template:create', (tpl) =>
-            @trigger 'subview:content', tpl
-        @current.render()
+        old = @current
+        unless @discover?
+            @discover = new DiscoverView(parent: this)
+            @discover.once 'template:create', (tpl) =>
+                @trigger 'subview:content', tpl
+            @discover.render()
+        @current = @discover
+        if @current isnt old
+            old?.trigger 'hide'
+            @current.trigger 'show'
 
     on_scroll: =>
         @current?.on_scroll()
