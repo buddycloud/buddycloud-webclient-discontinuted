@@ -3,6 +3,7 @@
 window.app = new EventEmitter
 app.setMaxListeners(0) # unlimited
 app[k] = v for k,v of {
+    process
     version: '0.0.0-60'
     localStorageVersion:'9e5dcf0'
     handler: {}
