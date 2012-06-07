@@ -8,7 +8,6 @@ adapters =
         addListSupport new JQueryAdapter(tpl, opts)
         return tpl
 
-
 class exports.BaseView extends Backbone.View
     template: -> new Template # empty.
     el: $('<div empty>') # so @el is always a jquery object
@@ -40,7 +39,7 @@ class exports.BaseView extends Backbone.View
             @delegateEvents()
             @trigger('template:ready', tpl)
             callback?.call?(this)
-            # invoke delayed callbackes from ready
+            # invoke delayed callbacks from ready
             if @_waiting?
                 cb?() for cb in @_waiting
                 delete @_waiting

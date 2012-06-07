@@ -12,7 +12,7 @@ design = require '../../_design/channel/comments'
 
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {view:view,schema:5}, ->
         @$section class:'comments', ->
             comments = new List
             view.bind('view:comment', insert.bind(this, comments))

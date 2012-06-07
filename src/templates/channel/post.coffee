@@ -12,9 +12,8 @@ unless process.title is 'browser'
 design = require '../../_design/channel/post'
 { load_indicate, addClass, removeClass } = require '../util'
 
-
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {view:view,schema:5}, ->
         @$section ->
             @attr class:"#{view.type}"
             view.model.bind 'change:unread', =>

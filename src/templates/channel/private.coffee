@@ -9,5 +9,5 @@ unless process.title is 'browser'
 design = require '../../_design/channel/private'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {view:view,schema:5}, ->
         @$article class:'ghost topic'
