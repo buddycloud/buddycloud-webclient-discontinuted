@@ -57,7 +57,7 @@ exports.sync = (items, collection, options, models = null) ->
     removed = []
     old_models = []
     # rebuild old collection state
-    for item in items
+    for item in items when item.opts?.view?
         bycid[item.opts.view.model.cid] = item
         old_models.push item.opts.view.model
     unless (l1 = old_models.length) is (l2 = (models ? collection.models).length)
