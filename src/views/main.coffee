@@ -102,9 +102,10 @@ class exports.MainView extends BaseView
         title = @current.model.nodes.get('posts')?.metadata.get('title')?.value
         document.title = title or @current.model.get('id')
 
-        @sidebar.setCurrentEntry channel
-        @current.trigger 'show'
-        old?.trigger 'hide' unless old is @current
+        unless old is @current
+            old?.trigger 'hide'
+            @sidebar.setCurrentEntry channel
+            @current.trigger 'show'
 
     sort_channels: () =>
         # don't interfere with current event chain
