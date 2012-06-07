@@ -6,5 +6,5 @@ class exports.PostsNode extends Node
     initialize: ->
         # overwriting default Posts
         @posts = new TopicPosts parent:this
-        @posts.on('change:updated', @trigger.bind(this, 'post:updated'))
+        @posts.on('update:time', @trigger.bind(this, 'post:updated'))
         super

@@ -15,7 +15,7 @@ class exports.Posts extends Collection
 
     update_time: (post) =>
         @sort()
-        @trigger('update:tine', post)
+        @trigger('update:time', post)
 
     onadd: (post) ->
         # do nothing. this is needed in the topicpost collection

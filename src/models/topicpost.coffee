@@ -10,9 +10,11 @@ class exports.TopicPost extends Post
         super
 
     # Also dives into comments
-    get_last_update: =>
-        last = super
-        last1 = @comments.last()?.get_last_update()
-        if last1 and last1 > last
-            last = last1
-        last
+    get_last_update: () ->
+        last_post = @get_update_time()
+        last_comment = @comments.last()?.get_update_time()
+        if last_comment > last_post
+            return last_comment
+        else
+            return last_comment
+#

@@ -2,6 +2,26 @@
 { NodeStore } = require '../collections/node'
 { gravatar } = require '../util'
 
+##
+# traverses posts collection and each comments section
+# to find and count all recent posts and comments
+forEachPost = (posts, criteria, callback) ->
+    count = 0
+    for post in posts.models ? []
+        old = count
+        if post.get_update_time() > criteria
+            callback(post)
+            count++
+        for i in [post.comments.length-1 .. 0] # reversed
+            comment = post.comments.at(i)
+            if comment?.get_update_time() > criteria
+                callback(comment)
+                count++
+            else break
+        break if count is old
+    return count
+
+
 class exports.Channel extends Model
     initialize: ->
         @unread_count = 0
@@ -44,14 +64,8 @@ class exports.Channel extends Model
     count_unread: ->
         return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
-        count = 0
-        for post in (@nodes.get('posts')?.posts.models or [])
-            if post.get_last_update() > last_view
-                unless post.get 'unread'
-                    post.set(unread:yes)
-                    post.trigger 'unread'
-                count++
-            else break
+        posts = @nodes.get('posts').posts
+        count = forEachPost(posts, last_view, (post) -> post.unread())
         @trigger 'update:unread', count if count - @unread_count
         app.favicon(count - @unread_count) # only add new ones
         @unread_count = count
@@ -61,13 +75,10 @@ class exports.Channel extends Model
         return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
         posts = @nodes.get('posts').posts
-        last_update = posts.first()?.get_last_update()
-        if last_update and last_update > last_view
-            for post in (@nodes.get('posts')?.posts.models or [])
-                if post.get 'unread'
-                    post.set(unread:no)
-                    post.trigger 'read'
-            last_view = last_update
+        forEachPost posts, last_view, (post) ->
+            last_update = post.get_update_time()
+            last_view = last_update if last_update > last_view
+            post.read()
         @trigger 'update:unread', 0 if @unread_count
         app.favicon(@unread_count * -1) # remove them
         @unread_count = 0

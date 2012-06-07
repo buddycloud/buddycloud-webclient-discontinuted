@@ -23,5 +23,18 @@ class exports.Post extends Model
         if (jid = @get('author')?.jid)
             @author = app.users.get_or_create id: jid
 
-    get_last_update: =>
+    get_update_time: ->
         @get('updated') or @get('published') or "#{(new Date 0).toISOString()}"
+
+    get_last_update: ->
+        @get_update_time()
+
+    read: ->
+        return unless @get 'unread'
+        @set unread:no
+        @trigger 'read'
+
+    unread: ->
+        return if @get 'unread'
+        @set unread:yes
+        @trigger 'unread'
