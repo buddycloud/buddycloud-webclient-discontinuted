@@ -33,8 +33,8 @@ class exports.Channel extends Model
 
         # Auto-create the default set of nodes for that channel, so
         # that its data can be retrieved via XMPP
-        ["posts", "status", "subscriptions",
-         "geo/previous", "geo/current", "geo/next"].forEach (id) =>
+        ["posts", "status", "subscriptions"].forEach (id) =>
+            # "geo/previous", "geo/current", "geo/next"].forEach (id) =>
             @nodes.get_or_create {id, nodeid:"/user/#{@id}/#{id}"}
         @nodes.get('posts').on('post:updated', @trigger.bind(this, 'post:updated'))
 
