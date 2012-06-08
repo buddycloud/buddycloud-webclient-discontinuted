@@ -8,8 +8,7 @@ browserify = require 'browserify'
 { createReadStream } = require 'fs'
 { Compiler } = require 'dt-compiler'
 { wrap_prefix, Watcher } = require './util'
-
-
+    
 snippets = ["main"
     "channel/index", "channel/posts", "channel/post"
     "channel/topicpost", "channel/comments", "channel/edit"
@@ -28,6 +27,23 @@ config.defaults path.join(cwd, "config.js")
 
 buildPath  = path.join(cwd, "assets")
 designPath = path.join(cwd, "src", "_design")
+pluginPath = path.join(cwd, "src", 'plugins')
+
+# Write plugin list to a require file
+fileSystem = require 'fs'
+plugins    = []
+for pluginDir in fileSystem.readdirSync(pluginPath)
+  if fileSystem.statSync(pluginPath + '/' + pluginDir).isFile()
+    pluginName = pluginDir.replace /.*(.js)$/, ''
+    plugins[pluginName] = "./plugins/#{pluginDir}"
+  else 
+    pluginName = pluginDir.replace /\-[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}/, ''
+    plugins[pluginDir] = "./plugins/#{pluginDir}/#{pluginName}.js"
+
+pluginFile = fileSystem.createWriteStream('./src/plugin-list.coffee', {'flags': 'w'});
+pluginFile.write("\nwindow.plugin = []\n")
+for pluginName, pluginDir of plugins
+  pluginFile.write "window.plugin['#{pluginName}'] = require '#{pluginDir}'\n"
 
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]
@@ -102,12 +118,6 @@ start_server = (args, opts) ->
 
         javascript.use(require('shimify'))
         javascript.use(require('scopify').createScope require:'./init')
-
-        #fileSystem = require 'fs'
-        #plugins    = []
-        #for pluginDir in fileSystem.readdirSync(pluginPath)
-        #  pluginName = pluginDir.replace /\-[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}/, ''
-        #  plugin     = javascript.require(pluginPath + "/#{pluginDir}/#{pluginName}")
         
         if config.build
             # minification

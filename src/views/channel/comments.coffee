@@ -71,14 +71,6 @@ class exports.CommentsView extends PostsBaseView
             @$('.answer').click() unless @$('.answer textarea').val() is ""
 
             callback?.call(this)
-
-    gatherPostData: (text) ->
-        post =
-          content: text.val()
-          author:
-            name: app.users.current.get 'jid'
-          in_reply_to: @model.parent.get 'id'
-        return post
         
 #     update_attributes: ->
 #         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
