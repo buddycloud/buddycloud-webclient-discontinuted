@@ -25,6 +25,13 @@ formatdate = require 'formatdate'
 Notificon = require 'notificon'
 { DataHandler } = require './handlers/data'
 
+# plugins
+window.app.plugins = []
+if config.plugins
+  for name, version in config.plugins
+    pluginDirectory = "#{name}-#{version}"
+    require "./plugins/#{pluginDirectory}/#{name}.js"
+    console.warn "./plugins/#{pluginDirectory}/#{name}.js"
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
