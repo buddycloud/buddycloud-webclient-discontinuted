@@ -14,7 +14,7 @@ design = require '../../../_design/channel/details/list'
 { addClass, removeClass } = require '../../util'
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         section = @$section class: 'channelList', ->
             view.bind('show', @show)
             view.bind('hide', @hide)

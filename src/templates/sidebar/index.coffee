@@ -12,7 +12,7 @@ design = require '../../_design/sidebar/index'
 { load_indicate, insert, sync } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         @$div class:'sidebar', ->
             if view.personal?
                 # FIXME dt-linker listens only for new tags, not for added ones.

@@ -9,7 +9,7 @@ unless process.title is 'browser'
 design = require '../../_design/discover/index'
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         @$div class:'content', ->
             @$div class:'discoverChannels', ->
                 view.on("subview:group", @add)

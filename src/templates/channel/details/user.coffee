@@ -43,7 +43,7 @@ reversed_affiliations_map = {}
 reversed_affiliations_map[v] = k for k,v of affiliations_map
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         channel = view.parent.parent.model
         @$div class:'adminAction', ->
             lastclass = ''

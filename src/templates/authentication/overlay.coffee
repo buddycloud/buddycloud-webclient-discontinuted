@@ -9,7 +9,7 @@ unless process.title is 'browser'
 design = require '../../_design/authentication/overlay'
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         @$div class:'overlay', ->
             @$div ->
                 # .close

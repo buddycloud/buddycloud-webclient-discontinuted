@@ -14,7 +14,7 @@ design = require '../../_design/sidebar/entry'
 { addClass, removeClass } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {userdata:view,schema:5}, ->
+    return new Template {schema:5, view}, ->
         view.bind('remove', @remove)
         channel = view.model
         @$div class:'channel', ->
