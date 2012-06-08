@@ -52,6 +52,20 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? error
 
+    retract: (nodeid, itemIds, callback) =>
+        @request (done) =>
+            @connection.pubsub.retract nodeid, itemIds
+            , (stanza) =>
+                app.debug "retract", stanza, itemIds
+                @work_enqueue ->
+                    done()
+                    callback? null
+            , (error) =>
+                app.error "retract", nodeid, error
+                @work_enqueue ->
+                    done()
+                    callback? error
+
     subscribe: (nodeid, callback) =>
         @request (done) =>
             # TODO: subscribe channel

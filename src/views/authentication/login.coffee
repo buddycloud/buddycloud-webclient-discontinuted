@@ -6,7 +6,7 @@
 class exports.LoginView extends AuthenticationView
     cssclass: 'loginPicked'
     initialize: ->
-        @el = $('#login')
+        @setElement $('#login')
         # get elements from login form (index.html)
         warning = $('label[for="store_local"] > div')
         checkbox = $('#store_local')
@@ -39,7 +39,7 @@ class exports.LoginView extends AuthenticationView
                 else
                     "@#{config.domain}"
 
-        @el.find('form').live 'submit', EventHandler (ev) =>
+        @$('form').live 'submit', EventHandler (ev) =>
             console.warn "form submit"
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection
@@ -55,7 +55,7 @@ class exports.LoginView extends AuthenticationView
                     setCredentials([jid, password])
                 # disable the form and give feedback
                 $('#home_login_submit').prop "disabled", yes
-                @el.find('.leftBox').addClass "working"
+                @$('.leftBox').addClass "working"
         super
 
     start_connection: (jid, password) ->

@@ -1,6 +1,7 @@
 { ChannelView } = require './channel/index'
 { Channels } = require '../collections/channel'
 { Sidebar } = require './sidebar/index'
+{ MinimalSidebar } = require './sidebar/minimal'
 { BaseView } = require './base'
 { DiscoverView } = require './discover/index'
 { CreateTopicChannelView } = require './create_topic_channel/index'
@@ -21,23 +22,34 @@ class exports.MainView extends BaseView
         @views = {} # this contains the channelnode views
         @timeouts = {} # this contains the channelview remove timeouts
         @channels = new Channels
-        @channels.comparator = (channel) ->
-            a = new Date(channel.last_touched)
-            b = new Date(channel.nodes.get('posts')?.posts.first()?.get_last_update() or 0)
-            a.getTime() - b.getTime()
+        @channels.comparator = (a, b) =>
+            if @sidebar.search.filter.length
+                ai = a.id.indexOf(@sidebar.search.filter)
+                bi = b.id.indexOf(@sidebar.search.filter)
+                return  1 if ai is -1 and bi isnt -1
+                return -1 if bi is -1 and ai isnt -1
+            if a.unread_count or b.unread_count
+                unless a.unread_count is b.unread_count
+                    return b.unread_count - a.unread_count
+            da = new Date(a.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            db = new Date(b.nodes.get('posts')?.posts.first()?.get_last_update() or 0).getTime()
+            return db - da
 
-        @sidebar = new Sidebar
-            parent:this
-            model: @channels
+        @sidebar = if app.users.isAnonymous(app.users.current)
+                new MinimalSidebar
+                    model: @channels
+                    parent:this
+            else
+                new Sidebar
+                    model: @channels
+                    parent:this
+        @sidebar.search.on('filter', @sort_channels)
 
         # special because normaly parents add their children views to the dom
         @render =>
-            app.users.current.channels.bind 'add', (channel) =>
-                @channels.get_or_create channel
-            app.users.current.channels.forEach (channel) =>
-                @channels.get_or_create channel
-
-            @channels.bind 'remove', @remove_channel_view
+            app.users.current.channels.on('add', @add_channel)
+            app.users.current.channels.forEach(  @add_channel)
+            @channels.on('remove', @remove_channel_view)
             # FIXME: let the ChannelView be created on-demand, they're
             # rendering much too often during startup. mrflix supposedly says
             #@channels.bind 'add',    @new_channel_view
@@ -49,9 +61,14 @@ class exports.MainView extends BaseView
     render: (callback) ->
         super ->
             body = $('body').removeClass('start')
-            body.append(@el)
-            @el.show()
-            @sidebar.render(callback)
+            if app.users.isAnonymous(app.users.current)
+                body.addClass('anonymous')
+            else
+                body.removeClass('anonymous')
+            body.append(@$el)
+            @$el.show()
+            @sidebar.render()
+            callback?()
 
     show: =>
         @sidebar.moveIn()
@@ -85,9 +102,20 @@ class exports.MainView extends BaseView
         title = @current.model.nodes.get('posts')?.metadata.get('title')?.value
         document.title = title or @current.model.get('id')
 
-        @sidebar.setCurrentEntry channel
-        @current.trigger 'show'
-        old?.trigger 'hide' unless old is @current
+        if @current isnt old
+            old?.trigger 'hide'
+            @sidebar.setCurrentEntry channel
+            @current.trigger 'show'
+
+    sort_channels: () =>
+        # don't interfere with current event chain
+        process.nextTick =>
+            @channels.sort()
+
+    add_channel: (channel) =>
+        channel = @channels.get_or_create(channel)
+        channel.on('update:unread', @sort_channels)
+        channel.nodes.get_or_create(id:'posts').on('post:updated', @sort_channels)
 
     new_channel_view: (channel) =>
         channel = @channels.get_or_create channel, silent:yes
@@ -113,11 +141,16 @@ class exports.MainView extends BaseView
         @current.render()
 
     on_discover: =>
-        @current?.trigger 'hide'
-        @current = new DiscoverView(parent: this)
-        @current.once 'template:create', (tpl) =>
-            @trigger 'subview:content', tpl
-        @current.render()
+        old = @current
+        unless @discover?
+            @discover = new DiscoverView(parent: this)
+            @discover.once 'template:create', (tpl) =>
+                @trigger 'subview:content', tpl
+            @discover.render()
+        @current = @discover
+        if @current isnt old
+            old?.trigger 'hide'
+            @current.trigger 'show'
 
     on_scroll: =>
         @current?.on_scroll()

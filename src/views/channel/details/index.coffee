@@ -79,10 +79,8 @@ class exports.ChannelDetailsView extends BaseView
             @followers.trigger 'change:all:users'
 
         app.handler.connector.get_similar_channels @model.get('id'), 16, (err, jids) =>
-            unless jids and jids.length > 0
-                # Nothing to display
-                return
-            jids.forEach (jid) ->
+            app.error "get_similar_channels", err if err
+            (jids ? []).forEach (jid) ->
                 similars.add app.users.get_or_create(id: jid)
 
 
@@ -99,7 +97,7 @@ class exports.ChannelDetailsView extends BaseView
         "click .infoToggle": "click_toggle"
 
     click_toggle: EventHandler ->
-        @el.toggleClass 'hidden'
+        @$el.toggleClass 'hidden'
 
     render: (callback) ->
         super =>

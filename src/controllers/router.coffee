@@ -16,6 +16,10 @@ class exports.Router extends Backbone.Router
         ":id@:domain":"loadingchannel"
         "create-topic-channel":"createtopicchannel"
 
+    constructor: ->
+        delete @routes['register'] if config.registration is off
+        super
+
     initialize: ->
         Backbone.history.start pushState:on
 

@@ -1,22 +1,18 @@
 { PostsBaseView } = require './postsbase'
 { TopicPostView } = require './topicpost'
 
+# @parent is ChannelView
+# @model is a PostsNode
 class exports.PostsView extends PostsBaseView
     ns: 'topic'
     template: require '../../templates/channel/posts'
-#     tutorial: require '../../templates/channel/tutorial.eco'
-#     empty:    require '../../templates/channel/empty.eco'
 
-    # @parent is ChannelView
-    # @el will be passed by @parent
-    # @model is a PostsNode
     initialize: ->
         super
 
         @model.bind 'unsync', =>
             setTimeout =>
-                channel = app.channels.get @model.get('nodeid')
-                app.handler.data.refresh_channel channel.get('id')
+                app.handler.data.refresh_channel @getChannel().get('id')
             , 50
 
     render: (callback) ->
@@ -28,16 +24,22 @@ class exports.PostsView extends PostsBaseView
     createView: (opts = {}) ->
         new TopicPostView opts
 
+    getChannel: () ->
+        app.channels.get @model.get('nodeid')
+
     indexOf: (model) ->
         @model.posts.indexOf(model)
+
+    sort: () =>
+        @model.posts.sort()
 
     on_scroll: (peepholeTop, peepholeBottom) =>
         return unless @rendered
         for own cid, view of @views
             content = view.model.get('content')?.value
             unless content?
-                { top: viewTop } = view.el.position()
-                viewBottom = viewTop + view.el.outerHeight()
+                { top: viewTop } = view.$el?.position() ? {top:0}
+                viewBottom = viewTop + (view.$el?.outerHeight() ? 0)
                 if peepholeBottom >= viewTop
                     return @load_more()
 

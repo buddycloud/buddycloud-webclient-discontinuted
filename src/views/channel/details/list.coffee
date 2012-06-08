@@ -49,7 +49,7 @@ class exports.ChannelDetailsList extends BaseView
             @showing_users[user_id] = yes
             @trigger 'add', user
 
-        if not @showing_users[user_id] and @filter?(user) and
+        if not @showing_users[user_id] and (not @filter? or @filter(user)) and
          (@showing_all or not @showing_all and @showing_count < 8)
             show()
 

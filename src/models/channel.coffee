@@ -3,12 +3,29 @@
 { gravatar } = require '../util'
 
 ##
-# Attribute id: Jabber-Id
-# Attribute jid: Jabber-Id
+# traverses posts collection and each comments section
+# to find and count all recent posts and comments
+forEachPost = (posts, criteria, callback) ->
+    count = 0
+    for post in posts.models ? []
+        old = count
+        if post.get_update_time() > criteria
+            callback(post)
+            count++
+        for i in [post.comments.length-1 .. 0] # reversed
+            comment = post.comments.at(i)
+            if comment?.get_update_time() > criteria
+                callback(comment)
+                count++
+            else break
+        break if count is old
+    return count
+
+
 class exports.Channel extends Model
     initialize: ->
-        @_unread_count = 0
-        @id = @get 'id'
+        @unread_count = 0
+        @id = @get 'id' # jid
         @last_touched = new Date
         @nodes = new NodeStore channel:this
         @avatar = gravatar @id
@@ -17,12 +34,9 @@ class exports.Channel extends Model
         # Auto-create the default set of nodes for that channel, so
         # that its data can be retrieved via XMPP
         ["posts", "status", "subscriptions",
-         "geo/previous", "geo/current", "geo/next"].forEach (type) =>
-            nodeid = "/user/#{@id}/#{type}"
-            node = @nodes.get_or_create {id:nodeid, nodeid}
-            node.bind 'change:unread', =>
-                app.debug "channel got unread"
-                @trigger 'change:node:unread'
+         "geo/previous", "geo/current", "geo/next"].forEach (id) =>
+            @nodes.get_or_create {id, nodeid:"/user/#{@id}/#{id}"}
+        @nodes.get('posts').on('post:updated', @trigger.bind(this, 'post:updated'))
 
     push_post: (nodeid, post) ->
         @trigger 'post', nodeid, post
@@ -48,27 +62,26 @@ class exports.Channel extends Model
             @trigger 'loading:stop'
 
     count_unread: ->
+        return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
-        count = 0
-        for post in (@nodes.get('posts')?.posts.models or [])
-            if post.get_last_update() > last_view
-                post.set unread:yes unless post.get 'unread'
-                count++
-            else break
-        @trigger 'bubble'
-        app.favicon(count - @_unread_count) # only add new ones
-        @_unread_count = count
+        posts = @nodes.get('posts').posts
+        count = forEachPost(posts, last_view, (post) -> post.unread())
+        @trigger 'update:unread', count if count - @unread_count
+        app.favicon(count - @unread_count) # only add new ones
+        @unread_count = count
         count
 
     mark_read: ->
+        return if app.users.isAnonymous(app.users.current)
         last_view = @get('last_view') or (new Date 0).toISOString()
         posts = @nodes.get('posts').posts
-        last_update = posts.first()?.get_last_update()
-        if last_update and last_update > last_view
-            posts.forEach((post) -> post.set unread:no if post.get 'unread')
-            last_view = last_update
-        app.favicon(@_unread_count * -1) # remove them
-        @_unread_count = 0
+        forEachPost posts, last_view, (post) ->
+            last_update = post.get_update_time()
+            last_view = last_update if last_update > last_view
+            post.read()
+        @trigger 'update:unread', 0 if @unread_count
+        app.favicon(@unread_count * -1) # remove them
+        @unread_count = 0
         @save { last_view }
 
     count_notifications: ->

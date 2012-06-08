@@ -8,13 +8,14 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../_design/channel/posts'
-{ insert } = require '../util'
+{ insert, sync } = require '../util'
 
 module.exports = design (view) ->
     return new Template {userdata:view,schema:5}, ->
         @$section class:'topics', ->
-            list = new List
-            view.bind('view:topic', insert.bind(this, list))
-            view.bind 'view:topic:remove', (i) ->
-                list.remove(i).remove(soft:true)
+            items = new List
+            view.on('view:topic', insert.bind(this, items))
+            view.model.on('reset',  sync.bind(this, items))
+            view.model.on 'remove', (entry, collection, options) ->
+                items.remove(options.index)?.remove()
 

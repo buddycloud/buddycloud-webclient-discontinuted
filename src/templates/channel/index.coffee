@@ -36,7 +36,8 @@ module.exports = design (view) ->
                         @$nav ->
                             @$span class:'messages button', ->
                                 @remove() # FIXME
-                            @$span class:'edit button', ->
+                            save = @$span class:'save button'
+                            edit = @$span class:'edit button', ->
                                 update_edit_button = =>
                                     if app.users.current.canEdit(view.model)
                                         @show()
@@ -44,6 +45,14 @@ module.exports = design (view) ->
                                         @hide()
                                 view.bind 'update:affiliations', update_edit_button
                                 update_edit_button()
+                            app.on 'editmode', (state) ->
+                                return if view.hidden
+                                if state is on
+                                    save.show()
+                                    edit.text "Cancel"
+                                else if state is off
+                                    save.hide()
+                                    edit.text "Edit"
                             if app.users.isAnonymous(app.users.current)
                                 @$span class:'login button', ->
                                     @text "Login"#  FIXME +"or Register to Follow"
@@ -97,6 +106,26 @@ module.exports = design (view) ->
 
                 @$section class:'topics', ->
                     view.postsview.bind('template:create', @replace)
+
+                tutorial = null
+                update_tutorial = =>
+                    if view.model.nodes.get('posts').posts.length
+                        return tutorial?.remove()
+                    type = "empty"
+                    type = "tutorial" if app.users.current.canPost(view.model)
+                    return if type is tutorial?.type
+                    tutorial?.remove()
+                    tutorial = @$p({class:"#{type}"}, tutorial_text[type])
+                    tutorial.type = type
+                timeout = null
+                throttled_update_tutorial = ->
+                    if timeout?
+                        clearTimeout(timeout)
+                        timeout = null
+                    timeout ?= setTimeout(update_tutorial, 200)
+                view.model.on('add',    throttled_update_tutorial)
+                view.model.on('remove', throttled_update_tutorial)
+
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
                     spinner.hide()
@@ -110,3 +139,6 @@ module.exports = design (view) ->
         view.bind('hide', @hide)
 
 
+tutorial_text =
+    tutorial:"content goes above ..."
+    empty:"this channel is empty"

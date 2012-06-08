@@ -12,22 +12,15 @@ unless process.title is 'browser'
 design = require '../../_design/channel/post'
 { load_indicate, addClass, removeClass } = require '../util'
 
+
 module.exports = design (view) ->
     return new Template {userdata:view,schema:5}, ->
         @$section ->
             @attr class:"#{view.type}"
-            view.model.bind 'change:unread', =>
-                if view.model.get('unread')
-                    addClass(@,"unread")
-                else
-                    onfocus = =>
-                        setTimeout =>
-                            removeClass(@,"unread")
-                        , 2000
-                    if app.focused
-                        onfocus()
-                    else
-                        app.once('focus', onfocus)
+            unless app.users.isAnonymous(app.users.current)
+                view.on('read', => removeClass(@,"unread"))
+                view.on('unread',  => addClass(@,"unread"))
+                addClass(@,"unread") if view.model.get 'unread'
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 time = @$time()
@@ -41,9 +34,10 @@ module.exports = design (view) ->
                         time.hide()
                     else
                         time.show()
-                view.model.bind('change:updated',   update_time)
-                view.model.bind('change:published', update_time)
+                view.model.on('update:time', update_time)
                 update_time()
+                @$button class:'delete button', ->
+                    return @remove() if app.users.isAnonymous(app.users.current)
             name = @span class:'name'
 
             update_author = ->

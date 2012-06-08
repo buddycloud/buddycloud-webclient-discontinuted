@@ -43,8 +43,7 @@ class exports.Channels extends Collection
 
     touch: (channel, opts = {}) =>
         channel.last_touched = opts.date or new Date
-        @sort(silent:true)
-        @trigger 'change' unless opts.silent
+        @sort()
 
 
 # used in models/user

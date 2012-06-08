@@ -5,6 +5,7 @@ unless process.title is 'browser'
             el = @select '.channel:not(.personal):first'
             el.find('.avatar').removeAttr('style')
             el.find('span').text("")
+            el.removeClass 'selected'
             return el
 
 
@@ -14,10 +15,11 @@ design = require '../../_design/sidebar/entry'
 
 module.exports = design (view) ->
     return new Template {userdata:view,schema:5}, ->
+        view.bind('remove', @remove)
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>
-                if view.isPersonal()
+                if app.users.isPersonal(channel)
                     addClass(@,"personal")
                 else
                     removeClass(@,"personal")
@@ -30,7 +32,7 @@ module.exports = design (view) ->
             avatar = @div class:'avatar', ->
                 unread_counter = @$span class:'channelpost counter'
                 update_unread = ->
-                    unread = channel.count_unread()
+                    unread = channel.unread_count
                     unread_counter.text "#{unread}"
                     if unread > 0
                         unread_counter.show()

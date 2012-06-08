@@ -1,7 +1,7 @@
 S4 = Store.S4
 # TODO depends on client type and connection
 #   (is it mobile, or small data capacity?)
-MAX_REQUESTS = 64
+MAX_REQUESTS = 128
 
 # TODO add priorities to send requests in the right order to produce a better ux feeling
 

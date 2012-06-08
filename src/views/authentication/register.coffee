@@ -5,7 +5,7 @@
 class exports.RegisterView extends AuthenticationView
     cssclass: 'registerPicked'
     initialize: ->
-        @el = $('#register')
+        @setElement  $('#register')
 
         passwd = $('#home_register_new_password')
         confirm = $('#home_register_new_confirm')
@@ -27,7 +27,7 @@ class exports.RegisterView extends AuthenticationView
                 else
                     "@#{config.domain}"
 
-        @el.find('#home_register_account').live 'click', EventHandler (ev) =>
+        @$('#home_register_account').live 'click', EventHandler (ev) =>
             ev.stopPropagation()
             # the form sumbit will always trigger a new connection
             name = $('#home_register_new_jid').val()
@@ -42,7 +42,7 @@ class exports.RegisterView extends AuthenticationView
                 # disable the form
                 $('#home_register_submit').prop "disabled", yes
                 $('#register_waiting').css "visibility","visible"
-                @el.find('.leftBox').addClass "working"
+                @$('.leftBox').addClass "working"
             else
                 @error "noname" unless name.length
                 @error "nopasswd" unless password.length

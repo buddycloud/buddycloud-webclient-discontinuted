@@ -11,12 +11,12 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../_design/discover/list'
-{ insert } = require '../util'
+{ insert, addClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template {userdata:view,schema:5}, ->
         @$div ->
-            @attr 'class', "#{view.id} "+@attr('class')
+            addClass(@,"#{view.id}")
             @$h2 ->
                 @text view.name
             @$div class:'list', ->

@@ -21,6 +21,7 @@ class exports.ChannelView extends BaseView
         'click #createNewTopic': 'clickPost'
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
+        'click .save': 'clickSave'
 
     initialize: () ->
         super
@@ -119,7 +120,7 @@ class exports.ChannelView extends BaseView
     show: =>
         @hidden = false
 
-        @model.mark_read()
+        @model.mark_read() if @rendered
 
         # Not subscribed? Refresh!
         unless app.users.current.isFollowing(@model)
@@ -169,7 +170,7 @@ class exports.ChannelView extends BaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post = @gatherPostData(text)
+            post = @postsview.createPost(content:text.val())
             node = @model.nodes.get('posts')
             app.handler.data.publish node, post, (error) =>
                 # TODO: make sure prematurely added post
@@ -183,7 +184,7 @@ class exports.ChannelView extends BaseView
                 @isPosting = false
                 unless error
                     # Reset form
-                    @el.find('.newTopic').removeClass 'write'
+                    @$('.newTopic').removeClass 'write'
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'
@@ -243,8 +244,8 @@ class exports.ChannelView extends BaseView
     on_scroll: throttle_callback(100, ->
         return unless @rendered
         if this is @parent.current
-            peepholeTop = @el.scrollTop()
-            peepholeBottom = peepholeTop + @el.outerHeight()
+            peepholeTop = @$el.scrollTop()
+            peepholeBottom = peepholeTop + @$el.outerHeight()
             @postsview?.on_scroll(peepholeTop, peepholeBottom)
     )
 
@@ -269,6 +270,14 @@ class exports.ChannelView extends BaseView
                 @parent.trigger('subview:editbar', tpl)
             @editview.render()
         @editview.toggle()
+
+    clickSave: EventHandler ->
+#        unless @editview
+#            @editview = new ChannelEditView { parent: this, @model }
+#            @editview.bind 'template:create', (tpl) =>
+#                @parent.trigger('subview:editbar', tpl)
+#            @editview.render()
+        @editview.clickSave()
 
     isEditing: =>
         @editview?.active

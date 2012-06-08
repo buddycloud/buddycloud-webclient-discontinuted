@@ -8,20 +8,23 @@ class exports.Posts extends Collection
         super()
 
     initialize: ->
-        @parent.bind('post', @get_or_create.bind(this))
-        @bind('add', @onadd.bind(this))
+        @parent.on('post', @get_or_create.bind(this))
+        @on('add', @onadd.bind(this))
+        @on('change:updated',   @update_time)
+        @on('change:published', @update_time)
+
+    update_time: (post) =>
+        @sort()
+        @trigger('update:time', post)
 
     onadd: (post) ->
-        # Hook 'change' as Backbone Collections only sort on 'add'
-        post.bind 'change', =>
-            @sort(silent: true)
-            post.trigger 'update', this
+        # do nothing. this is needed in the topicpost collection
 
     comparator: (post) ->
         - new Date(post.get_last_update()).getTime()
 
 
 class exports.Comments extends exports.Posts
-    comparator: ->
-        -1 * super # comments have a reversed posts order
+    comparator: (post) ->
+        -1 * super(post) # comments have a reversed posts order
 

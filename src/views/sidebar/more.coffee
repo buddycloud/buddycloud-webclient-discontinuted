@@ -3,22 +3,22 @@
 class exports.ChannelOverView extends Backbone.View
 
     initialize: ->
-        @el = $('#more_channels')
-        @el.one 'click', @expand
-        @el.hide()
+        @$el = $('#more_channels')
+        @$el.one 'click', @expand
+        @$el.hide()
 
     show: (t = 200) ->
-        @el.delay(t * 0.1).fadeIn()
+        @$el.delay(t * 0.1).fadeIn()
 
     hide: (t = 200) ->
-        @el.delay(t * 0.1).fadeOut()
+        @$el.delay(t * 0.1).fadeOut()
 
     expand: =>
         app.router.navigate "more"
         body = $('body')
         body.addClass 'inTransition'
         body.addClass 'channelOverview'
-        @el.one('click', @collapse).text "← back"
+        @$el.one('click', @collapse).text "← back"
         @render()
 
     collapse: =>
@@ -28,7 +28,7 @@ class exports.ChannelOverView extends Backbone.View
         do document.redraw
         body.addClass 'inTransition'
         body.removeClass 'channelOverview'
-        @el.one('click', @expand).text "more …"
+        @$el.one('click', @expand).text "more …"
         @render()
 
     render: ->

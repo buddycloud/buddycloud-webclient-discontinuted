@@ -7,10 +7,6 @@ async = require 'async'
 class exports.ChannelEditView extends BaseView
     template: require '../../templates/channel/edit'
 
-    events:
-        'click .save': 'clickSave'
-        'click .cancel': 'clickCancel'
-
     initialize: ->
         super
         @active = no
@@ -54,20 +50,22 @@ class exports.ChannelEditView extends BaseView
     render: (callback) ->
 #         @bind('template:create', (@tpl) => )
         super ->
-            @el.css left:"234px"
+            @$el.css left:"234px"
             @trigger 'loading:stop'
             callback?.call(this)
 
     begin: =>
+        app.emit 'editmode', on
         @show =>
-            @el.css left:"0px"
+            @$el.css left:"0px"
             $('html').addClass('editmode')
             @parent.$('*').each @makeEditable
 
     end: =>
+        app.emit 'editmode', off
         $('html').removeClass('editmode')
         @parent.$('*').each @undoEditable
-        @el.css left:"234px"
+        @$el.css left:"234px"
         @setTimeout(410, @hide)
 
         @trigger 'end'

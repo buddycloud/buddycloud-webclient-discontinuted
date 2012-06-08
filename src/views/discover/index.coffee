@@ -8,9 +8,9 @@ class exports.DiscoverView extends BaseView
 
     initialize: ->
         @views = {}
+        @bind('show', @show)
         @bind('hide', @hide)
         @button = $('.sidebar button.discover')
-        @button.addClass('active')
         super
 
         my_jid = app.users.current.get('id')
@@ -48,17 +48,17 @@ class exports.DiscoverView extends BaseView
 #             lists:
 #                 'nearby':"Nearby"
 
+    show: =>
+        @button.addClass('active')
+
     hide: =>
         @button.removeClass('active')
 
     render: (callback) ->
         super ->
             for _, view of @views
-                view.bind 'template:create', (tpl) =>
-                    @trigger 'subview:group', tpl
+                view.on('template:create', @trigger.bind(this, 'subview:group'))
                 view.render()
-#                 do (view) => view.render =>
-#                     @trigger 'subview:group', view.el
             callback?.call(this)
 
 channels_to_collection = (model, method, args...) ->

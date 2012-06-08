@@ -46,7 +46,7 @@ module.exports = design (view) ->
                         'data-userid': uid # FIXME UGLY
                     idxs[uid] = users.keys[users.length - 1]
                     update_count?()
-                    section.show() if users.length is 1
+                    process.nextTick(section.show) if users.length is 1
 
                 view.bind 'remove', (user) ->
                     uid = user.get 'id'
@@ -55,7 +55,7 @@ module.exports = design (view) ->
                     users.remove(i)?.remove()
                     delete idxs[uid]
                     update_count?()
-                    section.hide() if users.length is 0
+                    process.nextTick(section.hide) if users.length is 0
 
                 olduser = null
                 view.info.bind 'update:select:user', (user, el) =>

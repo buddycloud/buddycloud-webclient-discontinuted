@@ -7,14 +7,8 @@ class exports.ChannelEntry extends BaseView
 
     initialize: ->
         super
-#         @model.bind 'change:node:metadata', @render
-        # Update unread counter:
-#         @model.bind 'post', @render
-        @ready =>
-            @parent.ready =>
-                @model.bind 'bubble', @bubble
 
-        @model.bind 'post', throttle_callback 50, =>
+        @model.bind 'update:unread', throttle_callback 50, =>
             @trigger 'update:unread_counter'
 
         postsnode = @model.nodes.get_or_create(id: 'posts')
@@ -25,24 +19,13 @@ class exports.ChannelEntry extends BaseView
         statusnode.bind 'post', =>
             @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value
 
-
     events:
         "click": "click_entry"
 
-    render: (callback) =>
-        i = @parent.model.indexOf(@model)
-        @bind 'template:create', (tpl) =>
-            if @isPersonal()
-                @parent.trigger('subview:personalchannel', tpl)
-                @parent.personal = this
-            else
-                if @parent.personal?
-                    # fill the index gap
-                    i -= 1 if i > @parent.model.indexOf(@parent.personal.model)
-                @parent.trigger('subview:entry', i, tpl)
+    render: (callback) ->
         super ->
             @trigger 'update:highlight'
-            callback()
+            callback?()
 
     click_entry: EventHandler ->
             app.debug "ChannelEntry.click_entry", @, @model
@@ -51,35 +34,28 @@ class exports.ChannelEntry extends BaseView
             # setCurrentChannel() invoked mark_read(), update counter:
             @trigger 'update:unread_counter'
 
-    isPersonal : (a, b) =>
-        (@model.get('id') is app.users.current.get('id')) and (a ? true) or (b ? false)
-
-    isSelected : (a, b) =>
-        (@parent.current?.model.cid is @model.cid) and (a ? true) or (b ? false)
-
-
-    isFollowed : (a, b) =>
-        app.users.current.isFollowing(@model) and (a ? true) or (b ? false)
+    isSelected: =>
+        @model.get('id') is @parent.current?.model.get('id')
 
     bubble: (duration = 500) =>
         return # FIXME
-        return if @isPersonal() # dont eva eva bubble the personal channel!1!elf
+        return if app.users.isPersonal(@model) # dont eva eva bubble the personal channel!1!elf
         @parent._movingChannels ?= 0
         channelsel = @parent.$('#channels > .scrollHolder') # FIXME y ?
 
         # relative offset + absolute offset
-        offset = @el.position().top + channelsel.scrollTop()
+        offset = @$el.position().top + channelsel.scrollTop()
 
         # don't bubble if the channel is..
         #  - on top
         #  - bubbling
-        return off if offset is 0 or @el.hasClass('bubbleUp')
+        return off if offset is 0 or @$el.hasClass('bubbleUp')
 
         # sets z-index so that the element moves on top of all the others
-        @el.addClass('bubbleUp')
+        @$el.addClass('bubbleUp')
         # create a gap where the channel starts off
-        @el.before $('<div>')
-            .height(@el.height())
+        @$el.before $('<div>')
+            .height(@$el.height())
             .animate {height:0},
                 duration: duration
                 complete: ->
@@ -87,8 +63,8 @@ class exports.ChannelEntry extends BaseView
 
         # detach the bubbling channel from the DOM
         # and insert it at the top
-        @el.detach().css(top:offset)
-        channelsel.prepend @el
+        @$el.detach().css(top:offset)
+        channelsel.prepend @$el
 
         # wrap a growing holder around it
         @el.wrap $('<div>')
@@ -97,7 +73,7 @@ class exports.ChannelEntry extends BaseView
         # bubble the channel
         increase = => @parent._movingChannels += 1
         decrease = => @parent._movingChannels -= 1
-        @el.animate({top:0},
+        @$el.animate({top:0},
             duration: duration
             complete: ->
                 decrease()
@@ -105,11 +81,11 @@ class exports.ChannelEntry extends BaseView
                     .removeClass('bubbleUp')
                     .css(top:'', 'z-index':'')
                     .unwrap()
-                channelsel.parent().antiscroll()
+#                 channelsel.parent().antiscroll()
         ).css('z-index', increase() + 1)
 
         # let the holder grow
-        @el.parent()
-            .animate({height:@el.height()}, duration)
+        @$el.parent()
+            .animate({height:@$el.height()}, duration)
             .css(overflow:'visible')
 

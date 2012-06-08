@@ -6,6 +6,13 @@ class exports.PostsBaseView extends BaseView
         @views = {}
         super
 
+    createPost: (value = {}) ->
+        _.extend({
+            content: ""
+            author:
+                name: app.users.current.get 'id'
+        }, value)
+
     ##
     # TODO add different post type switch here
     # currently only TopicPosts are supported
@@ -15,13 +22,7 @@ class exports.PostsBaseView extends BaseView
             parent:this
         return if view.rendering
         i = @indexOf(view.model)
-        view.bind 'template:create', (tpl) =>
+        view.on 'template:create', (tpl) =>
             @trigger "view:#{@ns}", i, tpl
-            view.model.bind 'update', =>
-                j = @indexOf(view.model)
-                return if j is i
-                @trigger "view:#{@ns}:remove", i
-                @trigger "view:#{@ns}", j, tpl
-                i = j
         view.render()
 

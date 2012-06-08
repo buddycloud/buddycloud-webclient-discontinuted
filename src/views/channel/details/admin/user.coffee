@@ -5,8 +5,8 @@ class exports.UserAdmin extends BaseView
 
     initialize: ({@number}) ->
         super
-        @model.bind 'change', @render
-        @model.bind 'change:node:metadata', @render
+#         @model.bind 'change', @render
+#         @model.bind 'change:node:metadata', @render
 
     render: =>
         @update_attributes()

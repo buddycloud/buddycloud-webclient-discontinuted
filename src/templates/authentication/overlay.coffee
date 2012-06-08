@@ -12,7 +12,9 @@ module.exports = design (view) ->
     return new Template {userdata:view,schema:5}, ->
         @$div class:'overlay', ->
             @$div ->
+                # .close
                 @$div class: 'left', ->
                     @$p ->
                         @$a ->
+                            return @remove() if config.registration is off
                             @attr href: "/register"

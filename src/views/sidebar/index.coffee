@@ -19,13 +19,8 @@ class exports.Sidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-#         @search.bind 'filter', @render
-
         @channelsel = null
         @hidden = yes
-
-        $(window).resize =>
-            @channelsel?.parent().antiscroll()
 
         # sidebar entries
         @current = undefined
@@ -43,11 +38,7 @@ class exports.Sidebar extends BaseView
 
     render: (callback) ->
         super ->
-            @channelsel = @$('#channels > .scrollHolder')
             @search.render(callback)
-#         @$('.tutorial').remove()
-#         if channels.length < 2
-#             @el.append @tutorial()
 
     new_channel_entry: (channel) =>
         old = @current
@@ -58,9 +49,7 @@ class exports.Sidebar extends BaseView
                 parent:this
             @views[channel.cid] = entry
             @current ?= entry
-            entry?.render =>
-                @channelsel?.parent().antiscroll()
-                @$('.tutorial').remove()
+            @insert_entry(entry)
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
 
@@ -72,10 +61,27 @@ class exports.Sidebar extends BaseView
         if @timeouts[channel.cid]?
             clearTimeout @timeouts[channel.cid]
         @timeouts[channel.cid] = setTimeout ( =>
-            @views[channel.cid].el?.remove?()
+            @views[channel.cid].trigger 'remove'
             delete @timeouts[channel.cid]
             delete @views[channel.cid]
         ), time
+
+    indexOf: (blob) ->
+        i = @model.indexOf(blob)
+        if @personal?
+            # fill the index gap
+            i -= 1 if i > @model.indexOf(@personal.model)
+        return i
+
+    insert_entry: (entry) ->
+        entry.bind 'template:create', (tpl) =>
+            if app.users.isPersonal(entry.model)
+                @personal = entry
+                @trigger('subview:personalchannel', tpl)
+            else
+                i = @indexOf(entry.model)
+                @trigger('subview:entry', i, tpl)
+        do entry.render
 
     setCurrentEntry: (channel) =>
         old = @current
@@ -83,8 +89,8 @@ class exports.Sidebar extends BaseView
             @current = @new_channel_entry channel
         if @timeouts[@current.model.cid]?
             clearTimeout @timeouts[@current.model.cid]
-            @current.el.clearQueue()
-            @current.el.css opacity:1
+            @current.$el.clearQueue()
+            @current.$el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.trigger('update:highlight')
         old?.trigger('update:highlight')
@@ -109,12 +115,12 @@ class exports.Sidebar extends BaseView
 
     # sliding in animation
     moveIn: (t = 200) ->
-        @el.animate(left:"0", t)
+        @$el?.animate(left:"0", t)
 #         @overview.show(t)
         @hidden = no
 
     # sliding out animation
     moveOut: (t = 200) ->
-        @el.animate(left:"-#{@el.width?()}px", t)
+        @$el?.animate(left:"-#{@$el?.width?() ? 0}px", t)
 #         @overview.hide(t)
         @hidden = yes

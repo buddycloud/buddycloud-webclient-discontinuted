@@ -23,16 +23,16 @@ class exports.FollowNotificationView extends BaseView
         @trigger 'loading'
         app.handler.data.grant_subscription @model, =>
             @trigger 'granted'
-            @message_shown = new Date().getTime()
+            @message_shown = Date.now()
 
     on_click_deny: EventHandler ->
         @trigger 'loading'
         app.handler.data.deny_subscription @model, =>
             @trigger 'denied'
-            @message_shown = new Date().getTime()
+            @message_shown = Date.now()
 
     remove: =>
-        now = new Date().getTime()
+        now = Date.now()
         if @message_shown? and
            @message_shown + MIN_MESSAGE_TIME > now
             # Not shown long enough, procrastinate till later

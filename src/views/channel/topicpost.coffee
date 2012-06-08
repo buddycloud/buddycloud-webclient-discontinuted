@@ -9,8 +9,7 @@ class exports.TopicPostView extends BaseView
     initialize: ->
         @hidden = no
         super
-#         @model.bind 'change', @render FIXME
-        @model.bind 'change:author', @on_author
+        @model.on('change:author', @on_author)
 
         @opener   = new PostView
             type:'opener'
@@ -20,6 +19,9 @@ class exports.TopicPostView extends BaseView
         @comments = new CommentsView
             model:@model.comments
             parent:this
+
+    getChannel: () ->
+        @parent.getChannel()
 
     on_author: =>
         if @model.get('author')?.jid?

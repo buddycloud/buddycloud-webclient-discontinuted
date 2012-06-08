@@ -1,6 +1,7 @@
 { EventEmitter } = require 'events'
 
 window.app = new EventEmitter
+app.setMaxListeners(0) # unlimited
 app[k] = v for k,v of {
     version: '0.0.0-60'
     localStorageVersion:'9e5dcf0'
@@ -32,6 +33,9 @@ if config.plugins
     pluginDirectory = "#{name}-#{version}"
     require "./plugins/#{pluginDirectory}/#{name}.js"
     console.warn "./plugins/#{pluginDirectory}/#{name}.js"
+
+app.use = (plugin) ->
+    plugin?.call(this, this, require)
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on

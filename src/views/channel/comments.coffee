@@ -26,7 +26,7 @@ class exports.CommentsView extends PostsBaseView
         unless text.val() is ""
             text.attr "disabled", "disabled"
             @isPosting = true
-            post = @gatherPostData(text)
+            post = @createPost(content:text.val())
             node = @model.parent.collection.parent
             app.handler.data.publish node, post, (error) =>
                 # Re-enable form
@@ -34,7 +34,7 @@ class exports.CommentsView extends PostsBaseView
                 text.removeAttr "disabled"
                 unless error
                     # Reset form
-                    @el.find('.answer').removeClass 'write'
+                    @$('.answer').removeClass 'write'
                     text.val ""
                     # clear localStorage
                     text.trigger 'txtinput'
@@ -42,12 +42,21 @@ class exports.CommentsView extends PostsBaseView
                     console.error "postError", error
                     @show_comment_error error
 
+    createPost: ->
+        _.extend(super, in_reply_to:@model.parent.get 'id')
+
     createView: (opts = {}) ->
         opts.type ?= 'comment'
         new PostView opts
 
+    getChannel: () ->
+        @parent.parent?.getChannel?()
+
     indexOf: (model) ->
         @model.indexOf(model)
+
+    sort: () =>
+        @model.sort()
 
     show_comment_error: (error) =>
         p = $('<p class="postError"></p>')

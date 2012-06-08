@@ -16,7 +16,7 @@ snippets = ["main"
     "channel/details/index", "channel/details/list", "channel/details/user"
     "channel/follow_notification", "channel/pending_notification"
     "channel/error_notification", "channel/private"
-    "sidebar/index", "sidebar/search", "sidebar/entry"
+    "sidebar/index", "sidebar/minimal", "sidebar/search", "sidebar/entry"
     "authentication/overlay"
     "create_topic_channel/index"
     "discover/index", "discover/group", "discover/list", "discover/entry"
@@ -84,7 +84,6 @@ start_server = (args, opts) ->
                 debug  : config.dev
                 require: [
                     jquery  :'br-jquery'
-                    backbone:'backbone-browserify'
                     path.join(cwd, "src", "init")
                 ]
                 extensions:
