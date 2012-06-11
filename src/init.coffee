@@ -123,9 +123,11 @@ app.initialize = ->
 
     $(document).ready ->
         # page routing
-        app.router = new Router
+        app.router  = new Router
+        app.plugins = []
         for plugin,version of config.plugins
-           include = window.plugin["#{plugin}-#{version}"].plugin.init app, require
+           id = "#{plugin}-#{version}"
+           app.plugins[id] = window.plugin[id].plugin.init app, require
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding

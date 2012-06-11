@@ -28,7 +28,8 @@ window.config = {
     bosh_service: 'https://beta.buddycloud.org:443/http-bind/',
 	
     plugins: {
-        'show-client': '0.1.0'
+        'show-client': '0.1.0',
+        'security-labelling': '0.1.0'
     }
 
 };
