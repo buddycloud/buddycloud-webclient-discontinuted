@@ -41,7 +41,6 @@ class exports.ChannelView extends BaseView
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
-        console.log @
         # Potentially expensive (filters all node affiliations)
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
@@ -219,20 +218,13 @@ class exports.ChannelView extends BaseView
             @$('.follow').show()
 
     update_status: =>
-        statusnode = @model.nodes.get_or_create(id:'status')
+        statusnode = @model.nodes.get_or_create(id:'status')Ä
         value = statusnode.posts.at(0)?.get('content')?.value
         console.warn @model.get('id'), statusnode, "update_status", value
         if value
             @trigger('status', value)
         else
             @load_status_posts()
-
-    gatherPostData: (text) ->
-        post =
-          content: text.val()
-          author:
-            name: app.users.current.get 'jid'
-        return post
         
     load_status_posts: =>
         statusnode = @model.nodes.get_or_create(id:'status')

@@ -24,6 +24,12 @@ window.config = {
 
     /* Sign up for an embed.ly account to use OEmbed */
     embedly_key:undefined,
+    
+    bosh_service: 'https://beta.buddycloud.org:443/http-bind/',
+	
+    plugins: {
+        'show-client': '0.1.0',
+        'security-labelling': '0.1.0'
+    }
 
-    plugins: {}
 };
