@@ -218,7 +218,7 @@ class exports.ChannelView extends BaseView
             @$('.follow').show()
 
     update_status: =>
-        statusnode = @model.nodes.get_or_create(id:'status')Ä
+        statusnode = @model.nodes.get_or_create(id:'status')
         value = statusnode.posts.at(0)?.get('content')?.value
         console.warn @model.get('id'), statusnode, "update_status", value
         if value
