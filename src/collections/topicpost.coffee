@@ -4,8 +4,11 @@
 class exports.TopicPosts extends Posts
     model: TopicPost
 
-    onadd: (post) ->
-        super # implemented on Posts only for this purpose
+    initialize: ->
+        @on('add', @onadd)
+        super
+
+    onadd: (post) =>
         post.comments.on('update:time', @update_time)
 
     get_or_create: (post) ->
