@@ -5,6 +5,7 @@ unless process.title is 'browser'
             el = @select "article.topic:first section.opener" , "p *"
             el.find('time').attr(datetime:"", title:"")
             el.find('p, span, a, time').text("")
+            el.find('img.avatar').attr(src:"")
             return el
 
 
