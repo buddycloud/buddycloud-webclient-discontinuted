@@ -108,23 +108,24 @@ module.exports = design (view) ->
                     view.postsview.bind('template:create', @replace)
 
                 tutorial = null
+                timeout = null
                 update_tutorial = =>
+                    timeout = null
                     if view.model.nodes.get('posts').posts.length
-                        return tutorial?.remove()
+                        tutorial?.remove()
+                        tutorial = null
+                        return
                     type = "empty"
                     type = "tutorial" if app.users.current.canPost(view.model)
                     return if type is tutorial?.type
                     tutorial?.remove()
                     tutorial = @$p({class:"#{type}"}, tutorial_text[type])
                     tutorial.type = type
-                timeout = null
                 throttled_update_tutorial = ->
-                    if timeout?
-                        clearTimeout(timeout)
-                        timeout = null
                     timeout ?= setTimeout(update_tutorial, 200)
                 view.model.on('add',    throttled_update_tutorial)
                 view.model.on('remove', throttled_update_tutorial)
+                view.model.on('loading:stop', throttled_update_tutorial)
 
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'

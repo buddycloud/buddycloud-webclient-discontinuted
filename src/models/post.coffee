@@ -26,8 +26,7 @@ class exports.Post extends Model
     get_update_time: ->
         @get('updated') or @get('published') or "#{(new Date 0).toISOString()}"
 
-    get_last_update: ->
-        @get_update_time()
+    get_last_update: @::get_update_time
 
     read: ->
         return unless @get 'unread'
