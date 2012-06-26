@@ -10,10 +10,13 @@ class exports.PostView extends BaseView
         @model.on('change:content', @change_content)
         @ready @change_content
 
-        @model.on 'unread', =>
-            @trigger 'unread'
+#         @model.on 'change:unread', =>
+#             @trigger 'unread'
 
-        @model.on 'read', =>
+        @model.on 'change:unread', =>
+            if @model.get 'unread' is yes
+                return @trigger 'unread'
+
             onfocus = =>
                 setTimeout =>
                     @trigger 'read'

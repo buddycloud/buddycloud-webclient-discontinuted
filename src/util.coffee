@@ -97,7 +97,7 @@ exports.parse_post = (content = "") ->
 exports.throttle_callback = (interval, callback) ->
     timeout = null
     # We return a proxy callback:
-    () ->
+    return () ->
         that = this
         args = arguments
         # None yet scheduled?

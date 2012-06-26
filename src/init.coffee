@@ -26,6 +26,7 @@ require './vendor-bridge'
 formatdate = require 'formatdate'
 Notificon = require 'notificon'
 { DataHandler } = require './handlers/data'
+{ throttle_callback } = require './util'
 
 
 app.use = (plugin) ->
@@ -46,14 +47,15 @@ Strophe.fatal = (msg) ->
 
 # show a nice unread counter in the favicon
 total_number = 0
-app.favicon = (number) ->
-    total = total_number + number ? 0
-    return if total is total_number or isNaN(total)
-    console.warn "notificon", total
-    Notificon total or "",
+throttled_Notificon = throttle_callback 20, () ->
+    Notificon total_number or "",
         font:  "9px Helvetica"
         stroke:"#F03D25"
         color: "#ffffff"
+app.favicon = (number) ->
+    total = total_number + number ? 0
+    return if total is total_number or isNaN(total)
+    throttled_Notificon()
     total_number = total
 
 
