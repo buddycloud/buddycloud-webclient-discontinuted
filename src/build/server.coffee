@@ -103,8 +103,20 @@ start_server = (args, opts) ->
         javascript.use(require('shimify'))
         javascript.use(require('scopify').createScope require:'./init')
 
+        backendjs = browserify
+                mount  : '/web/js/backend.js'
+                verbose: yes
+                watch  : yes
+                cache  : on
+                debug  : config.dev
+                entry  : path.join(cwd, "src", "backend.coffee")
+
+        backendjs.use(require('shimify'))
+        backendjs.use(require('scopify').createScope())
+
         if config.build
             # minification
+            backendjs.register  'post', require 'uglify-js'
             javascript.register 'post', require 'uglify-js'
 
         stylePath = path.join(cwd, "src", "styles")
@@ -126,6 +138,7 @@ start_server = (args, opts) ->
                             watcher?.watch imp.path
                 style.use nib()
 
+        server.use backendjs
         server.use javascript
         server.use express.static buildPath
 

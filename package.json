@@ -41,6 +41,8 @@
 ,   "dt-jquery": "0.3.2"
 ,   "dt-list": "0.1.0"
 ,   "adiff": "0.2.4"
+,   "node-xmpp": "*"
+,   "ltx-xpath": "*"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
 ,   "notificon": "https://github.com/dodo/Notificon/tarball/master"
   }
