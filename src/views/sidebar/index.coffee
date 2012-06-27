@@ -26,8 +26,10 @@ class exports.Sidebar extends BaseView
         @current = undefined
         @views = {} # this contains the channel entry views
         @timeouts = {} # this contains the channelview remove timeouts
-#         @model.forEach        @new_channel_entry
         @ready =>
+            if @_next_channel?
+                @setCurrentEntry(@_next_channel)
+                delete @_next_channel
             @model.forEach        @new_channel_entry
             @model.bind 'add',    @new_channel_entry
             @model.bind 'remove', @remove_channel_entry
@@ -66,17 +68,19 @@ class exports.Sidebar extends BaseView
             delete @views[channel.cid]
         ), time
 
+    # index of the list in the ui
     indexOf: (blob) ->
         i = @model.indexOf(blob)
-        if @personal?
+        if @personal? and i isnt -1
             # fill the index gap
             i -= 1 if i > @model.indexOf(@personal.model)
         return i
 
     insert_entry: (entry) ->
+        if app.users.isPersonal(entry.model)
+            @personal = entry
         entry.bind 'template:create', (tpl) =>
             if app.users.isPersonal(entry.model)
-                @personal = entry
                 @trigger('subview:personalchannel', tpl)
             else
                 i = @indexOf(entry.model)
@@ -84,6 +88,8 @@ class exports.Sidebar extends BaseView
         do entry.render
 
     setCurrentEntry: (channel) =>
+        # cant load channel when ui is not ready
+        return @_next_channel = channel unless @rendered
         old = @current
         unless (@current = @views[channel.cid])
             @current = @new_channel_entry channel
