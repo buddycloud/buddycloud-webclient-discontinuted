@@ -26,6 +26,7 @@ require './vendor-bridge'
 formatdate = require 'formatdate'
 Notificon = require 'notificon'
 { DataHandler } = require './handlers/data'
+{ getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
 
 
@@ -107,7 +108,8 @@ app.initialize = ->
 
     # strophe handler
     app.handler.data = new DataHandler()
-    app.setConnection app.relogin()
+    creds = getCredentials() ? []
+    app.setConnection app.relogin(creds...)
 
     ### the password hack ###
     ### FIXME
