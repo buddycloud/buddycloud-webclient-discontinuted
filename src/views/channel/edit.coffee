@@ -64,6 +64,7 @@ class exports.ChannelEditView extends BaseView
     end: =>
         app.emit 'editmode', off
         $('html').removeClass('editmode')
+        @parent.$('.dangerZone').removeClass('.dangerZone') # FIXME
         @parent.$('*').each @undoEditable
         @$el.css left:"234px"
         @setTimeout(410, @hide)
