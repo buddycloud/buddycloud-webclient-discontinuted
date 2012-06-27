@@ -14,6 +14,8 @@ design = require '../../_design/sidebar/index'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'sidebar', ->
+            @$a id:'logout', ->
+                @remove() if app.users.isAnonymous(app.users.current)
             if view.personal?
                 # FIXME dt-linker listens only for new tags, not for added ones.
                 @$div class:'personal channel', ->
