@@ -101,6 +101,7 @@ class exports.Sidebar extends BaseView
             @current.$el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.trigger('update:highlight')
+        @search.reset()
         old?.trigger('update:highlight')
 
     on_logout: ->

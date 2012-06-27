@@ -14,6 +14,17 @@ class exports.Searchbar extends BaseView
             @events['keydown input[type="search"]'] = 'on_keydown'
         super
 
+    reset: () ->
+        if @set_filter ""
+            @$('input[type="search"]').val ""
+
+    set_filter: (filter) ->
+        return no if filter is @filter
+        @filter = filter
+        process.nextTick =>
+            @trigger 'filter', @filter
+        return yes
+
     on_keydown: (ev) =>
         code = ev.keyCode or ev.which
         return unless code is 13
@@ -21,10 +32,7 @@ class exports.Searchbar extends BaseView
 
     on_input: (tag, ev) => # used in the template, since we use an input event shim
         search = tag._jquery?.val()?.toLowerCase() or ""
-        return if search is @filter
-        @filter = search
-        process.nextTick =>
-            @trigger 'filter', search
+        @set_filter(search)
 
     on_search: EventHandler ->
         return if @filter is ""
@@ -38,11 +46,7 @@ class exports.Searchbar extends BaseView
             unless is_jid
                 search = channels[0].get 'id'
             app.router.navigate search, yes
-
-        input.val ""
-        @filter = ""
-        process.nextTick =>
-            @trigger 'filter', ""
+        @reset()
 
 
 
