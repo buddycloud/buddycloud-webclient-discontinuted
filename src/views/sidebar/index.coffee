@@ -2,6 +2,7 @@
 { ChannelEntry } = require './entry'
 { Searchbar } = require './search'
 { BaseView } = require '../base'
+{ setCredentials } = require '../../handlers/creds'
 
 # The sidebar shows all channels the user is:
 # * subscribed to
@@ -12,6 +13,7 @@ class exports.Sidebar extends BaseView
     events:
         'click #create_topic_channel': 'on_create_topic_channel'
         'click button.discover': 'on_discover'
+        'click #logout': 'on_logout'
 
     initialize: () ->
         super
@@ -26,8 +28,10 @@ class exports.Sidebar extends BaseView
         @current = undefined
         @views = {} # this contains the channel entry views
         @timeouts = {} # this contains the channelview remove timeouts
-#         @model.forEach        @new_channel_entry
         @ready =>
+            if @_next_channel?
+                @setCurrentEntry(@_next_channel)
+                delete @_next_channel
             @model.forEach        @new_channel_entry
             @model.bind 'add',    @new_channel_entry
             @model.bind 'remove', @remove_channel_entry
@@ -66,17 +70,19 @@ class exports.Sidebar extends BaseView
             delete @views[channel.cid]
         ), time
 
+    # index of the list in the ui
     indexOf: (blob) ->
         i = @model.indexOf(blob)
-        if @personal?
+        if @personal? and i isnt -1
             # fill the index gap
             i -= 1 if i > @model.indexOf(@personal.model)
         return i
 
     insert_entry: (entry) ->
+        if app.users.isPersonal(entry.model)
+            @personal = entry
         entry.bind 'template:create', (tpl) =>
             if app.users.isPersonal(entry.model)
-                @personal = entry
                 @trigger('subview:personalchannel', tpl)
             else
                 i = @indexOf(entry.model)
@@ -84,6 +90,8 @@ class exports.Sidebar extends BaseView
         do entry.render
 
     setCurrentEntry: (channel) =>
+        # cant load channel when ui is not ready
+        return @_next_channel = channel unless @rendered
         old = @current
         unless (@current = @views[channel.cid])
             @current = @new_channel_entry channel
@@ -93,8 +101,12 @@ class exports.Sidebar extends BaseView
             @current.$el.css opacity:1
             delete @timeouts[@current.model.cid]
         @current?.trigger('update:highlight')
+        @search.reset()
         old?.trigger('update:highlight')
 
+    on_logout: ->
+        setCredentials()
+        return true
 
     on_create_topic_channel: =>
         console.log "on_create_topic_channel", arguments...

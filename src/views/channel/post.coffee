@@ -10,10 +10,13 @@ class exports.PostView extends BaseView
         @model.on('change:content', @change_content)
         @ready @change_content
 
-        @model.on 'unread', =>
-            @trigger 'unread'
+#         @model.on 'change:unread', =>
+#             @trigger 'unread'
 
-        @model.on 'read', =>
+        @model.on 'change:unread', =>
+            if @model.get 'unread' is yes
+                return @trigger 'unread'
+
             onfocus = =>
                 setTimeout =>
                     @trigger 'read'
@@ -47,6 +50,7 @@ class exports.PostView extends BaseView
     events:
         'click .name': 'clickAuthor'
         'click .delete': 'clickDelete'
+        'click .cancel-delete': 'clickCancelDelete'
         'click .avatar': 'clickAuthor'
         'click .userlink': 'clickUserlink'
 
@@ -61,6 +65,10 @@ class exports.PostView extends BaseView
 
     clickDelete: EventHandler ->
         @$el?.toggleClass 'dangerZone'
+        if @$el.hasClass 'dangerZone'
+            @$('button.delete').text("are you sure?")
+        else
+            @$('button.delete').text("✖")
         return if not @$el or @$el.hasClass 'dangerZone'
         # FIXME add second button tu delete
         channel = @parent.getChannel()
@@ -68,6 +76,10 @@ class exports.PostView extends BaseView
             node = channel.nodes.get('posts')
             app.handler.data.retract node, [@model], (err) =>
                 return if err
+
+    clickCancelDelete: EventHandler ->
+        @$el?.removeClass 'dangerZone'
+        @$('button.delete').text("✖")
 
     # TODO: make url configurable
     # TODO: filter HTML for XSS

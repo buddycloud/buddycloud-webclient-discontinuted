@@ -66,9 +66,10 @@ class exports.Channel extends Model
         last_view = @get('last_view') or (new Date 0).toISOString()
         posts = @nodes.get('posts').posts
         count = forEachPost(posts, last_view, (post) -> post.unread())
-        @trigger 'update:unread', count if count - @unread_count
-        app.favicon(count - @unread_count) # only add new ones
+        diff = count - @unread_count
         @unread_count = count
+        app.favicon(diff) # only add new ones
+        @trigger 'update:unread', count if diff
         count
 
     mark_read: ->
@@ -79,9 +80,10 @@ class exports.Channel extends Model
             last_update = post.get_update_time()
             last_view = last_update if last_update > last_view
             post.read()
-        @trigger 'update:unread', 0 if @unread_count
-        app.favicon(@unread_count * -1) # remove them
+        old_count = @unread_count
         @unread_count = 0
+        app.favicon(old_count * -1) # remove them
+        @trigger 'update:unread', 0 if old_count
         @save { last_view }
 
     count_notifications: ->

@@ -42,7 +42,7 @@ class exports.Router extends Backbone.Router
         app.handler.connection.bind 'disconnected', @on_disconnected
 
         if app.users.target?
-            jid = app.users.target.get('jid')
+            jid = app.users.target.get('id')
             app.views.index = new MainView
             @navigate jid
             # in anonymous direct browsing route, navigate above doesn't
@@ -74,6 +74,8 @@ class exports.Router extends Backbone.Router
         if app.handler.connection.connected
             app.views.index ?= new MainView
         else
+            unless app.users.isAnonymous(app.users.current)
+                return @navigate app.users.current.get 'id', true
             app.views.index ?= new WelcomeView
         @setView app.views.index
 
