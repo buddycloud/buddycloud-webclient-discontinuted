@@ -1,5 +1,6 @@
 { BaseView } = require '../../base'
 { EventHandler } = require '../../../util'
+{ validate } = require '../../../controllers/affiliation'
 
 class exports.UserInfoView extends BaseView
     template: require '../../../templates/channel/details/user'
@@ -47,7 +48,7 @@ class exports.UserInfoView extends BaseView
     on_click_ok: EventHandler ->
         userid = @parent.parent.parent.model.get 'id'
         if @changing_role
-            affiliation = @$('select').val()
+            affiliation = validate @$('select').val()
         else if @banning
             affiliation = 'outcast'
         else
