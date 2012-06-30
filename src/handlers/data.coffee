@@ -324,7 +324,7 @@ class exports.DataHandler extends Backbone.EventHandler
     # hopefully idle
     scan_roster_for_channels: ->
         @connector.get_roster (items) =>
-            app.debug "roster", items
+            console.log "roster", items
             items.forEach (item) =>
                 if item.subscription is 'both' or
                    item.subscription is 'to'
@@ -337,7 +337,7 @@ class exports.DataHandler extends Backbone.EventHandler
                         @connector.get_node_metadata "/user/#{item.jid}/posts", (err) =>
                             unless err
                                 # Worked! Go subscribe...
-                                app.debug "subscribe_user", jid
+                                console.log "subscribe_user", jid
                                 @subscribe_user item.jid
 
 ##

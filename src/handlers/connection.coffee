@@ -8,21 +8,21 @@ class exports.ConnectionHandler extends Backbone.EventHandler
         @last_login = {}
 
         # for debug purposes only
-        @bind "all", (status) -> app.debug "connection_event", status
+        @bind "all", (status) -> console.log "connection_event", status
 
     # intialize strophe connection
     setup: (callback) ->
         # Set up connection
         @connection = new Strophe.Connection(config.bosh_service)
         @connection.addHandler (stanza) ->
-            app.debug "IN", Strophe.serialize stanza
+            console.log "IN", Strophe.serialize stanza
             true
         @connector.setConnection @connection
         # debugging
         if app.debug_mode
             send = @connection.send
             @connection.send = (stanza) =>
-                app.debug "OUT", Strophe.serialize stanza
+                console.log "OUT", Strophe.serialize stanza
                 send.apply @connection, arguments
 
         # check if the bosh service is reachable
@@ -57,11 +57,11 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 jid = "#{jid}@#{config.domain}"
             jid = jid.toLowerCase()
             @user = app.users.get_or_create id: jid
-        app.debug "CONNECT", jid, @user
+        console.log "CONNECT", jid, @user
         @setup => @connection.connect jid, password, @connection_event
 
     reset: () ->
-        app.debug "RESET", @user
+        console.log "RESET", @user
         @connection?.disconnect()
 
     # make sure we allways have a channel
@@ -70,7 +70,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
 
     discover_channel_server: (done) =>
         success = (pubsubJid) =>
-            app.error "discover_channel_server success", arguments
+            console.log "discover_channel_server success", arguments
             @connection.buddycloud.connect pubsubJid
             #@connection.presence.authorize pubsubJid
             @pubsubJid = pubsubJid

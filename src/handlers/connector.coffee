@@ -42,7 +42,7 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
-                app.debug "publish", stanza
+                console.log "publish", stanza
                 @work_enqueue ->
                     done()
                     callback? null
@@ -56,7 +56,7 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             @connection.pubsub.retract nodeid, itemIds
             , (stanza) =>
-                app.debug "retract", stanza, itemIds
+                console.log "retract", stanza, itemIds
                 @work_enqueue ->
                     done()
                     callback? null
@@ -87,7 +87,7 @@ class exports.Connector extends Backbone.EventHandler
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
             @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
-                app.debug "unsubscribe", stanza
+                console.log "unsubscribe", stanza
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
                 @trigger 'subscription',
                     jid: userJid
@@ -247,7 +247,7 @@ class exports.Connector extends Backbone.EventHandler
             when 'config'
                 @trigger 'metadata', notification.node, notification.config
             else
-                app.debug "Cannot handle notification for #{notification.type}"
+                console.log "Cannot handle notification for #{notification.type}"
 
     get_roster: (callback) =>
         @connection.roster.get (items) =>
