@@ -15,7 +15,8 @@ require "./vendor/strophe.buddycloud.js"
 
 ## jQuery
 window.jQuery = window.$ = require 'jquery'
-# plugins
+
+
 # from vendor folder
 require "./vendor/jquery.copycss.js"
 require "./vendor/jquery.mousewheel.js"

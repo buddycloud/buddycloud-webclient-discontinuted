@@ -40,6 +40,7 @@
 ,   "dt-compiler": "0.1.5"
 ,   "dt-jquery": "0.3.2"
 ,   "dt-list": "0.1.0"
+,   "dt-selector": "https://github.com/lloydwatkin/node-dt-selector/tarball/master"
 ,   "adiff": "0.2.4"
 ,   "Strophe.js": "https://github.com/metajack/strophejs/tarball/master"
 ,   "notificon": "https://github.com/dodo/Notificon/tarball/master"

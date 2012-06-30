@@ -71,7 +71,6 @@ class exports.CommentsView extends PostsBaseView
             @$('.answer').click() unless @$('.answer textarea').val() is ""
 
             callback?.call(this)
-
+        
 #     update_attributes: ->
 #         @user = @parent.parent.parent.user # topicpostview.postsview.channelview
-

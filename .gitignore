@@ -7,3 +7,6 @@ src/_design/
 node_modules/*
 buddycloud.tmproj
 build.tar.gz
+src/plugin-list.coffee
+.project
+.settings

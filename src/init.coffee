@@ -18,6 +18,7 @@ app[k] = v for k,v of {
 }
 
 require './vendor-bridge'
+require './plugin-list'
 { EventEmitter:DomEventEmitter } = require 'domevents'
 { Router } = require './controllers/router'
 { ConnectionHandler } = require './handlers/connection'
@@ -29,10 +30,6 @@ Notificon = require 'notificon'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
 
-
-app.use = (plugin) ->
-    plugin?.call(this, this, require)
-
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
 app.debug = ->
@@ -43,8 +40,6 @@ Strophe.log = (level, msg) ->
     console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
 Strophe.fatal = (msg) ->
     console.error "STROPHE:", msg if app.debug_mode
-
-
 
 # show a nice unread counter in the favicon
 total_number = 0
@@ -133,7 +128,11 @@ app.initialize = ->
 
     $(document).ready ->
         # page routing
-        app.router = new Router
+        app.router  = new Router
+        app.plugins = []
+        for plugin,version of config.plugins
+           id = "#{plugin}-#{version}"
+           app.plugins[id] = window.plugin[id].plugin.init app, require
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
@@ -171,9 +170,7 @@ app.relogin = (user, password, callback) ->
     else
         connection.connect user, password
     connection
-
-
-
+  
 Modernizr.load
     test:Modernizr.localStorage
     yep:'web/js/store.js'
