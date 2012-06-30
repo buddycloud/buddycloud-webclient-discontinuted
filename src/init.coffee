@@ -35,8 +35,6 @@ app.use = (plugin) ->
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
-app.error = ->
-    console.error "DEBUG:", arguments if app.debug_mode
 Strophe.log = (level, msg) ->
     console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
 Strophe.fatal = (msg) ->

@@ -47,7 +47,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null
             , (error) =>
-                app.error "publish", nodeid, error
+                console.error "publish", nodeid, error
                 @work_enqueue ->
                     done()
                     callback? error
@@ -61,7 +61,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null
             , (error) =>
-                app.error "retract", nodeid, error
+                console.error "retract", nodeid, error
                 @work_enqueue ->
                     done()
                     callback? error
@@ -79,7 +79,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, subscription
             , =>
-                app.error "subscribe", nodeid
+                console.error "subscribe", nodeid
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot subscribe")
@@ -97,7 +97,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null
             , =>
-                app.error "unsubscribe", nodeid
+                console.error "unsubscribe", nodeid
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot unsubscribe")
@@ -107,7 +107,7 @@ class exports.Connector extends Backbone.EventHandler
 #             for post in posts
 #                 @trigger "post", post, nodeid
 #         error = =>
-#             app.error "fetch_node_posts", nodeid, arguments
+#             console.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
     get_node_posts: ({nodeid, rsmAfter, itemIds}, callback) =>
@@ -123,7 +123,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, posts
             error = (error) =>
-                app.error "get_node_posts", nodeid, arguments
+                console.error "get_node_posts", nodeid, arguments
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->
                     done()
@@ -143,7 +143,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, metadata
             error = (error) =>
-                app.error "get_node_metadata", nodeid, arguments
+                console.error "get_node_metadata", nodeid, arguments
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->
                     done()

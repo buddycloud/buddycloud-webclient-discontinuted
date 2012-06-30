@@ -79,7 +79,7 @@ class exports.ChannelDetailsView extends BaseView
             @followers.trigger 'change:all:users'
 
         app.handler.connector.get_similar_channels @model.get('id'), 16, (err, jids) =>
-            app.error "get_similar_channels", err if err
+            console.error "get_similar_channels", err if err
             (jids ? []).forEach (jid) ->
                 similars.add app.users.get_or_create(id: jid)
 

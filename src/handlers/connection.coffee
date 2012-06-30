@@ -81,7 +81,7 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                     true
             @createChannel done
         error = =>
-            app.error "discover_channel_server error", arguments
+            console.error "discover_channel_server error", arguments
             @trigger 'nochannelserver'
             #done()
 
