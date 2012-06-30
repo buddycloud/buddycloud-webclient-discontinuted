@@ -10,6 +10,7 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+formatdate = require 'formatdate'
 design = require '../../_design/channel/post'
 { load_indicate, addClass, removeClass } = require '../util'
 
@@ -25,10 +26,10 @@ module.exports = design (view) ->
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 time = @time()
+                formatdate.update time
                 update_time = ->
                     if (date = view.model.get_update_time())?
                         time.attr "data-date":date, datetime:date
-                        time.ready -> @_jquery.formatdate(update:off)
                     if new Date(date ? 0).getTime() is 0
                         time.hide()
                     else
