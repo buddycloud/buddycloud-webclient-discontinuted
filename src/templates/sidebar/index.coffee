@@ -29,6 +29,11 @@ module.exports = design (view) ->
                 @once('replace', load_indicate(this).clear)
                 view.search.bind('template:create', @replace)
             scrollarea = @$div id:'channels', ->
+                @ready ->
+                    oldFilterResults = ""
+                    view.search.on 'filter', (filterResults)=>
+                        @_jquery.scrollTop(0) if oldFilterResults.length is 0
+                        oldFilterResults = filterResults
                 @$div -> # antiscroll
                     # channel ...
                     entries = new List
