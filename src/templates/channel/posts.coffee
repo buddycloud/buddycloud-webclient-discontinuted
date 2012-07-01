@@ -15,7 +15,7 @@ module.exports = design (view) ->
         @$section class:'topics', ->
             items = new List
             view.on('view:topic', insert.bind(this, items))
-            view.model.on('reset',  sync.bind(this, items))
-            view.model.on 'remove', (entry, collection, options) ->
+            view.model.posts.on('reset',  sync.bind(this, items))
+            view.model.posts.on 'remove', (entry, collection, options) ->
                 items.remove(options.index)?.remove()
 
