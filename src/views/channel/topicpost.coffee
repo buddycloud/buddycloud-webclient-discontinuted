@@ -2,19 +2,19 @@
 { CommentsView } = require './comments'
 { PostView } = require './post'
 { BaseView } = require '../base'
+{ gravatar } = require '../../../util'
 
 class exports.TopicPostView extends BaseView
 
     template: require '../../templates/channel/topicpost'
     
     events:
-        'keyup textarea': 'keypress'
+        'keyup .answer textarea': 'keypress'
 
     initialize: ->
         @hidden = no
         super
         @model.on('change:author', @on_author)
-
         @opener   = new PostView
             type:'opener'
             model:@model
@@ -42,6 +42,7 @@ class exports.TopicPostView extends BaseView
         @rendering = yes
         if @model.get('content')?.value?.indexOf?("Waiting for the ") is 0
             console.error "##############", @cid, this
+        @domready @setupInlineMention
         super ->
             @rendering = no
             parallel [((n)->n())
@@ -56,22 +57,39 @@ class exports.TopicPostView extends BaseView
                 @el?.hide()
             else
                 @el?.show()
-    keypress:  (ev) ->
-       if ev.keyCode is 16
-         @potentialMention = true
-       console.log @potentialMention
-       console.log @$('textarea')
-       @$('textarea').autocomplete(
-           lookup: @getChannelFollowers()
+
+    keypress: (ev) ->
+     if !@autocomplete?
+       @setupInlineMention()
+     if ev.which is 16
+       if @autocomplete.disabled is false
+         @autocomplete.enable()
+       return
+     # Escape, tab, enter, up, down
+     if ev.which in [27, 9, 13, 9, 38, 40]
+       @autocomplete.disable()
+       return
+
+    setupInlineMention: ->
+     followers = []
+     @parent.parent.details.followers.model.forEach (user) ->
+       uid = user.get 'id'
+       followers.push user.attributes.jid
+      
+     @autocomplete = @$('textarea').autocomplete(
+           lookup: followers
            delimiter: ' ',
            minChars: 1,
-           zIndex: 9999
-       )
-       
-    getChannelFollowers: ->
-      console.log @model
-      users = []
-      @parent.parent.details.followers.model.forEach (user) ->
-        users.push user.attributes.jid
-      return users
-
+           zIndex: 9999,
+           searchPrefix: '@',
+           noCache: true
+     )
+     suggestions = @autocomplete.options.lookup.suggestions
+     @parent.parent.details.followers.bind('add', (user) ->
+       jid = user.get('jid')
+       suggestions.push jid
+     )
+     @parent.parent.details.followers.bind('remove', (user) ->
+       jid = user.get('jid')
+       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
+     )
