@@ -29,7 +29,6 @@ window.config = {
 	
     plugins: {
         'show-client': '0.1.0',
-        'security-labelling': '0.1.0'
     }
 
 };
