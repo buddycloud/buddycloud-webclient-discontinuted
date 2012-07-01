@@ -6,8 +6,7 @@
 { FollowNotificationView } = require './follow_notification'
 { PendingNotificationView } = require './pending_notification'
 { OverlayLogin } = require '../authentication/overlay'
-{ EventHandler, throttle_callback } = require '../../util'
-
+{ EventHandler, throttle_callback, gravatar } = require '../../util'
 
 class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
@@ -334,8 +333,8 @@ class exports.ChannelView extends BaseView
     setupInlineMention: ->
      followers = []
      @details.followers.model.forEach (user) ->
-       uid = user.get 'id'
-       followers.push user.attributes.jid
+       jid = user.get 'id'
+       followers.push {jid:jid, gravatar: "#{gravatar jid}"}
       
      @autocomplete = @$('textarea').autocomplete(
            lookup: followers
@@ -344,14 +343,15 @@ class exports.ChannelView extends BaseView
            zIndex: 9999,
            searchPrefix: '@',
            noCache: true,
-           searchEverywhere: true
+           searchEverywhere: true,
+           dataKey: 'jid'
      )
      suggestions = @autocomplete.options.lookup.suggestions
      @details.followers.bind('add', (user) ->
        jid = user.get('jid')
-       suggestions.push jid
+       suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
      )
      @details.followers.bind('remove', (user) ->
        jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
+       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
      )

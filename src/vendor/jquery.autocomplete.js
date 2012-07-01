@@ -8,7 +8,9 @@
 *  Last Review: 04/19/2010
 * 
 *  Modified by Steven Lloyd Watkin <lloyd.watkin@surevine.com> on 01/07/2012
-*    - Added searchPrefix
+*    - Added 'searchPrefix' option
+*    - Added 'searchEverywhere' option
+*    - Added 'dataKey' option for passing object values and later allowing templates for suggestions
 */
 
 /*jslint onevar: true, evil: true, nomen: true, eqeqeq: true, bitwise: true, regexp: true, newcap: true, immed: true */
@@ -51,6 +53,7 @@
       zIndex: 9999,
       searchPrefix: '',
       searchEverywhere: false
+ 
     };
     this.initialize();
     this.setOptions(options);
@@ -229,11 +232,18 @@
       q = q.toLowerCase();
       for(i=0; i< len; i++){
         val = arr.suggestions[i];
-	indexSearch = 0
-	if (this.options.searchEverywhere == true) {
-	  indexSearch = -1;
+	if (typeof(val) == 'object') {
+	  val = val[this.options.dataKey];
 	}
-        if(val.toLowerCase().indexOf(q) === indexSearch){
+	indexSearch   = 0
+	indexPosition = val.toLowerCase().indexOf(q)
+	addData = false;
+	if ((this.options.searchEverywhere == true) && (indexPosition > -1)) {
+	    addData = true;
+	} else if (indexPosition == 0) {
+	  addData = true;
+	}
+        if(addData == true){
           ret.suggestions.push(val);
           ret.data.push(arr.data[i]);
         }
@@ -285,7 +295,11 @@
       this.container.hide().empty();
       for (i = 0; i < len; i++) {
         s = this.suggestions[i];
-        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + f(s, this.data[i], v) + '</div>');
+	entry = this.data[i]
+	if (typeof(entry) == 'object' && typeof(this.options.dataKey) != 'undefined') {
+	  entry = entry[this.options.dataKey];
+	}  
+        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + f(s, entry, v) + '</div>');
         div.mouseover(mOver(i));
         div.click(mClick(i));
         this.container.append(div);

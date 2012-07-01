@@ -73,8 +73,8 @@ class exports.TopicPostView extends BaseView
     setupInlineMention: ->
      followers = []
      @parent.parent.details.followers.model.forEach (user) ->
-       uid = user.get 'id'
-       followers.push user.attributes.jid
+       jid = user.get 'id'
+       followers.push {jid: jid, gravatar: "#{gravatar jid}"}
       
      @autocomplete = @$('textarea').autocomplete(
            lookup: followers
@@ -88,10 +88,9 @@ class exports.TopicPostView extends BaseView
      suggestions = @autocomplete.options.lookup.suggestions
      @parent.parent.details.followers.bind('add', (user) ->
        jid = user.get('jid')
-       #suggestions.push {jid: jid, gravatar: "#{gavatar jid}"}
-       suggestions.push jid
+       suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
      )
      @parent.parent.details.followers.bind('remove', (user) ->
        jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
+       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
      )
