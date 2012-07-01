@@ -21,7 +21,7 @@ class exports.ChannelView extends BaseView
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
         'click .save': 'clickSave'
-        'keyup .newTopic textarea': 'keypress'
+        'input textarea': 'keypress'
 
     initialize: () ->
         super
@@ -332,26 +332,35 @@ class exports.ChannelView extends BaseView
 
     setupInlineMention: ->
      followers = []
-     @details.followers.model.forEach (user) ->
-       jid = user.get 'id'
+     postsNode = @model.nodes.get('posts')
+     if postsNode? is false
+       setTimeout @setupInlineMention(), 1000
+     postsNode.subscribers.forEach (subscriber) ->
+       if subscriber.get('subscription') is 'none'
+         return
+       jid = subscriber.get 'id'
        followers.push {jid:jid, gravatar: "#{gravatar jid}"}
-      
-     @autocomplete = @$('textarea').autocomplete(
+
+     @$('textarea').each( (node) ->
+        @autocomplete = $(node).autocomplete(
            lookup: followers
-           delimiter: ' ',
-           minChars: 1,
-           zIndex: 9999,
-           searchPrefix: '@',
-           noCache: true,
-           searchEverywhere: true,
+           minChars: 1
+           zIndex: 9999
+           searchPrefix: '@'
+           noCache: true
+           searchEverywhere: true
            dataKey: 'jid'
+        )
      )
+     #@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
+     #return formatResult suggestion, entry, currentValue
+
      suggestions = @autocomplete.options.lookup.suggestions
-     @details.followers.bind('add', (user) ->
+     postsNode.on('add', (user) ->
        jid = user.get('jid')
        suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
      )
-     @details.followers.bind('remove', (user) ->
+     postsNode.on('remove', (user) ->
        jid = user.get('jid')
        suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
      )

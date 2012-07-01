@@ -98,7 +98,9 @@
       this.el.blur(function() { me.enableKillerFn(); });
       this.el.focus(function() { me.fixPosition(); });
     },
-    
+    template: function(entry, formatResult, currentValue, suggestion) {
+      return formatResult(suggestion, entry, currentValue);
+    },
     setOptions: function(options){
       var o = this.options;
       $.extend(o, options);
@@ -299,7 +301,7 @@
 	if (typeof(entry) == 'object' && typeof(this.options.dataKey) != 'undefined') {
 	  entry = entry[this.options.dataKey];
 	}  
-        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + f(s, entry, v) + '</div>');
+        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + this.template.call(entry, f, v, suggestion) + '</div>');
         div.mouseover(mOver(i));
         div.click(mClick(i));
         this.container.append(div);

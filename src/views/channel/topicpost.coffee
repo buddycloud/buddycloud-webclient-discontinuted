@@ -7,9 +7,6 @@
 class exports.TopicPostView extends BaseView
 
     template: require '../../templates/channel/topicpost'
-    
-    events:
-        'keyup .answer textarea': 'keypress'
 
     initialize: ->
         @hidden = no
@@ -42,7 +39,6 @@ class exports.TopicPostView extends BaseView
         @rendering = yes
         if @model.get('content')?.value?.indexOf?("Waiting for the ") is 0
             console.error "##############", @cid, this
-        @domready @setupInlineMention
         super ->
             @rendering = no
             parallel [((n)->n())
@@ -57,40 +53,3 @@ class exports.TopicPostView extends BaseView
                 @el?.hide()
             else
                 @el?.show()
-
-    keypress: (ev) ->
-     if !@autocomplete?
-       @setupInlineMention()
-     if ev.which is 16
-       if @autocomplete.disabled is false
-         @autocomplete.enable()
-       return
-     # Escape, tab, enter, up, down
-     if ev.which in [27, 9, 13, 9]
-       @autocomplete.disable()
-       return
-
-    setupInlineMention: ->
-     followers = []
-     @parent.parent.details.followers.model.forEach (user) ->
-       jid = user.get 'id'
-       followers.push {jid: jid, gravatar: "#{gravatar jid}"}
-      
-     @autocomplete = @$('textarea').autocomplete(
-           lookup: followers
-           dataKey: 'jid',
-           delimiter: ' ',
-           minChars: 1,
-           zIndex: 9999,
-           searchPrefix: '@',
-           noCache: true
-     )
-     suggestions = @autocomplete.options.lookup.suggestions
-     @parent.parent.details.followers.bind('add', (user) ->
-       jid = user.get('jid')
-       suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
-     )
-     @parent.parent.details.followers.bind('remove', (user) ->
-       jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
-     )
