@@ -46,6 +46,7 @@
     </div>
   </div>
   <div class="sidebar">
+    <a href='/login' class="flat button" id="logout" title="I'm here only for the functionality. By clicking me you'll log out. Don't jugde. Even potatoes have flowers.">Log Out</a>
     <div class="personal channel">
       <div class="avatar" style="background-image: url(public/avatars/user1.jpg)">
         <span class="channelpost counter">2</span>
@@ -63,7 +64,7 @@
       <button class="discover"><span>Discover New Channels</span></button>
     </nav>
     <div class="search">
-      <input type="search" results="5" autosave="channelSearch" placeholder="Filter channel list ..." />
+      <input type="search" results="5" autosave="channelSearch" placeholder="Go to a channel ..." />
     </div>
     <div id="channels" class="antiscroll-wrap">
       <div class="antiscroll-inner scrollHolder">
@@ -292,6 +293,7 @@
                 <div class="postmeta">
                   <time class="ago" data-strftime="%d.%m.%Y %H:%M" data-strftitle="%A %d %B %Y %H:%M" datetime="2011-06-06T05:06:00.000Z" title="5:06pm 06.06.2011">1 minute</time>
                   <button class="flat delete button" title="Delete Post">✖</button>
+                  <button class="flat cancel-delete button" title="Don't Delete Post">no!</button>
                 </div>
                 <span class="name">vera<span class="domain">@buddycloud.com</span></span><span class="location">from Home</span>
                 <p>So it looks like Andi finally joined: <a class="internal" href="buddycloud.com/andi@buddycloud.com">andi<span class="domain">@buddycloud.com</span></a></p>
@@ -808,7 +810,7 @@
   setTimeout('notify()', 2000);
   
   $(function () {
-      $('#channels').antiscroll();
+      //$('#channels').antiscroll();
   });//*/
   
   /* ###

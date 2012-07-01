@@ -19,7 +19,6 @@ app[k] = v for k,v of {
 
 require './vendor-bridge'
 require './plugin-list'
-
 { Order } = require 'order'
 Notificon = require 'notificon'
 formatdate = require 'formatdate'
@@ -32,6 +31,13 @@ formatdate = require 'formatdate'
 { DataHandler } = require './handlers/data'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
+<<<<<<< HEAD
+=======
+
+
+app.use = (plugin) ->
+    plugin?.call(this, this, require)
+>>>>>>> 8927f0238a3ae7eae3fd8324aa7d6a733190be3f
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
