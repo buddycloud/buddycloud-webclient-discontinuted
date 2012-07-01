@@ -184,7 +184,7 @@ class exports.ChannelEditView extends BaseView
                     .text(text)
 
                 if id is 'accessModel'
-                    if text is 'open'
+                    if text is 'open' or text is helptextOpenmode
                         el.find('input').prop('checked', yes)
                     update = ->
                         if el.find('input').prop('checked')
