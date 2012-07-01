@@ -88,9 +88,10 @@ class exports.TopicPostView extends BaseView
      suggestions = @autocomplete.options.lookup.suggestions
      @parent.parent.details.followers.bind('add', (user) ->
        jid = user.get('jid')
-       suggestions.push {jid: jid, gravatar: "#{gavatar jid}"}
+       #suggestions.push {jid: jid, gravatar: "#{gavatar jid}"}
+       suggestions.push jid
      )
      @parent.parent.details.followers.bind('remove', (user) ->
        jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
+       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
      )
