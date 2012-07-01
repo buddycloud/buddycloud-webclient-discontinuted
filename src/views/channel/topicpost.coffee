@@ -4,7 +4,11 @@
 { BaseView } = require '../base'
 
 class exports.TopicPostView extends BaseView
+    potentialMention = false
     template: require '../../templates/channel/topicpost'
+    
+    events:
+        'keyup textarea': 'keypress'
 
     initialize: ->
         @hidden = no
@@ -52,4 +56,26 @@ class exports.TopicPostView extends BaseView
                 @el?.hide()
             else
                 @el?.show()
+    keypress:  (ev) ->
+       if ev.keyCode is 16
+         @potentialMention = true
+       console.log @potentialMention
+       console.log @$('textarea')
+
+       data = 
+            ['simon@buddycloud.org',
+            'dodo@buddycloud.org',
+            'lloyd@buddycloud.org',
+            'andy@highfellow.org',
+            'tuomas@buddycloud.org']
+
+       @$('textarea').autocomplete(
+           lookup: data
+           delimiter: ' ',
+           minChars: 1,
+           zIndex: 9999
+       )
+       
+    textareaBlur: (ev) ->
+      @potentialMention = false
 

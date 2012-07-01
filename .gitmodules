@@ -7,6 +7,3 @@
 [submodule "external/jquery-animate-enhanced"]
 	path = external/jquery-animate-enhanced
 	url = git://github.com/benbarnett/jQuery-Animate-Enhanced.git
-[submodule "external/jquery-autocomplete"]
-        path = external/jquery-autocomplete
-        url = git://github.com/dyve/jquery-autocomplete.git

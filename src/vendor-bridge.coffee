@@ -21,6 +21,8 @@ require "./vendor/jquery.copycss.js"
 require "./vendor/jquery.mousewheel.js"
 require "./vendor/jquery.antiscroll.js"
 require "./vendor/jquery.animate-enhanced.js"
+require "./vendor/jquery.autocomplete.js"
+
 # from npm
 require "jquery-inputevent"
 require "jquery-textsaver"
