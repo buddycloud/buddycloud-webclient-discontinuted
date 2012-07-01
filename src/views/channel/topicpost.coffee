@@ -61,9 +61,8 @@ class exports.TopicPostView extends BaseView
          @potentialMention = true
        console.log @potentialMention
        console.log @$('textarea')
-
        @$('textarea').autocomplete(
-           lookup: @getChannelFollowers
+           lookup: @getChannelFollowers()
            delimiter: ' ',
            minChars: 1,
            zIndex: 9999
@@ -71,10 +70,8 @@ class exports.TopicPostView extends BaseView
        
     getChannelFollowers: ->
       console.log @model
-      return 
-            ['simon@buddycloud.org',
-            'dodo@buddycloud.org',
-            'lloyd@buddycloud.org',
-            'andy@highfellow.org',
-            'tuomas@buddycloud.org']
+      users = []
+      @parent.parent.details.followers.model.forEach (user) ->
+        users.push user.attributes.jid
+      return users
 
