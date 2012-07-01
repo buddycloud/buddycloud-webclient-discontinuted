@@ -32,11 +32,12 @@ module.exports = design (view) ->
             @$section ->
                 @$img ->
                     @attr 'src', user.avatar
-                @$span class: 'name', ->
-                    @text "#{view.model.get 'id'} "
+                @$div class:'info', ->
+                    @$span class:'name', ->
+                        @text "#{view.model.get 'id'} "
 
                 @$div class: 'controls', ->
-                    @$div class: "button small positive light", ->
+                    @$div class: "positive", ->
                         @text "Grant #{view.model.get('id')} to join"
 
                     # Don't let users click twice

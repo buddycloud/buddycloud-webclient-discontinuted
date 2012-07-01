@@ -3,7 +3,8 @@
 window.app = new EventEmitter
 app.setMaxListeners(0) # unlimited
 app[k] = v for k,v of {
-    version: '0.0.0-60'
+    process
+    version: '0.0.2'
     localStorageVersion:'9e5dcf0'
     handler: {}
     views: {}
@@ -18,21 +19,22 @@ app[k] = v for k,v of {
 
 require './vendor-bridge'
 require './plugin-list'
+
+{ Order } = require 'order'
+Notificon = require 'notificon'
+formatdate = require 'formatdate'
+
 { EventEmitter:DomEventEmitter } = require 'domevents'
 { Router } = require './controllers/router'
 { ConnectionHandler } = require './handlers/connection'
 { ChannelStore } = require './collections/channel'
 { UserStore } = require './collections/user'
-formatdate = require 'formatdate'
-Notificon = require 'notificon'
 { DataHandler } = require './handlers/data'
+{ getCredentials } = require './handlers/creds'
+{ throttle_callback } = require './util'
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
-app.debug = ->
-    console.log "DEBUG:", arguments if app.debug_mode
-app.error = ->
-    console.error "DEBUG:", arguments if app.debug_mode
 Strophe.log = (level, msg) ->
     console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
 Strophe.fatal = (msg) ->
@@ -40,14 +42,15 @@ Strophe.fatal = (msg) ->
 
 # show a nice unread counter in the favicon
 total_number = 0
-app.favicon = (number) ->
-    total = total_number + number ? 0
-    return if total is total_number or isNaN(total)
-    console.warn "notificon", total
-    Notificon total or "",
+throttled_Notificon = throttle_callback 20, () ->
+    Notificon total_number or "",
         font:  "9px Helvetica"
         stroke:"#F03D25"
         color: "#ffffff"
+app.favicon = (number) ->
+    total = total_number + number ? 0
+    return if total is total_number or isNaN(total)
+    throttled_Notificon()
     total_number = total
 
 
@@ -99,7 +102,8 @@ app.initialize = ->
 
     # strophe handler
     app.handler.data = new DataHandler()
-    app.setConnection app.relogin()
+    creds = getCredentials() ? []
+    app.setConnection app.relogin(creds...)
 
     ### the password hack ###
     ### FIXME
@@ -119,7 +123,23 @@ app.initialize = ->
     formatdate.options.max.unit = 9 # century
     formatdate.options.max.amount = 20 # 2000 years
     formatdate.options.min.string = "a moment ago"
-    formatdate.hook 'time'
+    formatdate.options.hook.update = formatdate.hook.update.dynamictemplate
+    # overload formatdate a little bit:
+    # track all the time related elements inside of a dt-list ,
+    #  so their are nicely handled when they get removed for example.
+    formatdate.hookList = new Order ({i}) ->
+        idx = @keys[i] # get index tracker
+        this[i]?.on 'remove', (el, opts = {}) =>
+            # only remove when removed completely
+            return if opts.soft
+            @remove(idx.i)
+    formatdate.hook(formatdate.hookList)
+    # TODO is this ugly?
+    formatdate.update = (time_element) ->
+        return if not time_element
+        formatdate.hookList.push (done) ->
+            done() # use it in a sync way
+            return time_element
 
     $(document).ready ->
         # page routing

@@ -5,16 +5,18 @@ unless process.title is 'browser'
             el = @select "article.topic:first section.opener" , "p *"
             el.find('time').attr(datetime:"", title:"")
             el.find('p, span, a, time').text("")
+            el.find('img.avatar').attr(src:"")
             return el
 
 
 { Template } = require 'dynamictemplate'
+formatdate = require 'formatdate'
 design = require '../../_design/channel/post'
 { load_indicate, addClass, removeClass } = require '../util'
 
 
 module.exports = design (view) ->
-    return new Template {schema:5, view}, ->
+    return new Template {schema:5}, ->
         @$section ->
             @attr class:"#{view.type}"
             unless app.users.isAnonymous(app.users.current)
@@ -23,19 +25,18 @@ module.exports = design (view) ->
                 addClass(@,"unread") if view.model.get 'unread'
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
-                time = @$time()
+                time = @time()
+                formatdate.update time
                 update_time = ->
-                    date = view.model.get('updated') or
-                           view.model.get('published')
-                    if date?
+                    if (date = view.model.get_update_time())?
                         time.attr "data-date":date, datetime:date
-                        time.ready -> @_jquery.formatdate(update:off)
                     if new Date(date ? 0).getTime() is 0
                         time.hide()
                     else
                         time.show()
                 view.model.on('update:time', update_time)
                 update_time()
+                time.end()
                 @$button class:'delete button', ->
                     return @remove() if app.users.isAnonymous(app.users.current)
             name = @span class:'name'

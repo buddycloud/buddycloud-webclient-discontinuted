@@ -120,10 +120,7 @@ Strophe.addConnectionPlugin('register', {
         if (register.length === 0 && mechanisms.length === 0)
             return;
 
-        if (register.length === 0) {
-            that._changeConnectStatus(Strophe.Status.REGIFAIL, null);
-            return;
-        } else this.enabled = true;
+        this.enabled = true;
 
         // send a get request for registration, to get all required data fields
         that._changeConnectStatus(Strophe.Status.REGISTERING, null);

@@ -44,7 +44,7 @@ class exports.NodeStore extends exports.Nodes
 
     constructor: ({@channel}) ->
         @localStorage = new Store "#{@channel.get 'id'}-nodes"
-        app.debug "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
+        # console.log "nr of channel #{@channel.get 'id'} nodes in cache: #{@localStorage.records.length}", arguments
         super()
 
     initialize: ->

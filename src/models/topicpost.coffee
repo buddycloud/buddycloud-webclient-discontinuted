@@ -16,5 +16,5 @@ class exports.TopicPost extends Post
         if last_comment > last_post
             return last_comment
         else
-            return last_comment
+            return last_post
 #

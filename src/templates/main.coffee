@@ -11,7 +11,7 @@ design = require '../_design/main'
 
 
 module.exports = design (view) ->
-    return new Template {schema:5, view}, ->
+    return new Template {schema:5}, ->
 
         @$div class:'editbar', ->
             @once('replace', load_indicate(this).clear)

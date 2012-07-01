@@ -12,8 +12,10 @@ design = require '../../_design/sidebar/index'
 { load_indicate, insert, sync } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {schema:5, view}, ->
+    return new Template {schema:5}, ->
         @$div class:'sidebar', ->
+            @$a id:'logout', ->
+                @remove() if app.users.isAnonymous(app.users.current)
             if view.personal?
                 # FIXME dt-linker listens only for new tags, not for added ones.
                 @$div class:'personal channel', ->
@@ -27,6 +29,11 @@ module.exports = design (view) ->
                 @once('replace', load_indicate(this).clear)
                 view.search.bind('template:create', @replace)
             scrollarea = @$div id:'channels', ->
+                @ready ->
+                    oldFilterResults = ""
+                    view.search.on 'filter', (filterResults)=>
+                        @_jquery.scrollTop(0) if oldFilterResults.length is 0
+                        oldFilterResults = filterResults
                 @$div -> # antiscroll
                     # channel ...
                     entries = new List
@@ -89,10 +96,12 @@ tutorial_text =  ["start typing into the"
 
 createTutorial = (tag, {view, entries}) ->
     tutorial = null
+    timeout = null
     update_tutorial = ->
+        timeout = null
         if view.model.length > 3
             if tutorial?
-                entries.pop()
+                entries.pop().remove()
                 tutorial = null
             return
         return if tutorial?
@@ -102,12 +111,8 @@ createTutorial = (tag, {view, entries}) ->
                 @$span class:'info', tutorial_text
         entries.push tutorial
 
-    timeout = null
     throttled_update_tutorial = ->
-        if timeout?
-            clearTimeout(timeout)
-            timeout = null
         timeout ?= setTimeout(update_tutorial, 200)
 
-    view.model.on('add',    throttled_update_tutorial)
+    view.on('subview:entry',throttled_update_tutorial)
     view.model.on('remove', throttled_update_tutorial)

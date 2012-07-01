@@ -1,5 +1,5 @@
 { BaseView } = require '../base'
-{ transitionendEvent, EventHandler, throttle_callback } = require '../../util'
+{ transitionendEvent, EventHandler } = require '../../util'
 
 
 class exports.ChannelEntry extends BaseView
@@ -7,12 +7,11 @@ class exports.ChannelEntry extends BaseView
 
     initialize: ->
         super
-
-        @model.bind 'update:unread', throttle_callback 50, =>
+        @model.on 'update:unread', =>
             @trigger 'update:unread_counter'
 
         postsnode = @model.nodes.get_or_create(id: 'posts')
-        postsnode.bind 'subscriber:update', throttle_callback 50, =>
+        postsnode.on 'subscriber:update', =>
             @trigger 'update:notification_counter'
 
         statusnode = @model.nodes.get_or_create(id: 'status')
@@ -28,11 +27,8 @@ class exports.ChannelEntry extends BaseView
             callback?()
 
     click_entry: EventHandler ->
-            app.debug "ChannelEntry.click_entry", @, @model
+            console.log "ChannelEntry.click_entry", @, @model
             app.router.navigate @model.get('id'), true
-
-            # setCurrentChannel() invoked mark_read(), update counter:
-            @trigger 'update:unread_counter'
 
     isSelected: =>
         @model.get('id') is @parent.current?.model.get('id')

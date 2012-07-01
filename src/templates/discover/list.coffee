@@ -14,7 +14,7 @@ design = require '../../_design/discover/list'
 { insert, addClass } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {schema:5, view}, ->
+    return new Template {schema:5}, ->
         @$div ->
             addClass(@,"#{view.id}")
             @$h2 ->

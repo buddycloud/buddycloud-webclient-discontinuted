@@ -42,12 +42,12 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             @connection.buddycloud.publishAtom nodeid, item
             , (stanza) =>
-                app.debug "publish", stanza
+                console.log "publish", stanza
                 @work_enqueue ->
                     done()
                     callback? null
             , (error) =>
-                app.error "publish", nodeid, error
+                console.error "publish", nodeid, error
                 @work_enqueue ->
                     done()
                     callback? error
@@ -56,12 +56,12 @@ class exports.Connector extends Backbone.EventHandler
         @request (done) =>
             @connection.pubsub.retract nodeid, itemIds
             , (stanza) =>
-                app.debug "retract", stanza, itemIds
+                console.log "retract", stanza, itemIds
                 @work_enqueue ->
                     done()
                     callback? null
             , (error) =>
-                app.error "retract", nodeid, error
+                console.error "retract", nodeid, error
                 @work_enqueue ->
                     done()
                     callback? error
@@ -79,7 +79,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, subscription
             , =>
-                app.error "subscribe", nodeid
+                console.error "subscribe", nodeid
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot subscribe")
@@ -87,7 +87,7 @@ class exports.Connector extends Backbone.EventHandler
     unsubscribe: (nodeid, callback) =>
         @request (done) =>
             @connection.buddycloud.unsubscribeNode nodeid, (stanza) =>
-                app.debug "unsubscribe", stanza
+                console.log "unsubscribe", stanza
                 userJid = Strophe.getBareJidFromJid(@connection.jid)
                 @trigger 'subscription',
                     jid: userJid
@@ -97,7 +97,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null
             , =>
-                app.error "unsubscribe", nodeid
+                console.error "unsubscribe", nodeid
                 @work_enqueue ->
                     done()
                     callback? new Error("Cannot unsubscribe")
@@ -107,7 +107,7 @@ class exports.Connector extends Backbone.EventHandler
 #             for post in posts
 #                 @trigger "post", post, nodeid
 #         error = =>
-#             app.error "fetch_node_posts", nodeid, arguments
+#             console.error "fetch_node_posts", nodeid, arguments
 #         @connection.buddycloud.getChannelPostStream nodeid, success, error
 
     get_node_posts: ({nodeid, rsmAfter, itemIds}, callback) =>
@@ -123,7 +123,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, posts
             error = (error) =>
-                app.error "get_node_posts", nodeid, arguments
+                console.error "get_node_posts", nodeid, arguments
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->
                     done()
@@ -143,7 +143,7 @@ class exports.Connector extends Backbone.EventHandler
                     done()
                     callback? null, metadata
             error = (error) =>
-                app.error "get_node_metadata", nodeid, arguments
+                console.error "get_node_metadata", nodeid, arguments
                 @trigger 'node:error', nodeid, error
                 @work_enqueue ->
                     done()
@@ -247,7 +247,7 @@ class exports.Connector extends Backbone.EventHandler
             when 'config'
                 @trigger 'metadata', notification.node, notification.config
             else
-                app.debug "Cannot handle notification for #{notification.type}"
+                console.log "Cannot handle notification for #{notification.type}"
 
     get_roster: (callback) =>
         @connection.roster.get (items) =>

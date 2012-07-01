@@ -12,7 +12,7 @@ design = require '../../_design/channel/index'
 { autoResize } = require '../util'
 
 module.exports = design (view) ->
-    return new Template {schema:5, view}, -> @$div class:'content', ->
+    return new Template {schema:5}, -> @$div class:'content', ->
         @$div class:'channelView', ->
             @$header ->
                 @$table -> @$tbody -> @$tr ->
@@ -108,23 +108,28 @@ module.exports = design (view) ->
                     view.postsview.bind('template:create', @replace)
 
                 tutorial = null
+                timeout = null
                 update_tutorial = =>
+                    timeout = null
                     if view.model.nodes.get('posts').posts.length
-                        return tutorial?.remove()
+                        tutorial?.remove()
+                        tutorial = null
+                        return
+                    if view.model.isLoading
+                        # This is added to not to display any helpers or 
+                        # notifies while channel is still loading.
+                        return
                     type = "empty"
                     type = "tutorial" if app.users.current.canPost(view.model)
                     return if type is tutorial?.type
                     tutorial?.remove()
                     tutorial = @$p({class:"#{type}"}, tutorial_text[type])
                     tutorial.type = type
-                timeout = null
                 throttled_update_tutorial = ->
-                    if timeout?
-                        clearTimeout(timeout)
-                        timeout = null
                     timeout ?= setTimeout(update_tutorial, 200)
                 view.model.on('add',    throttled_update_tutorial)
                 view.model.on('remove', throttled_update_tutorial)
+                view.model.on('loading:stop', throttled_update_tutorial)
 
                 @$p class:'loader', ->
                     spinner = @$span class:'spinner'
@@ -140,5 +145,6 @@ module.exports = design (view) ->
 
 
 tutorial_text =
-    tutorial:"content goes above ..."
-    empty:"this channel is empty"
+    tutorial: ["This channel is still empty."
+               "Be awesome and be the first to post."].join " "
+    empty:"Hmm, it seems that this channel is still empty."
