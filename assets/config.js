@@ -14,11 +14,11 @@ window.config = {
     anon_domain: "anon.example.com",
 
     /* overall used domain for this webclient instance.
-* used for registration and login. */
+     * used for registration and login. */
     domain: "example.com",
 
     /* Default domain to create topics under
-* unless the user specifies …@domain as the name. (see: https://buddycloud.org/wiki/Install#Advanced_Topics) */
+     * unless the user specifies …@domain as the name. (see: https://buddycloud.org/wiki/Install#Advanced_Topics) */
     //topic_domain: "topics.example.com",
     directoryService: "search.buddycloud.org",
 
