@@ -4,7 +4,7 @@
 { BaseView } = require '../base'
 
 class exports.TopicPostView extends BaseView
-    potentialMention = false
+
     template: require '../../templates/channel/topicpost'
     
     events:
@@ -62,20 +62,19 @@ class exports.TopicPostView extends BaseView
        console.log @potentialMention
        console.log @$('textarea')
 
-       data = 
-            ['simon@buddycloud.org',
-            'dodo@buddycloud.org',
-            'lloyd@buddycloud.org',
-            'andy@highfellow.org',
-            'tuomas@buddycloud.org']
-
        @$('textarea').autocomplete(
-           lookup: data
+           lookup: @getChannelFollowers
            delimiter: ' ',
            minChars: 1,
            zIndex: 9999
        )
        
-    textareaBlur: (ev) ->
-      @potentialMention = false
+    getChannelFollowers: ->
+      console.log @model
+      return 
+            ['simon@buddycloud.org',
+            'dodo@buddycloud.org',
+            'lloyd@buddycloud.org',
+            'andy@highfellow.org',
+            'tuomas@buddycloud.org']
 
