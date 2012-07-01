@@ -172,7 +172,7 @@ class exports.ChannelEditView extends BaseView
                     .input(preventEmptyness)
             when 'boolean'
                 text = el.text()
-                # Last class becomes id
+                # Last class becomes id -- dummy comment added for Simon
                 elClasses = el.prop('class').split(' ')
                 id = elClasses[elClasses.length - 1]
                 el
