@@ -327,7 +327,7 @@ class exports.ChannelView extends BaseView
          @autocomplete.enable()
        return
      # Escape, tab, enter, up, down
-     if ev.which in [27, 9, 13, 9, 38, 40]
+     if ev.which in [27, 9, 13, 9]
        @autocomplete.disable()
        return
 
@@ -343,7 +343,8 @@ class exports.ChannelView extends BaseView
            minChars: 1,
            zIndex: 9999,
            searchPrefix: '@',
-           noCache: true
+           noCache: true,
+           searchEverywhere: true
      )
      suggestions = @autocomplete.options.lookup.suggestions
      @details.followers.bind('add', (user) ->

@@ -66,7 +66,7 @@ class exports.TopicPostView extends BaseView
          @autocomplete.enable()
        return
      # Escape, tab, enter, up, down
-     if ev.which in [27, 9, 13, 9, 38, 40]
+     if ev.which in [27, 9, 13, 9]
        @autocomplete.disable()
        return
 
@@ -78,6 +78,7 @@ class exports.TopicPostView extends BaseView
       
      @autocomplete = @$('textarea').autocomplete(
            lookup: followers
+           dataKey: 'jid',
            delimiter: ' ',
            minChars: 1,
            zIndex: 9999,
@@ -87,9 +88,9 @@ class exports.TopicPostView extends BaseView
      suggestions = @autocomplete.options.lookup.suggestions
      @parent.parent.details.followers.bind('add', (user) ->
        jid = user.get('jid')
-       suggestions.push jid
+       suggestions.push {jid: jid, gravatar: "#{gavatar jid}"}
      )
      @parent.parent.details.followers.bind('remove', (user) ->
        jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
+       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
      )
