@@ -109,10 +109,6 @@ class exports.DataHandler extends Backbone.EventHandler
                 model?.collection?.remove(model)
             callback?(null)
 
-    add_post: (node, post) ->
-        nodeid = node.get?('nodeid') or node
-        @on_node_post post, nodeid
-
     ##
     # TODO: we can get very mixed responses according to the
     # individual access_model of nodes:
