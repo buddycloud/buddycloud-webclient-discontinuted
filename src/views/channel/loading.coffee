@@ -12,7 +12,6 @@ class exports.LoadingChannelView extends BaseView
     render: (callback) ->
         @setElement @template(jid: app.users.target.get('jid')), null, ->
             $('body').removeClass('start').addClass('center').append(@$el)
-            $('.centerBox').hide()
             callback?.apply?(this, arguments)
 
     hide: =>
