@@ -24,7 +24,7 @@ class exports.Router extends Backbone.Router
         Backbone.history.start pushState:on
 
     navigate: ->
-        @last_fragment = Backbone.history.fragment
+        @last_fragment = Backbone.history.fragment unless @current_view?.overlay
         # Avoid navigating while edit mode is on
         unless app.views?.index?.current?.isEditing?()
             super
