@@ -93,10 +93,8 @@ app.initialize = ->
 
     # show error message when config isnt loaded
     if typeof config is 'undefined'
-        $('#index')
-            .addClass('broken')
-            .html(do require './templates/welcome/configerror.html')
-        return
+        return $(document).ready ->
+            $('body').html(do require './templates/welcome/configerror.html')
 
 
     # caches
