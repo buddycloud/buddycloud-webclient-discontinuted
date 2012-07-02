@@ -17,6 +17,7 @@ class exports.Router extends Backbone.Router
         "create-topic-channel":"createtopicchannel"
 
     constructor: ->
+        @last_fragment = "/"
         delete @routes['register'] if config.registration is off
         super
 
@@ -24,6 +25,7 @@ class exports.Router extends Backbone.Router
         Backbone.history.start pushState:on
 
     navigate: ->
+        @last_fragment = Backbone.history.fragment
         # Avoid navigating while edit mode is on
         unless app.views?.index?.current?.isEditing?()
             super
@@ -31,7 +33,13 @@ class exports.Router extends Backbone.Router
     setView: (view) ->
         return unless view? # TODO access denied msg
         return if view is @current_view
-        @current_view?.trigger 'hide'
+        if view.overlay
+            @previous_view = @current_view
+            view.once 'close', =>
+                @current_view = @previous_view
+                @navigate @last_fragment
+        else
+            @current_view?.trigger 'hide'
         @current_view = view
         @current_view.trigger 'show'
 
