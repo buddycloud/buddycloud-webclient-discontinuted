@@ -1,8 +1,7 @@
 # views
 { LoadingChannelView } = require '../views/channel/loading'
-{ RegisterView } = require '../views/authentication/register'
-{ LoginView } = require '../views/authentication/login'
 { DiscoverView } = require '../views/discover/index'
+{ OverlayView } = require '../views/authentication/overlay'
 { MainView } = require '../views/main'
 
 class exports.Router extends Backbone.Router
@@ -91,12 +90,14 @@ class exports.Router extends Backbone.Router
         @setView app.views.index
 
     login: ->
-        app.views.login ?= new LoginView
-        @setView app.views.login
+        app.views.auth ?= new OverlayView
+        app.views.auth.setMode 'login'
+        @setView app.views.auth
 
     register: ->
-        app.views.register ?= new RegisterView
-        @setView app.views.register
+        app.views.auth ?= new OverlayView
+        app.views.auth.setMode 'register'
+        @setView app.views.auth
 
     overview: ->
         @setView app.views.overview
