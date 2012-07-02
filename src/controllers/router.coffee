@@ -85,8 +85,9 @@ class exports.Router extends Backbone.Router
             app.views.index ?= new MainView
         else
             unless app.users.isAnonymous(app.users.current)
-                return @navigate app.users.current.get 'id', true
-            app.views.index ?= new WelcomeView
+                @navigate app.users.current.get 'id', true
+            else
+                return do @discover # FIXME TODO until startpage is implemented
         @setView app.views.index
 
     login: ->
