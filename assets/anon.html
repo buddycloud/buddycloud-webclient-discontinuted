@@ -11,27 +11,46 @@
   <!--<script>require('main');</script>-->
 </head>
 <body class="wideChannelView anon">
+
+
+
+
   <div class="overlay">
     <div class="modal twoWindowed">
       <div class="close">Close</div>
       <div class="left">
         <h2>buddycloud login</h2>
-        <p>Not yet a member? <a href="#">Register</a></p>
+        <p><span>Not yet a member?</span> <a href="#">Register</a></p>
       </div>
       <form class="right clearfix">
         <div>
-          <label for="home_login_jid">name@domain.com</label>
-          <input type="email" id="home_login_jid" placeholder="name@domain.com" required />
+          <label for="auth_jid">What's your name?</label>
+          <input type="email" id="auth_name" placeholder="name@domain.com" required />
         </div>
         <div>
-          <label for="home_login_pwd">password</label>
-          <input type="password" id="home_login_pwd" required />
+          <label for="auth_pwd">What's your password?</label>
+          <input type="password" id="auth_pwd" required />
         </div>
-        <p class="leftBox"><a href="#">Forgot password?</a></p>
-        <button type="submit" id="home_login_submit" class="callToAction">Login</button>
+        <div>
+          <!-- placceholder for the email input field -->
+        </div>
+        <span>
+        <input type="checkbox" id="store_local" />
+          <label for="store_local"> remember password <span>on this computer</span>
+          </label>
+        </span>
+        <p class="leftBox">
+          <span class="spinner">logging in</span>
+          <a href="#">Forgot your password? Don't worry.</a>
+        </p>
+        <button type="submit" id="auth_submit" class="callToAction">Login</button>
       </form>
     </div>
   </div>
+
+
+
+
   <div id="sidebar">
     <div id="channels">
       <div class="search">
@@ -961,6 +980,8 @@
     list.children().clone().appendTo(list);
     $(this).remove();
   });
+
+  $('.overlay').show()
 </script>
 </body>
 </html>
