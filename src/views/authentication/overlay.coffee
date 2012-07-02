@@ -26,7 +26,7 @@ class exports.OverlayView extends BaseView
         'submit form': 'onSubmit'
 
     isClosable: ->
-        app.views.index? and not app.users.isAnonymous(app.users.current)
+        app.views.index? and app.users.isAnonymous(app.users.current)
 
     focus: =>
         # bug on ipad: the focus has to be delayed to happen after the
