@@ -5,6 +5,7 @@
 # manages a list of groups
 class exports.DiscoverView extends BaseView
     template: require '../../templates/discover/index'
+    adapter: 'jquery'
 
     initialize: ->
         @views = {}
@@ -59,6 +60,7 @@ class exports.DiscoverView extends BaseView
             for _, view of @views
                 view.on('template:create', @trigger.bind(this, 'subview:group'))
                 view.render()
+            $('body').append(@$el)
             callback?.call(this)
 
 channels_to_collection = (model, method, args...) ->

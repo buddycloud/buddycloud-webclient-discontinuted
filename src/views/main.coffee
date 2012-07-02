@@ -3,7 +3,6 @@
 { Sidebar } = require './sidebar/index'
 { MinimalSidebar } = require './sidebar/minimal'
 { BaseView } = require './base'
-{ DiscoverView } = require './discover/index'
 { CreateTopicChannelView } = require './create_topic_channel/index'
 
 class exports.MainView extends BaseView
@@ -139,18 +138,6 @@ class exports.MainView extends BaseView
         @current.once 'template:create', (tpl) =>
             @trigger 'subview:content', tpl
         @current.render()
-
-    on_discover: =>
-        old = @current
-        unless @discover?
-            @discover = new DiscoverView(parent: this)
-            @discover.once 'template:create', (tpl) =>
-                @trigger 'subview:content', tpl
-            @discover.render()
-        @current = @discover
-        if @current isnt old
-            old?.trigger 'hide'
-            @current.trigger 'show'
 
     on_scroll: =>
         @current?.on_scroll()

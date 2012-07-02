@@ -6,6 +6,7 @@ class exports.WelcomeView extends View
     template: require '../../templates/welcome/show.html'
 
     initialize: ->
+        return # FIXME replace it with startpage
         @setElement $('.centerBox')
 
         @on 'show', -> @$el.show()

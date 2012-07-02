@@ -1,8 +1,8 @@
 # views
 { LoadingChannelView } = require '../views/channel/loading'
 { RegisterView } = require '../views/authentication/register'
-{ WelcomeView } = require '../views/welcome/show'
 { LoginView } = require '../views/authentication/login'
+{ DiscoverView } = require '../views/discover/index'
 { MainView } = require '../views/main'
 
 class exports.Router extends Backbone.Router
@@ -43,11 +43,13 @@ class exports.Router extends Backbone.Router
 
         if app.users.target?
             jid = app.users.target.get('id')
-            app.views.index = new MainView
+            app.views.index ?= new MainView
             @navigate jid
             # in anonymous direct browsing route, navigate above doesn't
             # trigger an URL change event at all
             @loadingchannel jid
+        else if app.views.discover?
+            do @discover
 
     on_disconnected: =>
          # we are still on the welcome site
@@ -111,6 +113,19 @@ class exports.Router extends Backbone.Router
             @navigate "/"
 
     discover: () ->
-        app.views.index?.on_discover?()
+        app.views.index ?= new MainView
+        if app.views.discover is 'wait'
+            app.views.discover = new DiscoverView(parent:app.views.index)
+        else unless app.views.discover?
+            app.views.discover = 'wait'
+            do @discover if app.handler.connection.connected
+            return
+
+        if app.handler.connection.connected
+            app.views.discover.render =>
+                @setView app.views.discover
+        else
+            # FIXME and now?
+            @setView app.views.index
 
 
