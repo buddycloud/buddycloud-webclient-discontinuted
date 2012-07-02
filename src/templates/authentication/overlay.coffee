@@ -24,6 +24,7 @@ module.exports = design (view) ->
                                 when 'login'
                                     @text "buddycloud login"
                     @$p ->
+                        return @remove() if config.registration is off
                         @$span ->
                             view.on 'switch mode', =>
                                 switch view.mode
@@ -32,7 +33,6 @@ module.exports = design (view) ->
                                     when 'login'
                                         @text "Not yet a member?"
                         @$a ->
-                            return @remove() if config.registration is off
                             @attr href: "/register"
                             view.on 'switch mode', =>
                                 switch view.mode
