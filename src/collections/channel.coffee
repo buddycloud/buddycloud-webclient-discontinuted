@@ -112,7 +112,7 @@ class exports.ChannelStore extends exports.Channels
     initialize: ->
         super
         @localStorage = new Store("channels")
-        app.debug "nr of channels in cache: #{@localStorage.records.length}"
+        console.log "nr of channels in cache: #{@localStorage.records.length}"
         @fetch()
 
     get_or_create: (attrs, options = {}) ->

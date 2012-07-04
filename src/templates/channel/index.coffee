@@ -115,6 +115,10 @@ module.exports = design (view) ->
                         tutorial?.remove()
                         tutorial = null
                         return
+                    if view.model.isLoading
+                        # This is added to not to display any helpers or 
+                        # notifies while channel is still loading.
+                        return
                     type = "empty"
                     type = "tutorial" if app.users.current.canPost(view.model)
                     return if type is tutorial?.type
@@ -141,5 +145,6 @@ module.exports = design (view) ->
 
 
 tutorial_text =
-    tutorial:"content goes above ..."
-    empty:"this channel is empty"
+    tutorial: ["This channel is still empty."
+               "Be awesome and be the first to post."].join " "
+    empty:"Hmm, it seems that this channel is still empty."

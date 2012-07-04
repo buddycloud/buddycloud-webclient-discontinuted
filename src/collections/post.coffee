@@ -14,6 +14,7 @@ class exports.Posts extends Collection
 
     update_time: (post) =>
         @trigger('update:time', post)
+        post.trigger('update:time')
         @sort()
 
     comparator: (post) ->

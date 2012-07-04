@@ -18,29 +18,8 @@ unless process.title is 'browser'
 { List } = require 'dt-list'
 design = require '../../../_design/channel/details/user'
 { addClass, removeClass, insert } = require '../../util'
-
-userspeak =
-    'owner':    "Producer"
-    'moderator':"Moderator"
-    'publisher':"Follower+Post"
-    'member':   "Follower"
-    'outcast':  "Banned"
-    'none':     "Does not follow back"
-
-class_map =
-    'owner':    "moderator"
-    'moderator':"moderator"
-    'publisher':"followerPlus"
-    'member':   "follower"
-    'outcast':  "none"
-    'none':     "none"
-
-affiliations_map =
-    'moderator': 'moderator'
-    'publisher': 'followerPlus'
-    'member':    'follower'
-reversed_affiliations_map = {}
-reversed_affiliations_map[v] = k for k,v of affiliations_map
+{ userspeak, class_map, affiliations_map, reversed_affiliations_map } =
+    require '../../../controllers/affiliation'
 
 module.exports = design (view) ->
     return new Template {schema:5, view}, ->

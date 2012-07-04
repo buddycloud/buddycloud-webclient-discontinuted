@@ -10,6 +10,7 @@ class exports.TopicPosts extends Posts
 
     onadd: (post) =>
         post.comments.on('update:time', @update_time)
+        post.comments.on('add', => @sort())
 
     get_or_create: (post) ->
         if post.in_reply_to

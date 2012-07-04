@@ -3,6 +3,12 @@
 async = require 'async'
 { Tag } = require 'dynamictemplate'
 
+helptextOpenmode = ["open: anyone can view"
+                    "or follow. (click to change)"].join " "
+helptextPrivatemode = ["private:"
+                       "only followers you approve will be"
+                       "able to view posts."
+                       "(click to change)"].join " "
 
 class exports.ChannelEditView extends BaseView
     template: require '../../templates/channel/edit'
@@ -166,25 +172,25 @@ class exports.ChannelEditView extends BaseView
                     .input(preventEmptyness)
             when 'boolean'
                 text = el.text()
-                # Last class becomes id
+                # Last class becomes id -- dummy comment added for Simon
                 elClasses = el.prop('class').split(' ')
                 id = elClasses[elClasses.length - 1]
                 el
                     .addClass('contenteditable')
-                    .html('<input type="checkbox"><label></label>')
+                    .html('<input type="checkbox" style="display:none;"><label></label>')
                 el.find('input').attr('id', id)
                 el.find('label')
                     .attr('for', id)
                     .text(text)
 
                 if id is 'accessModel'
-                    if text is 'open'
+                    if text is 'open' or text is helptextOpenmode
                         el.find('input').prop('checked', yes)
                     update = ->
                         if el.find('input').prop('checked')
-                            el.find('label').text("open")
+                            el.find('label').text(helptextOpenmode)
                         else
-                            el.find('label').text("private")
+                            el.find('label').text(helptextPrivatemode)
                     el.find('input').change update
                     update()
 
@@ -198,4 +204,3 @@ class exports.ChannelEditView extends BaseView
                 el.prop('contenteditable', no)
             when 'boolean'
                 el.removeClass('contenteditable')
-

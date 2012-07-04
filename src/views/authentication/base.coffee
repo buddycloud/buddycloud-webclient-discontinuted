@@ -41,7 +41,7 @@ class exports.AuthenticationView extends Backbone.View
         ,410
 
     error: (type) =>
-        app.error "'#{type}' during authentication"
+        console.error "'#{type}' during authentication"
         app.handler.connection.reset()
         # wobble animation
         curr_pos = @box.position()

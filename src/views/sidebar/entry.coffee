@@ -27,7 +27,7 @@ class exports.ChannelEntry extends BaseView
             callback?()
 
     click_entry: EventHandler ->
-            app.debug "ChannelEntry.click_entry", @, @model
+            console.log "ChannelEntry.click_entry", @, @model
             app.router.navigate @model.get('id'), true
 
     isSelected: =>

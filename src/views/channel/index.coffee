@@ -22,10 +22,11 @@ class exports.ChannelView extends BaseView
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
         'click .save': 'clickSave'
+        'keyup .newTopic textarea': 'keypress'
 
     initialize: () ->
         super
-
+  
         @bind 'show', @show
         @bind 'hide', @hide
 
@@ -86,7 +87,7 @@ class exports.ChannelView extends BaseView
         unless node.metadata_synced
             app.handler.data.get_node_metadata node.get('nodeid')
         app.handler.data.get_all_node_affiliations node.get('nodeid')
-
+        @domready @setupInlineMention
         super ->
             if @model
                 text = @$('.newTopic textarea')
@@ -317,3 +318,39 @@ class exports.ChannelView extends BaseView
             @pending_notification.remove()
             delete @pending_notification
     
+    keypress:  (ev) ->
+     if !@autocomplete?
+       @setupInlineMention()
+     if ev.which is 16
+       if @autocomplete.disabled is false
+         @autocomplete.enable()
+       return
+     # Escape, tab, enter, up, down
+     if ev.which in [27, 9, 13, 9]
+       @autocomplete.disable()
+       return
+
+    setupInlineMention: ->
+     followers = []
+     @details.followers.model.forEach (user) ->
+       uid = user.get 'id'
+       followers.push user.attributes.jid
+      
+     @autocomplete = @$('textarea').autocomplete(
+           lookup: followers
+           delimiter: ' ',
+           minChars: 1,
+           zIndex: 9999,
+           searchPrefix: '@',
+           noCache: true,
+           searchEverywhere: true
+     )
+     suggestions = @autocomplete.options.lookup.suggestions
+     @details.followers.bind('add', (user) ->
+       jid = user.get('jid')
+       suggestions.push jid
+     )
+     @details.followers.bind('remove', (user) ->
+       jid = user.get('jid')
+       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
+     )

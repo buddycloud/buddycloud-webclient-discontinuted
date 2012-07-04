@@ -29,6 +29,6 @@ class exports.UserStore extends UsersBaseCollection
     initialize: ->
         super
         @localStorage = new Store("users")
-        app.debug "nr of users in cache: #{@localStorage.records.length}"
+        console.log "nr of users in cache: #{@localStorage.records.length}"
         @fetch()
 

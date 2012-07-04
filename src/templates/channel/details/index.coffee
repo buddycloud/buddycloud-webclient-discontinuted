@@ -9,6 +9,7 @@ unless process.title is 'browser'
 
 
 { Template } = require 'dynamictemplate'
+formatdate = require 'formatdate'
 { throttle_callback } = require '../../../util'
 design = require '../../../_design/channel/details/index'
 
@@ -30,6 +31,7 @@ module.exports = design (view) ->
                     description = make_field 'description'
                     accessModel = make_field 'open'
                     creationDate = make_field 'broadcast', 'time'
+                    formatdate.update creationDate
 
                     update_metadata = =>
                         description.text metadata.get('description')?.value
@@ -40,7 +42,6 @@ module.exports = design (view) ->
                         date = metadata.get('creation_date')?.value
                         if date?
                             creationDate.attr "data-date":date, datetime:date
-                            creationDate.ready -> @_jquery?.formatdate(update:off)
                         if new Date(date ? 0).getTime() is 0
                             creationDate.hide()
                         else
