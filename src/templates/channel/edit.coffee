@@ -10,7 +10,7 @@ unless process.title is 'browser'
 design = require '../../_design/channel/edit'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         @$div class: 'editbar', ->
             @$div class: 'edits', ->
                 @$div class: 'contenteditable', ->

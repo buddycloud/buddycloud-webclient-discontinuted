@@ -42,7 +42,6 @@ class exports.ChannelView extends BaseView
         @model.bind 'post', =>
             unless @hidden
                 @model.mark_read()
-
         # Potentially expensive (filters all node affiliations)
         trigger_update_permissions = throttle_callback 50, =>
             @trigger 'update:permissions'
@@ -227,7 +226,7 @@ class exports.ChannelView extends BaseView
             @trigger('status', value)
         else
             @load_status_posts()
-
+        
     load_status_posts: =>
         statusnode = @model.nodes.get_or_create(id:'status')
         # FIXME: when we're anonymous, refresh_channel() gets those
@@ -318,7 +317,7 @@ class exports.ChannelView extends BaseView
                 @pending_notification?
             @pending_notification.remove()
             delete @pending_notification
-
+    
     keypress:  (ev) ->
      if !@autocomplete?
        @setupInlineMention()

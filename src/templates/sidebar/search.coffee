@@ -9,7 +9,7 @@ unless process.title is 'browser'
 design = require '../../_design/sidebar/search'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         @$div class:'search', ->
             @$input(type:'search').ready ->
                 # a little bit ugly i guess

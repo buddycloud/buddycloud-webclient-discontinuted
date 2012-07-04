@@ -25,4 +25,7 @@ window.config = {
     /* Sign up for an embed.ly account to use OEmbed */
     embedly_key:undefined
 
+    plugins: {
+        'show-client': '0.1.0',
+    }
 };

@@ -10,7 +10,7 @@ design = require '../../_design/create_topic_channel/index'
 { addClass, removeClass } = require '../util'
 
 module.exports = design (view) ->
-    return new Template schema:5, -> @$div class:'content', ->
+    return new Template {schema:5}, -> @$div class:'content', ->
         @$div class:'channelView', ->
             @$form class: "stream clearfix", ->
                 @$div class: 'role', ->

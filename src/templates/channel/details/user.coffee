@@ -22,7 +22,7 @@ design = require '../../../_design/channel/details/user'
     require '../../../controllers/affiliation'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         channel = view.parent.parent.model
         @$div class:'adminAction', ->
             lastclass = ''

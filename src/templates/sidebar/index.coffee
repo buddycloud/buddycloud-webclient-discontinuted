@@ -12,7 +12,7 @@ design = require '../../_design/sidebar/index'
 { load_indicate, insert, sync } = require '../util'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         @$div class:'sidebar', ->
             @$a id:'logout', ->
                 @remove() if app.users.isAnonymous(app.users.current)

@@ -12,7 +12,7 @@ unless process.title is 'browser'
 design = require '../../_design/discover/entry'
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         @$div ->
             @$div class:'avatar', ->
                 @attr 'style':"background-image:url(#{view.model.avatar})"

@@ -15,7 +15,7 @@ design = require '../../../_design/channel/details/index'
 
 
 module.exports = design (view) ->
-    return new Template schema:5, ->
+    return new Template {schema:5}, ->
         postsnode = view.model.nodes.get_or_create(id: 'posts')
         metadata = postsnode.metadata
 
