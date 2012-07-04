@@ -2,7 +2,7 @@
 window.config = {
 
     /* address of the bosh gateway. this should be reachable from webclient domain */
-    bosh_service: 'http://localhost:7070',
+    bosh_service: 'https://example.com:443/http-bind/',
 
     /* enable or disable registration */
     registration: true,
@@ -21,14 +21,12 @@ window.config = {
      * unless the user specifies …@domain as the name. (see: https://buddycloud.org/wiki/Install#Advanced_Topics) */
     //topic_domain: "topics.example.com",
     directoryService: "search.buddycloud.org",
-bosh_service: 'https://beta.buddycloud.org:443/http-bind/',
+
     /* Sign up for an embed.ly account to use OEmbed */
     embedly_key:undefined,
-    
-	
+
     plugins: {
         'show-client': '0.1.0',
-        'security-labelling': '0.1.0'
     }
 
 };
