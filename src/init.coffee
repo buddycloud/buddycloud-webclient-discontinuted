@@ -18,13 +18,10 @@ app[k] = v for k,v of {
 }
 
 require './vendor-bridge'
-<<<<<<< HEAD
 require './plugin-list'
-=======
 { Order } = require 'order'
 Notificon = require 'notificon'
 formatdate = require 'formatdate'
->>>>>>> 2c5811959262ea43419cd402b9d2ff44ca4059c5
 { EventEmitter:DomEventEmitter } = require 'domevents'
 { Router } = require './controllers/router'
 { ConnectionHandler } = require './handlers/connection'
