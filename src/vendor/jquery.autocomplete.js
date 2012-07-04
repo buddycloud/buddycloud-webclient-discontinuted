@@ -221,9 +221,10 @@
       arr = val.split(d);
       query = $.trim(arr[arr.length - 1])
       if (query.substring(0, this.options.searchPrefix.length) == this.options.searchPrefix) {
-	 query = query.substring(this.options.searchPrefix.length)
+	     query = query.substring(this.options.searchPrefix.length)
+         return query;
       }
-      return query;
+      return '';
     },
 
     getSuggestionsLocal: function(q) {
@@ -270,7 +271,9 @@
     isBadQuery: function(q) {
       var i = this.badQueries.length;
       while (i--) {
-        if (q.indexOf(this.badQueries[i]) === 0) { return true; }
+        if (q.indexOf(this.badQueries[i]) === 0) {
+            return true;
+        }
       }
       return false;
     },
@@ -301,7 +304,7 @@
 	if (typeof(entry) == 'object' && typeof(this.options.dataKey) != 'undefined') {
 	  entry = entry[this.options.dataKey];
 	}  
-        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + this.template.call(entry, f, v, suggestion) + '</div>');
+        div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + this.template(entry, f, v, s) + '</div>');
         div.mouseover(mOver(i));
         div.click(mClick(i));
         this.container.append(div);

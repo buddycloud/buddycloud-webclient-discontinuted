@@ -321,28 +321,19 @@ class exports.ChannelView extends BaseView
     keypress:  (ev) ->
      if !@autocomplete?
        @setupInlineMention()
-     if ev.which is 16
-       if @autocomplete.disabled is false
-         @autocomplete.enable()
-       return
-     # Escape, tab, enter, up, down
-     if ev.which in [27, 9, 13, 9]
-       @autocomplete.disable()
-       return
 
     setupInlineMention: ->
-     followers = []
-     postsNode = @model.nodes.get('posts')
-     if postsNode? is false
-       setTimeout @setupInlineMention(), 1000
-     postsNode.subscribers.forEach (subscriber) ->
+      followers = []
+      postsNode = @model.nodes.get('posts')
+      if postsNode? is false
+        setTimeout @setupInlineMention(), 1000
+      postsNode.subscribers.forEach (subscriber) ->
        if subscriber.get('subscription') is 'none'
          return
        jid = subscriber.get 'id'
        followers.push {jid:jid, gravatar: "#{gravatar jid}"}
 
-     @$('textarea').each( (node) ->
-        @autocomplete = $(node).autocomplete(
+      @autocomplete = @$('textarea').autocomplete(
            lookup: followers
            minChars: 1
            zIndex: 9999
@@ -350,17 +341,20 @@ class exports.ChannelView extends BaseView
            noCache: true
            searchEverywhere: true
            dataKey: 'jid'
+           delimiter: ' '
         )
-     )
-     #@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
-     #return formatResult suggestion, entry, currentValue
+      #@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
+      #return formatResult suggestion, entry, currentValue
 
-     suggestions = @autocomplete.options.lookup.suggestions
-     postsNode.on('add', (user) ->
-       jid = user.get('jid')
-       suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
-     )
-     postsNode.on('remove', (user) ->
-       jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
-     )
+      suggestions = @autocomplete.options.lookup.suggestions
+
+      postsNode.on('add', (user) ->
+        jid = user.get('jid')
+        console.debug "Adding suggestion #{jid}"
+        suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
+      )
+      postsNode.on('remove', (user) ->
+        jid = user.get('jid')
+        console.debug "Removing suggestion #{jid}"
+        suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
+      )
