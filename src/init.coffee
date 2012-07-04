@@ -31,6 +31,9 @@ formatdate = require 'formatdate'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
 
+app.use = (plugin) ->
+    plugin?.call(this, this, require)
+
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
 Strophe.log = (level, msg) ->
