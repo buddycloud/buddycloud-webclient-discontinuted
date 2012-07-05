@@ -21,11 +21,11 @@ class exports.ChannelView extends BaseView
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
         'click .save': 'clickSave'
-        'input textarea': 'keypress'
+        'keyup textarea': 'keypress'
 
     initialize: () ->
         super
-  
+
         @bind 'show', @show
         @bind 'hide', @hide
 
@@ -318,43 +318,47 @@ class exports.ChannelView extends BaseView
             @pending_notification.remove()
             delete @pending_notification
 
-    keypress:  (ev) ->
-     if !@autocomplete?
-       @setupInlineMention()
+    keypress: (ev) ->
+      if !@autocomplete?
+        @setupInlineMention()
 
     setupInlineMention: ->
-      followers = []
-      postsNode = @model.nodes.get('posts')
-      if postsNode? is false
-        setTimeout @setupInlineMention(), 1000
-      postsNode.subscribers.forEach (subscriber) ->
-       if subscriber.get('subscription') is 'none'
-         return
-       jid = subscriber.get 'id'
-       followers.push {jid:jid, gravatar: "#{gravatar jid}"}
+       followers = []
+       postsNode = @model.nodes.get('posts')
 
-      @autocomplete = @$('textarea').autocomplete(
-           lookup: followers
-           minChars: 1
-           zIndex: 9999
-           searchPrefix: '@'
-           noCache: true
-           searchEverywhere: true
-           dataKey: 'jid'
-           delimiter: ' '
-        )
-      #@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
-      #return formatResult suggestion, entry, currentValue
+       if postsNode? is false
+         setTimeout @setupInlineMention(), 1000
+       postsNode.subscribers.forEach (subscriber) ->
+        if subscriber.get('subscription') is 'none'
+          return
+        jid = subscriber.get 'id'
+        followers.push {jid:jid, gravatar: "#{gravatar jid}"}
 
-      suggestions = @autocomplete.options.lookup.suggestions
-
-      postsNode.on('add', (user) ->
-        jid = user.get('jid')
-        console.debug "Adding suggestion #{jid}"
-        suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
-      )
-      postsNode.on('remove', (user) ->
-        jid = user.get('jid')
-        console.debug "Removing suggestion #{jid}"
-        suggestions = suggestions.filter (user) -> user.jid isnt "#{jid}"
-      )
+       @$('textarea').each ->
+          @autocomplete = $(this).autocomplete(
+            lookup: followers
+            minChars: 1
+            zIndex: 9999
+            searchPrefix: '@'
+            noCache: true
+            searchEverywhere: true
+            dataKey: 'jid'
+            delimiter: ' '
+          )
+ 
+       ##@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
+       ##return formatResult suggestion, entry, currentValue
+       
+       suggestions = @autocomplete.options.lookup.suggestions         
+       postsNode.on('add', (user) ->
+          jid = user.get('jid')
+          console.debug "Adding suggestion #{jid}"
+          suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
+       )
+       postsNode.on('remove', (user) ->
+          jid = user.get('jid')
+          console.debug "Removing suggestion #{jid}"
+          newFollowerList = suggestions.filter (user) -> user.jid isnt "#{jid}"
+          suggestions = newFollowerList
+          console.debug suggestions
+       )
