@@ -6,8 +6,7 @@
 { FollowNotificationView } = require './follow_notification'
 { PendingNotificationView } = require './pending_notification'
 { OverlayLogin } = require '../authentication/overlay'
-{ EventHandler, throttle_callback } = require '../../util'
-
+{ EventHandler, throttle_callback, gravatar } = require '../../util'
 
 class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
@@ -22,11 +21,11 @@ class exports.ChannelView extends BaseView
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
         'click .save': 'clickSave'
-        'keyup .newTopic textarea': 'keypress'
+        'keyup textarea': 'keypress'
 
     initialize: () ->
         super
-  
+
         @bind 'show', @show
         @bind 'hide', @hide
 
@@ -319,39 +318,47 @@ class exports.ChannelView extends BaseView
             @pending_notification.remove()
             delete @pending_notification
 
-    keypress:  (ev) ->
-     if !@autocomplete?
-       @setupInlineMention()
-     if ev.which is 16
-       if @autocomplete.disabled is false
-         @autocomplete.enable()
-       return
-     # Escape, tab, enter, up, down
-     if ev.which in [27, 9, 13, 9]
-       @autocomplete.disable()
-       return
+    keypress: (ev) ->
+      if !@autocomplete?
+        @setupInlineMention()
 
     setupInlineMention: ->
-     followers = []
-     @details.followers.model.forEach (user) ->
-       uid = user.get 'id'
-       followers.push user.attributes.jid
-      
-     @autocomplete = @$('textarea').autocomplete(
-           lookup: followers
-           delimiter: ' ',
-           minChars: 1,
-           zIndex: 9999,
-           searchPrefix: '@',
-           noCache: true,
-           searchEverywhere: true
-     )
-     suggestions = @autocomplete.options.lookup.suggestions
-     @details.followers.bind('add', (user) ->
-       jid = user.get('jid')
-       suggestions.push jid
-     )
-     @details.followers.bind('remove', (user) ->
-       jid = user.get('jid')
-       suggestions = suggestions.filter (user) -> user isnt "#{jid}"
-     )
+       followers = []
+       postsNode = @model.nodes.get('posts')
+
+       if postsNode? is false
+         setTimeout @setupInlineMention(), 1000
+       postsNode.subscribers.forEach (subscriber) ->
+        if subscriber.get('subscription') is 'none'
+          return
+        jid = subscriber.get 'id'
+        followers.push {jid:jid, gravatar: "#{gravatar jid}"}
+
+       @$('textarea').each ->
+          @autocomplete = $(this).autocomplete(
+            lookup: followers
+            minChars: 1
+            zIndex: 9999
+            searchPrefix: '@'
+            noCache: true
+            searchEverywhere: true
+            dataKey: 'jid'
+            delimiter: ' '
+          )
+ 
+       ##@autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
+       ##return formatResult suggestion, entry, currentValue
+       
+       suggestions = @autocomplete.options.lookup.suggestions         
+       postsNode.on('add', (user) ->
+          jid = user.get('jid')
+          console.debug "Adding suggestion #{jid}"
+          suggestions.push {jid: jid, gravatar: "#{gravatar jid}"}
+       )
+       postsNode.on('remove', (user) ->
+          jid = user.get('jid')
+          console.debug "Removing suggestion #{jid}"
+          newFollowerList = suggestions.filter (user) -> user.jid isnt "#{jid}"
+          suggestions = newFollowerList
+          console.debug suggestions
+       )
