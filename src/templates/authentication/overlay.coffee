@@ -46,12 +46,12 @@ module.exports = design (view) ->
                     @$div -> # name
                         if view.store_local
                             @$input ->
-                                @attr value:getCredentials()[0] # name
+                                @attr value:getCredentials()?[0] # name
                     @$div -> # password
                         # FIXME TODO toggle clear text
                         if view.store_local
                             @$input ->
-                                @attr value:getCredentials()[1] # password
+                                @attr value:getCredentials()?[1] # password
                     @$div ->
                         @hide() # we start with login mode
                         @$label for:'auth_email', "In case you forget your password, what's your e-mail?"

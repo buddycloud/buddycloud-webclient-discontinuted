@@ -20,7 +20,11 @@ window.config = {
     /* Default domain to create topics under
      * unless the user specifies …@domain as the name. (see: https://buddycloud.org/wiki/Install#Advanced_Topics) */
     //topic_domain: "topics.example.com",
+
     directoryService: "search.buddycloud.org",
+
+    /* enable store password checkbox by default when true */
+    store_credential_default: false,
 
     /* Sign up for an embed.ly account to use OEmbed */
     embedly_key:undefined

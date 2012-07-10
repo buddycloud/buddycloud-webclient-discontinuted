@@ -10,7 +10,7 @@ class exports.OverlayView extends BaseView
 
     initialize: () ->
         @mode = "login"
-        @store_local = getCredentials()?
+        @store_local = getCredentials()? or config.store_credential_default
         @on('show', @show)
         @on('hide', @hide)
         @render ->
