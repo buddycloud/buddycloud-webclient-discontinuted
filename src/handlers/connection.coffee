@@ -25,17 +25,20 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 console.log "OUT", Strophe.serialize stanza
                 send.apply @connection, arguments
 
+        # Just call the callback directly as the check below was causing problems with BOSH on certain servers (Tigase)
+        callback?();
+
         # check if the bosh service is reachable
-        randomRid = Math.floor(Math.random() * 4294967295);
-        jQuery.ajax
-            type:'POST'
-            contentType:"text/xml"
-            data:'<body rid="' + randomRid + '" xmlns="http://jabber.org/protocol/httpbind"/>'
-            url:config.bosh_service
-            processData:off
-            success: callback
-            error: =>
-                @trigger 'nobosh'
+        # randomRid = Math.floor(Math.random() * 4294967295);
+        # jQuery.ajax
+            # type:'POST'
+            # contentType:"text/xml"
+            # data:'<body rid="' + randomRid + '" xmlns="http://jabber.org/protocol/httpbind"/>'
+            # url:config.bosh_service
+            # processData:off
+            # success: callback
+            # error: =>
+                # @trigger 'nobosh'
 
     reconnect: () =>
         {jid, password} = @last_login ? {}
