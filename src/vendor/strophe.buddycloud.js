@@ -45,8 +45,8 @@ Strophe.addConnectionPlugin('buddycloud', {
                 throw new Error(plugin + " plugin required!");
         });
 
-        Strophe.addNamespace('FORWARD', "urn:xmpp:forward:tmp");
-        Strophe.addNamespace('MAM', "urn:xmpp:archive#management");
+        Strophe.addNamespace('FORWARD', "urn:xmpp:forward:0");
+        Strophe.addNamespace('MAM', "urn:xmpp:mam:tmp");
 
         // generate _postParsers with the right namespaces
         this._postParsers = this._postParsers_template();
@@ -413,15 +413,14 @@ Strophe.addConnectionPlugin('buddycloud', {
      */
     replayNotifications: function(start, end, success, error) {
         var conn = this._connection;
-        var queryAttrs = { xmlns: Strophe.NS.MAM };
-        if (start)
-            queryAttrs.start = start.toISOString ? start.toISOString() : start;
-        if (end)
-            queryAttrs.end = end.toISOString ? end.toISOString() : end;
         var iq = $iq({ from: conn.jid,
                        to: this.channels.jid,
                        type: 'get' }).
-            c('query', queryAttrs);
+            c('query', { xmlns: Strophe.NS.MAM });
+        if (start)
+            iq.c('start').t(start.toISOString ? start.toISOString() : start).up();
+        if (end)
+            iq.c('end')  .t(end.toISOString   ? end.toISOString()   : end)  .up();
         conn.sendIQ(iq, success, this._errorcode(error));
     },
 
