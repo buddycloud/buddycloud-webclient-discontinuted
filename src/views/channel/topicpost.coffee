@@ -2,9 +2,11 @@
 { CommentsView } = require './comments'
 { PostView } = require './post'
 { BaseView } = require '../base'
-{ gravatar } = require '../../../util'
 
 class exports.TopicPostView extends BaseView
+
+    events:
+        'keyup .answer textarea': 'keypress'
 
     template: require '../../templates/channel/topicpost'
 
@@ -53,3 +55,11 @@ class exports.TopicPostView extends BaseView
                 @el?.hide()
             else
                 @el?.show()
+                
+
+    keypress: () ->
+        if !@autocomplete?
+          @setupInlineMention @$('.answer textarea')
+    
+    getPostsNode: () ->
+        @postsNode = @parent.parent.model.nodes.get('posts')

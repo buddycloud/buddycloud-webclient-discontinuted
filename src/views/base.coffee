@@ -1,5 +1,6 @@
-{ View } = require 'backbone'
+{ View }     = require 'backbone'
 { Template } = require 'dynamictemplate'
+{ gravatar } = require '../../util'
 
 adapters =
     jquery: require('dt-jquery').bind(this,
@@ -69,3 +70,34 @@ class exports.BaseView extends View
             @_waitingfordom ?= []
             @_waitingfordom.push callback
         return this
+
+    setupInlineMention: (element) ->
+        @getPostsNode()
+        if !@postsNode?
+            return
+        followers = []
+        @postsNode.subscribers.forEach (subscriber) ->
+            if subscriber.get('subscription') is 'none'
+                return
+            jid = subscriber.get 'id'
+            followers[jid] = {jid:jid, avatar: "#{gravatar jid}"}
+        if @autocomplete?
+            # Just update followers
+            @autocomplete.setLookup followers
+            return
+        @autocomplete = $(element).autocomplete(
+            lookup: followers
+            minChars: 1
+            zIndex: 9999
+            searchPrefix: '@'
+            noCache: true
+            dataKey: 'jid'
+            delimiter: ' '
+        )
+        @autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
+            entry = formatResult suggestion, entry, currentValue
+            return "<img src=\"#{this.options.lookup.suggestions[suggestion].avatar}\"/><span class=\"entry\">#{entry}</span>"
+        self = @
+        @postsNode.on('subscriber:update', (user) ->
+            self.setupInlineMention(element)
+        )
