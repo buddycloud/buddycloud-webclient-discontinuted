@@ -96,7 +96,7 @@ class exports.BaseView extends View
         )
         @autocomplete.template = (entry,  formatResult, currentValue, suggestion) ->
             entry = formatResult suggestion, entry, currentValue
-            return "<img src=\"#{this.options.lookup.suggestions[suggestion].avatar}\"/><span class=\"entry\">#{entry}</span>"
+            return "<img class=\"avatar\" src=\"#{this.options.lookup.suggestions[suggestion].avatar}\"/><span class=\"entry\">#{entry}</span>"
         self = @
         @postsNode.on('subscriber:update', (user) ->
             self.setupInlineMention(element)
