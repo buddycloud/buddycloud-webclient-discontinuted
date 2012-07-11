@@ -26,6 +26,7 @@
   }
 
   function Autocomplete(el, options) {
+
     this.el = $(el);
     this.el.attr('autocomplete', 'off');
     this.suggestions = [];
@@ -57,6 +58,7 @@
     };
     this.initialize();
     this.setOptions(options);
+    return this;
   }
   
   $.fn.autocomplete = function(options) {
@@ -104,12 +106,18 @@
     setOptions: function(options){
       var o = this.options;
       $.extend(o, options);
+      
       if(o.lookup){
-        this.isLocal = true;
-        if($.isArray(o.lookup)){ o.lookup = { suggestions:o.lookup, data:[] }; }
+        this.setLookup(o.lookup);
       }
       $('#'+this.mainContainerId).css({ zIndex:o.zIndex });
       this.container.css({ maxHeight: o.maxHeight + 'px', width:o.width });
+    },
+    setLookup: function(lookup) {
+        this.isLocal = true;
+        if ($.isArray(lookup) || $.isObject(lookup)) { 
+            this.options.lookup = { suggestions:lookup, data:[] };
+        }
     },
     clearCache: function(){
       this.cachedResponse = [];
@@ -229,27 +237,26 @@
 
     getSuggestionsLocal: function(q) {
       var ret, arr, len, val, i;
-      arr = this.options.lookup;
-      len = arr.suggestions.length;
+      arr = this.options.lookup.suggestions;
       ret = { suggestions:[], data:[] };
-      q = q.toLowerCase();
-      for(i=0; i< len; i++){
-        val = arr.suggestions[i];
-	if (typeof(val) == 'object') {
-	  val = val[this.options.dataKey];
-	}
-	indexSearch   = 0
-	indexPosition = val.toLowerCase().indexOf(q)
-	addData = false;
-	if ((this.options.searchEverywhere == true) && (indexPosition > -1)) {
-	    addData = true;
-	} else if (indexPosition == 0) {
-	  addData = true;
-	}
-        if(addData == true){
-          ret.suggestions.push(val);
-          ret.data.push(arr.data[i]);
-        }
+      q   = q.toLowerCase();
+      for (var index in arr) {
+          val = arr[index];
+	      if (typeof(val) == 'object') {
+	          val = val[this.options.dataKey];
+	      }
+	      indexSearch   = 0
+	      indexPosition = val.toLowerCase().indexOf(q)
+	      addData = false;
+	      if ((this.options.searchEverywhere == true) && (indexPosition > -1)) {
+	          addData = true;
+	      } else if (indexPosition == 0) {
+	          addData = true;
+	      }
+          if (addData == true) {
+              ret.suggestions.push(val);
+              ret.data.push(this.options.lookup.data[index]);
+          }
       }
       return ret;
     },
@@ -257,7 +264,7 @@
     getSuggestions: function(q) {
       var cr, me;
       cr = this.isLocal ? this.getSuggestionsLocal(q) : this.cachedResponse[q];
-      if (cr && $.isArray(cr.suggestions)) {
+      if (cr && ($.isArray(cr.suggestions) || $.isObject(cr.suggestions))) {
         this.suggestions = cr.suggestions;
         this.data = cr.data;
         this.suggest();
@@ -300,10 +307,10 @@
       this.container.hide().empty();
       for (i = 0; i < len; i++) {
         s = this.suggestions[i];
-	entry = this.data[i]
-	if (typeof(entry) == 'object' && typeof(this.options.dataKey) != 'undefined') {
-	  entry = entry[this.options.dataKey];
-	}  
+		entry = this.data[i]
+		if (typeof(entry) == 'object' && typeof(this.options.dataKey) != 'undefined') {
+		  entry = entry[this.options.dataKey];
+		}  
         div = $((me.selectedIndex === i ? '<div class="selected"' : '<div') + ' title="' + s + '">' + this.template(entry, f, v, s) + '</div>');
         div.mouseover(mOver(i));
         div.click(mClick(i));
