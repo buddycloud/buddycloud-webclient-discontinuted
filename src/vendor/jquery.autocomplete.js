@@ -53,8 +53,8 @@
       delimiter: null,
       zIndex: 9999,
       searchPrefix: '',
-      searchEverywhere: false
- 
+      searchEverywhere: false,
+      appendSpace: true
     };
     this.initialize();
     this.setOptions(options);
@@ -403,12 +403,14 @@
     },
 
     onSelect: function(i) {
-      var me, fn, s, d;
-      me = this;
-      fn = me.options.onSelect;
-      s = me.suggestions[i];
-      d = me.data[i];
-      me.el.val(me.getValue(s));
+      var me, fn, s, d, val;
+      me  = this;
+      fn  = me.options.onSelect;
+      s   = me.suggestions[i];
+      d   = me.data[i];
+      val = me.getValue(s);
+      if (this.options.appendSpace == true) val = val + ' ';
+      me.el.val(val);
       if ($.isFunction(fn)) { fn(s, d, me.el); }
     },
     
@@ -420,7 +422,8 @@
         currVal = me.currentValue;
         arr = currVal.split(del);
         if (arr.length === 1) { return value; }
-        return currVal.substr(0, currVal.length - arr[arr.length - 1].length) + value;
+        response = currVal.substr(0, currVal.length - arr[arr.length - 1].length) + value;
+        return response;
     }
 
   };

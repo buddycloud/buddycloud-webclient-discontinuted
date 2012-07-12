@@ -323,5 +323,4 @@ class exports.ChannelView extends BaseView
            @setupInlineMention @$('.newTopic textarea')
         
     getPostsNode: () ->
-        console.debug @model       
         @postsNode = @model.nodes.get('posts')
