@@ -26,8 +26,26 @@ snippets = ["main"
 cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "config.js")
 
-buildPath = path.join(cwd, "assets")
+buildPath  = path.join(cwd, "assets")
 designPath = path.join(cwd, "src", "_design")
+pluginPath = path.join(cwd, "src", 'plugins')
+
+# Write plugin list to a require file
+fileSystem = require 'fs'
+plugins    = []
+for pluginDir in fileSystem.readdirSync(pluginPath)
+    if pluginDir.substr(0,1) is '.' then continue
+    if fileSystem.statSync(pluginPath + '/' + pluginDir).isFile()
+        if pluginDir.substr(-3) isnt '.js' then continue
+        pluginName = pluginDir.replace /.*(.js)$/, ''
+        plugins[pluginName] = "./plugins/#{pluginDir}"
+    else 
+        pluginName = pluginDir.replace /\-[0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}/, ''
+        plugins[pluginDir] = "./plugins/#{pluginDir}/#{pluginName}.js"
+pluginFile = fileSystem.createWriteStream('./src/plugin-list.coffee', {'flags': 'w'});
+pluginFile.write("\nwindow.plugin = []\n")
+for pluginName, pluginDir of plugins
+    pluginFile.write "window.plugin['#{pluginName}'] = require '#{pluginDir}'\n"
 
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]

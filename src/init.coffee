@@ -18,6 +18,7 @@ app[k] = v for k,v of {
 }
 
 require './vendor-bridge'
+require './plugin-list'
 { Order } = require 'order'
 Notificon = require 'notificon'
 formatdate = require 'formatdate'
@@ -147,6 +148,10 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
+        app.plugins = []
+        for plugin,version of config.plugins
+            id = "#{plugin}-#{version}"
+            app.plugins[id] = window.plugin[id].plugin.init app, require
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
