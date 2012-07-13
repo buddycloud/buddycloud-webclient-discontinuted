@@ -1,6 +1,14 @@
+async = require 'async'
 { BaseView } = require '../base'
 { getCredentials, setCredentials } = require '../../handlers/creds'
 { EventHandler } = require '../../util'
+
+wobbleAnimation = [
+    {m:"-=10px", t:200}
+    {m:"+=20px", t:400}
+    {m:"-=20px", t:400}
+    {m:"+=10px", t:200}
+]
 
 
 class exports.OverlayView extends BaseView
@@ -130,4 +138,30 @@ class exports.OverlayView extends BaseView
             @register_success()
             # Navigate to home channel after auth:
             app.users.target ?= connection.user
+
+    reset: () =>
+#         app.handler.connection.unbind "connected", @reset
+        @$('.leftBox').removeClass "working"
+        $('#auth_submit').prop "disabled", no
+
+    error: (type) =>
+        @box ?= @$('.modal')
+        console.error "'#{type}' during authentication"
+        app.handler.connection.reset()
+        # trigger error message
+        @$("form").addClass('hasError')
+        par = @$("##{type}").show().parent()
+        do par.show if par.hasClass('error')
+        # wobble animation
+        return if @animating
+        curr_pos = @box.position()
+        @box.css(
+            top : "#{curr_pos.top}px"
+            left: "#{curr_pos.left}px"
+        )
+        @animating = yes
+        async.mapSeries(
+            wobbleAnimation,
+            (({m:left, t}, next) => @box.animate({left, leaveTransforms:yes}, t, next)),
+            ( => @animating = no))
 
