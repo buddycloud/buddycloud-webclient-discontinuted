@@ -55,7 +55,7 @@ module.exports = design (view) ->
                     @$div ->
                         @hide() # we start with login mode
                         @$label for:'auth_email', "In case you forget your password, what's your e-mail?"
-                        @$input id:'auth_email', type:'text'
+                        @$input id:'auth_email', type:'email'
                         view.on 'switch mode', =>
                             switch view.mode
                                 when 'register' then @show()
