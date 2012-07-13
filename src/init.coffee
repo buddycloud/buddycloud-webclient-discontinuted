@@ -29,6 +29,7 @@ formatdate = require 'formatdate'
 { DataHandler } = require './handlers/data'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
+{ Selector } = require 'dt-selector'
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
@@ -156,7 +157,6 @@ app.initialize = ->
                 pluginClass = "-#{plugin}".replace /(\-[a-z])/g, ($1) ->
                     $1.toUpperCase().replace('-','')
                 for i of app.plugins
-                    console.debug i, app.plugins[i]
                     app.plugins[i].init app, require
         initialisePlugins()
 
