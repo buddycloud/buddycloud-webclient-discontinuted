@@ -4,10 +4,11 @@ async = require 'async'
 { EventHandler } = require '../../util'
 
 wobbleAnimation = [
-    {m:"-=10px", t:200}
-    {m:"+=20px", t:400}
-    {m:"-=20px", t:400}
-    {m:"+=10px", t:200}
+    {m:-10, t: 50}
+    {m:+10, t:100}
+    {m:-10, t:100}
+    {m:+10, t:100}
+    {m: +0, t: 50}
 ]
 
 
@@ -162,6 +163,6 @@ class exports.OverlayView extends BaseView
         @animating = yes
         async.mapSeries(
             wobbleAnimation,
-            (({m:left, t}, next) => @box.animate({left, leaveTransforms:yes}, t, next)),
+            (({m, t}, next) => @box.animate({left:curr_pos.left+m}, t, next)),
             ( => @animating = no))
 
