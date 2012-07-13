@@ -100,7 +100,7 @@ class exports.OverlayView extends BaseView
         switch @mode
             when 'login'
                 # Navigate to home channel first
-                app.users.target ?= app.users.get_or_create(id: jid)
+                app.users.target = app.users.get_or_create(id: jid)
                 # the form sumbit will always trigger a new connection
                 @start_connection(jid, password)
                 # save password
