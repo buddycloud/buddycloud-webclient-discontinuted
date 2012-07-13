@@ -29,9 +29,6 @@ formatdate = require 'formatdate'
 { DataHandler } = require './handlers/data'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
-<<<<<<< HEAD
-{ Selector } = require 'dt-selector'
-=======
 
 # plugin api
 require 'dt-selector' # required in plugins
@@ -42,7 +39,6 @@ app.use = (plugin) ->
         plugin_queue.push(plugin)
     else
         plugin?.call(this, this, require)
->>>>>>> 9b9aedeeee90584ab1af44d1264aecebcf2c7c7f
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
@@ -50,6 +46,8 @@ Strophe.log = (level, msg) ->
     console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
 Strophe.fatal = (msg) ->
     console.error "STROPHE:", msg if app.debug_mode
+
+
 
 # show a nice unread counter in the favicon
 total_number = 0
@@ -91,13 +89,6 @@ app.document.on('focusout', onblur)
 
 # app bootstrapping on document ready
 app.initialize = ->
-
-   for plugin,version of config.plugins
-       filename = "/web/plugins/#{plugin}-#{version}/#{plugin}.js"
-       fileref = document.createElement('script')
-       fileref.setAttribute "type","text/javascript"
-       fileref.setAttribute("src", filename)
-       document.getElementsByTagName("head")[0].appendChild(fileref)
 
     # when domain used an older webclient version before, we clear localStorage
     version = localStorage.getItem('__version__')
@@ -162,21 +153,10 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
-<<<<<<< HEAD
-        app.plugins = []
-        initialisePlugins = () ->
-            if app.plugins.length isnt _.size(config.plugins)
-                return setTimeout initialisePlugins, 200
-            for plugin,version of config.plugins
-                for i of app.plugins
-                    app.plugins[i].init app, require
-        initialisePlugins()
-=======
         # initialize plugins
         for plugin in plugin_queue
             plugin?.call(app, app, require)
         plugin_queue = null
->>>>>>> 9b9aedeeee90584ab1af44d1264aecebcf2c7c7f
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
