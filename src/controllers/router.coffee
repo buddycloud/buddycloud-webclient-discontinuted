@@ -5,9 +5,8 @@
 { MainView } = require '../views/main'
 
 class exports.Router extends Backbone.Router
-    routes : # eg http://localhost:3000/welcome
+    routes : # eg http://localhost:3000/discover
         ""           :"index"
-        "welcome"    :"index"
         "login"      :"login"
         "register"   :"register"
         "discover"   :"discover"
