@@ -30,9 +30,15 @@ formatdate = require 'formatdate'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
 
+# plugin api
 require 'dt-selector' # required in plugins
+plugin_queue = []
 app.use = (plugin) ->
-    plugin?.call(this, this, require)
+    if plugin_queue?
+        # app isn't ready yet
+        plugin_queue.push(plugin)
+    else
+        plugin?.call(this, this, require)
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
@@ -147,6 +153,10 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
+        # initialize plugins
+        for plugin in plugin_queue
+            plugin?.call(app, app, require)
+        plugin_queue = null
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
