@@ -94,7 +94,14 @@ class exports.OverlayView extends BaseView
                 setCredentials([jid, password]) if @store_local
 
             when 'register'
-                console.error "rofl"
+                email = $('#auth_email').val()
+                email = undefined unless email.length
+                # the form sumbit will always trigger a new connection
+                @start_registration(jid, password, email)
+                # disable the form
+                $('#home_register_submit').prop "disabled", yes
+                $('#register_waiting').css "visibility","visible"
+                @$('.leftBox').addClass "working"
 
     start_connection: (jid, password) ->
         app.relogin jid, password, (err) =>
@@ -103,20 +110,21 @@ class exports.OverlayView extends BaseView
 #             if err
 #                 @error(err.message)
 
-    start_registration: (name, password, email) ->
-        connection = app.relogin name
+    start_registration: (jid, password, email) ->
+        connection = app.relogin jid
         , { register: yes, password, email }
         , (err) =>
-            console.warn "start_registration", name, err
+            console.warn "start_registration", jid, err
             @reset()
             # couldnt register? try login …
             if err?.message is "regifail" and app.handler.connection.isRegistered()
-                @register_success()
-                @login_success()
+#                 @register_success()
+#                 @login_success()
+                @reset()
             else if err
                 @error(err.message)
             else
-                @login_success()
+#                 @login_success()
         connection.bind 'registered', =>
             @register_success()
             # Navigate to home channel after auth:
