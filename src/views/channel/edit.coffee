@@ -166,10 +166,12 @@ class exports.ChannelEditView extends BaseView
                         else
                             return true
                     )
+                preventEmptyness.call(el)
             when 'multiLine'
                 el
                     .prop('contenteditable', yes)
                     .input(preventEmptyness)
+                preventEmptyness.call(el)
             when 'boolean'
                 text = el.text()
                 # Last class becomes id -- dummy comment added for Simon

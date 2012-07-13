@@ -29,7 +29,20 @@ formatdate = require 'formatdate'
 { DataHandler } = require './handlers/data'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
+<<<<<<< HEAD
 { Selector } = require 'dt-selector'
+=======
+
+# plugin api
+require 'dt-selector' # required in plugins
+plugin_queue = []
+app.use = (plugin) ->
+    if plugin_queue?
+        # app isn't ready yet
+        plugin_queue.push(plugin)
+    else
+        plugin?.call(this, this, require)
+>>>>>>> 9b9aedeeee90584ab1af44d1264aecebcf2c7c7f
 
 ### could be used to switch console output ###
 app.debug_mode = config.debug ? on
@@ -149,6 +162,7 @@ app.initialize = ->
     $(document).ready ->
         # page routing
         app.router = new Router
+<<<<<<< HEAD
         app.plugins = []
         initialisePlugins = () ->
             if app.plugins.length isnt _.size(config.plugins)
@@ -157,6 +171,12 @@ app.initialize = ->
                 for i of app.plugins
                     app.plugins[i].init app, require
         initialisePlugins()
+=======
+        # initialize plugins
+        for plugin in plugin_queue
+            plugin?.call(app, app, require)
+        plugin_queue = null
+>>>>>>> 9b9aedeeee90584ab1af44d1264aecebcf2c7c7f
 
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
@@ -201,3 +221,5 @@ Modernizr.load
     test:Modernizr.localStorage
     yep:'web/js/store.js'
     complete:app.initialize
+
+Modernizr.load(load:config.plugins) if Array.isArray(config.plugins)

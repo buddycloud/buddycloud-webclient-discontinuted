@@ -116,7 +116,7 @@ module.exports = design (view) ->
                         tutorial = null
                         return
                     if view.model.isLoading
-                        # This is added to not to display any helpers or 
+                        # This is added to not to display any helpers or
                         # notifies while channel is still loading.
                         return
                     type = "empty"

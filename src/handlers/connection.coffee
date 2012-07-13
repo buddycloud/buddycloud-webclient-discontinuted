@@ -26,14 +26,12 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 send.apply @connection, arguments
 
         # check if the bosh service is reachable
-        randomRid = Math.floor(Math.random() * 4294967295);
         jQuery.ajax
-            type:'POST'
-            contentType:"text/xml"
-            data:'<body rid="' + randomRid + '" xmlns="http://jabber.org/protocol/httpbind"/>'
+            type:'OPTIONS'
+            contentType:'text/xml'
             url:config.bosh_service
             processData:off
-            success: callback
+            success:callback
             error: =>
                 @trigger 'nobosh'
 

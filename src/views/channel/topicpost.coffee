@@ -55,11 +55,11 @@ class exports.TopicPostView extends BaseView
                 @el?.hide()
             else
                 @el?.show()
-                
+
 
     keypress: () ->
         if !@autocomplete?
           @setupInlineMention @$('.answer textarea')
-    
+
     getPostsNode: () ->
         @postsNode = @parent.parent.model.nodes.get('posts')
