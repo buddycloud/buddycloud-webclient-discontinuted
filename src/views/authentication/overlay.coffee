@@ -95,7 +95,7 @@ class exports.OverlayView extends BaseView
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
         # disable the form and give feedback
-        $('#auth_submit').prop "disabled", yes
+        @trigger 'disable:form'
 
         switch @mode
             when 'login'
@@ -111,10 +111,6 @@ class exports.OverlayView extends BaseView
                 email = undefined unless email.length
                 # the form sumbit will always trigger a new connection
                 @start_registration(jid, password, email)
-                # disable the form
-                $('#home_register_submit').prop "disabled", yes
-                $('#register_waiting').css "visibility","visible"
-                @$('.leftBox').addClass "working"
 
     start_connection: (jid, password) ->
         app.relogin jid, password, (err) =>
@@ -136,8 +132,7 @@ class exports.OverlayView extends BaseView
             app.users.target = connection.user
 
     reset: () =>
-        @$('.leftBox').removeClass "working"
-        $('#auth_submit').prop "disabled", no
+        @trigger 'enable:form'
 
     error: (type) =>
         @box ?= @$('.modal')

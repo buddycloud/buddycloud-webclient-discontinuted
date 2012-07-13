@@ -47,6 +47,8 @@ module.exports = design (view) ->
                                     @text "buddycloud login"
                     @$p ->
                         return @remove() if config.registration is off
+                        view.on('disable:form', @hide)
+                        view.on( 'enable:form', @show)
                         @$span ->
                             view.on 'switch mode', =>
                                 switch view.mode
@@ -67,6 +69,10 @@ module.exports = design (view) ->
                 onError.call this, 'nobosh'
                 onError.call this, 'nochannelserver'
                 @$form ->
+                    view.on 'disable:form', =>
+                        @ready( => @_jquery.props?('disable', yes))
+                    view.on 'enable:form', =>
+                        @ready( => @_jquery.props?('disable', no))
                     @$span -> # errors
                         onError.call this, 'regifail'
                         onError.call this, 'authfail'
