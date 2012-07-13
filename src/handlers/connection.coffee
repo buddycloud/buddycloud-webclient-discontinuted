@@ -118,10 +118,11 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 @trigger 'submitting'
 
             else if status is Strophe.Status.SBMTFAIL
-                @trigger 'sbmtfail'
                 # user accidently pressed register instead of login, so we try to authenticate as given user
                 if @isRegistered()
                     @connection.authenticate()
+                else
+                    @trigger 'sbmtfail'
 
             else if status is Strophe.Status.REGISTERED
                 @trigger 'registered'
