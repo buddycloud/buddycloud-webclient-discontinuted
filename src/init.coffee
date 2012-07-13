@@ -35,7 +35,7 @@ app.use = (plugin) ->
     plugin?.call(this, this, require)
 
 ### could be used to switch console output ###
-app.debug_mode = config.debug ? on
+app.debug_mode = config?.debug ? on
 Strophe.log = (level, msg) ->
     console.warn "STROPHE:", level, msg if app.debug_mode and level > 0
 Strophe.fatal = (msg) ->
