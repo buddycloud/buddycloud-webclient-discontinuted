@@ -321,6 +321,6 @@ class exports.ChannelView extends BaseView
     keypress: () ->
         if !@autocomplete?
            @setupInlineMention @$('.newTopic textarea')
-        
+
     getPostsNode: () ->
         @postsNode = @model.nodes.get('posts')
