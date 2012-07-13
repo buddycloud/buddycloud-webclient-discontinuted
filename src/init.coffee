@@ -201,3 +201,5 @@ Modernizr.load
     test:Modernizr.localStorage
     yep:'web/js/store.js'
     complete:app.initialize
+
+Modernizr.load(load:config.plugins) if Array.isArray(config.plugins)
