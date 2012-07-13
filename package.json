@@ -10,7 +10,7 @@
 ,   "update":  "#./node_modules/.bin/coffee"
   }
 , "dependencies": {
-    "coffee-script": "1.2.0"
+    "coffee-script": "1.3.3"
 ,   "colors": "0.6.0-1"
 ,   "tarball": "0.0.3"
 ,   "request": "2.9.153"
