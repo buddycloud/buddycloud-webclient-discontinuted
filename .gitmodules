@@ -7,6 +7,3 @@
 [submodule "external/jquery-animate-enhanced"]
 	path = external/jquery-animate-enhanced
 	url = git://github.com/benbarnett/jQuery-Animate-Enhanced.git
-[submodule "assets/web/plugins"]
-	path = assets/web/plugins
-	url = https://github.com/lloydwatkin/buddycloud-webclient-plugins.git
