@@ -9,9 +9,31 @@ unless process.title is 'browser'
 design = require '../../_design/authentication/overlay'
 { getCredentials } = require '../../handlers/creds'
 
+errorMessage =
+    'nobosh':"BOSH Service unavailable!"
+    'nochannelserver':"Channel Server unreachable!"
+    'regifail':"Cannot create new Account."
+    'authfail':"Unable to confirm your username or password."
+    'connfail':"Connection to the server closed."
+    'disconnected':"Thats weird. You disconnected."
+    'noname':"please provide a username"
+    'nopasswd':"please enter a password"
+
+
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'overlay', ->
+
+            errors = {}
+            view.on 'reset:errors', ->
+                for type, error of errors
+                    error.remove()
+                errors = {}
+            onError = (type) ->
+                view.on "error:#{type}", (t) =>
+                    console.error "ERR", type, t, errors[t]
+                    errors[t] ?= @$div({class:'error'}, errorMessage[t])
+
             @$div ->
                 @$div class:'close', ->
                     @hide() unless view.isClosable()
@@ -42,16 +64,25 @@ module.exports = design (view) ->
                                     when 'login'
                                         @attr href:"/register"
                                         @text "Register"
+                onError.call this, 'nobosh'
+                onError.call this, 'nochannelserver'
                 @$form ->
+                    @$span -> # errors
+                        onError.call this, 'regifail'
+                        onError.call this, 'authfail'
+                        onError.call this, 'connfail'
+                        onError.call this, 'disconnected'
                     @$div -> # name
                         if view.store_local
                             @$input ->
                                 @attr value:getCredentials()?[0] # name
+                        onError.call this, 'noname'
                     @$div -> # password
                         # FIXME TODO toggle clear text
                         if view.store_local
                             @$input ->
                                 @attr value:getCredentials()?[1] # password
+                        onError.call this, 'nopasswd'
                     @$div ->
                         @hide() # we start with login mode
                         @$label for:'auth_email', "In case you forget your password, what's your e-mail?"

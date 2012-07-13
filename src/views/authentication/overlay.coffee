@@ -85,6 +85,7 @@ class exports.OverlayView extends BaseView
     onSubmit: EventHandler (ev) ->
         console.warn "form submit"
         ev.stopPropagation()
+        @trigger 'reset:errors'
         jid = $('#auth_name').val()
         password = $('#auth_pwd').val()
         unless jid.length and password.length
@@ -126,22 +127,15 @@ class exports.OverlayView extends BaseView
         , (err) =>
             console.warn "start_registration", jid, err
             @reset()
-            # couldnt register? try login …
-            if err?.message is "regifail" and app.handler.connection.isRegistered()
-#                 @register_success()
-#                 @login_success()
-                @reset()
-            else if err
-                @error(err.message)
-            else
-#                 @login_success()
-        connection.bind 'registered', =>
-            @register_success()
+            return @error(err.message) if err
             # Navigate to home channel after auth:
-            app.users.target ?= connection.user
+            app.users.target = connection.user
+        connection.bind 'registered', =>
+            @reset()
+            # Navigate to home channel after auth:
+            app.users.target = connection.user
 
     reset: () =>
-#         app.handler.connection.unbind "connected", @reset
         @$('.leftBox').removeClass "working"
         $('#auth_submit').prop "disabled", no
 
@@ -151,8 +145,8 @@ class exports.OverlayView extends BaseView
         app.handler.connection.reset()
         # trigger error message
         @$("form").addClass('hasError')
-        par = @$("##{type}").show().parent()
-        do par.show if par.hasClass('error')
+        @trigger "error:#{type}", type
+        @trigger "error:all", type
         # wobble animation
         return if @animating
         curr_pos = @box.position()
