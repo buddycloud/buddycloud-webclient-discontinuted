@@ -78,7 +78,10 @@ class exports.OverlayView extends BaseView
         ev.stopPropagation()
         jid = $('#auth_name').val()
         password = $('#auth_pwd').val()
-        return if jid.length is 0 or password.length is 0
+        unless jid.length and password.length
+            @error "noname" unless jid.length
+            @error "nopasswd" unless password.length
+            return
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
         # disable the form and give feedback
@@ -105,10 +108,8 @@ class exports.OverlayView extends BaseView
 
     start_connection: (jid, password) ->
         app.relogin jid, password, (err) =>
-            console.error "RELOGIN", err
-#             @reset()
-#             if err
-#                 @error(err.message)
+            @error(err.message) if err
+            @reset()
 
     start_registration: (jid, password, email) ->
         connection = app.relogin jid
