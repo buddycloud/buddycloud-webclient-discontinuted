@@ -30,7 +30,7 @@ module.exports = (tarPath) ->
             gname:'nogroup'
             uid: 1000
             gid: 1000
-            mode: 0o0644
+            mode: 0644
 
     tarball
         .on('error', onError)
