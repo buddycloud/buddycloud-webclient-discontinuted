@@ -30,7 +30,7 @@ formatdate = require 'formatdate'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
 
-
+require 'dt-selector' # required in plugins
 app.use = (plugin) ->
     plugin?.call(this, this, require)
 
