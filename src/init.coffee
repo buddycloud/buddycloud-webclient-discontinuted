@@ -154,8 +154,6 @@ app.initialize = ->
             if app.plugins.length isnt _.size(config.plugins)
                 return setTimeout initialisePlugins, 200
             for plugin,version of config.plugins
-                pluginClass = "-#{plugin}".replace /(\-[a-z])/g, ($1) ->
-                    $1.toUpperCase().replace('-','')
                 for i of app.plugins
                     app.plugins[i].init app, require
         initialisePlugins()
