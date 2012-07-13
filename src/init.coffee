@@ -169,9 +169,9 @@ app.relogin = (user, password, callback) ->
             app.handler.connection.connection.disconnect()
 
         app.setConnection connection
-        app.router.on_connected()
         console.warn "app.relogin success callback"
         callback?()
+        app.router.on_connected()
     connection.bind 'connected', on_connected
     ["authfail", "regifail", "authfail", "sbmtfail", "connfail", "disconnected"].forEach (type) ->
         connection.bind type, ->
