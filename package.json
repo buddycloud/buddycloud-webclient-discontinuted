@@ -36,7 +36,7 @@
 ,   "async": "0.1.18"
 ,   "socket.io": "0.9.2"
 ,   "dynamictemplate": "0.5.6"
-,   "dt-compiler": "0.1.5"
+,   "dt-compiler": "0.1.7"
 ,   "dt-jquery": "0.3.2"
 ,   "dt-list": "0.1.0"
 ,   "order": "0.1.0"
