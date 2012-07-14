@@ -88,22 +88,18 @@ start_server = (args, opts) ->
         javascript.alias('jquery', 'br-jquery')
 
         javascript.register '.html', (source) ->
-            source = source
-                .replace(/'/g, "\\'") # don't let html escape itself
-                .replace(/\n/g, "\\n'+\n'") # new lines
-            "module.exports=function(){return '#{source}'}"
+            "module.exports=function(){return '#{JSON.stringify source}'};"
         javascript.register 'modernizr.js', (source) ->
             # modernizr needs the full global window namespace
-            "!function(){#{source}}.call(window)"
+            "!function(){#{source}}.call(window);"
         javascript.register 'strophe.js', (source) ->
             # expose MD5 lib because we need that for gravatar too
-            source += ";window.MD5=MD5"
+            source += ";window.MD5=MD5;"
             source
 
         javascript.addEntry(path.join(cwd, "src", "init.coffee"))
 
         javascript.use(require('shimify'))
-        javascript.use(require('scopify').createScope())
 
         if config.build
             # minification
