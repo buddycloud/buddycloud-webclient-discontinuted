@@ -46,9 +46,8 @@
 ,   "notificon": "https://github.com/dodo/Notificon/tarball/master"
   }
 , "_dependencies_missing_from_npm": {
-    "jQuery.fn.autoResize":    "5025b4a5c3ed60d7218827eb19e8c0c4e641aabe",
-    "jQuery-Animate-Enhanced": "ae3ba3db0cb3aa731400c67eddf27a6e2e0a54a5",
-    "antiscroll":    "fa1eb21de5b474637a93f3666883117b69270c97",
-    "normalize.css": "3404fcb8b966373340e9428d21cccb0b4801d7c0"
+    "jQuery-Animate-Enhanced": "9f80839a4058774ea353ba37a3dda630f819883d",
+    "antiscroll":    "6e962668179236a6ffbb2b4bde7241b65ff1dd18",
+    "normalize.css": "b7579700ead7f94ddb07687e0ec8fbf8efc4ad93"
   }
 }
