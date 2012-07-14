@@ -69,10 +69,6 @@ module.exports = design (view) ->
                 onError.call this, 'nobosh'
                 onError.call this, 'nochannelserver'
                 @$form ->
-                    view.on 'disable:form', =>
-                        @ready( => @_jquery.props?('disable', yes))
-                    view.on 'enable:form', =>
-                        @ready( => @_jquery.props?('disable', no))
                     @$span -> # errors
                         onError.call this, 'regifail'
                         onError.call this, 'authfail'
@@ -124,5 +120,9 @@ module.exports = design (view) ->
                             switch view.mode
                                 when 'register' then @text "Join buddycloud"
                                 when 'login'    then @text "Login"
+                        view.on 'disable:form', =>
+                            @ready( => @_jquery.prop('disabled', yes))
+                        view.on 'enable:form', =>
+                            @ready( => @_jquery.prop('disabled', no))
 
 
