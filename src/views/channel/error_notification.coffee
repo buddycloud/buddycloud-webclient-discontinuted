@@ -1,6 +1,6 @@
 { BaseView } = require '../base'
-notification = require '../../templates/channel/error_notification'
-private      = require '../../templates/channel/private'
+Notification = require '../../templates/channel/error_notification'
+Private      = require '../../templates/channel/private'
 
 class exports.ErrorNotificationView extends BaseView
 
@@ -8,9 +8,9 @@ class exports.ErrorNotificationView extends BaseView
         err = error.message ? error
 
         if "#{err}".indexOf('forbidden') is 0 # startswith
-            @template = private
+            @template = Private
         else
-            @template = notification
+            @template = Notification
 
         super
         @ready =>

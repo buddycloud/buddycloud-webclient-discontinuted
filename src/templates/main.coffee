@@ -27,7 +27,7 @@ module.exports = design (view) ->
         view.bind 'subview:content', (tag) =>
             if indicator?
                 indicator.clear()
-                delete indicator
+                indicator = null
 
             @add tag
 
