@@ -26,3 +26,4 @@ class exports.PostsBaseView extends BaseView
             @trigger "view:#{@ns}", i, tpl
         view.render()
 
+

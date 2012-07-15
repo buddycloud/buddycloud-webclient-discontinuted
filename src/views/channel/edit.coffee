@@ -166,13 +166,15 @@ class exports.ChannelEditView extends BaseView
                         else
                             return true
                     )
+                preventEmptyness.call(el)
             when 'multiLine'
                 el
                     .prop('contenteditable', yes)
                     .input(preventEmptyness)
+                preventEmptyness.call(el)
             when 'boolean'
                 text = el.text()
-                # Last class becomes id
+                # Last class becomes id -- dummy comment added for Simon
                 elClasses = el.prop('class').split(' ')
                 id = elClasses[elClasses.length - 1]
                 el
@@ -184,7 +186,7 @@ class exports.ChannelEditView extends BaseView
                     .text(text)
 
                 if id is 'accessModel'
-                    if text is 'open'
+                    if text is 'open' or text is helptextOpenmode
                         el.find('input').prop('checked', yes)
                     update = ->
                         if el.find('input').prop('checked')

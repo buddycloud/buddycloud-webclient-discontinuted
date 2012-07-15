@@ -27,6 +27,10 @@ window.config = {
     store_credential_default: false,
 
     /* Sign up for an embed.ly account to use OEmbed */
-    embedly_key:undefined
+    embedly_key:undefined,
+
+    /* list of url paths to the plugin file
+     * e.g ["web/js/show-client-0.1.0.js"] */
+    plugins: [],
 
 };

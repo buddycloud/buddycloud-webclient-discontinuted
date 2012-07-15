@@ -6,8 +6,7 @@
 { FollowNotificationView } = require './follow_notification'
 { PendingNotificationView } = require './pending_notification'
 { OverlayLogin } = require '../authentication/overlay'
-{ EventHandler, throttle_callback } = require '../../util'
-
+{ EventHandler, throttle_callback, gravatar } = require '../../util'
 
 class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
@@ -22,6 +21,7 @@ class exports.ChannelView extends BaseView
         'scroll': 'on_scroll'
         'click .edit': 'clickEdit'
         'click .save': 'clickSave'
+        'keyup .newTopic textarea': 'keypress'
 
     initialize: () ->
         super
@@ -87,7 +87,7 @@ class exports.ChannelView extends BaseView
         unless node.metadata_synced
             app.handler.data.get_node_metadata node.get('nodeid')
         app.handler.data.get_all_node_affiliations node.get('nodeid')
-
+        @domready @setupInlineMention
         super ->
             if @model
                 text = @$('.newTopic textarea')
@@ -311,3 +311,10 @@ class exports.ChannelView extends BaseView
                 @pending_notification?
             @pending_notification.remove()
             delete @pending_notification
+
+    keypress: () ->
+        if !@autocomplete?
+           @setupInlineMention @$('.newTopic textarea')
+
+    getPostsNode: () ->
+        @postsNode = @model.nodes.get('posts')

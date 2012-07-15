@@ -4,13 +4,16 @@
 { BaseView } = require '../base'
 
 class exports.TopicPostView extends BaseView
+
+    events:
+        'keyup .answer textarea': 'keypress'
+
     template: require '../../templates/channel/topicpost'
 
     initialize: ->
         @hidden = no
         super
         @model.on('change:author', @on_author)
-
         @opener   = new PostView
             type:'opener'
             model:@model
@@ -53,3 +56,10 @@ class exports.TopicPostView extends BaseView
             else
                 @el?.show()
 
+
+    keypress: () ->
+        if !@autocomplete?
+          @setupInlineMention @$('.answer textarea')
+
+    getPostsNode: () ->
+        @postsNode = @parent.parent.model.nodes.get('posts')
