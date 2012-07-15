@@ -159,10 +159,13 @@ app.initialize = ->
 app.setConnection = (connection) ->
     # Avoid DataHandler double-binding
     if app.handler.connection isnt connection
+        app.handler.connection?.off() # removeAllListeners
         app.handler.connection = connection
         app.handler.connector = connection.connector
         app.users.current = connection.user
         app.handler.data.setConnector connection.connector
+        connection.on(   'connected', app.emit.bind(app,    'connected'))
+        connection.on('disconnected', app.emit.bind(app, 'disconnected'))
 
 app.relogin = (user, password, callback) ->
     console.warn "relogin", user
