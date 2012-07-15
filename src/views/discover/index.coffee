@@ -7,6 +7,9 @@ class exports.DiscoverView extends BaseView
     template: require '../../templates/discover/index'
     adapter: 'jquery'
 
+    events:
+        'click .login': 'clickLogin'
+
     initialize: ->
         @views = {}
         @bind('show', @show)
@@ -48,6 +51,10 @@ class exports.DiscoverView extends BaseView
 #             id:"location"
 #             lists:
 #                 'nearby':"Nearby"
+
+
+    clickLogin: EventHandler (ev) ->
+        app.router.navigate "login", true
 
     show: =>
         @button.addClass('active')
