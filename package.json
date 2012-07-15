@@ -16,7 +16,7 @@
 ,   "request": "2.9.153"
 ,   "bufferstream": "0.5.1"
 ,   "node-dev": "0.2.2"
-,   "express": "2.5.8"
+,   "express": "2.5.11"
 ,   "jsconfig": "0.2.0"
 ,   "uglify-js": "1.2.6"
 ,   "stylus": "0.24.0"
