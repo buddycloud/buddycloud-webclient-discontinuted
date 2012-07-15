@@ -6,6 +6,7 @@
 class exports.DiscoverView extends BaseView
     template: require '../../templates/discover/index'
     adapter: 'jquery'
+    overlay: yes
 
     events:
         'click .login': 'clickLogin'
