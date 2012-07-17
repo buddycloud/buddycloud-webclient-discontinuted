@@ -18,7 +18,7 @@ entries = [
     "web/js/app.js"
     "web/js/store.js"
     "web/css/main.css"
-].concat spiderDir("assets", "web/fonts"), spiderDir("assets", "public")
+].concat spiderDir("assets", "web/fonts"), spiderDir("assets", "public"), spiderDir("assets", "web/plugins")
 
 
 

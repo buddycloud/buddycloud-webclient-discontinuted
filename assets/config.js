@@ -32,5 +32,4 @@ window.config = {
     /* list of url paths to the plugin file
      * e.g ["web/js/show-client-0.1.0.js"] */
     plugins: [],
-
 };

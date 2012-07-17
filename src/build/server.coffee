@@ -26,7 +26,7 @@ snippets = ["main"
 cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "config.js")
 
-buildPath = path.join(cwd, "assets")
+buildPath  = path.join(cwd, "assets")
 designPath = path.join(cwd, "src", "_design")
 
 config.cli
