@@ -79,7 +79,7 @@ start_server = (args, opts) ->
         console.log "bundling app.js …".yellow
         javascript = browserify
                 mount  : '/web/js/app.js'
-                watch  : yes
+                watch  : not config.build and config.watch
                 cache  : on
                 debug  : config.dev
                 require: [
