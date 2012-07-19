@@ -43,6 +43,12 @@ class exports.MainView extends BaseView
                     model: @channels
                     parent:this
         @sidebar.search.on('filter', @sort_channels)
+        @on 'destroy', ->
+            @sidebar.destroy()
+            @channels.forEach(@remove_channel_view)
+            for prop in ['sidebar', 'channels', 'views', 'timeouts', 'current']
+                delete this[prop]
+            null
 
         # special because normaly parents add their children views to the dom
         @render =>
@@ -129,6 +135,7 @@ class exports.MainView extends BaseView
         view
 
     remove_channel_view: (channel) =>
+        @views[channel.cid]?.destroy()
         delete @views[channel.cid]
         delete @timeouts[channel.cid]
 

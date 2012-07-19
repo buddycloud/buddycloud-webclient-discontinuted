@@ -13,7 +13,9 @@ class exports.MinimalSidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-        @hidden = yes
+        @on 'destroy', ->
+            @search.destroy()
+            delete @search
 
     render: (callback) ->
         super ->

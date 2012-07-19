@@ -15,7 +15,6 @@ design = require '../../_design/sidebar/entry'
 
 module.exports = design (view) ->
     return new Template {schema:5, view}, ->
-        view.bind('remove', @remove)
         channel = view.model
         @$div class:'channel', ->
             view.bind 'update:highlight', =>

@@ -21,8 +21,12 @@ class exports.Sidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-        @channelsel = null
-        @hidden = yes
+        @on 'destroy', ->
+            @search.destroy()
+            @model.forEach((c) => @views[c?.id]?.destroy())
+            for prop in ['personal', 'timeouts', 'current', 'search', 'views']
+                delete this[prop]
+            null
 
         # sidebar entries
         @current = undefined
@@ -65,7 +69,7 @@ class exports.Sidebar extends BaseView
         if @timeouts[channel.cid]?
             clearTimeout @timeouts[channel.cid]
         @timeouts[channel.cid] = setTimeout ( =>
-            @views[channel.cid].trigger 'remove'
+            @views[channel.cid].destroy()
             delete @timeouts[channel.cid]
             delete @views[channel.cid]
         ), time

@@ -16,6 +16,10 @@ class exports.DiscoverView extends BaseView
         @bind('show', @show)
         @bind('hide', @hide)
         @button = $('.sidebar button.discover')
+        @on 'destroy', ->
+            view?.destroy() for view in views
+            delete @button
+            delete @views
         super
 
         my_jid = app.users.current.get('id')
