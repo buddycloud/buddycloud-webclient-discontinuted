@@ -47,9 +47,12 @@ class exports.Router extends Backbone.Router
         @connected = yes
         if app.users.target?
             jid = app.users.target.get('id')
-            channels = app.views.index?.channels
-            app.views.index?.destroy()
-            app.views.index = new MainView {channels}
+            if app.views.discover
+                channels = app.views.index?.channels
+                app.views.index?.destroy()
+                app.views.index = new MainView {channels}
+            else
+                app.views.index ?= new MainView
             @navigate jid
             # in anonymous direct browsing route, navigate above doesn't
             # trigger an URL change event at all
