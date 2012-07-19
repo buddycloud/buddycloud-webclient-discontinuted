@@ -21,6 +21,8 @@ class exports.Router extends Backbone.Router
 
     initialize: ->
         Backbone.history.start pushState:on
+        app.on('disconnected', @on_disconnected)
+        @connected = no
 
     navigate: ->
         @last_fragment = Backbone.history.fragment unless @current_view?.overlay
@@ -42,14 +44,11 @@ class exports.Router extends Backbone.Router
         @current_view.trigger 'show'
 
     on_connected: =>
-        if @previous_connection?
-            @previous_connection.unbind 'disconnected', @on_disconnected
-        @previous_connection = app.handler.connection
-        app.handler.connection.bind 'disconnected', @on_disconnected
-
+        @connected = yes
         if app.users.target?
             jid = app.users.target.get('id')
-            app.views.index ?= new MainView
+            app.views.index?.destroy()
+            app.views.index = new MainView
             @navigate jid
             # in anonymous direct browsing route, navigate above doesn't
             # trigger an URL change event at all
@@ -58,6 +57,7 @@ class exports.Router extends Backbone.Router
             do @discover
 
     on_disconnected: =>
+        return unless @connected
          # we are still on the welcome site
         return unless app.views.index?.constructor is MainView
         $('#sidebar').remove()
