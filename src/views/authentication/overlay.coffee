@@ -99,8 +99,6 @@ class exports.OverlayView extends BaseView
 
         switch @mode
             when 'login'
-                # Navigate to home channel first
-                app.users.target = app.users.get_or_create(id: jid)
                 # the form sumbit will always trigger a new connection
                 @start_connection(jid, password)
                 # save password
@@ -117,7 +115,7 @@ class exports.OverlayView extends BaseView
             @reset()
             return @error(err.message) if err
             # Navigate to home channel after auth:
-            app.users.target = connection.user
+            app.users.target ?= connection.user
 
     start_registration: (jid, password, email) ->
         connection = app.relogin jid
@@ -127,11 +125,11 @@ class exports.OverlayView extends BaseView
             @reset()
             return @error(err.message) if err
             # Navigate to home channel after auth:
-            app.users.target = connection.user
+            app.users.target ?= connection.user
         connection.bind 'registered', =>
             @reset()
             # Navigate to home channel after auth:
-            app.users.target = connection.user
+            app.users.target ?= connection.user
 
     reset: () =>
         @trigger 'enable:form'
