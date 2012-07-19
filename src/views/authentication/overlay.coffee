@@ -113,9 +113,11 @@ class exports.OverlayView extends BaseView
                 @start_registration(jid, password, email)
 
     start_connection: (jid, password) ->
-        app.relogin jid, password, (err) =>
-            @error(err.message) if err
+        connection = app.relogin jid, password, (err) =>
             @reset()
+            return @error(err.message) if err
+            # Navigate to home channel after auth:
+            app.users.target = connection.user
 
     start_registration: (jid, password, email) ->
         connection = app.relogin jid
