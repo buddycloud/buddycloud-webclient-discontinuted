@@ -7,6 +7,7 @@
 { PendingNotificationView } = require './pending_notification'
 { OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback, gravatar } = require '../../util'
+{ setupInlineMention } = require './util'
 
 class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
@@ -81,6 +82,7 @@ class exports.ChannelView extends BaseView
 
         @follow_notification_views = {}
 
+    setupInlineMention:setupInlineMention
     render: (callback) ->
         node = @model.nodes.get_or_create id: 'posts'
         @metadata = node.metadata

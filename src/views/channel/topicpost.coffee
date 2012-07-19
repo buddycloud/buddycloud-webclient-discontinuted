@@ -2,6 +2,7 @@
 { CommentsView } = require './comments'
 { PostView } = require './post'
 { BaseView } = require '../base'
+{ setupInlineMention } = require './util'
 
 class exports.TopicPostView extends BaseView
 
@@ -9,6 +10,8 @@ class exports.TopicPostView extends BaseView
         'keyup .answer textarea': 'keypress'
 
     template: require '../../templates/channel/topicpost'
+
+    setupInlineMention:setupInlineMention
 
     initialize: ->
         @hidden = no
