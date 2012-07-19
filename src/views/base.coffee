@@ -70,4 +70,14 @@ class exports.BaseView extends View
             @_waitingfordom.push callback
         return this
 
+    destroy: =>
+        return if @destroyed
+        @trigger('destroy')
+        @el?.remove()
+        @off() # removeAllListeners
+        # remove references
+        for prop in ['el', '$el', 'options', 'model', 'collection', 'parent']
+            delete this[prop]
+        @destroyed = yes
+        Object.freeze this # You’re frozen when your heart’s not open
 
