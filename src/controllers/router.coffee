@@ -49,9 +49,8 @@ class exports.Router extends Backbone.Router
         if app.users.target?
             jid = app.users.target.get('id')
             if app.views.discover
-                channels = app.views.index?.channels
                 app.views.index?.destroy()
-                app.views.index = new MainView {channels}
+                app.views.index = new MainView
             else
                 app.views.index?.trigger 'update sidebar'
                 app.views.index ?= new MainView

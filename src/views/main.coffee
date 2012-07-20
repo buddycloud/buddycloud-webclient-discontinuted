@@ -12,7 +12,7 @@ class exports.MainView extends BaseView
     events:
         'scroll': 'on_scroll'
 
-    initialize: ({@channels} = {}) ->
+    initialize: () ->
         super
         @bind 'show', @show
         @bind 'hide', @hide
@@ -20,7 +20,7 @@ class exports.MainView extends BaseView
         # sidebar entries
         @views = {} # this contains the channelnode views
         @timeouts = {} # this contains the channelview remove timeouts
-        @channels ?= new Channels
+        @channels = new Channels
         @channels.comparator = (a, b) =>
             if (filter = @sidebar.search.filter).length
                 ai = a.id.indexOf(filter)
