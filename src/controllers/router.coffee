@@ -52,6 +52,7 @@ class exports.Router extends Backbone.Router
                 app.views.index?.destroy()
                 app.views.index = new MainView {channels}
             else
+                app.views.index?.trigger 'update sidebar'
                 app.views.index ?= new MainView
             @navigate jid
             # in anonymous direct browsing route, navigate above doesn't

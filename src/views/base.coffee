@@ -70,10 +70,10 @@ class exports.BaseView extends View
             @_waitingfordom.push callback
         return this
 
-    destroy: =>
+    destroy: (opts = {}) =>
         return if @destroyed
         @trigger('destroy')
-        @el?.remove()
+        @el?.remove() if opts.rmel ? yes
         @off() # removeAllListeners
         # remove references
         for prop in ['el', '$el', 'options', 'model', 'collection', 'parent']

@@ -19,9 +19,10 @@ module.exports = design (view) ->
             view.bind('show', @show)
             view.bind('hide', @hide)
 
-        @$div class:'sidebar', ->
+        sidebar = @$div class:'sidebar', ->
             @once('replace', load_indicate(this).clear)
-            view.sidebar.bind('template:create', @replace)
+            view.on 'sidebar:template', (tpl) ->
+                sidebar = sidebar.replace(tpl)
 
         indicator = load_indicate this
         view.bind 'subview:content', (tag) =>
