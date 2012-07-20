@@ -21,6 +21,7 @@ class exports.Router extends Backbone.Router
 
     initialize: ->
         Backbone.history.start pushState:on
+        app.on(   'connected', @on_connected)
         app.on('disconnected', @on_disconnected)
         @connected = no
 
@@ -65,6 +66,7 @@ class exports.Router extends Backbone.Router
         return unless @connected
          # we are still on the welcome site
         return unless app.views.index?.constructor is MainView
+        @connected = no
         $('#sidebar').remove()
         app.views.index.el.remove()
         delete app.views.index
