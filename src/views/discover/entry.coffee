@@ -10,9 +10,6 @@ class exports.DiscoverListEntryView extends BaseView
         @statusnode = @model.nodes.get_or_create(id: 'status')
         @statusnode.bind 'post', @update_status
         @parent.on('destroy', @destroy)
-        @on 'destroy', ->
-            delete @statusnode
-            delete @status
         @update_status()
         unless @status
             app.handler.data.get_node_posts @statusnode
@@ -26,3 +23,9 @@ class exports.DiscoverListEntryView extends BaseView
 
     on_click: =>
         app.router.navigate @model.get('id'), yes
+
+    destroy: =>
+        return if @destroyed
+        delete @statusnode
+        delete @status
+        super

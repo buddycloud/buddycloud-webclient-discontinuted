@@ -13,9 +13,6 @@ class exports.MinimalSidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-        @on 'destroy', ->
-            @search.destroy()
-            delete @search
 
     render: (callback) ->
         super ->
@@ -36,3 +33,8 @@ class exports.MinimalSidebar extends BaseView
         @$el?.animate(left:"-#{@$el?.width?() ? 0}px", t)
         @hidden = yes
 
+    destroy: =>
+        return if @destroyed
+        @search.destroy()
+        delete @search
+        super

@@ -21,12 +21,6 @@ class exports.Sidebar extends BaseView
         @search = new Searchbar
             model:@parent.channels
             parent:this
-        @on 'destroy', ->
-            @search.destroy()
-            @model.forEach((c) => @views[c?.id]?.destroy())
-            for prop in ['personal', 'timeouts', 'current', 'search', 'views']
-                delete this[prop]
-            null
 
         # sidebar entries
         @current = undefined
@@ -140,3 +134,11 @@ class exports.Sidebar extends BaseView
         @$el?.animate(left:"-#{@$el?.width?() ? 0}px", t)
 #         @overview.hide(t)
         @hidden = yes
+
+    destroy: =>
+        return if @destroyed
+        @search.destroy()
+        @model.forEach((c) => @views[c?.id]?.destroy())
+        for prop in ['personal', 'timeouts', 'current', 'search', 'views']
+            delete this[prop]
+        super

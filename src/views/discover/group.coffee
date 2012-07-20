@@ -9,9 +9,6 @@ class exports.DiscoverGroupView extends BaseView
 
     initialize: ({@name, @id, lists}) ->
         @views = {}
-        @on 'destroy', ->
-            view?.destroy() for view in views
-            delete @views
         super
 
         for id, listOpts of lists
@@ -31,5 +28,9 @@ class exports.DiscoverGroupView extends BaseView
 #                     @trigger 'subview:list', view.el
             callback?.call(this)
 
-
+    destroy: =>
+        return if @destroyed
+        view?.destroy() for view in @views
+        delete @views
+        super
 

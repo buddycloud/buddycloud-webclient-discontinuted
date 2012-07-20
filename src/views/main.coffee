@@ -37,12 +37,6 @@ class exports.MainView extends BaseView
 
         do @updateSidebar # initialize
         @on('update sidebar', @updateSidebar)
-        @on 'destroy', ->
-            @sidebar.destroy()
-            @channels.forEach(@remove_channel_view)
-            for prop in ['sidebar', 'channels', 'views', 'timeouts', 'current']
-                delete this[prop]
-            null
 
         # special because normaly parents add their children views to the dom
         @render =>
@@ -165,3 +159,11 @@ class exports.MainView extends BaseView
 
     on_scroll: =>
         @current?.on_scroll()
+
+    destroy: =>
+        return if @destroyed
+        @sidebar.destroy()
+        @channels.forEach(@remove_channel_view)
+        for prop in ['sidebar', 'channels', 'views', 'timeouts', 'current']
+            delete this[prop]
+        super
