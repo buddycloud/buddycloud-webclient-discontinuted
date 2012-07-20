@@ -40,8 +40,6 @@ class exports.MainView extends BaseView
 
         # special because normaly parents add their children views to the dom
         @render =>
-            app.users.current.channels.on('add', @add_channel)
-            app.users.current.channels.forEach(  @add_channel)
             @channels.on('remove', @remove_channel_view)
             # FIXME: let the ChannelView be created on-demand, they're
             # rendering much too often during startup. mrflix supposedly says
@@ -75,6 +73,9 @@ class exports.MainView extends BaseView
                 body.addClass('anonymous')
             else
                 body.removeClass('anonymous')
+            process.nextTick =>
+                app.users.current.channels.on('add',@add_channel)
+                app.users.current.channels.forEach( @add_channel)
 
 
     render: (callback) ->
