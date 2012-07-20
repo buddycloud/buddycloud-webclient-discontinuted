@@ -5,6 +5,12 @@ async = require 'async'
 
 class exports.DataHandler extends Backbone.EventHandler
 
+    constructor: ->
+        # HACK because of this strophejs hack
+        app.on(   'connected', @on_connection_established)
+        app.on('disconnected', @on_connection_end)
+        super
+
     setConnector: (@connector) ->
         @connector.bind 'post', @on_node_post
         @connector.bind 'posts:rsm:last', @on_node_posts_rsm_last
@@ -13,8 +19,6 @@ class exports.DataHandler extends Backbone.EventHandler
         @connector.bind 'subscription', @on_subscription
         @connector.bind 'metadata', @on_metadata
         @connector.bind 'node:error', @on_node_error
-        @connector.bind 'connection:established', @on_connection_established
-        @connector.bind 'connection:end', @on_connection_end
 
         @get_posts_queue = new RSMQueue 'posts', (nodeid, rsmAfter, callback) =>
             @connector.get_node_posts { nodeid, rsmAfter }, callback
