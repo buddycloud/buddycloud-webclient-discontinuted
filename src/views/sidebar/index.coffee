@@ -2,7 +2,6 @@
 { ChannelEntry } = require './entry'
 { Searchbar } = require './search'
 { BaseView } = require '../base'
-{ setCredentials } = require '../../handlers/creds'
 
 # The sidebar shows all channels the user is:
 # * subscribed to
@@ -13,7 +12,6 @@ class exports.Sidebar extends BaseView
     events:
         'click #create_topic_channel': 'on_create_topic_channel'
         'click button.discover': 'on_discover'
-        'click #logout': 'on_logout'
 
     initialize: () ->
         super
@@ -101,10 +99,6 @@ class exports.Sidebar extends BaseView
         @current?.trigger('update:highlight')
         @search.reset()
         old?.trigger('update:highlight')
-
-    on_logout: ->
-        setCredentials()
-        return true
 
     on_create_topic_channel: =>
         console.log "on_create_topic_channel", arguments...

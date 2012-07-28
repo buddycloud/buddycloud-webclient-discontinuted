@@ -1,4 +1,5 @@
 { BaseView } = require '../base'
+{ setCredentials } = require '../../handlers/creds'
 { EventHandler } = require '../../util'
 
 class exports.Userbar extends BaseView
@@ -6,6 +7,7 @@ class exports.Userbar extends BaseView
 
     events:
         "click .register": "clickRegister"
+        "click .logout":   "clickLogout"
         "click .login":    "clickLogin"
 
     clickRegister: EventHandler (ev) ->
@@ -14,4 +16,8 @@ class exports.Userbar extends BaseView
     clickLogin: EventHandler (ev) ->
         app.router.navigate "login", true
 
+
+    clickLogout: EventHandler (ev) ->
+        setCredentials()
+        app.relogin()
 

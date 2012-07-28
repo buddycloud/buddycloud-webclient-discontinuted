@@ -53,10 +53,7 @@ module.exports = design (view) ->
                                 else if state is off
                                     save.hide()
                                     edit.text "Edit"
-                            if app.users.isAnonymous(app.users.current)
-                                @$span class:'login button', ->
-                                    @text "Login"#  FIXME +"or Register to Follow"
-                            else
+                            unless app.users.isAnonymous(app.users.current)
                                 follow = @$span class:'follow button', ->
                                     @text "Follow"
                                 unfollow = @$span class:'unfollow button', ->

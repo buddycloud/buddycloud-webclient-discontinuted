@@ -5,7 +5,6 @@
 { ErrorNotificationView } = require './error_notification'
 { FollowNotificationView } = require './follow_notification'
 { PendingNotificationView } = require './pending_notification'
-{ OverlayLogin } = require '../authentication/overlay'
 { EventHandler, throttle_callback, gravatar } = require '../../util'
 { setupInlineMention } = require './util'
 
@@ -13,7 +12,6 @@ class exports.ChannelView extends BaseView
     template: require '../../templates/channel/index'
 
     events:
-        'click .login': 'clickLogin'
         'click .follow': 'clickFollow'
         'click .unfollow': 'clickUnfollow'
         'click .newTopic, .answer': 'openNewTopicEdit'
@@ -193,9 +191,6 @@ class exports.ChannelView extends BaseView
                 else
                     console.error "postError", error
                     @show_post_error error
-
-    clickLogin: EventHandler (ev) ->
-        app.router.navigate "login", true
 
     clickFollow: EventHandler (ev) ->
         @$('.follow').hide()
