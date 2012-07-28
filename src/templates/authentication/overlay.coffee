@@ -42,7 +42,7 @@ module.exports = design (view) ->
                         view.on 'switch mode', =>
                             switch view.mode
                                 when 'register'
-                                    @text "buddycloud registration"
+                                    @text "buddycloud sign-up"
                                 when 'login'
                                     @text "buddycloud login"
                     @$p ->
@@ -53,7 +53,7 @@ module.exports = design (view) ->
                             view.on 'switch mode', =>
                                 switch view.mode
                                     when 'register'
-                                        @text "Already a member?"
+                                        @text "Already on buddycloud?"
                                     when 'login'
                                         @text "Not yet a member?"
                         @$a ->
