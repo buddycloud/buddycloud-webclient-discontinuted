@@ -1,5 +1,6 @@
 { ChannelView } = require './channel/index'
 { Channels } = require '../collections/channel'
+{ Userbar } = require './userbar/index'
 { Sidebar } = require './sidebar/index'
 { MinimalSidebar } = require './sidebar/minimal'
 { BaseView } = require './base'
@@ -37,6 +38,8 @@ class exports.MainView extends BaseView
 
         do @updateSidebar # initialize
         @on('update sidebar', @updateSidebar)
+        @userbar = new Userbar
+            parent:this
 
         # special because normaly parents add their children views to the dom
         @render =>
@@ -46,6 +49,9 @@ class exports.MainView extends BaseView
             #@channels.bind 'add',    @new_channel_view
             # if we already found a view in the cache
             #@current?.el.show()
+
+            @userbar.once('template:create', @trigger.bind(this, 'subview:userbar'))
+            @userbar.render()
 
             @setCurrentChannel(@_first_channel)
 
