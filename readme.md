@@ -10,5 +10,5 @@ Install documentation is at https://buddycloud.org/wiki/Install
 This code is Apache 2 licensed and copyright buddycloud.
 
 # Attribution
- 
+
 * lock/unlock icons: By Yusuke Kamiyamane, licensed under Creative Commons Attribution 3.0 license.  "unlock-small.png" is a version of "lock-small.png" modified by mrflix.
