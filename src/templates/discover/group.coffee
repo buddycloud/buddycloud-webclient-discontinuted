@@ -15,8 +15,9 @@ design = require '../../_design/discover/group'
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div ->
-            addClass(@,"#{view.id}")
+            addClass(@,"#{view.id}") if view.id?
             @$h1 ->
+                return @remove() unless view.name?
                 @text view.name
             view.bind("subview:list", @add)
 

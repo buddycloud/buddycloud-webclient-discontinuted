@@ -24,7 +24,7 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'holder', ->
             @$section class:'stats', ->
-                view.on("subview:list", @add)
+                view.on("subview:discover", @add)
 
         view.on('show', @show)
         view.on('hide', @hide)
