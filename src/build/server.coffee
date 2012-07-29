@@ -21,6 +21,7 @@ snippets = ["main"
     "authentication/overlay"
     "create_topic_channel/index"
     "discover/index", "discover/group", "discover/list", "discover/entry"
+    "discover/startpage"
 ]
 
 

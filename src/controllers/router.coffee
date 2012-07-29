@@ -1,4 +1,5 @@
 # views
+{ Startpage } = require '../views/discover/startpage'
 { LoadingChannelView } = require '../views/channel/loading'
 { DiscoverView } = require '../views/discover/index'
 { OverlayView } = require '../views/authentication/overlay'
@@ -91,7 +92,9 @@ class exports.Router extends Backbone.Router
             unless app.users.isAnonymous(app.users.current)
                 @navigate app.users.current.get 'id', true
             else
-                return do @discover # FIXME TODO until startpage is implemented
+                app.views.start ?= new Startpage
+                @setView app.views.start
+                return
         @setView app.views.index
 
     login: ->
