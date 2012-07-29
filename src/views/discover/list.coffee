@@ -8,7 +8,6 @@ class exports.DiscoverListView extends BaseView
     template: require '../../templates/discover/list'
 
     initialize: ({@name, @model, @id}) ->
-        @model.bind 'add', @add_entry
 
     add_entry: (entry) =>
         i = @model.indexOf(entry)
@@ -16,5 +15,9 @@ class exports.DiscoverListView extends BaseView
         view.bind 'template:create', (tpl) =>
             @trigger 'subview:entry', i, tpl
         view.render()
-#         view.render =>
-#             @trigger 'subview:entry', view.el
+
+    render: (callback) ->
+        super ->
+            callback?()
+            @model.bind 'add', @add_entry
+            @model.forEach     @add_entry

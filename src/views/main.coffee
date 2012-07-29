@@ -50,8 +50,6 @@ class exports.MainView extends BaseView
             # if we already found a view in the cache
             #@current?.el.show()
 
-            @userbar.once('template:create', @trigger.bind(this, 'subview:userbar'))
-            @userbar.render()
 
             @setCurrentChannel(@_first_channel)
 
@@ -89,7 +87,9 @@ class exports.MainView extends BaseView
             body = $('body').removeClass('start')
             body.append(@$el)
             @$el.show()
+            @userbar.once('template:create', @trigger.bind(this, 'subview:userbar'))
             @sidebar.once('template:create', @trigger.bind(this, 'sidebar:template'))
+            @userbar.render()
             @sidebar.render()
             callback?()
 
