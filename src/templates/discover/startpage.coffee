@@ -17,14 +17,20 @@ unless process.title is 'browser'
             return el
 
 
+$$ = require 'dt-selector'
 { Template } = require 'dynamictemplate'
 design = require '../../_design/discover/startpage'
+{ removeClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'holder', ->
             @$section class:'stats', ->
-                view.on("subview:discover", @add)
+                view.on "subview:discover", (el) =>
+                    @add(el)
+                    $$(el).on 'div', (e) ->
+                        removeClass(e,"span-2")
+                        removeClass(e,"span-1")
 
         view.on('show', @show)
         view.on('hide', @hide)
