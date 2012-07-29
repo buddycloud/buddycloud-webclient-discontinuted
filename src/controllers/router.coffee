@@ -131,19 +131,16 @@ class exports.Router extends Backbone.Router
             @navigate "/"
 
     discover: () ->
-        app.views.index ?= new MainView
         if app.views.discover is 'wait'
             app.views.discover = new DiscoverView(parent:app.views.index)
         else unless app.views.discover?
             app.views.discover = 'wait'
-            do @discover if app.handler.connection.connected
+            do @discover if @connected
             return
 
-        if app.handler.connection.connected
-            app.views.discover.render =>
-                @setView app.views.discover
-        else
-            # FIXME and now?
-            @setView app.views.index
+        if @connected
+            app.views.index ?= new MainView
+            app.views.discover.update()
+            @setView app.views.discover
 
 

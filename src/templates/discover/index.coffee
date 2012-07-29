@@ -7,10 +7,12 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/discover/index'
+{ addClass } = require '../util'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'content', ->
+            addClass(@,"disco")
             @$div class:'discoverChannels', ->
                 view.on("subview:group", @add)
 

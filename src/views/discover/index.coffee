@@ -1,6 +1,7 @@
 { BaseView } = require '../base'
 { EventHandler } = require '../../util'
 { DiscoverGroupView } = require './group'
+{ channels_to_collection } = require './util'
 
 # manages a list of groups
 class exports.DiscoverView extends BaseView
@@ -10,6 +11,7 @@ class exports.DiscoverView extends BaseView
 
     initialize: ->
         @views = {}
+        @jobs = []
         @bind('show', @show)
         @bind('hide', @hide)
         @button = $('.sidebar button.discover')
@@ -18,9 +20,9 @@ class exports.DiscoverView extends BaseView
         my_jid = app.users.current.get('id')
 
         mostActive = new Backbone.Collection()
-        channels_to_collection mostActive, 'get_most_active_nodes', null
+        @jobs.push [mostActive, 'get_most_active_nodes', null]
         popular = new Backbone.Collection()
-        channels_to_collection popular, 'get_popular_nodes', null
+        @jobs.push [popular, 'get_popular_nodes', null]
         @views.local = new DiscoverGroupView
             name:"Local"
             id:"local"
@@ -33,7 +35,7 @@ class exports.DiscoverView extends BaseView
                     model: popular
 
         recommended = new Backbone.Collection()
-        channels_to_collection recommended, 'recommend_channels', my_jid, 10
+        @jobs.push [recommended, 'recommend_channels', my_jid, 10]
         @views.global = new DiscoverGroupView
             name:"Global"
             id:"global"
@@ -50,6 +52,11 @@ class exports.DiscoverView extends BaseView
 #             lists:
 #                 'nearby':"Nearby"
 
+        @render()
+
+    update: =>
+        channels_to_collection.apply(this, job) for job in @jobs
+        this
 
     show: =>
         @button.addClass('active')
@@ -59,10 +66,10 @@ class exports.DiscoverView extends BaseView
 
     render: (callback) ->
         super ->
+            $('body').append(@$el)
             for _, view of @views
                 view.on('template:create', @trigger.bind(this, 'subview:group'))
                 view.render()
-            $('body').append(@$el)
             callback?.call(this)
 
     destroy: =>
@@ -70,15 +77,6 @@ class exports.DiscoverView extends BaseView
         view?.destroy() for view in @views
         delete @button
         delete @views
+        delete @jobs
         super
 
-channels_to_collection = (model, method, args...) ->
-    {connector} = app.handler
-    connector[method].call connector, args..., (err, jids) ->
-        if jids
-            for jid in jids
-                # Some queries return nodes not jids:
-                if (m = jid.match(/\/user\/([^\/]+)/))
-                    jid = m[1]
-                unless model.get(jid)?
-                    model.add app.channels.get_or_create(id: jid)
