@@ -14,6 +14,7 @@ unless process.title is 'browser'
                 .attr(href:"http://buddycloud.org")
 
             el.find(".contact").remove() # FIXME the contact values are just wrong
+            el.find("input[type='search']").remove() # FIXME until search is implemented
             return el
 
 
