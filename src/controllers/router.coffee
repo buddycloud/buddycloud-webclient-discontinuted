@@ -93,15 +93,17 @@ class exports.Router extends Backbone.Router
 
     index: ->
         if app.handler.connection.connected
-            app.views.index ?= new MainView
+            if app.views.start?
+                @setView app.views.start
+            else
+                app.views.index ?= new MainView
+                @setView app.views.index
         else
             unless app.users.isAnonymous(app.users.current)
                 @navigate app.users.current.get 'id', true
             else
                 app.views.start ?= new Startpage
                 @setView app.views.start
-                return
-        @setView app.views.index
 
     login: ->
         app.views.auth ?= new OverlayView
