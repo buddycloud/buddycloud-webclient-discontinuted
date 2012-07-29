@@ -118,6 +118,7 @@ class exports.Router extends Backbone.Router
         app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected
+            app.views.index ?= new MainView
             channel = app.channels.get_or_create id: jid
             app.views.index.setCurrentChannel channel
             @setView app.views.index
