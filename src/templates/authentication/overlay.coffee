@@ -7,7 +7,6 @@ unless process.title is 'browser'
 
 { Template } = require 'dynamictemplate'
 design = require '../../_design/authentication/overlay'
-{ getCredentials } = require '../../handlers/creds'
 
 errorMessage =
     'nobosh':"BOSH Service unavailable!"
@@ -75,15 +74,17 @@ module.exports = design (view) ->
                         onError.call this, 'connfail'
                         onError.call this, 'disconnected'
                     @$div -> # name
-                        if view.store_local
-                            @$input ->
-                                @attr value:getCredentials()?[0] # name
+                        @$input ->
+                            if view.store_local or view.values.name?
+                                @attr value:view.values.name
+                            view.on('fillout', => @attr value:view.values.name)
                         onError.call this, 'noname'
                     @$div -> # password
                         # FIXME TODO toggle clear text
-                        if view.store_local
-                            @$input ->
-                                @attr value:getCredentials()?[1] # password
+                        @$input ->
+                            if view.store_local or view.values.password?
+                                @attr value:view.values.password
+                            view.on('fillout', => @attr value:view.values.password)
                         onError.call this, 'nopasswd'
                     @$div ->
                         @hide() # we start with login mode

@@ -61,8 +61,12 @@ class exports.Router extends Backbone.Router
             @loadingchannel jid
         else if app.views.discover?
             do @discover
-        else if app.views.start?
-            app.views.start.update()
+        if app.views.start?
+            if app.users.isAnonymous(app.users.current)
+                app.views.start.update()
+            else
+                app.views.start.destroy()
+                app.views.start = null
 
     on_disconnected: =>
         return unless @connected

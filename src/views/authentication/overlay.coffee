@@ -18,6 +18,8 @@ class exports.OverlayView extends BaseView
     overlay: yes
 
     initialize: () ->
+        @values = {}
+        [@values.name, @values.password] = getCredentials() ? [null, null]
         @mode = "login"
         @store_local = getCredentials()? or config.store_credential_default
         @on('show', @show)
@@ -35,7 +37,7 @@ class exports.OverlayView extends BaseView
         'submit form': 'onSubmit'
 
     isClosable: ->
-        app.views.index? and app.users.isAnonymous(app.users.current)
+        (app.views.index? or app.views.start?) and app.users.isAnonymous(app.users.current)
 
     focus: =>
         # bug on ipad: the focus has to be delayed to happen after the
@@ -85,9 +87,12 @@ class exports.OverlayView extends BaseView
     onSubmit: EventHandler (ev) ->
         console.warn "form submit"
         ev.stopPropagation()
+        jid = $('#auth_name').val() ? ""
+        password = $('#auth_pwd').val() ? ""
+        @submit(jid, password)
+
+    submit: (jid, password) ->
         @trigger 'reset:errors'
-        jid = $('#auth_name').val()
-        password = $('#auth_pwd').val()
         unless jid.length and password.length
             @error "noname" unless jid.length
             @error "nopasswd" unless password.length
@@ -133,6 +138,11 @@ class exports.OverlayView extends BaseView
 
     reset: () =>
         @trigger 'enable:form'
+
+    fill: (name, password) ->
+        @values.password = password
+        @values.name = name
+        @trigger 'fillout'
 
     error: (type) =>
         @box ?= @$('.modal')
