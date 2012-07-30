@@ -24,7 +24,7 @@ window.config = {
     directoryService: "search.buddycloud.org",
 
     /* enable store password checkbox by default when true */
-    store_credential_default: false,
+    store_credential_default: true,
 
     /* Sign up for an embed.ly account to use OEmbed */
     embedly_key:undefined,
