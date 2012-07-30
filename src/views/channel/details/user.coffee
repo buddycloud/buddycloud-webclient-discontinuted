@@ -66,6 +66,8 @@ class exports.UserInfoView extends BaseView
         delete @changing_role
         delete @banning
         @currentjid = user.get 'id'
+        @curaffiliation = user.getAffiliationFor(@parent.parent.model)
+        @trigger 'update:select:affiliation', @curaffiliation
         @trigger 'update:select:user', user
         do @render unless @rendering
 

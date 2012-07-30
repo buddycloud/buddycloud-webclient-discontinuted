@@ -64,28 +64,36 @@ module.exports = design (view) ->
                     @$section class:'action changeRole', ->
                         infos = {}
                         options = {}
-                        selected = 'moderator'
+                        selected = view.curaffiliation
+                        selected = affiliations_map[selected]? and selected or 'member'
                         @$select ->
                             for role, value of affiliations_map
                                 options[role] = @$option {value}
-                            update_affiliation = (val) =>
-                                role = reversed_affiliations_map[val]
-                                return if role is selected
-                                infos[selected]?.hide()
-                                infos[role]?.show()
-                                selected = role
-                            view.bind('update:select:affiliation', update_affiliation)
-                            update_affiliation(selected)
+                            options[selected].attr(selected: 'selected')
 
                         @$section class:'info', ->
                             for role, cls of affiliations_map
                                 infos[role] = @$div class:cls
+                                if role is selected
+                                    infos[role].show()
+                                else
+                                    infos[role].hide()
+
+                        update_affiliation = (val) =>
+                            role = reversed_affiliations_map[val] ? 'member'
+                            return if role is selected
+                            infos[selected]?.hide()
+                            infos[role]?.show()
+                            selected = role
+                        view.bind('update:select:affiliation', update_affiliation)
+                        update_affiliation(selected)
 
                         postsnode = channel.nodes.get_or_create(id:'posts')
                         # change selected
                         set_current_option = (user) ->
                             role = postsnode.affiliations
                                 .get(user)?.get('affiliation')
+                            role = affiliations_map[role]? and role or 'member'
                             options[selected]?.removeAttr('selected')
                             options[role]?.attr(selected: 'selected')
                             infos[selected]?.hide()
