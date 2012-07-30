@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select "body > div:not(.userbar)", "*"
+            @select "body > div:not(.userbar, .content)", "*"
 
 
 { Template } = require 'dynamictemplate'
