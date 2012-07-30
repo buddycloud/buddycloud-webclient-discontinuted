@@ -9,9 +9,9 @@ unless process.title is 'browser'
 design = require '../../_design/authentication/overlay'
 
 errorMessage =
-    'nobosh':"BOSH Service unavailable!"
-    'nochannelserver':"Channel Server unreachable!"
-    'regifail':"Cannot create new Account."
+    'nobosh':"BOSH service unavailable!"
+    'nochannelserver':"The buddycloud server component is unreachable!"
+    'regifail':"Cannot create new account."
     'authfail':"Unable to confirm your username or password."
     'connfail':"Connection to the server closed."
     'disconnected':"Thats weird. You disconnected."
