@@ -4,6 +4,12 @@
 
 class exports.Userbar extends BaseView
     template: require '../../templates/userbar/index'
+    adapter: 'jquery'
+
+    initialize: () ->
+        app.on('connected', @update)
+        do @update
+        do @render
 
     events:
         "click .register": "clickRegister"
@@ -21,3 +27,13 @@ class exports.Userbar extends BaseView
         setCredentials()
         app.relogin()
 
+    update: () =>
+        if app.users.isAnonymous(app.users.current)
+            $('body').addClass('anonymous')
+        else
+            $('body').removeClass('anonymous')
+
+    render: (callback) ->
+        super ->
+            $('body').append(@$el)
+            callback?()

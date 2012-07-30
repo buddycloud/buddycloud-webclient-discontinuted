@@ -1,6 +1,5 @@
 { ChannelView } = require './channel/index'
 { Channels } = require '../collections/channel'
-{ Userbar } = require './userbar/index'
 { Sidebar } = require './sidebar/index'
 { MinimalSidebar } = require './sidebar/minimal'
 { BaseView } = require './base'
@@ -38,8 +37,6 @@ class exports.MainView extends BaseView
 
         do @updateSidebar # initialize
         @on('update sidebar', @updateSidebar)
-        @userbar = new Userbar
-            parent:this
 
         # special because normaly parents add their children views to the dom
         @render =>
@@ -72,11 +69,6 @@ class exports.MainView extends BaseView
             @sidebar.render =>
                 @sidebar.moveIn()
         @ready =>
-            body = $('body')
-            if app.users.isAnonymous(app.users.current)
-                body.addClass('anonymous')
-            else
-                body.removeClass('anonymous')
             process.nextTick =>
                 app.users.current.channels.on('add',@add_channel)
                 app.users.current.channels.forEach( @add_channel)
@@ -87,9 +79,7 @@ class exports.MainView extends BaseView
             body = $('body').removeClass('start')
             body.append(@$el)
             @$el.show()
-            @userbar.once('template:create', @trigger.bind(this, 'subview:userbar'))
             @sidebar.once('template:create', @trigger.bind(this, 'sidebar:template'))
-            @userbar.render()
             @sidebar.render()
             callback?()
 

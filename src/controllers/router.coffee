@@ -1,4 +1,5 @@
 # views
+{ Userbar } = require '../views/userbar/index'
 { Startpage } = require '../views/discover/startpage'
 { LoadingChannelView } = require '../views/channel/loading'
 { DiscoverView } = require '../views/discover/index'
@@ -92,6 +93,7 @@ class exports.Router extends Backbone.Router
     # routes
 
     index: ->
+        app.views.userbar ?= new Userbar
         if app.handler.connection.connected
             if app.views.start?
                 @setView app.views.start
@@ -116,6 +118,7 @@ class exports.Router extends Backbone.Router
         @setView app.views.auth
 
     overview: ->
+        app.views.userbar ?= new Userbar
         @setView app.views.overview
 
     loadingchannel: (id, domain) ->
@@ -124,6 +127,7 @@ class exports.Router extends Backbone.Router
         app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected
+            app.views.userbar ?= new Userbar
             app.views.index ?= new MainView
             channel = app.channels.get_or_create id: jid
             app.views.index.setCurrentChannel channel
@@ -137,7 +141,7 @@ class exports.Router extends Backbone.Router
         if app.views.index?.on_create_topic_channel?
             app.views.index.on_create_topic_channel()
         else
-            @navigate "/"
+            @navigate "/", true
 
     discover: () ->
         if app.views.discover is 'wait'
@@ -148,6 +152,7 @@ class exports.Router extends Backbone.Router
             return
 
         if @connected
+            app.views.userbar ?= new Userbar
             app.views.index ?= new MainView
             app.views.discover.update()
             @setView app.views.discover

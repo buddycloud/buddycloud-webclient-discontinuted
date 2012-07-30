@@ -15,6 +15,7 @@ unless process.title is 'browser'
 
             el.find(".contact").remove() # FIXME the contact values are just wrong
             el.find("input[type='search']").remove() # FIXME until search is implemented
+            el.find("form").remove() # FIXME until mrflix finds a better spot for that
             return el
 
 

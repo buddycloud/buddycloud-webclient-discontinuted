@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "streams.html"
         select: () ->
-            @select "body > div", "*"
+            @select "body > div:not(.userbar)", "*"
 
 
 { Template } = require 'dynamictemplate'
@@ -12,10 +12,6 @@ design = require '../_design/main'
 
 module.exports = design (view) ->
     return new Template schema:5, ->
-
-        @$div class:'userbar', ->
-#             @once('replace', load_indicate(this).clear)
-            view.bind('subview:userbar', @replace)
 
         @$div class:'editbar', ->
             @once('replace', load_indicate(this).clear)
