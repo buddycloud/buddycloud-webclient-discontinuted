@@ -110,12 +110,19 @@ module.exports = design (view) ->
                                         @show()
                                     else
                                         @hide()
-                    @$p ->
-                        @$a ->
+                    @$span -> # forgot password
                         view.on 'switch mode', =>
                             switch view.mode
                                 when 'register' then @hide()
                                 when 'login'    then @show()
+                    @$p -> # leftBox
+                        @$span -> # spinner
+                            view.on 'switch mode', =>
+                                switch view.mode
+                                    when 'register' then @text "signing you up"
+                                    when 'login'    then @text "logging you in"
+                            view.on('disable:form', @show)
+                            view.on('enable:form',  @hide)
                     @$button ->
                         view.on 'switch mode', =>
                             switch view.mode
