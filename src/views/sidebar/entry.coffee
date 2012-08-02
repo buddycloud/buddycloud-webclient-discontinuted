@@ -15,8 +15,7 @@ class exports.ChannelEntry extends BaseView
             @trigger 'update:notification_counter'
 
         statusnode = @model.nodes.get_or_create(id: 'status')
-        statusnode.bind 'post', =>
-            @trigger 'update:status', statusnode.posts.at(0)?.get('content')?.value
+        statusnode.on('post', @update_status)
 
     events:
         "click": "click_entry"
@@ -24,7 +23,22 @@ class exports.ChannelEntry extends BaseView
     render: (callback) ->
         super ->
             @trigger 'update:highlight'
+            @update_status()
             callback?()
+
+    update_status: =>
+        statusnode = @model.nodes.get_or_create(id:'status')
+        value = statusnode.posts.at(0)?.get('content')?.value
+        if value?
+            @trigger('update:status', value)
+        else
+            @load_status_posts()
+
+    load_status_posts: =>
+        statusnode = @model.nodes.get_or_create(id:'status')
+        # FIXME: when we're anonymous, refresh_channel() gets those
+        # for us already!
+        app.handler.data.get_node_posts(statusnode)
 
     click_entry: EventHandler ->
             console.log "ChannelEntry.click_entry", @, @model

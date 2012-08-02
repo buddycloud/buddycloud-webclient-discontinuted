@@ -73,9 +73,7 @@ module.exports = design (view) ->
                 owner.end()
 
                 status = @$span class:'status'
-                update_status = (text) ->
+                view.on 'update:status', (text) ->
                     status.text text ? ""
                     status.attr title:(text ? "")
-                view.bind 'update:status', update_status
-                update_status()
 
