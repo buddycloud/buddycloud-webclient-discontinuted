@@ -28,6 +28,7 @@ module.exports = design (view) ->
                         p.end()
                         span
 
+                    make_field('address').text(view.model.get 'id')
                     description = make_field 'description'
                     accessModel = make_field 'open'
                     creationDate = make_field 'broadcast', 'time'
