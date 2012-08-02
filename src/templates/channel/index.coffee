@@ -4,6 +4,7 @@ unless process.title is 'browser'
         select: () ->
             el = @select ".content", "article.topic, div.channelDetails, .notification"
             el.find('h2, span:not(.loader, .button), #poweredby').text("")
+            el.find('img.avatar').removeAttr('src')
             return el
 
 
