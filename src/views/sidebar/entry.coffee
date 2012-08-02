@@ -21,6 +21,10 @@ class exports.ChannelEntry extends BaseView
         "click": "click_entry"
 
     render: (callback) ->
+        node = @model.nodes.get_or_create id: 'posts'
+        @metadata = node.metadata
+        unless node.metadata_synced
+            app.handler.data.get_node_metadata node.get('nodeid')
         super ->
             @trigger 'update:highlight'
             @update_status()

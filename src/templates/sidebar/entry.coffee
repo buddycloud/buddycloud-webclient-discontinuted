@@ -60,11 +60,17 @@ module.exports = design (view) ->
                 update = ->
                     avatar.attr style:"background-image:url(#{channel.avatar})"
 
-                    jid = channel.get('id')?.split('@') or []
-                    username.text   "#{jid[0]}"
-                    domain.text "@#{jid[1]}"
+                    title = view.metadata.get('title')?.value
+                    if title?
+                        username.text "#{title}"
+                        domain.text ""
+                    else
+                        jid = channel.get('id')?.split('@') or []
+                        username.text   "#{jid[0]}"
+                        domain.text "@#{jid[1]}"
+                    owner.attr title:"#{channel.get 'id'}"
 
-                channel.bind('change', update)
+                view.metadata.on('change', update)
                 do update
 
                 avatar.end()
