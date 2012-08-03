@@ -144,5 +144,5 @@ module.exports = design (view) ->
 
 tutorial_text =
     tutorial: ["This channel is still empty."
-               "Be awesome and be the first to post."].join " "
-    empty:"Hmm, it seems that this channel is still empty."
+               "first post"].join " "
+    empty:"This channel has no posts. Yet."
