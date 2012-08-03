@@ -42,7 +42,7 @@ class exports.Searchbar extends BaseView
         is_jid = /[^\/]+@[^\/]/.test(search)
         channels = @model.filter(@filter)
 
-        if is_jid or channels.length is 1
+        if is_jid or channels.length
             unless is_jid
                 search = channels[0].get 'id'
             app.router.navigate search, yes
