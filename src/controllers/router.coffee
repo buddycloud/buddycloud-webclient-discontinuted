@@ -74,8 +74,6 @@ class exports.Router extends Backbone.Router
          # we are still on the welcome site
         return unless app.views.index?.constructor is MainView
         @connected = no
-        app.views.index.destroy()
-        app.views.index = null
 
         # Last login succeeded? Reconnect!
         if app.handler.connection.wasConnected()
