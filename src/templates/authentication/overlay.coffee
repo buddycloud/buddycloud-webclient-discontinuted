@@ -17,6 +17,7 @@ errorMessage =
     'disconnected':"Thats weird. You disconnected."
     'noname':"please provide a username"
     'nopasswd':"please enter a password"
+    "invalidjid":"Username is invalid (did you use a space?)"
 
 
 module.exports = design (view) ->
@@ -79,6 +80,7 @@ module.exports = design (view) ->
                                 @attr value:view.values.name
                             view.on('fillout', => @attr value:view.values.name)
                         onError.call this, 'noname'
+                        onError.call this, 'invalidjid'
                     @$div -> # password
                         # FIXME TODO toggle clear text
                         @$input ->

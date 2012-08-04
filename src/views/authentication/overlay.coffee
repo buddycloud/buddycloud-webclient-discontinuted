@@ -100,6 +100,9 @@ class exports.OverlayView extends BaseView
             return
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
+        if @valid_jid(jid) is false
+            @error "invalidjid"
+            return
         # disable the form and give feedback
         @trigger 'disable:form'
 
@@ -146,6 +149,10 @@ class exports.OverlayView extends BaseView
         @values.password = password
         @values.name = name
         @trigger 'fillout'
+
+    valid_jid: (jid) =>
+        # TODO Improve jid checking beyond this simple check
+        return jid.indexOf(' ') is -1
 
     error: (type) =>
         @box ?= @$('.modal')
