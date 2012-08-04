@@ -111,7 +111,9 @@ update_text = (parts) ->
                 full_link = link
                 unless link.match(/^[a-z0-9-]+:/)
                     full_link = 'http://' + link
-                @$a { href: full_link, target: "_blank"}, link
+                link_target = "_blank"
+                link_target = "_self" if document.domain is full_link.split('/')[2]
+                @$a { href: full_link, target: link_target}, link
             when 'user'
                 flush_text()
 
