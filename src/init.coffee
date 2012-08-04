@@ -176,12 +176,11 @@ app.relogin = (user, password, callback) ->
     on_connected = ->
         console.warn "connected", connection
 
-        if app.handler.connection?.connection? and
-           app.handler.connection isnt connection
-            console.warn "Disconnect", app.handler.connection, connection
-            app.handler.connection.connection.disconnect()
-
+        old_connection = app.handler.connection
         app.setConnection connection
+        if old_connection isnt connection
+            old_connection.reset()
+
         console.warn "app.relogin success callback"
         callback?()
         app.emit('connected')
