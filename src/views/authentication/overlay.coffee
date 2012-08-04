@@ -66,6 +66,7 @@ class exports.OverlayView extends BaseView
         app.router.navigate "register", true
 
     onClickLogin: EventHandler ->
+        console.debug "onClickLogin clicked."
         app.router.navigate "login", true
 
     onClick: (ev) ->
@@ -106,7 +107,8 @@ class exports.OverlayView extends BaseView
             when 'login'
                 # the form sumbit will always trigger a new connection
                 @start_connection(jid, password)
-                # save password
+                # save password. This should be done only if logged in
+                # successfully, right?
                 setCredentials([jid, password]) if @store_local
 
             when 'register'
@@ -117,6 +119,7 @@ class exports.OverlayView extends BaseView
 
     start_connection: (jid, password) ->
         connection = app.relogin jid, password, (err) =>
+            console.warn "Error in start_connection", jid, err
             @reset()
             return @error(err.message) if err
             # Navigate to home channel after auth:
@@ -146,8 +149,10 @@ class exports.OverlayView extends BaseView
 
     error: (type) =>
         @box ?= @$('.modal')
-        console.error "'#{type}' during authentication"
-        app.handler.connection.reset()
+        console.error "'#{type}' during auth (and while waiting for pizzas.)"
+        # Tuomas commented this out to make the login form not to disappear
+        # when trying to log in with wrong credentials.
+        # app.handler.connection.reset()
         # trigger error message
         @$("form").addClass('hasError')
         @trigger "error:#{type}", type
