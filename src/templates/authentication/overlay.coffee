@@ -17,6 +17,7 @@ errorMessage =
     'disconnected':"Thats weird. You disconnected."
     'noname':"please provide a username"
     'nopasswd':"please enter a password"
+    "invalidjid":"Username is invalid"
 
 
 module.exports = design (view) ->
@@ -28,10 +29,19 @@ module.exports = design (view) ->
                 for type, error of errors
                     error.remove()
                 errors = {}
-            onError = (type) ->
-                view.on "error:#{type}", (t) =>
-                    console.error "ERR", type, t, errors[t]
-                    errors[t] ?= @$div({class:'error'}, errorMessage[t])
+            onError = (error) ->
+                message = ''
+                type    = error
+                if typeof error isnt 'string'
+                    type    = error.type
+                    message = error.message
+                view.on "error:#{type}", (err) =>
+                    t = err
+                    m = ''
+                    if typeof err isnt 'string'
+                        t = err['type']
+                        m = err['message']
+                    errors[t] ?= @$div({class:'error'}, errorMessage[t] + m)
 
             @$div ->
                 @$div class:'close', ->
@@ -79,6 +89,7 @@ module.exports = design (view) ->
                                 @attr value:view.values.name
                             view.on('fillout', => @attr value:view.values.name)
                         onError.call this, 'noname'
+                        onError.call this, 'invalidjid'
                     @$div -> # password
                         # FIXME TODO toggle clear text
                         @$input ->
