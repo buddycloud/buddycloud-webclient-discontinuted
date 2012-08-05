@@ -2,6 +2,7 @@ async = require 'async'
 { BaseView } = require '../base'
 { getCredentials, setCredentials } = require '../../handlers/creds'
 { EventHandler } = require '../../util'
+{ getJidErrors } = require '../../controllers/user'
 
 wobbleAnimation = [
     {m:-10, t: 50}
@@ -100,9 +101,11 @@ class exports.OverlayView extends BaseView
             return
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
-        if @valid_jid(jid) is false
-            @error "invalidjid"
+        jidErrors = getJidErrors jid
+        if jidErrors
+            @error "invalidjid", jidErrors
             return
+
         # disable the form and give feedback
         @trigger 'disable:form'
 
@@ -149,10 +152,6 @@ class exports.OverlayView extends BaseView
         @values.password = password
         @values.name = name
         @trigger 'fillout'
-
-    valid_jid: (jid) =>
-        # TODO Improve jid checking beyond this simple check
-        return jid.indexOf(' ') is -1
 
     error: (type) =>
         @box ?= @$('.modal')

@@ -7,3 +7,5 @@ src/_design/
 node_modules/*
 buddycloud.tmproj
 build.tar.gz
+.project
+.settings
