@@ -1,3 +1,4 @@
+{ parse } = require 'querystring'
 # views
 { Userbar } = require '../views/userbar/index'
 { Startpage } = require '../views/discover/startpage'
@@ -5,6 +6,8 @@
 { DiscoverView } = require '../views/discover/index'
 { OverlayView } = require '../views/authentication/overlay'
 { MainView } = require '../views/main'
+
+decode = (url) -> Object.keys(parse url)[0]
 
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:3000/discover
@@ -120,7 +123,7 @@ class exports.Router extends Backbone.Router
 
     loadingchannel: (id, domain) ->
         jid = if domain then "#{id}@#{domain}" else id
-        jid = jid.toLowerCase()
+        jid = decode(jid.toLowerCase())
         app.users.target = app.users.get_or_create id: jid
 
         if app.handler.connection.connected
