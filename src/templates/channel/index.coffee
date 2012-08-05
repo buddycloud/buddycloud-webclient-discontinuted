@@ -11,6 +11,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/index'
 { autoResize } = require '../util'
+{ parse_post } = require '../../util' 
 
 module.exports = design (view) ->
     return new Template schema:5, -> @$div class:'content', ->
@@ -30,7 +31,7 @@ module.exports = design (view) ->
 
                             status = @$span class:'status'
                             update_status = (text) ->
-                                status.text text ? ""
+                                update_text.call status, parse_post(text)
                             view.bind 'status', update_status
                             update_status()
                     @$td ->
@@ -146,3 +147,41 @@ tutorial_text =
     tutorial: ["This channel is still empty."
                "first post"].join " "
     empty:"This channel has no posts. Yet."
+    
+update_text = (parts) ->
+    # Empty the <p/>
+    @text("")
+
+    text = ""
+    flush_text = =>
+        if text and text.length > 0
+            @$span text
+            text = ""
+    for part in parts
+        switch part.type
+            when 'text'
+                text += part.value
+            when 'link'
+                flush_text()
+
+                link = part.value
+                # Protocol part may be missing (short URLs like
+                # ur1.ca/8jz57). Make sure there's one or the browser will
+                # think it's a link to http://example.com/ur1.ca/8jz57.
+                full_link = link
+                unless link.match(/^[a-z0-9-]+:/)
+                    full_link = 'http://' + link
+                link_target = "_blank"
+                link_target = "_self" if document.domain is full_link.split('/')[2]
+                @$a { href: full_link, target: link_target}, link
+            when 'user'
+                flush_text()
+
+                userid = part.value
+                @$a
+                    class: 'internal userlink'
+                    href: "/#{userid}"
+                    'data-userid': userid
+                , ->
+                    @text userid
+    flush_text()
