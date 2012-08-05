@@ -101,9 +101,13 @@ class exports.OverlayView extends BaseView
             return
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
+        jid = jid.toLowerCase()
         jidErrors = getJidErrors jid
-        if jidErrors
-            @error "invalidjid", jidErrors
+        if jidErrors isnt false
+            s = if jidErrors.length > 1 then 's' else ''
+            jidErrorMessage =  " you used the following invalid character" + 
+                s + ": \"" + jidErrors.join('", "') + '"'
+            @error "invalidjid", jidErrorMessage
             return
 
         # disable the form and give feedback
@@ -153,7 +157,7 @@ class exports.OverlayView extends BaseView
         @values.name = name
         @trigger 'fillout'
 
-    error: (type) =>
+    error: (type, message = '') =>
         @box ?= @$('.modal')
         console.error "'#{type}' during auth (and while waiting for pizzas.)"
         # Tuomas commented this out to make the login form not to disappear
@@ -161,8 +165,8 @@ class exports.OverlayView extends BaseView
         # app.handler.connection.reset()
         # trigger error message
         @$("form").addClass('hasError')
-        @trigger "error:#{type}", type
-        @trigger "error:all", type
+        @trigger "error:#{type}", {type:type, message:message}
+        @trigger "error:all",  {type:type, message:message}
         # wobble animation
         return if @animating
         curr_pos = @box.position()
