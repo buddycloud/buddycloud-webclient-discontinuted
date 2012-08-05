@@ -11,7 +11,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 design = require '../../_design/channel/index'
 { autoResize } = require '../util'
-{ parse_post } = require '../../util' 
+{ parse_post } = require '../../util'
 
 module.exports = design (view) ->
     return new Template schema:5, -> @$div class:'content', ->
@@ -147,7 +147,7 @@ tutorial_text =
     tutorial: ["This channel is still empty."
                "first post"].join " "
     empty:"This channel has no posts. Yet."
-    
+
 update_text = (parts) ->
     # Empty the <p/>
     @text("")
