@@ -98,7 +98,7 @@ class exports.UserChannels extends exports.Channels
             last_view = channel.get 'last_view'
             if not timestamp or last_view > timestamp
                 timestamp = last_view
-        timestamp
+        timestamp or Date.now()
 
 # global channel collection store
 # only one instance as app.channels
