@@ -2,7 +2,6 @@ async = require 'async'
 { BaseView } = require '../base'
 { getCredentials, setCredentials } = require '../../handlers/creds'
 { EventHandler } = require '../../util'
-{ getJidErrors } = require '../../controllers/user'
 
 wobbleAnimation = [
     {m:-10, t: 50}
@@ -101,15 +100,6 @@ class exports.OverlayView extends BaseView
             return
         # append domain if only the name part is provided
         jid += "@#{config.domain}" if jid.indexOf("@") is -1
-        jid = jid.toLowerCase()
-        jidErrors = getJidErrors jid
-        if jidErrors isnt false
-            s = if jidErrors.length > 1 then 's' else ''
-            jidErrorMessage =  " you used the following invalid character" + 
-                s + ": \"" + jidErrors.join('", "') + '"'
-            @error "invalidjid", jidErrorMessage
-            return
-
         # disable the form and give feedback
         @trigger 'disable:form'
 
@@ -157,7 +147,7 @@ class exports.OverlayView extends BaseView
         @values.name = name
         @trigger 'fillout'
 
-    error: (type, message = '') =>
+    error: (type) =>
         @box ?= @$('.modal')
         console.error "'#{type}' during auth (and while waiting for pizzas.)"
         # Tuomas commented this out to make the login form not to disappear
@@ -165,8 +155,8 @@ class exports.OverlayView extends BaseView
         # app.handler.connection.reset()
         # trigger error message
         @$("form").addClass('hasError')
-        @trigger "error:#{type}", {type:type, message:message}
-        @trigger "error:all",  {type:type, message:message}
+        @trigger "error:#{type}", type
+        @trigger "error:all", type
         # wobble animation
         return if @animating
         curr_pos = @box.position()
