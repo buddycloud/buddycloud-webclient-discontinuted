@@ -2,7 +2,7 @@ unless process.title is 'browser'
     return module.exports =
         src: "startpage.html"
         select: () ->
-            el = @select "header, .holder:has(.stats)", ".stats > *"
+            el = @select "header, .holder:has(.stats)", ".stats > *, .about > *"
 
             # set urls from header links
             el.find('.logo > a').attr(href:"/lounge@topics.buddycloud.org")
@@ -32,6 +32,8 @@ module.exports = design (view) ->
                     $$(el).on 'div', (e) ->
                         removeClass(e,"span-2")
                         removeClass(e,"span-1")
+
+            @$section(class:'about').raw(config['homepage-text'])
 
         view.on('show', @show)
         view.on('hide', @hide)
