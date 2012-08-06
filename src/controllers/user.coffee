@@ -1,5 +1,11 @@
-invalidJidCharacters =
-    '\x20':  'space'        # keyCode 32 
+
+# [1,2,1,3] becomes [1,2,3]
+set = (array = [], o = {}) ->
+    o[k] = 0 for k in array
+    Object.keys(o)
+
+exports.invalidJIDCharacters = invalid_chars =
+    '\x20':  'space'        # keyCode 32
     '\x22':  'double-quote' # keyCode 34
     '\x26':  '&'            # keyCode 38
     '\x27':  "single-quote" # keyCode 39
@@ -10,20 +16,14 @@ invalidJidCharacters =
     '\x40':  '@'            # keyCode 64
     '\x7F':  'delete'       # keyCode 127
 
-getJidErrors = (jid) ->
+invalid = new RegExp("(#{Object.keys(invalid_chars).join '|'})", 'g')
+
+exports.validateJID = (jid) ->
     # return false if jid is valid
     # otherwise a string of errors
-    badCharacters = []
-    for ascii, name of invalidJidCharacters
-        if jid.match ascii 
-            if ascii isnt '\x40' or (jid.split(/@/g).length isnt 2)
-                badCharacters.push name
-    if badCharacters.length is 0
-        return false
+    jid = "#{jid}".replace('@',"") # replace one @ for the domain
+    badCharacters = set(jid.match(invalid)).map((c) -> invalid_chars[c])
+    return null if badCharacters.length is 0
     console.log "Bad characters in JID", badCharacters
     return badCharacters
 
-module.exports = { 
-    getJidErrors
-    invalidJidCharacters
-}

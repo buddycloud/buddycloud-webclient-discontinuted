@@ -29,19 +29,13 @@ module.exports = design (view) ->
                 for type, error of errors
                     error.remove()
                 errors = {}
-            onError = (error) ->
-                message = ''
-                type    = error
-                if typeof error isnt 'string'
-                    type    = error.type
-                    message = error.message
-                view.on "error:#{type}", (err) =>
-                    t = err
-                    m = ''
-                    if typeof err isnt 'string'
-                        t = err['type']
-                        m = err['message']
-                    errors[t] ?= @$div({class:'error'}, errorMessage[t] + m)
+            onError = (type) ->
+                view.on "error:#{type}", (msg = "") =>
+                    errors[type] ?= @$div class:'error'
+                    errors[type].text errorMessage[type]+msg
+                view.on "remove:error:#{type}", ->
+                    errors[type]?.remove()
+                    errors[type] = null
 
             @$div ->
                 @$div class:'close', ->
@@ -88,6 +82,9 @@ module.exports = design (view) ->
                             if view.store_local or view.values.name?
                                 @attr value:view.values.name
                             view.on('fillout', => @attr value:view.values.name)
+                            @ready ->
+                                # a little bit ugly i guess
+                                @_jquery.input(view.on_input.bind(view, this))
                         onError.call this, 'noname'
                         onError.call this, 'invalidjid'
                     @$div -> # password

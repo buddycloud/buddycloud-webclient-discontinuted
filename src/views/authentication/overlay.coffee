@@ -1,8 +1,8 @@
 async = require 'async'
 { BaseView } = require '../base'
+{ validateJID:validate } = require '../../controllers/user'
 { getCredentials, setCredentials } = require '../../handlers/creds'
 { EventHandler } = require '../../util'
-{ getJidErrors } = require '../../controllers/user'
 
 wobbleAnimation = [
     {m:-10, t: 50}
@@ -63,6 +63,23 @@ class exports.OverlayView extends BaseView
             @$el.fadeOut(100)
         @trigger 'close'
 
+    check_: (jid) ->
+        # append domain if only the name part is provided
+        jid += "@#{config.domain}" if jid.indexOf("@") is -1
+        jid = jid.toLowerCase()
+        if (err = validate(jid))
+            s = if err.length > 1 then 's' else ''
+            msg =  ". You can't use invalid character#{s}: #{err.join ', '}"
+            @error "invalidjid", msg
+            return null
+        else
+            @trigger "remove:error:invalidjid"
+            return jid
+
+    on_input: (tag, ev) => # used in the template, since we use an input event shim
+        jid = tag._jquery?.val() or ""
+        @check_(jid)
+
     onClickRegister: EventHandler ->
         app.router.navigate "register", true
 
@@ -99,17 +116,7 @@ class exports.OverlayView extends BaseView
             @error "noname" unless jid.length
             @error "nopasswd" unless password.length
             return
-        # append domain if only the name part is provided
-        jid += "@#{config.domain}" if jid.indexOf("@") is -1
-        jid = jid.toLowerCase()
-        jidErrors = getJidErrors jid
-        if jidErrors isnt false
-            s = if jidErrors.length > 1 then 's' else ''
-            jidErrorMessage =  " you used the following invalid character" + 
-                s + ": \"" + jidErrors.join('", "') + '"'
-            @error "invalidjid", jidErrorMessage
-            return
-
+        return unless (jid = @check_(jid))
         # disable the form and give feedback
         @trigger 'disable:form'
 
@@ -157,7 +164,7 @@ class exports.OverlayView extends BaseView
         @values.name = name
         @trigger 'fillout'
 
-    error: (type, message = '') =>
+    error: (type, message) =>
         @box ?= @$('.modal')
         console.error "'#{type}' during auth (and while waiting for pizzas.)"
         # Tuomas commented this out to make the login form not to disappear
@@ -165,15 +172,14 @@ class exports.OverlayView extends BaseView
         # app.handler.connection.reset()
         # trigger error message
         @$("form").addClass('hasError')
-        @trigger "error:#{type}", {type:type, message:message}
-        @trigger "error:all",  {type:type, message:message}
+        @trigger "error:#{type}", message
+        @trigger "error:all",     message
         # wobble animation
         return if @animating
         curr_pos = @box.position()
-        @box.css(
+        @box.css
             top : "#{curr_pos.top}px"
             left: "#{curr_pos.left}px"
-        )
         @animating = yes
         async.mapSeries(
             wobbleAnimation,
