@@ -7,8 +7,15 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 design = require '../../_design/userbar/index'
 
+rm = -> @remove() if config.registration is off
+
 module.exports = design (view) ->
     return new Template schema:5, ->
         @$div class:'userbar', ->
+            @$nav ->
+                @$div -> # .getin
+                    @$span()   # Login
+                    @$span(rm) # or
+                    @$span(rm) # Register
 
 
