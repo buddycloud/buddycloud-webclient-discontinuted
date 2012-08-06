@@ -26,14 +26,15 @@ class exports.ConnectionHandler extends Backbone.EventHandler
                 send.apply @connection, arguments
 
         # check if the bosh service is reachable
-        jQuery.ajax
-            type:'OPTIONS'
-            contentType:'text/xml'
-            url:config.bosh_service
-            processData:off
-            success:callback
-            error: =>
-                @trigger 'nobosh'
+        callback?()
+#         jQuery.ajax
+#             type:'OPTIONS'
+#             contentType:'text/xml'
+#             url:config.bosh_service
+#             processData:off
+#             success:callback
+#             error: =>
+#                 @trigger 'nobosh'
 
     reconnect: () =>
         {jid, password} = @last_login ? {}
