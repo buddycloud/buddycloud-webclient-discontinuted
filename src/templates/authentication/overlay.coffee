@@ -27,7 +27,7 @@ module.exports = design (view) ->
             errors = {}
             view.on 'reset:errors', ->
                 for type, error of errors
-                    error.remove()
+                    error?.remove()
                 errors = {}
             onError = (type) ->
                 view.on "error:#{type}", (msg = "") =>
