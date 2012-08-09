@@ -78,6 +78,11 @@ module.exports = design (view) ->
                         onError.call this, 'connfail'
                         onError.call this, 'disconnected'
                     @$div -> # name
+                        @$label ->
+                            view.on 'switch mode', =>
+                                switch view.mode
+                                    when 'register' then @text "Choose a username"
+                                    when 'login'    then @text "Type in your username"
                         @$input ->
                             if view.store_local or view.values.name?
                                 @attr value:view.values.name
@@ -88,6 +93,11 @@ module.exports = design (view) ->
                         onError.call this, 'noname'
                         onError.call this, 'invalidjid'
                     @$div -> # password
+                        @$label ->
+                            view.on 'switch mode', =>
+                                switch view.mode
+                                    when 'register' then @text "and a nice password"
+                                    when 'login'    then @text "and your password"
                         # FIXME TODO toggle clear text
                         @$input ->
                             if view.store_local or view.values.password?
