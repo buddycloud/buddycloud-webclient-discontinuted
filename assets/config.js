@@ -46,7 +46,7 @@ window.config['homepage-text'] = "<h3>Share, discover, communicate in a magicall
     + "strong encryption keep you safe online."
     + "</p>"
     + "<ul>"
-    + "<li>create channels - open for everyone or private</li>"
+    + "<li>create channels - open to everyone or private</li>"
     + "<li>share your ideas, photos and movies about any subject</li>"
     + "<li>discover great channels from other buddycloud users around the world</li>"
     + "</ul>"
