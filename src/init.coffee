@@ -131,22 +131,6 @@ app.initialize = ->
     formatdate.options.max.amount = 20 # 2000 years
     formatdate.options.min.string = "a moment ago"
     formatdate.options.hook.update = formatdate.hook.update.dynamictemplate
-    # overload formatdate a little bit:
-    # track all the time related elements inside of a dt-list ,
-    #  so their are nicely handled when they get removed for example.
-    formatdate.hookList = new Order ({i}) ->
-        idx = @keys[i] # get index tracker
-        this[i]?.on 'remove', (el, opts = {}) =>
-            # only remove when removed completely
-            return if opts.soft
-            @remove(idx.i)
-    formatdate.hook(formatdate.hookList)
-    # TODO is this ugly?
-    formatdate.update = (time_element) ->
-        return if not time_element
-        formatdate.hookList.push (done) ->
-            done() # use it in a sync way
-            return time_element
 
     $(document).ready ->
         # page routing

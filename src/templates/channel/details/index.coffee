@@ -33,7 +33,7 @@ module.exports = design (view) ->
                     description = make_field 'description'
                     accessModel = make_field 'open'
                     creationDate = make_field 'broadcast', 'time'
-                    formatdate.update creationDate
+                    creationDate.formatteddate = formatdate.smart creationDate
 
                     update_metadata = =>
                         abouttext = metadata.get('description')?.value
@@ -48,6 +48,7 @@ module.exports = design (view) ->
                         if new Date(date ? 0).getTime() is 0
                             creationDate.hide()
                         else
+                            creationDate.formatteddate.update()
                             creationDate.show()
                     # Filtering for owners takes potentially long, and
                     # we bind to every affiliation update.

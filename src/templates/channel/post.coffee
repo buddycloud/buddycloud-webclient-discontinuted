@@ -26,13 +26,14 @@ module.exports = design (view) ->
             avatar = @img class:'avatar'
             @$div class:'postmeta', ->
                 time = @time()
+                time.formatteddate = formatdate.smart time
                 update_time = ->
                     if (date = view.model.get_update_time())?
                         time.attr "data-date":date, datetime:date
                     if new Date(date ? 0).getTime() is 0
                         time.hide()
                     else
-                        formatdate.update time
+                        time.formatteddate.update()
                         time.show()
                 view.model.on('update:time', update_time)
                 update_time()
