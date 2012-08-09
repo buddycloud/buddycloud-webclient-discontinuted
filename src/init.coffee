@@ -129,6 +129,7 @@ app.initialize = ->
     #  $('#login_form').trigger "submit"
     formatdate.options.max.unit = 9 # century
     formatdate.options.max.amount = 20 # 2000 years
+    formatdate.options.min.amount = 20 # 20 seconds
     formatdate.options.min.string = "a moment ago"
     formatdate.options.hook.update = formatdate.hook.update.dynamictemplate
 
