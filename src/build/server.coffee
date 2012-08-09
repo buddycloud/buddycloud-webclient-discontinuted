@@ -78,13 +78,15 @@ start_server = (args, opts) ->
     server.configure ->
         server.use express.favicon(path.join(buildPath, "favicon.ico"))
 
-        watching = not config.build and config.watch
+        watching =  not config.build and config.watch
+        debugging = not config.build and config.dev
+        console.log "debug mode".bold.yellow if debugging
         console.log "bundling app.js …".yellow
         javascript = browserify
                 mount  : '/web/js/app.js'
+                debug  : debugging
                 watch  : watching
                 cache  : on
-                debug  : config.dev
                 require: [
                     'br-jquery'
                 ]
