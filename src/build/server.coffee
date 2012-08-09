@@ -65,7 +65,7 @@ config.load (args, opts) ->
             console.log "* compiling #{selector.snippet}".bold.black
             design.build
                 select: selector.select
-                watch:  yes
+                watch:  not config.build and config.watch
                 done:   done
                 path:   designPath
                 dest:   "#{selector.snippet}.js"
@@ -78,15 +78,17 @@ start_server = (args, opts) ->
     server.configure ->
         server.use express.favicon(path.join(buildPath, "favicon.ico"))
 
+        watching = not config.build and config.watch
         console.log "bundling app.js …".yellow
         javascript = browserify
                 mount  : '/web/js/app.js'
-                watch  : not config.build and config.watch
+                watch  : watching
                 cache  : on
                 debug  : config.dev
                 require: [
                     'br-jquery'
                 ]
+        console.log "watching code …".magenta if watching
         javascript.alias('jquery', 'br-jquery')
 
         javascript.register '.html', (source) ->
