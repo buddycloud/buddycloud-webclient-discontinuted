@@ -58,17 +58,21 @@ module.exports = design (view) ->
                 domain = owner.span class:'domain'
 
                 update = ->
-                    avatar.attr style:"background-image:url(#{channel.avatar})"
+                    avatar.attr
+                        style:"background-image:url(#{channel.avatar})"
+                        title:"#{channel.get 'id'}"
 
                     title = view.metadata.get('title')?.value
                     if title?
+                        owner.attr title:"#{title}"
                         username.text "#{title}"
                         domain.text ""
                     else
-                        jid = channel.get('id')?.split('@') or []
+                        id = channel.get('id')
+                        jid = id?.split('@') or []
+                        owner.attr title:"#{id}"
                         username.text   "#{jid[0]}"
                         domain.text "@#{jid[1]}"
-                    owner.attr title:"#{channel.get 'id'}"
 
                 view.metadata.on('change', update)
                 do update
