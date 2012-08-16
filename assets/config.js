@@ -54,8 +54,8 @@ window.config['homepage-text'] = "<h3>Share, discover, communicate in a magicall
     + "Learn more <a href='http://buddycloud.com/features'>about buddycloud</a>."
     + "</p>"
     + "<p>"
-    + "For help with this buddycloud on" + window.config.domain
-    + "contact <a href='mailto:" + window.config.helpmail + "'>your friendly sysadmin'</a>"
+    + "For help with this buddycloud on " + window.config.domain
+    + " contact <a href='mailto:" + window.config.helpmail + "'>your friendly sysadmin</a>."
     + "</p>"
     + "<p>"
     + "Coming soon for Android™ and iPhone®."
