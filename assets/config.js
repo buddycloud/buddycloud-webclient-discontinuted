@@ -4,6 +4,9 @@ window.config = {
     /* address of the bosh gateway. this should be reachable from webclient domain */
     bosh_service: 'https://example.com:443/http-bind/',
 
+    /* address of the api server */
+    api_service: 'https://api.example.com',
+
     /* enable or disable registration */
     registration: true,
 

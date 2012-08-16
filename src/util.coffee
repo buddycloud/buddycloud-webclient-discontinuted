@@ -1,4 +1,4 @@
-
+url = require 'url'
 
 exports.transEndEventNames = transEndEventNames =
     'WebkitTransition' : 'webkitTransitionEnd'
@@ -8,11 +8,22 @@ exports.transEndEventNames = transEndEventNames =
     'transition'       : 'transitionend'
 exports.transitionendEvent = transEndEventNames[Modernizr.prefixed('transition')]
 
-
-exports.gravatar = (mail) ->
-    opts = s:50, d:'retro'
-    hash = MD5.hexdigest mail?.toLowerCase?() or ""
-    "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
+api = null
+exports.gravatar = (jid) ->
+    api ?= url.parse(config.api_service)
+    url.format
+        protocol:api.protocol
+        hostname:api.hostname
+        port:api.port
+        pathname:"/media/#{jid}/avatar"
+        query:
+            'maxwidth':"50"
+            'maxheight':"50"
+            'default':url.format
+                protocol:location.protocol
+                hostname:location.hostname
+                port:location.port
+                pathname:"/public/avatars/anon.png"
 
 exports.EventHandler = (handler) ->
     return (ev) ->
