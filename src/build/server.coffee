@@ -28,12 +28,12 @@ snippets = ["main"
 cwd = path.join(__dirname, "..", "..")
 config.defaults path.join(cwd, "devconfig.js")
 
-buildPath = path.join(cwd, "assets")
 designPath = path.join(cwd, "src", "_design")
 
 config.cli
     host: ['host', ['b', "build server listen address", 'host']]
     port: ['port', ['p', "build server listen port",  'number']]
+    assets:['assets', ['a', "path to assets folder", 'path']]
     build:['build',[off, "build and pack everything together" ]]
     design:['design',[off, "enable build server on the fly style reload"]]
     dev:['dev',[off, "enable code reload and development tools in the browser"]]
@@ -42,6 +42,7 @@ config.cli
 config.load (args, opts) ->
 
     config.port++ if config.build
+    config.assets = path.resolve(cwd, config.assets)
 
     pending = 0
     done = ->
@@ -58,7 +59,7 @@ config.load (args, opts) ->
 
     for filename, selectors of sources
         design = new Compiler
-        design.load(path.join(buildPath, filename))
+        design.load(path.join(config.assets, filename))
         console.log "loading #{filename} …".yellow
         for selector in selectors
             pending++
@@ -76,7 +77,7 @@ start_server = (args, opts) ->
     server = express.createServer()
 
     server.configure ->
-        server.use express.favicon(path.join(buildPath, "favicon.ico"))
+        server.use express.favicon(path.join(config.assets, "favicon.ico"))
 
         watching =  not config.build and config.watch
         debugging = not config.build and config.dev
@@ -113,7 +114,7 @@ start_server = (args, opts) ->
 
         stylePath = path.join(cwd, "src", "styles")
         server.use wrap_prefix "/web/css", stylus.middleware
-            dest : path.join(buildPath, "web", "css")
+            dest : path.join(config.assets, "web", "css")
             src  : stylePath
             paths: [stylePath]
             debug: yes
@@ -131,9 +132,9 @@ start_server = (args, opts) ->
                 style.use nib()
 
         server.use javascript
-        server.use express.static buildPath
+        server.use express.static config.assets
 
-    index_html = path.join(buildPath, "index.html")
+    index_html = path.join(config.assets, "index.html")
 
     index = (req, res) ->
         res.header 'Content-Type', 'text/html'

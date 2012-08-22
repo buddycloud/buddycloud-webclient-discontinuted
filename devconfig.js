@@ -5,6 +5,9 @@ module.exports = {
     port: 3000,
     watch: true,
 
+    // assets folder
+    assets: "assets",
+
     // stylus
     css: {
         compress: true,
