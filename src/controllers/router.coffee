@@ -7,7 +7,7 @@
 { OverlayView } = require '../views/authentication/overlay'
 { MainView } = require '../views/main'
 
-decode = (url) -> Object.keys(parse url)[0]
+decode = (url) -> Object.keys(parse url)[0].replace(/\s/g, "+")
 
 class exports.Router extends Backbone.Router
     routes : # eg http://localhost:3000/discover
