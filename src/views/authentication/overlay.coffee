@@ -32,6 +32,7 @@ class exports.OverlayView extends BaseView
         'click .close': 'hide'
         'click': 'onClick'
         'keydown': 'onKeydown'
+        'txtinput #auth_name': 'on_input'
         'click a[href="/register"]': 'onClickRegister'
         'click a[href="/login"]': 'onClickLogin'
         'change #store_local': 'onStoreLocal'
@@ -76,8 +77,8 @@ class exports.OverlayView extends BaseView
             @trigger "remove:error:invalidjid"
             return jid
 
-    on_input: (tag, ev) => # used in the template, since we use an input event shim
-        jid = tag._jquery?.val() or ""
+    on_input: EventHandler (ev) ->
+        jid = $(ev.target).val() or ""
         @check_(jid)
 
     onClickRegister: EventHandler ->

@@ -87,9 +87,6 @@ module.exports = design (view) ->
                             if view.store_local or view.values.name?
                                 @attr value:view.values.name
                             view.on('fillout', => @attr value:view.values.name)
-                            @ready ->
-                                # a little bit ugly i guess
-                                @_jquery.input(view.on_input.bind(view, this))
                         onError.call this, 'noname'
                         onError.call this, 'invalidjid'
                     @$div -> # password

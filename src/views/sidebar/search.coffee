@@ -5,6 +5,7 @@ class exports.Searchbar extends BaseView
     template: require '../../templates/sidebar/search'
 
     events:
+        'txtinput input[type="search"]': 'on_input'
         'search input[type="search"]': 'on_search'
 
     constructor: ->
@@ -30,8 +31,8 @@ class exports.Searchbar extends BaseView
         return unless code is 13
         @on_search(ev)
 
-    on_input: (tag, ev) => # used in the template, since we use an input event shim
-        search = tag._jquery?.val()?.toLowerCase() or ""
+    on_input: EventHandler (ev) ->
+        search = $(ev.target).val()?.toLowerCase() or ""
         @set_filter(search)
 
     on_search: EventHandler ->
