@@ -19,11 +19,6 @@ exports.gravatar = (jid) ->
         query:
             'maxwidth':"50"
             'maxheight':"50"
-            'default':url.format
-                protocol:location.protocol
-                hostname:location.hostname
-                port:location.port
-                pathname:"/public/avatars/anon.png"
 
 exports.EventHandler = (handler) ->
     return (ev) ->

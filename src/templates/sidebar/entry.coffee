@@ -59,7 +59,7 @@ module.exports = design (view) ->
 
                 update = ->
                     avatar.attr
-                        style:"background-image:url(#{channel.avatar})"
+                        style:"background-image:url(#{channel.avatar}),url(/public/avatars/anon.png)"
                         title:"#{channel.get 'id'}"
 
                     title = view.metadata.get('title')?.value
