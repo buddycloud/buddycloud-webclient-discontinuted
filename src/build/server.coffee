@@ -98,10 +98,6 @@ start_server = (args, opts) ->
         javascript.register 'modernizr.js', (source) ->
             # modernizr needs the full global window namespace
             "!function(){#{source}}.call(window);"
-        javascript.register 'strophe.js', (source) ->
-            # expose MD5 lib because we need that for gravatar too
-            source += ";window.MD5=MD5;"
-            source
 
         javascript.addEntry(path.join(cwd, "src", "init.coffee"))
 
