@@ -15,7 +15,7 @@ module.exports = design (view) ->
     return new Template schema:5, ->
         @$div ->
             @$div class:'avatar', ->
-                @attr 'style':"background-image:url(#{view.model.avatar})"
+                @attr 'style':"background-image:url(#{view.model.avatar}),url(/public/avatars/anon.png)"
             @$div class:'info', ->
                 @$span class:'owner', ->
                     @text view.model.get('id') # FIXME
