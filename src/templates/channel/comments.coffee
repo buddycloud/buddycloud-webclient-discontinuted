@@ -31,6 +31,7 @@ module.exports = design (view) ->
 
                 @$img class:'avatar', ->
                     @attr src:"#{app.users.current.avatar}"
+                    @attr 'onerror': 'app.avatar_fallback(this)'
                     @attr title:"#{app.users.current.id}"
                 autoResize(@div class:'expanding area').textarea.ready ->
                         @_jquery.textSaver()
