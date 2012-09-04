@@ -1,6 +1,6 @@
 { Model } = require './base'
 { NodeStore } = require '../collections/node'
-{ gravatar } = require '../util'
+{ avatar } = require '../util'
 
 ##
 # traverses posts collection and each comments section
@@ -28,7 +28,7 @@ class exports.Channel extends Model
         @id = @get 'id' # jid
         @last_touched = new Date
         @nodes = new NodeStore channel:this
-        @avatar = gravatar @id
+        @avatar = avatar @id
         @nodes.fetch()
 
         # Auto-create the default set of nodes for that channel, so

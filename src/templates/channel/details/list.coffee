@@ -10,7 +10,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 { List } = require 'dt-list'
 design = require '../../../_design/channel/details/list'
-{ gravatar } = require '../../../util'
+{ avatar } = require '../../../util'
 { addClass, removeClass } = require '../../util'
 
 module.exports = design (view) ->
@@ -41,7 +41,7 @@ module.exports = design (view) ->
                     uid = user.get 'id'
                     users.push @$img
                         class:'avatar'
-                        src:"#{gravatar uid}"
+                        src:"#{avatar uid}"
                         title:uid
                         'data-userid': uid # FIXME UGLY
                         onerror:"this.src='/public/avatars/anon.png'"
