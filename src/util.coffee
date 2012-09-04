@@ -27,10 +27,7 @@ exports.gravatar = (mail) ->
   opts = s:50, d:'retro'
   hash = MD5.hexdigest mail?.toLowerCase?() or ""
   "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
- 
-exports.fetchGravatar = (self) ->
-   console.log "HELLLLOOOOO " + self.jid
-      
+
 exports.EventHandler = (handler) ->
     return (ev) ->
         ev?.preventDefault?()
