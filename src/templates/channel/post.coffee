@@ -6,11 +6,10 @@ unless process.title is 'browser'
             el.find('time').attr(datetime:"", title:"")
             el.find('p, span, a, time').text("")
             el.find('img.avatar').attr
-                onerror:"this.src='/public/avatars/anon.png'"
+                onerror:"app.avatar_fallback(this)"
                 src:""
             return el
-
-
+  
 { Template } = require 'dynamictemplate'
 formatdate = require 'formatdate'
 design = require '../../_design/channel/post'
@@ -47,6 +46,7 @@ module.exports = design (view) ->
             update_author = ->
                 author = app.users.get_or_create id:(view.model.get('author')?.jid)
                 avatar.attr src:"#{author?.avatar or " "}"
+                avatar.attr title:"#{view.model.get('author')?.jid}"
                 name.text(author?.get('name') or
                             author?.get('jid') or
                             "???")

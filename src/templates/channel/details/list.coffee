@@ -44,7 +44,7 @@ module.exports = design (view) ->
                         src:"#{avatar uid}"
                         title:uid
                         'data-userid': uid # FIXME UGLY
-                        onerror:"this.src='/public/avatars/anon.png'"
+                        onerror:"app.avatar_fallback(this)"
                     idxs[uid] = users.keys[users.length - 1]
                     update_count?()
                     process.nextTick(section.show) if users.length is 1

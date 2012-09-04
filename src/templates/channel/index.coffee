@@ -5,7 +5,7 @@ unless process.title is 'browser'
             el = @select ".content", "article.topic, div.channelDetails, .notification"
             el.find('h2, span:not(.loader, .button), #poweredby').text("")
             el.find('img.avatar').attr
-                onerror:"this.src='/public/avatars/anon.png'"
+                onerror:"app.avatar_fallback(this)"
                 src:""
             return el
 
@@ -23,6 +23,7 @@ module.exports = design (view) ->
                     @$td ->
                         @$img class:'avatar', ->
                             @attr src:"#{view.model.avatar}"
+                            @attr title:"#{view.model.id}"
                     @$td ->
                         @$div ->
                             title = @$h2 class:'title'
@@ -91,6 +92,7 @@ module.exports = design (view) ->
                     @attr 'id', "#{view.model.get 'id'}-topicpost"
                     @$img class:'avatar', ->
                         @attr src:"#{app.users.current.avatar}"
+                        @attr title:"#{app.users.current.id}"
                     # Following code will implement autoresize on the textarea which
                     # is used to post a new topic to a channel.
                     # Autoresize means the form is "growing" automatically bigger when
