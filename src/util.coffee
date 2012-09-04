@@ -9,9 +9,10 @@ exports.transEndEventNames = transEndEventNames =
 exports.transitionendEvent = transEndEventNames[Modernizr.prefixed('transition')]
 
 api = null
-exports.gravatar = (jid) ->
+exports.avatar = (jid) ->
+    return gravatar(jid) unless config.api_service?
     api ?= url.parse(config.api_service)
-    url.format
+    response = url.format
         protocol:api.protocol
         hostname:api.hostname
         port:api.port
@@ -19,6 +20,13 @@ exports.gravatar = (jid) ->
         query:
             'maxwidth':"50"
             'maxheight':"50"
+    console.log response
+    response
+            
+exports.gravatar = (mail) ->
+  opts = s:50, d:'retro'
+  hash = MD5.hexdigest mail?.toLowerCase?() or ""
+  "https://secure.gravatar.com/avatar/#{hash}?" + $.param(opts)
 
 exports.EventHandler = (handler) ->
     return (ev) ->

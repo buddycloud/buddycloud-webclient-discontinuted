@@ -12,6 +12,7 @@ unless process.title is 'browser'
 { Template } = require 'dynamictemplate'
 design = require '../../_design/sidebar/entry'
 { addClass, removeClass } = require '../util'
+{ gravatar } = require '../../util'
 
 module.exports = design (view) ->
     return new Template {schema:5, view}, ->
@@ -58,8 +59,9 @@ module.exports = design (view) ->
                 domain = owner.span class:'domain'
 
                 update = ->
+                    fallback = gravatar(channel.get 'id')
                     avatar.attr
-                        style:"background-image:url(#{channel.avatar}),url(/public/avatars/anon.png)"
+                        style:"background-image:url(#{channel.avatar}),url(#{fallback})"
                         title:"#{channel.get 'id'}"
 
                     title = view.metadata.get('title')?.value
