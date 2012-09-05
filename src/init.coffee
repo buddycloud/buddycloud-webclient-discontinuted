@@ -1,4 +1,5 @@
 { EventEmitter } = require 'events'
+performance.now = -> new Date().getTime() # FIXME: stupid stupid hack
 
 window.app = new EventEmitter
 app.setMaxListeners(0) # unlimited
