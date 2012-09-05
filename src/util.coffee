@@ -10,7 +10,7 @@ exports.transitionendEvent = transEndEventNames[Modernizr.prefixed('transition')
 
 api = null
 exports.avatar = (jid) ->
-    return gravatar(jid) unless config.api_service?
+    return exports.gravatar(jid) unless config.api_service?
     api ?= url.parse(config.api_service)
     response = url.format
         protocol:api.protocol
