@@ -32,6 +32,8 @@ module.exports = design (view) ->
             @$section ->
                 @$img ->
                     @attr 'src', user.avatar
+                    @attr 'title', view.model.get('id')
+                    @attr 'onerror', 'app.avatar_fallback(this)'
                 @$div class:'info', ->
                     @$span class:'name', ->
                         @text "#{view.model.get 'id'} "

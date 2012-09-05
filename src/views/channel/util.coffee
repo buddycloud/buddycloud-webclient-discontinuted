@@ -1,4 +1,4 @@
-{ gravatar } = require '../../util'
+{ avatar } = require '../../util'
 
 exports.setupInlineMention = (element) ->
     @getPostsNode()
@@ -9,7 +9,7 @@ exports.setupInlineMention = (element) ->
         if subscriber.get('subscription') is 'none'
             return
         jid = subscriber.get 'id'
-        followers[jid] = {jid:jid, avatar: "#{gravatar jid}"}
+        followers[jid] = {jid:jid, avatar: "#{avatar jid}"}
     if @autocomplete?
         # Just update followers
         @autocomplete.setLookup followers

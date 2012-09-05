@@ -1,7 +1,7 @@
 { Model } = require './base'
 { UserMetadata } = require './metadata/user'
 { UserChannels } = require '../collections/channel'
-{ gravatar } = require '../util'
+{ avatar } = require '../util'
 
 class exports.User extends Model
 
@@ -9,7 +9,7 @@ class exports.User extends Model
         # id and jid are the same
         @id = @get('jid') or @get('id')
         @save {jid: @id, @id}
-        @avatar = gravatar @id
+        @avatar = avatar @id
         # subscribed channels
         @channels = new UserChannels parent:this
         @metadata = new UserMetadata parent:this

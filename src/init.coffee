@@ -29,6 +29,7 @@ formatdate = require 'formatdate'
 { DataHandler } = require './handlers/data'
 { getCredentials } = require './handlers/creds'
 { throttle_callback } = require './util'
+{ gravatar } = require './util'
 
 # plugin api
 require 'dt-selector' # required in plugins
@@ -132,6 +133,9 @@ app.initialize = ->
     formatdate.options.min.amount = 20 # 20 seconds
     formatdate.options.min.string = "a moment ago"
     formatdate.options.hook.update = formatdate.hook.update.dynamictemplate
+
+    app.avatar_fallback = (img) ->
+        img.src = gravatar img.getAttribute 'title'
 
     $(document).ready ->
         # page routing

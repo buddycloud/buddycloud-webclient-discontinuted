@@ -5,7 +5,7 @@
 { ErrorNotificationView } = require './error_notification'
 { FollowNotificationView } = require './follow_notification'
 { PendingNotificationView } = require './pending_notification'
-{ EventHandler, throttle_callback, gravatar } = require '../../util'
+{ EventHandler, throttle_callback, avatar } = require '../../util'
 { setupInlineMention } = require './util'
 
 class exports.ChannelView extends BaseView
