@@ -90,9 +90,11 @@ update_text = do ->
                     full_link = link
                     unless link.match(/^[a-z0-9-]+:/)
                         full_link = 'http://' + link
-                    link_target = "_blank"
-                    link_target = "_self" if document.domain is full_link.split('/')[2]
-                    @$a { href: full_link, target: link_target}, link
+                    link_attrs = { href: full_link, target: "_blank", rel: "nofollow" }
+                    if document.domain is full_link.split('/')[2]
+                        link_attrs.target = "_self" 
+                        delete link_attrs.rel
+                    @$a link_attrs, link
                     unless previews_rendered[full_link]
                         previews_rendered[full_link] = yes
                         render_preview.call(@up(end: no), view, full_link)
